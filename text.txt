@@ -1,0 +1,11 @@
+<?php
+// Database Configuration
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'dff_vn');
+define('DB_PORT', '3306');
+
+// Site Configuration
+define('SITE_NAME', 'DFF.VN');
+define('SITE_DESCRIPTION', 'Diễn đàn Tài chính Việt Nam');
