@@ -26,40 +26,39 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
 
-    <script src="../cdn.jsdelivr.net/npm/bootstrap%405.1.3/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
 
 
-    <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-    <link rel="stylesheet" href="../cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
-    <link rel="stylesheet" href="../cdn.jsdelivr.net/npm/bootstrap-icons%401.4.1/font/bootstrap-icons.css" />
-    <link href="../cdn.jsdelivr.net/npm/bootstrap%405.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="../../public/css/sweetalert2.min3860.css?v=1" />
-    <link rel="stylesheet" href="../../public/css/select25e1f.css?v=2" />
-    <link rel="stylesheet" href="../../public/css/select2-bootstrap.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap%405.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
 
 
     <link rel="stylesheet" href="../css/style.css">
 
-    <script src="Vendor/DffVn/Content/js/jquery-2.1.3.js"></script>
-    <script src="../cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="Vendor/DffVn/Content/js/bootbox.min.js"></script>
-    <script src="../img.dff.vn/static/js/owl.carousel.min.js"></script>
-    <script src="content/js/bootstrap.min.js"></script>
-    <script src="../cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <script src="content/js/jqueryui-autocomplete-bootstrap-min.js"></script>
-    <script src="content/js/validate.min.js"></script>
-    <script src="../img.dff.vn/static/js/sweetalert2.all.min.js"></script>
-    <script src="content/js/popup5e1f.js?v=2"></script>
-    <script src="../img.dff.vn/static/js/jquery.select2.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
 
-    <script src="../cdn.jsdelivr.net/npm/%40editorjs/editorjs%40latest"></script>
-    <script src="../cdn.jsdelivr.net/npm/%40editorjs/header%40latest"></script>
-    <script src="../cdn.jsdelivr.net/npm/%40editorjs/link-autocomplete"></script>
-    <script src="../cdn.jsdelivr.net/npm/%40editorjs/table%40latest"></script>
-    <script src="../cdn.jsdelivr.net/npm/editorjs-paragraph-with-alignment%403.0.0"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/link-autocomplete@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/editorjs-paragraph-with-alignment@3.0.0"></script>
     <script src="content/edi/quote%40latest.js"></script><!-- Quote -->
     <script src="content/edi/image%40latest.js"></script>
 
@@ -106,359 +105,28 @@
 
 <body>
 
-    <script async defer crossorigin="anonymous" src="../connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
         nonce="9gkWGB3D"></script>
 
 
 
-    <div class="collapse navbar-collapse m-menu-i" id="navbarNav5">
-
-        <ul class="">
-            <li class="item"><svg class="home-icon" rpl="" fill="currentColor" height="20" icon-name="home-outline"
-                    viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                    <!--?lit$03863286$--><!--?lit$03863286$-->
-                    <path
-                        d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
-                    </path><!--?-->
-                </svg>
-                <a href="index.html" title="Trang chủ">Trang chủ</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-newspaper idiscuss"></i>
-                <a href="tin-moi.html" title="Trang chủ">Mới nhất</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-box-arrow-up-right trend-icon"></i>
-                <a href="trends.html" title="Trang chủ">Xu hướng</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
-            </li>
-
-        </ul>
-        <div class="line"></div>
-
-        <label class="bg-tranparent">CHỦ ĐỀ</label>
-        <ul class=" top-item">
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/ktvm-104446377.png"><a title="Vĩ mô" href="vi-mo-t128-1.html">
-                    Vĩ mô</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/ck-153008757.png"><a title="Thị trường"
-                    href="thi-truong-t129-1.html"> Thị trường</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/2-12045699.png"><a title="Crypto " href="crypto-t2202-1.html">
-                    Crypto </a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/dn-104202856.png"><a title="360° Doanh nghiệp"
-                    href="360-doanh-nghiep-t123-1.html"> 360° Doanh nghiệp</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/nh-154022179.png"><a title="Tài chính"
-                    href="tai-chinh-t139-1.html"> Tài chính</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/bds-153325898.png"><a title="Nhà đất"
-                    href="nha-dat-t140-1.html"> Nhà đất</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/1-120418263.png"><a title="Quốc tế "
-                    href="quoc-te-t2201-1.html"> Quốc tế </a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/3-120542176.png"><a title="Thảo luận"
-                    href="thao-luan-t2203-1.html"> Thảo luận</a> </li>
-
-        </ul>
-
-        <div class="line"></div>
-        <ul class=" about-c">
-            <li><i class="bi bi-tv"></i>
-                <a href="policy.html#about"> Về chúng tôi</a>
-            </li>
-            <li>
-                <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service"> Chính sách nội dung</a>
-            </li>
-            <li><svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z">
-                    </path>
-                    <path
-                        d="M6.617 10H.625a.625.625 0 0 0-.625.625 3.62 3.62 0 1 0 7.242 0A.625.625 0 0 0 6.617 10Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.58A2.376 2.376 0 0 1 3.621 13h-.004Z">
-                    </path>
-                    <path
-                        d="M19.375 10h-5.992a.624.624 0 0 0-.625.625 3.622 3.622 0 0 0 6.966 1.386c.182-.44.276-.91.276-1.386a.624.624 0 0 0-.625-.625Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.576A2.375 2.375 0 0 1 16.379 13h-.004Z">
-                    </path>
-                    <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
-                </svg>
-                <a href="policy.html#privacy-policy"> Chính sách riêng tư</a>
-            </li>
-            <li><i class="bi bi-badge-ad"></i>
-                <a href="policy.html#advertisement"> Quảng cáo </a>
-            </li>
-        </ul>
-
-
-
-    </div>
+    <?php require_once 'view/layout/sidebar.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+    ?>
 
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
         <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event.html"> Lịch sự kiện </a></span>
     </div>
+    <!-- header start -->
 
-    <div class="hmain">
-        <div class="main">
-            <div class="header-top">
-                <div class="m-menu "><span class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav5"
-                        aria-controls="navbarNav5" aria-expanded="false"><a href="javascript:void(0)"><i
-                                class="fas fa-bars"></i></a></span>
-                </div>
-                <div class="header-logo">
-                    <a href="index.html">
-                        <img alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
-                            src="../img.dff.vn/static/img/logo.png" /></a>
-                    <div class="box-search">
-                        <div class="input-group ">
-                            <span class="input-group-append">
-                                <button
-                                    class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
-                                    module-load="onSearch" type="button">
-                                    <i class="fa fa-search"></i>
-                                </button>
-                            </span>
-                            <input class="form-control border-end-0 border rounded-pill"
-                                onkeypress="return OnEnter(event)" placeholder="Tìm kiếm" type="search" />
-                        </div>
-                        <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
-                    </div>
-                </div>
-
-                <div class="header-right">
-                    <ul>
-                        <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
-                        <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
-                                    aria-expanded="false" title="Tạo mới" href="javascript:void(0)"><i
-                                        class="fas fa-plus"></i></a>
-                                <ul class="dropdown-menu hide">
-                                    <li><a style="position:relative" class="dropdown-item btquick"
-                                            href="javascript:void(0)" module-load="loadwrite"><i
-                                                class="fas fa-plus"></i><span class="number"><i
-                                                    class="bi bi-lightning-charge-fill"></i></span> Viết bài nhanh</a>
-                                    </li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" data-url="/write.html"
-                                            module-load="redirect"><i class="fas fa-plus"></i> Viết bài thường</a></li>
-                                </ul>
-                            </span>
-                        </li>
-                        <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
-                                aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                    title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">4</span>
-                            </span>
-                        </li>
-                        <li class="top-pro "><span class="signin"><a module-load="signin" href="javascript:void(0)"><img
-                                        src="vendor/dffvn/content/img/user.svg"></a> </span>
-                            <span class="dropdown signed hide">
-                                <a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="vendor/dffvn/content/img/user.svg">
-                                </a>
-
-                                <ul class="dropdown-menu hide">
-                                    <li>
-                                        <div class="profiles">
-                                            <ul>
-                                            </ul>
-                                            <div class="add">
-                                                <a href="index.html">Xem tất cả Profile</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="menu-ai hide"><a class="dropdown-item" href="index.html"><i
-                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết
-                                            bài</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i>
-                                            Profile</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
-                                                class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
-                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                                </ul>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="collapse box-alert" id="id_alert">
-
-                    <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link fw-semibold active position-relative" id="pills-home-tab"
-                                data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
-                                aria-controls="pills-home" aria-selected="true">Thông báo</button>
-                        </li>
-
-                    </ul>
-                    <div class="tab-content" id="pills-tabContent">
-
-                    </div>
-                </div>
-                <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
-
-            </div>
-        </div>
-    </div>
-
-
-
-
-
-    <div class="top-stock">
-        <div class="marquee">
-            <div class="item co-VNINDEX">
-                <div class="irow label">
-                    <span>VNINDEX</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-            <div class="item co-HNX">
-                <div class="irow label">
-                    <span>HNX</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-            <div class="item co-VN30F1M">
-                <div class="irow label">
-                    <span>VN30F1M</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-            <div class="item co-VN30">
-                <div class="irow label">
-                    <span>VN30</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-            <div class="item co-UPCOM">
-                <div class="irow label">
-                    <span>UPCOM</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-
-            <div class="item co-Slave">
-                <div class="irow label">
-                    <span>Bạc</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-            <div class="item co-Oil">
-                <div class="irow label">
-                    <span>Dầu Thô WTI</span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-
-
-            <div class="item co-BTC">
-                <div class="irow label">
-                    <span><a target="_blank" href="coins-bitcoin.html">Bitcoin</a></span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-
-            <div class="item co-ETH">
-                <div class="irow label">
-                    <span><a target="_blank" href="coins-ethereum.html">Ethereum</a></span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-
-            <div class="item co-BNB">
-                <div class="irow label">
-                    <span><a target="_blank" href="coins-binancecoin.html">BNB</a></span>
-                    <span class="value"></span>
-                </div>
-                <div class="irow content">
-                    <span>
-                        <i class=""></i>
-                        <index></index>
-                    </span>
-                    <span class="per"></span>
-                </div>
-            </div>
-
-
-
-        </div>
-    </div>
-
+    <?php require_once 'view/layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
+    ?>
     <!-- cho cái thi trường chạy -->
+
+    <!-- header end -->
+    <!-- script chạy thị trường -->
     <script>
-        $(function () {
+        $(function() {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -469,7 +137,7 @@
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function () {
+                    marqueeInterval = setInterval(function() {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -494,7 +162,7 @@
 
         });
     </script>
-
+    <!-- script chạy thị trường end -->
     <div class="func-mobile">
         <ul>
             <li>
@@ -555,7 +223,7 @@
             <main class="main-content">
 
 
-
+                <!-- 4 cục bài viết nổi bật start -->
                 <div class="owl-slider home-slider">
                     <div id="home_slider" class="owl-carousel">
 
@@ -691,7 +359,9 @@
 
                     </div>
                 </div>
+                <!-- 4 cục bài viết nổi bật end -->
 
+                <!-- bài viết chính block start -->
                 <div class="content-left cover-page">
                     <div class="block-k box-write">
                         <a href="javascript:void(0)" class="img-own"> <img src="vendor/dffvn/content/img/user.svg"> </a>
@@ -1049,7 +719,9 @@
 
 
                 </div>
+                <!-- bài viết chính block end -->
 
+                
                 <div class="content-right">
                     <div class="block-k bs-coin">
                         <div class="search-container">
@@ -1400,9 +1072,9 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
 
 
                     <script>
-                        $(function () {
+                        $(function() {
                             var height = $(".content-right").outerHeight() + 600;
-                            $(window).scroll(function () {
+                            $(window).scroll(function() {
                                 var rangeToTop = $(this).scrollTop();
                                 if (rangeToTop > height) {
                                     $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -1415,7 +1087,6 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
 
 
                         });
-
                     </script>
                 </div>
 
@@ -1583,14 +1254,12 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-
-
-
-            $(function () {
+            $(function() {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
-                    rewind: false, /* use rewind if you don't want loop */
+                    rewind: false,
+                    /* use rewind if you don't want loop */
                     margin: 20,
                     dots: false,
                     /*
@@ -1625,14 +1294,14 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function () {
+                $('.mb-chat').click(function() {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function () {
+                $('.cover-chat .cclose').click(function() {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function (e) {
+                $('.cm-more').on('click', function(e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -1640,17 +1309,12 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
                 coin_search();
 
             });
-
-
-
-
-
         </script>
 
 
 
         <script>
-            $(function () {
+            $(function() {
                 type = 3;
             });
         </script>
@@ -1671,12 +1335,10 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
 
 
     <script>
-
-
-        $(function () {
+        $(function() {
             Page.registerModule(document);
 
-            $(window).scroll(function () {
+            $(window).scroll(function() {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");
@@ -1689,8 +1351,6 @@ l&#253; nợ vốn 100 tỷ đồng" border="0" />
             });
 
         });
-
-
     </script>
 </body>
 
