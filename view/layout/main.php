@@ -721,7 +721,7 @@
                 </div>
                 <!-- bài viết chính block end -->
 
-                
+
                 <div class="content-right">
                     <div class="block-k bs-coin">
                         <div class="search-container">
@@ -775,16 +775,13 @@
                             <ul>
 
                                 <li class="new-style">
-                                    <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
-lý nợ vốn 100 tỷ đồng" href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
+                                    <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng" href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
                                         muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
                                         lý nợ vốn 100 tỷ đồng
 
                                     </a>
 
-                                    <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg" title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản
-l&#253; nợ vốn 100 tỷ đồng" alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản
-l&#253; nợ vốn 100 tỷ đồng" border="0" />
+                                    <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg" title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng" alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng" border="0" />
                                 </li>
 
                                 <li class="new-style">
