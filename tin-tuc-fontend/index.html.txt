@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>DFF.VN Prototype</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+    header {
+      background: #1c1c1c;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #333;
+    }
+    header .logo {
+      font-size: 20px;
+      font-weight: bold;
+      color: #1e90ff;
+    }
+    header input {
+      width: 300px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      outline: none;
+    }
+    .container {
+      display: flex;
+    }
+    nav {
+      width: 220px;
+      background: #1a1a1a;
+      padding: 20px;
+      border-right: 1px solid #333;
+      height: 100vh;
+    }
+    nav ul {
+      list-style: none;
+      padding: 0;
+    }
+    nav li {
+      padding: 10px;
+      cursor: pointer;
+      border-radius: 6px;
+      margin-bottom: 8px;
+      transition: background 0.3s;
+    }
+    nav li:hover {
+      background: #333;
+    }
+    .content {
+      flex: 1;
+      padding: 20px;
+    }
+    .page {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">DFF.VN</div>
+    <input type="text" placeholder="Tìm kiếm...">
+  </header>
+
+  <div class="container">
+    <nav>
+      <ul>
+        <li onclick="showPage('home')">🏠 Trang chủ</li>
+        <li onclick="showPage('latest')">📰 Mới nhất</li>
+        <li onclick="showPage('trend')">📈 Xu hướng</li>
+        <li onclick="showPage('comment')">💬 Bình luận</li>
+      </ul>
+    </nav>
+
+    <div class="content">
+      <!-- Trang chủ -->
+      <div id="home" class="page active">
+        <div class="card">Bài viết nổi bật 1 - Trang chủ</div>
+        <div class="card">Bài viết nổi bật 2 - Trang chủ</div>
+      </div>
+
+      <!-- Mới nhất -->
+      <div id="latest" class="page">
+        <div class="card">Tin mới nhất 1</div>
+        <div class="card">Tin mới nhất 2</div>
+      </div>
+
+      <!-- Xu hướng -->
+      <div id="trend" class="page">
+        <div class="card">Chủ đề đang hot 1</div>
+        <div class="card">Chủ đề đang hot 2</div>
+      </div>
+
+      <!-- Bình luận -->
+      <div id="comment" class="page">
+        <div class="card">Người dùng A: Bình luận gì đó...</div>
+        <div class="card">Người dùng B: Bình luận khác...</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+  </script>
+</body>
+</html>
