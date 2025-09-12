@@ -51,35 +51,43 @@
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
                                     src="vendor/dffvn/content/img/user.svg"></a> 
                         </span> -->
-                        <span class="dropdown signed hide" style="display: block;">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" onclick="showLoginModal()">
-                                <img src="vendor/dffvn/content/img/user.svg">
-                            </a>
-
-                            <ul class="dropdown-menu hide">
-                                <li>
-                                    <div class="profiles">
-                                        <ul>
-                                        </ul>
-                                        <div class="add">
-                                            <a href="index.html">Xem tất cả Profile</a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <!-- Đã đăng nhập -->
+                            <span class="dropdown signed" style="display: block;">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                                    <img src="vendor/dffvn/content/img/user.svg">
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="profiles">
+                                            <ul>
+                                                <!-- Có thể load profile user tại đây -->
+                                            </ul>
+                                            <div class="add">
+                                                <a href="index.html">Xem tất cả Profile</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li class="menu-ai hide"><a class="dropdown-item" href="index.html"><i
-                                            class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết
-                                        bài</a></li>
-                                <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i>
-                                        Profile</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
-                                            class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                            class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
-                                            class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                            </ul>
-                        </span>
+                                    </li>
+                                    <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
+                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
+                                                class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
+                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
+                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                </ul>
+                            </span>
+                        <?php else: ?>
+                            <!-- Chưa đăng nhập -->
+                            <span class="signin">
+                                <a href="javascript:void(0)" onclick="showLoginModal()">
+                                    <img src="vendor/dffvn/content/img/user.svg">
+                                </a>
+                            </span>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </div>
@@ -116,7 +124,6 @@
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
                             <?php
-                            session_start();
                             // Hiển thị thông báo lỗi
                             if (isset($_SESSION['login_errors']) && !empty($_SESSION['login_errors'])) {
                                 echo '<div class="alert alert-danger">';
@@ -126,7 +133,7 @@
                                 echo '</div>';
                                 unset($_SESSION['login_errors']);
                             }
-                            
+
                             // Hiển thị thông báo thành công
                             if (isset($_SESSION['login_success'])) {
                                 echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['login_success']) . '</div>';
@@ -153,7 +160,7 @@
                         </div>
 
                         <div class="col-12 text-right">
-                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:Page.register()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
@@ -177,32 +184,134 @@
         </div>
     </div>
 </div>
+<!-- Modal đăng kí -->
+<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true" data-popup-id="8268" aria-modal="true" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="width:450px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+            </div>
+            <div class="modal-body" style="padding:10px 15px 10px">
+                <div class="row">
+                    <div class="col-xs-12">
+                        <div class="popup-area-msg"></div>
+                    </div>
+                </div>
 
+                <form id="register" novalidate="novalidate">
+                    <div class="f-register">
+                        <div class="col-12">
+                            <div class="title">
+                                Tạo tài khoản để sử dụng đầy đủ tính năng và tham gia cộng đồng thành viên của DFF.VN
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-person"></i></div>
+                                <input name="fullName" id="fullName" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-person"></i></div>
+                                <input name="userName" id="userName" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i style="opacity: 0.5;" class="fas fa-at"></i></div>
+                                <input name="email" id="email" type="text" class="form-control" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-phone"></i></div>
+                                <input name="phone" id="phone" type="text" class="form-control" placeholder="Số điện thoại">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-share"></i></div>
+                                <input name="refCode" id="refCode" type="text" value="" class="form-control" placeholder="Mã liên kết">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="f-submit">
+                                <button type="submit" id="submit" href="javascript:void(0)">Đăng ký</button>
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-social text-center">
+                                Khi bấm tạo tài khoản bạn đã đồng ý
+                                với <a href="/policy.html" target="_blank">quy định</a> của DFF.VN
+                            </div>
+                        </div>
+                        <div class="col-12 text-center">
+                            <a class="color-logo" href="javascript:switchToLogin()">Đã có tài khoản? Đăng nhập</a>
+                        </div>
+
+                        <input type="hidden" name="t" value="2">
+
+                    </div>
+                </form>
+
+                <script>
+                    // Form đăng ký chỉ để hiển thị, không xử lý
+                    $("#register").submit(function(e) {
+                        e.preventDefault();
+                        alert('Chức năng đăng ký đang được phát triển!');
+                    });
+                </script>
+            </div>
+            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+        </div>
+    </div>
+</div>
+<!-- Xử lý ẩn hiện modal -->
 <script>
-// Modal đăng nhập JavaScript
-$(function() {
-    // Bootstrap 5 Modal handling
-    var modalElement = document.getElementById('div_modal');
-    if (modalElement) {
-        var modal = new bootstrap.Modal(modalElement);
-        
-        // Show modal when needed
+    $(function() {
+        // Lấy modal login
+        var loginElement = document.getElementById('div_modal');
+        var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
+
+        // Lấy modal register
+        var registerElement = document.getElementById('register_modal');
+        var registerModal = registerElement ? new bootstrap.Modal(registerElement) : null;
+
+        // Hàm mở modal đăng nhập
         window.showLoginModal = function() {
-            modal.show();
+            if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
+            if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
-        
-        // Hide modal when close button is clicked
-        $('.sh-popup-close, .cmd-cancel').on('click', function() {
-            modal.hide();
+
+        // Hàm mở modal đăng ký
+        window.showRegisterModal = function() {
+            if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
+            if (registerModal) registerModal.show(); // mở modal đăng ký
+        };
+
+        // Hàm chuyển ngược từ đăng ký sang đăng nhập
+        window.switchToLogin = function() {
+            if (registerModal) registerModal.hide();
+            if (loginModal) loginModal.show();
+        };
+
+        // Đóng modal khi click nút close hoặc thoát
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
+            if (loginModal) loginModal.hide();
         });
-    }
 
-    // Form đăng nhập sẽ được xử lý bằng PHP
-    // Không cần JavaScript xử lý form nữa
-});
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
+            if (registerModal) registerModal.hide();
+        });
+    });
 </script>
-
-
 
 
 

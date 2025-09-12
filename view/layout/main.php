@@ -219,7 +219,7 @@
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <div class="main">
 
-           
+
 
             <!-- ?php require_once 'view/page/Home.php'; -->
             <?= $content ?>
