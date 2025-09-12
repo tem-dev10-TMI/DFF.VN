@@ -24,7 +24,11 @@ switch ($url) {
         $controller = new registerUserController();
         $controller->index();
         break;
-
+    case 'profile':
+        require_once 'controller/homeController.php';
+        $controller = new homeController();
+        $controller->profile();
+        break;
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
