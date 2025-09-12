@@ -8,7 +8,7 @@ class homeController
 
                 //Load view
                 ob_start();
-                require_once 'view/home/home.php';
+                require_once 'view/page/home.php';
                 $content = ob_get_clean();
 
                 //Load layout
