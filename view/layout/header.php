@@ -51,45 +51,57 @@
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
                                     src="vendor/dffvn/content/img/user.svg"></a> 
                         </span> -->
-                        <?php if (isset($_SESSION['user_id'])): ?>
-                            <!-- Đã đăng nhập -->
-                            <span class="dropdown signed" style="display: block;">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
-                                    <img src="vendor/dffvn/content/img/user.svg">
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li>
-                                        <div class="profiles">
-                                            <ul>
-                                                <!-- Có thể load profile user tại đây -->
-                                            </ul>
-                                            <div class="add">
-                                                <a href="index.html">Xem tất cả Profile</a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
-                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
-                                                class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
-                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                                </ul>
-                            </span>
-                        <?php else: ?>
-                            <!-- Chưa đăng nhập -->
-                            <span class="signin">
-                                <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="vendor/dffvn/content/img/user.svg">
-                                </a>
-                            </span>
-                        <?php endif; ?>
-                    </li>
-                </ul>
+                        <span class="dropdown signed hide" style="display: block;">
+                            <a class="dropdown-toggle  " data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="vendor/dffvn/content/img/user.svg">
+                            </a>
+
+                            <ul class="dropdown-menu hide">
+                                <li>
+                                    <div class="profiles">
+                                        <ul>
+                                        </ul>
+                                        <div class="add">
+                                            <a href="index.html">Xem tất cả Profile</a>
+                                            <?php if (isset($_SESSION['user_id'])): ?>
+                                                <!-- Đã đăng nhập -->
+                                                <span class="dropdown signed" style="display: block;">
+                                                    <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                                                        <img src="vendor/dffvn/content/img/user.svg">
+                                                    </a>
+                                                    <ul class="dropdown-menu">
+                                                        <li>
+                                                            <div class="profiles">
+                                                                <ul>
+                                                                    <!-- Có thể load profile user tại đây -->
+                                                                </ul>
+                                                                <div class="add">
+                                                                    <a href="index.html">Xem tất cả Profile</a>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
+                                                                    class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                                        <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
+                                                        <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
+                                                        <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
+                                                                    class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
+                                                        <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
+                                                                    class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                                                        <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
+                                                                    class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                                    </ul>
+                                                </span>
+                                            <?php else: ?>
+                                                <!-- Chưa đăng nhập -->
+                                                <span class="signin">
+                                                    <a href="javascript:void(0)" onclick="showLoginModal()">
+                                                        <img src="vendor/dffvn/content/img/user.svg">
+                                                    </a>
+                                                </span>
+                                            <?php endif; ?>
+                                </li>
+                            </ul>
             </div>
             <div class="collapse box-alert" id="id_alert">
 
@@ -312,8 +324,6 @@
         });
     });
 </script>
-
-
 
 <div class="top-stock">
     <div class="marquee">
