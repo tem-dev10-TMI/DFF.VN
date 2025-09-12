@@ -55,7 +55,13 @@
                             <!-- Đã đăng nhập -->
                             <span class="dropdown signed" style="display: block;">
                                 <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
-                                    <img src="vendor/dffvn/content/img/user.svg">
+                                    <?php 
+                                        $avatarUrl = $_SESSION['user_avatar_url'] ?? null; 
+                                        if (!$avatarUrl || trim($avatarUrl) === '') {
+                                            $avatarUrl = 'vendor/dffvn/content/img/user.svg';
+                                        }
+                                    ?>
+                                    <img src="<?= htmlspecialchars($avatarUrl) ?>">
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
