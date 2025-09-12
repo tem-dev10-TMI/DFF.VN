@@ -19,9 +19,9 @@ if (empty($url)) {
 }
 
 switch ($url) {
-    case 'register':
-        require_once 'controller/auth/registerUserController.php';
-        $controller = new registerUserController();
+    case 'home':
+        require_once 'controller/homeController.php';
+        $controller = new homeController();
         $controller->index();
         break;
     case 'profile':
