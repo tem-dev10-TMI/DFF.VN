@@ -100,8 +100,13 @@
                                                     </a>
                                                 </span>
                                             <?php endif; ?>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
+                        </span>
+                    </li>
+                </ul>
             </div>
             <div class="collapse box-alert" id="id_alert">
 
