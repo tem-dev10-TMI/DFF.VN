@@ -198,23 +198,24 @@
                     </div>
                 </div>
 
-                <form id="register" novalidate="novalidate">
+                <form id="register" action="<?= BASE_URL ?>/register" method="POST" novalidate="novalidate">
                     <div class="f-register">
                         <div class="col-12">
                             <div class="title">
                                 Tạo tài khoản để sử dụng đầy đủ tính năng và tham gia cộng đồng thành viên của DFF.VN
                             </div>
                         </div>
+                        <input type="hidden" name="role" value="customer">
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="fullName" id="fullName" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
+                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="userName" id="userName" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
+                                <input name="username" id="username" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
                             </div>
                         </div>
                         <div class="col-12">
@@ -236,14 +237,8 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-text"><i class="bi bi-share"></i></div>
-                                <input name="refCode" id="refCode" type="text" value="" class="form-control" placeholder="Mã liên kết">
-                            </div>
-                        </div>
-                        <div class="col-12">
                             <div class="f-submit">
-                                <button type="submit" id="submit" href="javascript:void(0)">Đăng ký</button>
+                                <button type="submit" id="submit">Đăng ký</button>
                             </div>
                         </div>
                         <div class="col-12">
@@ -260,14 +255,6 @@
 
                     </div>
                 </form>
-
-                <script>
-                    // Form đăng ký chỉ để hiển thị, không xử lý
-                    $("#register").submit(function(e) {
-                        e.preventDefault();
-                        alert('Chức năng đăng ký đang được phát triển!');
-                    });
-                </script>
             </div>
             <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>

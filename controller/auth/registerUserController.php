@@ -56,7 +56,7 @@ class registerUserController
         //Load view
         ob_start();
         //Cần chỉnh sửa lại đường dẫn
-        require_once 'view/page/auth/registerUser.php';
+        require_once 'view/layout/header.php';
         $content = ob_get_clean();
 
         //Load layout
