@@ -4,7 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <title>Thỏa thuận dịch vụ</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+    .sidebar {
+        width: 30%;
+        background: #fafafa;
+        padding: 20px;
+        border-right: 1px solid #ddd;
+
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+    }
+
+    .sidebar h3 {
+        color: #000000;
+        font-size: 24px;
+        margin-bottom: 10px;
+
+    }
+
+    .sidebar ul {
+        list-style-type: none;
+        padding-left: 20px;
+        margin-bottom: 20px;
+    }
+
+    .sidebar ul li {
+        position: relative;
+        margin-bottom: 8px;
+        padding-left: 12px;
+    }
+
+    .sidebar ul li::before {
+        content: "";
+        width: 8px;
+        height: 8px;
+        border: 2px solid #ff9900;
+        border-radius: 50%;
+        position: absolute;
+        left: 0;
+        top: 6px;
+        left: -15px;
+    }
+
+    .content {
+        width: 70%;
+        padding: 0 20px;
+    }
+
+    .content h3 {
+        color: #07598c;
+        font-size: 28px;
+        ;
+        margin-top: 0;
+    }
+
+    .content h4 {
+        color: #000000;
+        margin-top: 20px;
+        font-size: 21px;
+    }
+
+    a {
+        color: #010508;
+        text-decoration: none;
+    }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        background: #f4f4f4;
+        border-top: 1px solid #ddd;
+        margin-top: 20px;
+    }
+
+    footer p {
+        margin: 5px 0;
+    }
+
+    footer a {
+        color: #00060c;
+    }
+
+    .a1 {
+        color: #087ff6;
+    }
+
+    a:hover {
+        color: #ffc107;
+        text-decoration: none;
+        transition: color 0.1s ease;
+    }
+
+    h3:hover {
+        color: #ffc107;
+        text-decoration: none;
+        transition: color 0.1s ease;
+    }
+    </style>
 </head>
 
 <body>
