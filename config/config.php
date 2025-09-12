@@ -6,6 +6,8 @@ define('DB_PASS', 'AVNS_brCrqfhHuYX88MkBMqS');
 define('DB_NAME', 'dff_db');
 define('DB_PORT', '27925');
 
+define('BASE_URL', 'http://localhost/DFF.VN');
+
 // Site Configuration
 define('SITE_NAME', 'DFF.VN');
 define('SITE_DESCRIPTION', 'Diễn đàn Tài chính Việt Nam');
