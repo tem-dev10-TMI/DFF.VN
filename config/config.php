@@ -1,10 +1,10 @@
 <?php
 // Database Configuration
-define('DB_HOST', '');
-define('DB_USER', '');
-define('DB_PASS', '');
-define('DB_NAME', '');
-define('DB_PORT', '');
+define('DB_HOST', 'mysql-37b8db9-nguyenquangtrung13062005-8a5b.d.aivencloud.com');
+define('DB_USER', 'avnadmin');
+define('DB_PASS', 'AVNS_brCrqfhHuYX88MkBMqS');
+define('DB_NAME', 'dff_db');
+define('DB_PORT', '27925');
 
 // Site Configuration
 define('SITE_NAME', 'DFF.VN');
