@@ -18,8 +18,8 @@ if (empty($url)) {
     exit;
 }
 
-switch($url){
-/*     case 'home':
+switch ($url) {
+    /*     case 'home':
         require_once 'controller/HomeController.php';
         $controller = new authController();
         $controller->login();
@@ -27,9 +27,8 @@ switch($url){
 
     default:
         //404 page
-        require_once 'controller/error/404Controller.php';
+        /*         require_once 'controller/error/404Controller.php';
         $controller = new NotFoundController;
         $controller->index();
-        break;
+        break; */
 }
-?>
