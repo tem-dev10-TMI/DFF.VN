@@ -55,7 +55,13 @@
                             <!-- Đã đăng nhập -->
                             <span class="dropdown signed" style="display: block;">
                                 <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
-                                    <img src="vendor/dffvn/content/img/user.svg">
+                                    <?php 
+                                        $avatarUrl = $_SESSION['user_avatar_url'] ?? null; 
+                                        if (!$avatarUrl || trim($avatarUrl) === '') {
+                                            $avatarUrl = 'vendor/dffvn/content/img/user.svg';
+                                        }
+                                    ?>
+                                    <img src="<?= htmlspecialchars($avatarUrl) ?>">
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -76,7 +82,7 @@
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
+                                    <li><a class="dropdown-item" module-load="logout" href="<?= BASE_URL ?>/logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
@@ -123,32 +129,25 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
-                            <?php
-                            // Hiển thị thông báo lỗi
-                            if (isset($_SESSION['login_errors']) && !empty($_SESSION['login_errors'])) {
-                                echo '<div class="alert alert-danger">';
-                                foreach ($_SESSION['login_errors'] as $error) {
-                                    echo '<p>' . htmlspecialchars($error) . '</p>';
-                                }
-                                echo '</div>';
-                                unset($_SESSION['login_errors']);
-                            }
+                            <?php if (!empty($error)) : ?>
+                                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                            <?php endif; ?>
 
-                            // Hiển thị thông báo thành công
-                            if (isset($_SESSION['login_success'])) {
-                                echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['login_success']) . '</div>';
-                                unset($_SESSION['login_success']);
-                            }
-                            ?>
+                            <?php if (isset($_SESSION['success'])): ?>
+                                <div class="alert alert-success">
+                                    <?= $_SESSION['success'] ?>
+                                    <?php unset($_SESSION['success']); ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
-                <form id="login" method="POST" action="controller/UserController.php" novalidate="novalidate">
+                <form id="login" method="POST" action="<?= BASE_URL ?>/login" novalidate="novalidate">
                     <div class="f-login">
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
-                                <input name="userName" id="userName" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+                                <input name="username" id="username" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
 
@@ -164,7 +163,7 @@
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
-                                <button type="submit" id="submit" href="javascript:void(0)">Đăng nhập</button>
+                                <button type="submit" id="submit">Đăng nhập</button>
                             </div>
                         </div>
                         <div class="content-divider text-muted"> <span>OR</span> </div>
@@ -234,6 +233,12 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
                                 <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
