@@ -218,9 +218,11 @@
         </style>
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <div class="main">
-            <?php require_once 'view/page/Home.php'; // vị trí hiện thị bài viết chính block ở đầu á  
-            ?>
 
+           
+
+            <!-- ?php require_once 'view/page/Home.php'; -->
+            <?= $content ?>
             <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
 
 
