@@ -33,8 +33,11 @@ switch ($url) {
         session_destroy();
         header("Location: " . BASE_URL . "");
         break;
-
-
+    case 'profile':
+        require_once 'controller/homeController.php';
+        $controller = new homeController();
+        $controller->profile();
+        break;
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
