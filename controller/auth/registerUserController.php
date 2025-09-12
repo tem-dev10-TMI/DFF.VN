@@ -51,8 +51,6 @@ class registerUserController
             $_SESSION['user_username'] = $user['username'];
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'];
-        } else {
-            include 'view/auth/register.php';
         }
 
         //Load view
