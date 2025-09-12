@@ -104,7 +104,7 @@
 
                     <ul class="nav nav-second-level about-c">
                         <li><i class="bi bi-tv"></i>
-                            <a href="?url=about">Về chúng tôi</a>
+                            <a href="policy.html#about">Về chúng tôi</a>
                         </li>
                         <li class="mline">
                             <i class="bi bi-book"></i>

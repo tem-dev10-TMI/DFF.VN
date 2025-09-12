@@ -55,13 +55,7 @@
                             <!-- Đã đăng nhập -->
                             <span class="dropdown signed" style="display: block;">
                                 <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
-                                    <?php 
-                                        $avatarUrl = $_SESSION['user_avatar_url'] ?? null; 
-                                        if (!$avatarUrl || trim($avatarUrl) === '') {
-                                            $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                        }
-                                    ?>
-                                    <img src="<?= htmlspecialchars($avatarUrl) ?>">
+                                    <img src="vendor/dffvn/content/img/user.svg">
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -82,7 +76,7 @@
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" module-load="logout" href="<?= BASE_URL ?>/logout"><i
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
@@ -90,7 +84,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg">
+                                    <img src="vendor/dffvn/content/img/user.svg">
                                 </a>
                             </span>
                         <?php endif; ?>
@@ -129,25 +123,32 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
-                            <?php if (!empty($error)) : ?>
-                                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-                            <?php endif; ?>
+                            <?php
+                            // Hiển thị thông báo lỗi
+                            if (isset($_SESSION['login_errors']) && !empty($_SESSION['login_errors'])) {
+                                echo '<div class="alert alert-danger">';
+                                foreach ($_SESSION['login_errors'] as $error) {
+                                    echo '<p>' . htmlspecialchars($error) . '</p>';
+                                }
+                                echo '</div>';
+                                unset($_SESSION['login_errors']);
+                            }
 
-                            <?php if (isset($_SESSION['success'])): ?>
-                                <div class="alert alert-success">
-                                    <?= $_SESSION['success'] ?>
-                                    <?php unset($_SESSION['success']); ?>
-                                </div>
-                            <?php endif; ?>
+                            // Hiển thị thông báo thành công
+                            if (isset($_SESSION['login_success'])) {
+                                echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['login_success']) . '</div>';
+                                unset($_SESSION['login_success']);
+                            }
+                            ?>
                         </div>
                     </div>
                 </div>
-                <form id="login" method="POST" action="<?= BASE_URL ?>/login" novalidate="novalidate">
+                <form id="login" method="POST" action="controller/UserController.php" novalidate="novalidate">
                     <div class="f-login">
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+                                <input name="userName" id="userName" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
 
@@ -163,7 +164,7 @@
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
-                                <button type="submit" id="submit">Đăng nhập</button>
+                                <button type="submit" id="submit" href="javascript:void(0)">Đăng nhập</button>
                             </div>
                         </div>
                         <div class="content-divider text-muted"> <span>OR</span> </div>
@@ -233,12 +234,6 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
                                 <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <div class="input-group">
-                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">

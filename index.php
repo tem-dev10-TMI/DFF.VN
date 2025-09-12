@@ -19,34 +19,15 @@ if (empty($url)) {
 }
 
 switch ($url) {
-    case 'home':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
+    case 'register':
+        require_once 'controller/auth/registerUserController.php';
+        $controller = new registerUserController();
         $controller->index();
-        break;
-    case 'login':
-        require_once 'controller/auth/loginController.php';
-        $controller = new loginController();
-        $controller->index();
-        break;
-    case 'logout':
-        session_destroy();
-        header("Location: " . BASE_URL . "");
         break;
     case 'profile':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once 'controller/homeController.php';
         $controller = new homeController();
         $controller->profile();
-        break;
-    case 'trends':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->trends();
-        break;
-    case 'about':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->about();
         break;
     default:
         //404 page

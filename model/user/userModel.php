@@ -60,23 +60,4 @@ class UserModel
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
-
-    //Xác thực người dùng bằng username và mât khẩu
-    public static function verifyUser($username, $password)
-    {
-        $db = new connect();
-        try {
-            $stmt = $db->db->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
-            $stmt->execute([$username, $username]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            if ($user && password_verify($password, $user['password_hash'])) {
-                return $user;
-            }
-        } catch (PDOException $e) {
-            error_log("Lỗi khi xác thực người dùng: " . $e->getMessage());
-        }
-
-        return false;
-    }
 }
