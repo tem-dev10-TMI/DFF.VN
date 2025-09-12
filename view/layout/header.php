@@ -51,35 +51,43 @@
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
                                     src="vendor/dffvn/content/img/user.svg"></a> 
                         </span> -->
-                        <span class="dropdown signed hide" style="display: block;">
-                            <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" onclick="showLoginModal()">
-                                <img src="vendor/dffvn/content/img/user.svg">
-                            </a>
-
-                            <ul class="dropdown-menu hide">
-                                <li>
-                                    <div class="profiles">
-                                        <ul>
-                                        </ul>
-                                        <div class="add">
-                                            <a href="index.html">Xem tất cả Profile</a>
+                        <?php if (isset($_SESSION['user_id'])): ?>
+                            <!-- Đã đăng nhập -->
+                            <span class="dropdown signed" style="display: block;">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                                    <img src="vendor/dffvn/content/img/user.svg">
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <div class="profiles">
+                                            <ul>
+                                                <!-- Có thể load profile user tại đây -->
+                                            </ul>
+                                            <div class="add">
+                                                <a href="index.html">Xem tất cả Profile</a>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
-                                <li class="menu-ai hide"><a class="dropdown-item" href="index.html"><i
-                                            class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết
-                                        bài</a></li>
-                                <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i>
-                                        Profile</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
-                                            class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                            class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
-                                            class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
-                            </ul>
-                        </span>
+                                    </li>
+                                    <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
+                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
+                                                class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
+                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
+                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                </ul>
+                            </span>
+                        <?php else: ?>
+                            <!-- Chưa đăng nhập -->
+                            <span class="signin">
+                                <a href="javascript:void(0)" onclick="showLoginModal()">
+                                    <img src="vendor/dffvn/content/img/user.svg">
+                                </a>
+                            </span>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </div>
@@ -116,7 +124,6 @@
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
                             <?php
-                            session_start();
                             // Hiển thị thông báo lỗi
                             if (isset($_SESSION['login_errors']) && !empty($_SESSION['login_errors'])) {
                                 echo '<div class="alert alert-danger">';
@@ -126,7 +133,7 @@
                                 echo '</div>';
                                 unset($_SESSION['login_errors']);
                             }
-                            
+
                             // Hiển thị thông báo thành công
                             if (isset($_SESSION['login_success'])) {
                                 echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['login_success']) . '</div>';
@@ -179,32 +186,28 @@
 </div>
 
 <script>
-// Modal đăng nhập JavaScript
-$(function() {
-    // Bootstrap 5 Modal handling
-    var modalElement = document.getElementById('div_modal');
-    if (modalElement) {
-        var modal = new bootstrap.Modal(modalElement);
-        
-        // Show modal when needed
-        window.showLoginModal = function() {
-            modal.show();
-        };
-        
-        // Hide modal when close button is clicked
-        $('.sh-popup-close, .cmd-cancel').on('click', function() {
-            modal.hide();
-        });
-    }
+    // Modal đăng nhập JavaScript
+    $(function() {
+        // Bootstrap 5 Modal handling
+        var modalElement = document.getElementById('div_modal');
+        if (modalElement) {
+            var modal = new bootstrap.Modal(modalElement);
 
-    // Form đăng nhập sẽ được xử lý bằng PHP
-    // Không cần JavaScript xử lý form nữa
-});
+            // Show modal when needed
+            window.showLoginModal = function() {
+                modal.show();
+            };
+
+            // Hide modal when close button is clicked
+            $('.sh-popup-close, .cmd-cancel').on('click', function() {
+                modal.hide();
+            });
+        }
+
+        // Form đăng nhập sẽ được xử lý bằng PHP
+        // Không cần JavaScript xử lý form nữa
+    });
 </script>
-
-
-
-
 
 <div class="top-stock">
     <div class="marquee">
