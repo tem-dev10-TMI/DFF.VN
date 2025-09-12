@@ -24,6 +24,15 @@ switch ($url) {
         $controller = new homeController();
         $controller->index();
         break;
+    case 'login':
+        require_once 'controller/auth/loginController.php';
+        $controller = new loginController();
+        $controller->index();
+        break;
+    case 'logout':
+        session_destroy();
+        header("Location: " . BASE_URL . "");
+        break;
     case 'profile':
         require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
