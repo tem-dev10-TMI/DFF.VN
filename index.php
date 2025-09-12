@@ -18,18 +18,23 @@ if (empty($url)) {
     exit;
 }
 
-switch($url){
-/*     case 'home':
-        require_once 'controller/HomeController.php';
-        $controller = new authController();
-        $controller->login();
-        break; */
-
-    default:
-        //404 page
-        require_once 'controller/error/404Controller.php';
-        $controller = new NotFoundController;
+switch ($url) {
+    case 'register':
+        require_once 'controller/auth/registerUserController.php';
+        $controller = new registerUserController();
         $controller->index();
         break;
+    case 'profile':
+        require_once 'controller/homeController.php';
+        $controller = new homeController();
+        $controller->profile();
+        break;
+    default:
+        //404 page
+        /*         require_once 'controller/error/404Controller.php';
+        $controller = new NotFoundController;
+        require_once 'controller/error/404Controller.php';
+        //$controller = new NotFoundController;
+        $controller->index();
+        break; */
 }
-?>

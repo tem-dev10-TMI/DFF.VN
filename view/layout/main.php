@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
+
+<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:46 GMT -->
+<!-- Added by HTTrack -->
+<meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="content-language" content="vi" />
+    <meta http-equiv="REFRESH" content="1800" />
+    <title>Mạng xã hội Kinh tế - Tài chính DFF | DFF.VN </title>
+    <meta name="description"
+        content="DFF.VN - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
+    <meta name="keywords"
+        content="DFF, DFF.VN, Mạng xã hội DFF, Mạng xã hội kinh tế, Mạng xã hội đầu tư, doanh nghiệp, doanh nhân, cổ phiếu, chứng khoán, quản lý tài chính, kinh doanh,Cộng đồng nhà đầu tư, mạng lưới nhà đầu tư, diễn đàn tài chính, diễn đàn nhà đầu tư, phân tích tài chính, thông tin doanh nghiệp, phân tích doanh nghiệp" />
+    <meta property="fb:app_id" content="1145361220537572" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="DFF.VN" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="dff.vn" />
+    <meta name="robots" content="noarchive, max-image-preview:large, index, follow" />
+    <meta name="GOOGLEBOT" content="noarchive, max-image-preview:large, index, follow" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
+
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
+
+
+    <link rel="stylesheet" href="public/css/style.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/link-autocomplete@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/editorjs-paragraph-with-alignment@3.0.0"></script>
+    <script src="content/edi/quote%40latest.js"></script><!-- Quote -->
+    <script src="content/edi/image%40latest.js"></script>
+
+
+    <script>
+        var can, code;
+    </script>
+
+
+
+
+
+    <!-- Google tag (gtag.js) -->
+    <!-- <script async src="../www.googletagmanager.com/gtag/js2102?id=G-74K75Z0MDE"></script>
+<script> // không cần cái này, để gg thu thập dữ liệu người
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-74K75Z0MDE');
+</script>
+
+<script async type="application/javascript"
+        src="../news.google.com/swg/js/v1/swg-basic.js"></script>
+<script>
+  (self.SWG_BASIC = self.SWG_BASIC || []).push( basicSubscriptions => {
+    basicSubscriptions.init({
+      type: "NewsArticle",
+      isPartOfType: ["Product"],
+      isPartOfProductId: "CAow84mwDA:openaccess",
+      clientOptions: { theme: "light", lang: "vi" },
+    });
+  });
+</script> -->
+
+
+    <!-- <script type="application/ld+json">{ tự tra cái này nếu cần
+ "@context": "http://schema.org",
+"@type": "WebSite",
+"name": "dff.vn",
+"alternateName": "DFF.VN - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường",
+"url": "https://dff.vn"
+}</script><link href="index.html" rel="canonical" /></head> -->
+
+<body>
+
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
+        nonce="9gkWGB3D"></script>
+
+
+
+    <?php require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+    ?>
+
+    <div class="m-top-info">
+        <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
+        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event.html"> Lịch sự kiện </a></span>
+    </div>
+    <!-- header start -->
+
+    <?php require_once 'view/layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
+    ?>
+    <!-- cho cái thi trường chạy -->
+
+    <!-- header end -->
+    <!-- script chạy thị trường -->
+    <script>
+        $(function() {
+
+            function Marquee(selector, speed) {
+                const parentSelector = document.querySelector(selector);
+                const clone = parentSelector.innerHTML;
+                const firstElement = parentSelector.children[0];
+                let i = 0;
+                let marqueeInterval;
+                parentSelector.insertAdjacentHTML('beforeend', clone);
+
+                function startMarquee() {
+                    marqueeInterval = setInterval(function() {
+                        firstElement.style.marginLeft = `-${i}px`;
+                        /*var fwid = $('.top-stock').width();*/
+                        fwid = 1500;
+                        if (i > fwid) {
+                            i = 0;
+                        }
+                        i = i + speed;
+                    }, 0);
+                }
+
+                function stopMarquee() {
+                    clearInterval(marqueeInterval);
+                }
+
+                parentSelector.addEventListener('mouseenter', stopMarquee);
+                parentSelector.addEventListener('mouseleave', startMarquee);
+
+                startMarquee();
+            }
+
+            window.addEventListener('load', () => Marquee('.marquee', 0.2));
+
+        });
+    </script>
+    <!-- script chạy thị trường end -->
+
+
+    <div class="func-mobile">
+        <ul>
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="fitem1">
+                <a href="javascript:void(0)" module-load="loadwrite">
+                    <i class="fas fa-plus"></i>
+                    <span>Tạo mới</span>
+                </a>
+            </li>
+            <li class="fitem2">
+                <a href="trends.html" class="m-trend">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <span>Xu hướng</span>
+                </a>
+            </li>
+            <li><a data-bs-toggle="collapse" data-bs-target="#id_alert" aria-controls="id_alert" aria-expanded="false"
+                    href="javascript:void(0)"><i class="fas fa-bell"></i>
+                    <span class="number">4</span>
+                    <span class="falert">Thông báo</span>
+                </a></li>
+            <li>
+                <a module-load="signin" href="javascript:void(0)"><i class="fas fa-user-alt"></i>
+                    <span>Tôi</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <a module-load="boxIndex"></a>
+
+
+
+
+    <div id="wrapper">
+
+
+        <a module-load="loadData">
+
+
+
+
+        </a>
+
+
+        <style>
+            @media (max-width:768px) {
+                #back-top {
+                    bottom: 140px !important;
+                }
+            }
+        </style>
+        <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
+        <?php if ($profile): ?>
+            <?= $content ?>
+
+        <?php else: ?>
+        <div class="main">
+
+
+
+            <!-- ?php require_once 'view/page/Home.php'; -->
+            <?= $content ?>
+
+
+            <?php require_once 'view/layout/sidebarLeft.php'; ?>
+
+
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-coin mb-coins" viewBox="0 0 16 16">
+                <path
+                    d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
+                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+            </svg>
+            <i class="bi bi-chat-left-text-fill mb-chat"></i>
+        </div>
+        <?php endif; ?>
+        <input type="hidden" id="hdd_id" value="24166" />
+
+        <script>
+            $(function() {
+
+                jQuery("#home_slider").owlCarousel({
+                    autoplay: false,
+                    rewind: false,
+                    /* use rewind if you don't want loop */
+                    margin: 20,
+                    dots: false,
+                    /*
+                   animateOut: 'fadeOut',
+                   animateIn: 'fadeIn',
+                   */
+                    responsiveClass: true,
+                    autoHeight: true,
+                    autoplayTimeout: 7000,
+                    navText: ["<i class='fa fa-chevron-left'></i>", "<i class='fa fa-chevron-right'></i>"],
+                    smartSpeed: 800,
+                    nav: true,
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+
+                        600: {
+                            items: 1
+                        },
+
+                        1024: {
+                            items: 3
+                        },
+
+                        1366: {
+                            items: 4
+                        }
+                    }
+                });
+
+                var nid = $('#hdd_id').val();
+                Page.loadCm(0, $('.list_comment'), 0, nid)
+
+                $('.mb-chat').click(function() {
+                    $('.cover-chat').show();
+                });
+                $('.cover-chat .cclose').click(function() {
+                    $('.cover-chat').hide();
+                });
+
+                $('.cm-more').on('click', function(e) {
+                    var id = $('.box_result:last').attr('data-ref');
+                    Page.loadCm(0, $('.list_comment'), id, nid);
+                });
+
+                coin_search();
+
+            });
+        </script>
+
+
+
+        <script>
+            $(function() {
+                type = 3;
+            });
+        </script>
+
+
+
+        <footer class="footer">
+
+        </footer>
+
+        <script src="public/js/main1c07.js?v=17"></script>
+        <script src="public/js/articleade1.js?v=35"></script>
+
+        <div id="fb-root"></div>
+        <span id="back-top"><i class="fas fa-arrow-up"></i></span>
+    </div>
+
+
+    <script>
+        $(function() {
+            Page.registerModule(document);
+
+
+            $(window).scroll(function() {
+                var rangeToTop = $(this).scrollTop();
+                if (rangeToTop > 500) {
+                    $("#back-top").fadeIn("slow");
+                } else {
+                    $("#back-top").fadeOut("slow");
+                }
+                if ($(window).scrollTop() + $(window).height() + 1 >= $(document).height()) {
+                    Page.loadData();
+                }
+            });
+
+        });
+    </script>
+</body>
+
+<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:53 GMT -->
+
+</html>
