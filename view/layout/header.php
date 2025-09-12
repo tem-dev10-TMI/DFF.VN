@@ -230,6 +230,12 @@
                             </div>
                         </div>
                         <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <div class="f-submit">
                                 <button type="submit" id="submit">Đăng ký</button>
                             </div>
