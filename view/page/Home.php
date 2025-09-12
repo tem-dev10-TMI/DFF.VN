@@ -328,7 +328,7 @@
         <div class="block-k ">
             <div class="view-carde f-frame">
                 <div class="provider">
-                    <img class="logo" alt="" src="/Upload/img_static/bannerdao638824667798806492.jpg">
+                    <img class="logo" alt="" src="https://dff.vn/Upload/img_static/bannerdao638824667798806492.jpg">
                     <div class="p-covers">
                         <span class="name" title="">
                             <a href="/profile.html?q=663464303035383" title="Phương Nhi">Phương Nhi</a>
