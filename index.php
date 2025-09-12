@@ -43,6 +43,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->trends();
         break;
+    case 'about':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->about();
+        break;
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
