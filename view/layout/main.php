@@ -217,8 +217,8 @@
             }
         </style>
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
-        <?php if (false): ?>
-
+        <?php if ($profile): ?>
+            <?= $content ?>
 
         <?php else: ?>
         <div class="main">
