@@ -1,68 +1,46 @@
 <?php
-require_once 'models/businessmenModel.php';
+require_once "model/businessmenModel.php";
 
-class BusinessmenController {
-    public function register() {
+class businessmenController
+{
+    public function register()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $userId      = $_POST['user_id'];
-            $birth_year  = $_POST['birth_year'];
-            $nationality = $_POST['nationality'];
-            $education   = $_POST['education'];
-            $position    = $_POST['position'];
+            $user_id = $_SESSION['user_id'] ?? null;
 
-            $db = new connect();
-
-            // ==============================
-            // Lấy số followers từ bảng user_follows
-            // ==============================
-            $sqlFollowers = "SELECT COUNT(*) AS total_followers 
-                             FROM user_follows 
-                             WHERE following_id = ?";
-            $stmt = $db->db->prepare($sqlFollowers);
-            $stmt->execute([$userId]);
-            $followers = $stmt->fetch(PDO::FETCH_ASSOC)['total_followers'] ?? 0;
-
-            // ==============================
-            // Lấy số likes từ bảng article_likes (theo các bài viết của user)
-            // ==============================
-            $sqlLikes = "SELECT COUNT(*) AS total_likes 
-                         FROM article_likes 
-                         WHERE article_id IN (
-                             SELECT id FROM articles WHERE user_id = ?
-                         )";
-            $stmt = $db->db->prepare($sqlLikes);
-            $stmt->execute([$userId]);
-            $likes = $stmt->fetch(PDO::FETCH_ASSOC)['total_likes'] ?? 0;
-
-            // ==============================
-            // Kiểm tra điều kiện
-            // ==============================
-            if ($followers < 100 || $likes < 2000) {
-                $error = "Bạn cần có ít nhất 100 lượt theo dõi và 2000 lượt like để đăng ký doanh nhân.";
-                include 'views/registerBusinessmen.php';
+            if (!$user_id) {
+                $_SESSION['error'] = "Bạn cần đăng nhập để đăng ký doanh nhân!";
+                header("Location: index.php?action=login");
                 exit;
             }
 
-            // ==============================
-            // Nếu đủ điều kiện → Lưu vào bảng businessmen
-            // ==============================
-            $success = businessmenModel::registerBusiness(
-                $userId,
-                $birth_year,
-                $nationality,
-                $education,
-                $position
-            );
+            $birth_year  = $_POST['birth_year'] ?? null;
+            $nationality = $_POST['nationality'] ?? null;
+            $education   = $_POST['education'] ?? null;
+            $position    = $_POST['position'] ?? null;
 
-            if ($success) {
-                $message = "Đăng ký doanh nhân thành công!";
-                include 'views/registerSuccess.php';
-            } else {
-                $error = "Có lỗi xảy ra, vui lòng thử lại.";
-                include 'views/registerBusinessmen.php';
+            // Gọi model để lấy số follow / like
+            $followers = businessmenModel::getFollowersCount($user_id);
+            $likes     = businessmenModel::getLikesCount($user_id);
+
+            // Kiểm tra điều kiện
+            if ($followers < 100 || $likes < 1000) {
+                $_SESSION['error'] = "Bạn cần tối thiểu 100 follow và 1000 like để đăng ký doanh nhân. 
+                (Hiện tại: $followers follow, $likes like)";
+                header("Location: index.php?action=businessmen_form");
+                exit;
             }
-        } else {
-            include 'views/registerBusinessmen.php';
+
+            // Đăng ký
+            $result = businessmenModel::registerBusiness($user_id, $birth_year, $nationality, $education, $position);
+
+            if ($result) {
+                $_SESSION['success'] = "Đăng ký doanh nhân thành công!";
+                header("Location: index.php?action=businessmen_profile&user_id=$user_id");
+            } else {
+                $_SESSION['error'] = "Có lỗi xảy ra, vui lòng thử lại!";
+                header("Location: index.php?action=businessmen_form");
+            }
         }
     }
 }

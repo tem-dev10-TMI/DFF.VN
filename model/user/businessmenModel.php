@@ -109,4 +109,23 @@ class businessmenModel
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+     // ========== Lấy số follower của user ==========
+     public static function getFollowersCount($user_id)
+     {
+         $db = new connect();
+         $sql = "SELECT COUNT(*) FROM followers WHERE user_id = :user_id";
+         $stmt = $db->db->prepare($sql);
+         $stmt->execute([':user_id' => $user_id]);
+         return (int) $stmt->fetchColumn();
+     }
+ 
+     // ========== Lấy số like của user ==========
+     public static function getLikesCount($user_id)
+     {
+         $db = new connect();
+         $sql = "SELECT COUNT(*) FROM likes WHERE user_id = :user_id";
+         $stmt = $db->db->prepare($sql);
+         $stmt->execute([':user_id' => $user_id]);
+         return (int) $stmt->fetchColumn();
+     }
 }

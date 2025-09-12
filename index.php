@@ -19,14 +19,11 @@ if (empty($url)) {
 }
 
 switch ($url) {
-    /*     case 'home':
-switch($url){
-     case 'home':
-        require_once 'controller/HomeController.php';
-        $controller = new homeController();
+    case 'register':
+        require_once 'controller/auth/registerUserController.php';
+        $controller = new registerUserController();
         $controller->index();
-        break; 
-        */
+        break;
 
     default:
         //404 page
