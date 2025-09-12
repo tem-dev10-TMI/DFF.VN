@@ -24,6 +24,16 @@ switch ($url) {
         $controller = new registerUserController();
         $controller->index();
         break;
+    case 'login':
+        require_once 'controller/auth/loginController.php';
+        $controller = new loginController();
+        $controller->index();
+        break;
+    case 'logout':
+        session_destroy();
+        header("Location: " . BASE_URL . "");
+        break;
+
 
     default:
         //404 page
