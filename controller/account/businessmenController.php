@@ -1,4 +1,5 @@
 <?php
+
 require_once __DIR__ . '/../models/user/businessmenModel.php';
 
 class BusinessmenController
@@ -45,9 +46,11 @@ class BusinessmenController
             businessmenModel::registerBusiness($user_id, $birth_year, $nationality, $education, $position);
 
             header('Location: index.php?controller=businessmen&action=index');
+
             exit;
         }
     }
+
 
     // Form sửa doanh nhân
     public static function edit($user_id)
@@ -68,9 +71,11 @@ class BusinessmenController
             businessmenModel::updateBusiness($user_id, $birth_year, $nationality, $education, $position);
 
             header('Location: index.php?controller=businessmen&action=index');
+
             exit;
         }
     }
+
 
     // Xóa doanh nhân
     public static function destroy($user_id)
@@ -78,5 +83,6 @@ class BusinessmenController
         businessmenModel::deleteBusiness($user_id);
         header('Location: index.php?controller=businessmen&action=index');
         exit;
+
     }
 }
