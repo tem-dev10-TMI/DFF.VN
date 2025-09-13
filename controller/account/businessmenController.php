@@ -22,7 +22,7 @@ class businessmenController
 
         if (!$user_id) {
             $_SESSION['error'] = "Không tìm thấy user!";
-            header("Location: index.php?url=businessmen");
+            header("Location: " . BASE_URL . "/profileUser?msg=user_not_found");
             exit;
         }
 
@@ -31,7 +31,7 @@ class businessmenController
 
         if (!$business) {
             $_SESSION['error'] = "Người dùng chưa đăng ký doanh nhân!";
-            header("Location: index.php?url=businessmen");
+            header("Location: " . BASE_URL . "/businessmen");
             exit;
         }
 
@@ -66,7 +66,8 @@ class businessmenController
             } else {
                 $_SESSION['error'] = "Thêm quá trình công tác thất bại!";
             }
-            header("Location: index.php?url=businessmen_profile&user_id=" . $_SESSION['user_id']);
+            header("Location: " . BASE_URL . "/businessmen/profile?user_id=" . $_SESSION['user_id']);
+            exit;
         }
     }
 
@@ -96,6 +97,7 @@ class businessmenController
                 $_SESSION['error'] = "Cập nhật thất bại!";
             }
             header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
         }
     }
 
@@ -113,7 +115,7 @@ class businessmenController
                 $_SESSION['error'] = "Xoá thất bại!";
             }
             header("Location: " . $_SERVER['HTTP_REFERER']);
+            exit;
         }
     }
 }
-    
