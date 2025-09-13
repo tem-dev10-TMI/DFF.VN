@@ -2,6 +2,7 @@
 require_once 'model/article/articlesmodel.php';
 require_once 'model/commentmodel.php';
 require_once 'model/user/businessmenModel.php';
+require_once 'model/MarketDataModel.php';
 class homeController
 {
         public static function index()
@@ -12,12 +13,15 @@ class homeController
                 // Fetch data from database
                 $articles = ArticlesModel::getAllArticles();
                 $comments = CommentsModel::getComments();
-                $topBusinessmen = businessmenModel::getTopBusinessmen(10);
+                $businessmen = businessmenModel::getAllBusinessmen();
+
+                $marketData = MarketDataModel::getCachedMarketData();
 
                 //Load view
                 ob_start();
-
+                
                 require_once 'view/page/home.php';
+                
                 $content = ob_get_clean();
 
                 //Load layout

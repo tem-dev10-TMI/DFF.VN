@@ -1,10 +1,3 @@
-<?php
-
-
-$comments = CommentsModel::getComments();
-$articles = ArticlesModel::getAllArticles();
-$topBusinessmen = businessmenModel::getTopBusinessmen(10);                                                                                                                                                                            
-?>
 
 <main class="main-content">
 
@@ -55,16 +48,27 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
                         <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                             src="vendor/dffvn/content/img/img_small.jpg" width="30">
                     </div>
-                    <!-- ////////////////////// -->
-                    <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất</span>
-    </h5>
-    <div class="owl-slider">
+
+                        <!-- ////////////////////// -->
+        <div class="block-k box-company-label">
+
+<h5>
+    <span><a href="#">Top doanh nhân</a> </span>
+    <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
+</h5>
+<div class="owl-slider">
         <div class="owl-carousel box-company">
-            <?php if (!empty($topBusinessmen)): ?>
-                <?php foreach ($topBusinessmen as $biz): ?>
+            <!-- Debug: Kiểm tra dữ liệu businessmen -->
+            <?php 
+            echo "<!-- Debug: businessmen count = " . (isset($businessmen) ? count($businessmen) : 'undefined') . " -->";
+            if (isset($businessmen) && !empty($businessmen)) {
+                echo "<!-- Debug: First businessman = " . print_r($businessmen[0], true) . " -->";
+            }
+            ?>
+             <?php var_dump($businessmen); ?>
+
+            <?php if (!empty($businessmen)): ?>
+                <?php foreach ($businessmen as $biz): ?>
                     <div class="item">
                         <ul>
                             <li>
@@ -86,13 +90,17 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Chưa có doanh nhân nào.</p>
+                <div class="item">
+                    <ul>
+                        <li class="text-center p-3">
+                            <p>Chưa có doanh nhân nào trong cơ sở dữ liệu.</p>
+                        </li>
+                    </ul>
+                </div>
             <?php endif; ?>
         </div>
     </div>
 </div>
-
-
 
                     <!-- ///////////////////////////// -->
 
