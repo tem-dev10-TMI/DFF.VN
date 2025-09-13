@@ -128,4 +128,17 @@ class businessmenModel
          $stmt->execute([':user_id' => $user_id]);
          return (int) $stmt->fetchColumn();
      }
+     public static function getTopBusinessmen($limit = 10) {
+    $db = new connect();
+    $sql = "SELECT b.*, u.name, u.username 
+            FROM businessmen b
+            LEFT JOIN users u ON b.user_id = u.id
+            ORDER BY b.id DESC
+            LIMIT :limit";
+    $stmt = $db->db->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
