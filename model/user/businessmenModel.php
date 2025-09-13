@@ -128,64 +128,36 @@ class businessmenModel
          $stmt->execute([':user_id' => $user_id]);
          return (int) $stmt->fetchColumn();
      }
-     public static function getTopBusinessmen($limit = 10) {
+     public static function getAllBusinessmen()
+{
     $db = new connect();
-    $sql = "SELECT b.*, u.name, u.username, u.avatar_url as logo_url
+
+    // Lấy tất cả doanh nhân + thông tin user
+    $sql = "SELECT 
+                b.id,
+                b.user_id,
+                b.position,              
+                u.name,
+                u.username
             FROM businessmen b
             LEFT JOIN users u ON b.user_id = u.id
-            ORDER BY b.id DESC
-            LIMIT :limit";
-    $stmt = $db->db->prepare($sql);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->execute();
-    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    // Nếu không có dữ liệu, tạo dữ liệu mẫu
-    if (empty($result)) {
-        self::createSampleBusinessmen();
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-    
-    return $result;
-}
+            ORDER BY b.id DESC";
 
-// Tạo dữ liệu mẫu cho businessmen
-public static function createSampleBusinessmen() {
-    $db = new connect();
-    
-    // Lấy một số users để tạo businessmen
-    $sql = "SELECT id, name, username FROM users LIMIT 3";
     $stmt = $db->db->prepare($sql);
     $stmt->execute();
-    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-    if (empty($users)) {
-        return false;
-    }
-    
-    $sampleData = [
-        ['position' => 'CEO', 'nationality' => 'Việt Nam', 'education' => 'MBA Harvard'],
-        ['position' => 'CTO', 'nationality' => 'Việt Nam', 'education' => 'PhD Computer Science'],
-        ['position' => 'CFO', 'nationality' => 'Việt Nam', 'education' => 'CPA']
-    ];
-    
-    foreach ($users as $index => $user) {
-        if (isset($sampleData[$index])) {
-            $sql = "INSERT IGNORE INTO businessmen (user_id, position, nationality, education, birth_year) 
-                    VALUES (:user_id, :position, :nationality, :education, :birth_year)";
-            $stmt = $db->db->prepare($sql);
-            $stmt->execute([
-                ':user_id' => $user['id'],
-                ':position' => $sampleData[$index]['position'],
-                ':nationality' => $sampleData[$index]['nationality'],
-                ':education' => $sampleData[$index]['education'],
-                ':birth_year' => 1980 + $index
-            ]);
+    $businessmen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Fallback nếu trống
+    foreach ($businessmen as &$biz) {
+        if (empty($biz['position'])) {
+            $biz['position'] = 'Doanh nhân';
+        }
+        if (empty($biz['logo_url'])) {
+            $biz['logo_url'] = 'https://via.placeholder.com/150';
         }
     }
-    
-    return true;
+
+    return $businessmen;
 }
 
 }
