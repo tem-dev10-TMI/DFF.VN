@@ -243,8 +243,8 @@
             </div>
         <?php endif; ?>
         <input type="hidden" id="hdd_id" value="24166" />
-
-        <!-- <script>
+            
+        <script>
             $(function() {
 
                 jQuery("#home_slider").owlCarousel({
@@ -300,7 +300,7 @@
                 coin_search();
 
             });
-        </script> -->
+        </script>
 
 
 
@@ -316,8 +316,8 @@
 
         </footer>
 
-        <script src="public/js/main1c07.js?v=17"></script>
-        <script src="public/js/articleade1.js?v=35"></script>
+        <script src="public/js/main1c07.js"></script>
+        <script src="public/js/articleade1.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>

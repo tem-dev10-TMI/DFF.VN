@@ -1,12 +1,12 @@
 <?php
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../model/article/articlesmodel.php';
-require_once __DIR__ . '/../../model/commentmodel.php';
-require_once __DIR__ . '/../../model/user/businessmenModel.php';
+// require_once __DIR__ . '/../../config/db.php';
+// require_once __DIR__ . '/../../model/article/articlesmodel.php';
+// require_once __DIR__ . '/../../model/commentmodel.php';
+// require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
-$comments = CommentsModel::getComments();
-$articles = ArticlesModel::getAllArticles();      
-$topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
+// $comments = CommentsModel::getComments();
+// $articles = ArticlesModel::getAllArticles();      
+// $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
 
 <main class="main-content">
