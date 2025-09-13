@@ -9,6 +9,11 @@ class homeController
                 //Load model
                 //require_once '/../../config/db.php';
 
+                // Fetch data from database
+                $articles = ArticlesModel::getAllArticles();
+                $comments = CommentsModel::getComments();
+                $topBusinessmen = businessmenModel::getTopBusinessmen(10);
+
                 //Load view
                 ob_start();
 

@@ -31,7 +31,7 @@ class ArticlesModel
     public static function getAllArticles()
     {
         $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name, t.name AS topic_name
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
@@ -45,7 +45,7 @@ class ArticlesModel
     public static function getArticleById($id)
     {
         $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name, t.name AS topic_name
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
