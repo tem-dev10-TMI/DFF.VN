@@ -1,17 +1,25 @@
 <?php
-
+require_once 'model/article/articlesmodel.php';
+require_once 'model/commentmodel.php';
+require_once 'model/user/businessmenModel.php';
 class homeController
 {
         public static function index()
         {
                 //Load model
+                //require_once '/../../config/db.php';
+
+                // Fetch data from database
+                $articles = ArticlesModel::getAllArticles();
+                $comments = CommentsModel::getComments();
+                $topBusinessmen = businessmenModel::getTopBusinessmen(10);
 
                 //Load view
                 ob_start();
 
                 require_once 'view/page/home.php';
                 $content = ob_get_clean();
-                
+
                 //Load layout
                 $profile = false; // đừng ai xóa
                 require_once 'view/layout/main.php';
