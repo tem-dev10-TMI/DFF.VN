@@ -244,7 +244,7 @@
         <?php endif; ?>
         <input type="hidden" id="hdd_id" value="24166" />
 
-        <script>
+        <!-- <script>
             $(function() {
 
                 jQuery("#home_slider").owlCarousel({
@@ -300,7 +300,7 @@
                 coin_search();
 
             });
-        </script>
+        </script> -->
 
 
 
