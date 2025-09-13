@@ -533,7 +533,7 @@ function submitConversion() {
   submitBtn.disabled = true;
 
   // Submit form tới PHP
-  fetch('controller/convertToBusiness.php', {
+  fetch('controller/test-api-profile/convertToBusiness.php', {
     method: 'POST',
     body: formData
   })
@@ -582,7 +582,7 @@ function loadPosts() {
     loadingElement.style.display = 'block';
   }
 
-  fetch('controller/loadPosts.php', {
+  fetch('controller/test-api-profile/loadPosts.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -771,7 +771,7 @@ function addPost() {
     formData.append('image', imageFile);
   }
 
-  fetch('controller/addPost.php', {
+  fetch('controller/test-api-profile/addPost.php', {
     method: 'POST',
     body: formData
   })
@@ -807,7 +807,7 @@ function addPost() {
 
 // Like/Unlike bài viết
 function toggleLike(postId) {
-  fetch('controller/toggleLike.php', {
+  fetch('controller/test-api-profile/toggleLike.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -834,7 +834,7 @@ function toggleLike(postId) {
 
 // Dislike bài viết
 function toggleDislike(postId) {
-  fetch('controller/toggleLike.php', {
+  fetch('controller/test-api-profile/toggleLike.php', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
