@@ -5,9 +5,10 @@
     <div class="card shadow p-4">
       <h3 class="mb-3 text-center">Đăng nhập Admin</h3>
       <?php if($msg = flash('error')): ?>
-        <div class="alert alert-danger"><?=e($msg)?></div>
+        <div class="alert alert-danger"><?= e($msg) ?></div>
       <?php endif; ?>
-      <form method="post" action="<?=BASE_URL?>/index.php?route=login&action=do">
+      <!-- Sửa action từ admin.php sang admin.php -->
+      <form method="post" action="<?= BASE_URL ?>/admin.php?route=login&action=do">
         <div class="mb-3">
           <label class="form-label">Tên đăng nhập</label>
           <input type="text" name="username" class="form-control" required>

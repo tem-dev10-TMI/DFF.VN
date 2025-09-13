@@ -7,7 +7,7 @@ class AuthController {
     }
 
     public function loginForm() {
-        include __DIR__ . '/../views/auth/login.php';
+        include __DIR__ . '/../../view/admin/views/auth/login.php';
     }
 
     public function login() {
@@ -24,16 +24,16 @@ class AuthController {
                 'username' => $user['username'],
                 'role' => $user['role']
             ];
-            header("Location: " . BASE_URL . "/index.php?route=dashboard");
+            header("Location: " . BASE_URL . "/admin.php?route=dashboard");
         } else {
             flash('error', 'Sai tên đăng nhập hoặc mật khẩu');
-            header("Location: " . BASE_URL . "/index.php?route=login");
+            header("Location: " . BASE_URL . "/admin.php?route=login");
         }
     }
 
     public function logout() {
         unset($_SESSION['user']);
         session_destroy();
-        header("Location: " . BASE_URL . "/index.php?route=login");
+        header("Location: " . BASE_URL . "/admin.php?route=login");
     }
 }

@@ -3,7 +3,7 @@
 <div class="card shadow-sm border-0">
   <div class="card-header bg-white d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Danh sách bài viết</h5>
-    <a href="<?=BASE_URL?>/index.php?route=articles&action=create" class="btn btn-success btn-sm">
+    <a href="<?=BASE_URL?>/admin.php?route=articles&action=create" class="btn btn-success btn-sm">
       <i class="bi bi-plus-circle me-1"></i> Thêm mới
     </a>
   </div>
@@ -41,10 +41,10 @@
             </td>
             <td><?=date('d/m/Y', strtotime($a['created_at']))?></td>
             <td class="text-end">
-              <a class="btn btn-sm btn-outline-primary" href="<?=BASE_URL?>/index.php?route=articles&action=edit&id=<?=$a['id']?>">
+              <a class="btn btn-sm btn-outline-primary" href="<?=BASE_URL?>/admin.php?route=articles&action=edit&id=<?=$a['id']?>">
                 <i class="bi bi-pencil-square"></i>
               </a>
-              <a class="btn btn-sm btn-outline-danger" href="<?=BASE_URL?>/index.php?route=articles&action=delete&id=<?=$a['id']?>" 
+              <a class="btn btn-sm btn-outline-danger" href="<?=BASE_URL?>/admin.php?route=articles&action=delete&id=<?=$a['id']?>" 
                  onclick="return confirm('Bạn có chắc muốn xóa bài viết này?');">
                 <i class="bi bi-trash"></i>
               </a>

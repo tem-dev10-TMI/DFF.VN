@@ -10,7 +10,7 @@
       <div class="card-body">
 
         <form method="post" enctype="multipart/form-data"
-              action="<?= BASE_URL ?>/index.php?route=articles&action=<?= $isEdit ? 'update&id=' . $article['id'] : 'store' ?>">
+              action="<?= BASE_URL ?>/admin.php?route=articles&action=<?= $isEdit ? 'update&id=' . $article['id'] : 'store' ?>">
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Tiêu đề</label>
@@ -71,7 +71,7 @@
           </div>
 
           <div class="text-end">
-            <a href="<?=BASE_URL?>/index.php?route=articles" class="btn btn-secondary">Hủy</a>
+            <a href="<?=BASE_URL?>/admin.php?route=articles" class="btn btn-secondary">Hủy</a>
             <button class="btn btn-primary"><?= $isEdit ? 'Cập nhật' : 'Tạo mới' ?></button>
           </div>
         </form>

@@ -3,8 +3,11 @@ class Tag extends BaseModel {
     protected $table = 'tags';
     public function __construct($pdo){ parent::__construct($pdo); }
     public function create($data){
-        $stmt = $this->pdo->prepare("INSERT INTO tags (name, slug, created_at) VALUES (:name,:slug,NOW())");
-        return $stmt->execute([':name'=>$data['name'], ':slug'=>$data['slug']]);
+        $stmt = $this->pdo->prepare("
+    INSERT INTO tags (name) 
+    VALUES (:name)
+");
+$stmt->execute([':name' => $data['name']]);
     }
     public function update($id,$data){
         $fields=['name','slug'];

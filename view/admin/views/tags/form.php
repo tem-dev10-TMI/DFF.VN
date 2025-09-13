@@ -9,7 +9,7 @@
       </div>
       <div class="card-body">
 
-        <form method="post" action="<?=BASE_URL?>/index.php?route=tags&action=<?= $isEdit ? 'update&id='.$tag['id'] : 'store'?>">
+        <form method="post" action="<?=BASE_URL?>/admin.php?route=tags&action=<?= $isEdit ? 'update&id='.$tag['id'] : 'store'?>">
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Tên tag</label>
@@ -24,7 +24,7 @@
           </div>
 
           <div class="text-end">
-            <a href="<?=BASE_URL?>/index.php?route=tags" class="btn btn-secondary">Hủy</a>
+            <a href="<?=BASE_URL?>/admin.php?route=tags" class="btn btn-secondary">Hủy</a>
             <button class="btn btn-primary"><?=$isEdit ? 'Cập nhật' : 'Tạo mới'?></button>
           </div>
         </form>

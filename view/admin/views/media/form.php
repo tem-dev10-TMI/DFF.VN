@@ -9,7 +9,7 @@
       <div class="card-body">
 
         <form method="post" enctype="multipart/form-data" 
-              action="<?=BASE_URL?>/index.php?route=media&action=store">
+              action="<?=BASE_URL?>/admin.php?route=media&action=store">
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Chọn file</label>
@@ -18,7 +18,7 @@
           </div>
 
           <div class="text-end">
-            <a href="<?=BASE_URL?>/index.php?route=media" class="btn btn-secondary">Hủy</a>
+            <a href="<?=BASE_URL?>/admin.php?route=media" class="btn btn-secondary">Hủy</a>
             <button class="btn btn-primary">Upload</button>
           </div>
         </form>

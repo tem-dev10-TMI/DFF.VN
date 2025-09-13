@@ -32,12 +32,12 @@
             <td class="text-end">
               <?php if(empty($c['approved'])): ?>
                 <a class="btn btn-sm btn-outline-success" 
-                   href="<?=BASE_URL?>/index.php?route=comments&action=approve&id=<?=$c['id']?>">
+                   href="<?=BASE_URL?>/admin.php?route=comments&action=approve&id=<?=$c['id']?>">
                   <i class="bi bi-check-circle"></i>
                 </a>
               <?php endif; ?>
               <a class="btn btn-sm btn-outline-danger" 
-                 href="<?=BASE_URL?>/index.php?route=comments&action=delete&id=<?=$c['id']?>"
+                 href="<?=BASE_URL?>/admin.php?route=comments&action=delete&id=<?=$c['id']?>"
                  onclick="return confirm('Bạn có chắc muốn xóa bình luận này?');">
                 <i class="bi bi-trash"></i>
               </a>
