@@ -1,0 +1,248 @@
+DROP DATABASE IF EXISTS dff_db;
+-- Bước 1: Tạo cơ sở dữ liệu nếu chưa tồn tại
+-- Bước 1: Tạo cơ sở dữ liệu nếu chưa tồn tại
+CREATE DATABASE IF NOT EXISTS dff_db 
+CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+
+-- Bước 2: Sử dụng cơ sở dữ liệu vừa tạo
+USE dff_db;
+
+-- =================================================================
+-- ========== NHÓM NGƯỜI DÙNG, QUYỀN RIÊNG TƯ & CHẤP THUẬN ==========
+-- =================================================================
+
+-- 1. Bảng `users` (Đã tích hợp Role)
+CREATE TABLE users (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100),
+  username VARCHAR(100) UNIQUE,
+  email VARCHAR(255) UNIQUE,
+  password_hash VARCHAR(255),
+  -- Tích hợp vai trò từ bảng `roles`
+  role ENUM('user', 'businessmen', 'admin') DEFAULT 'user', 
+  phone VARCHAR(20),
+  avatar_url TEXT,
+  cover_photo TEXT,			-- ảnh bìa
+  description TEXT,
+  is_email_verified BOOLEAN DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 2. Bảng `user_privacy_settings` (Giữ lại như cũ)
+CREATE TABLE user_privacy_settings (
+  user_id BIGINT PRIMARY KEY,
+  profile_visibility ENUM('public','followers_only') DEFAULT 'public',
+  activity_visibility ENUM('public','followers_only') DEFAULT 'public',
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 3. Bảng `user_consents` (Giữ lại như cũ)
+CREATE TABLE user_consents (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT,
+  consent_type VARCHAR(100),
+  is_granted BOOLEAN,
+  last_updated DATETIME,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =================================================================
+-- ========== NHÓM DOANH NHÂN & SỰ NGHIỆP & CÁ NHÂN ==========
+-- =================================================================
+
+-- 4. Bảng `businessmen`
+CREATE TABLE businessmen (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  birth_year YEAR,
+  nationality VARCHAR(100),
+  education VARCHAR(255),
+  position VARCHAR(255),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 5. Bảng `businessmen_careers`
+CREATE TABLE businessmen_careers (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  businessmen_id BIGINT NOT NULL,
+  start_year YEAR,
+  end_year YEAR NULL,
+  position VARCHAR(255),
+  company VARCHAR(255),
+  description TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (businessmen_id) REFERENCES businessmen(id) ON DELETE CASCADE
+);
+-- 6. Bảng `profile_user`
+CREATE TABLE profile_user (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,                   
+  display_name VARCHAR(150),   
+  birth_year YEAR,            
+  workplace VARCHAR(255),                  
+  studied_at VARCHAR(255),                 
+  live_at VARCHAR(255),                    
+  link_code VARCHAR(100) UNIQUE,           -- Mã liên kết (link profile rút gọn)
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =================================================================
+-- ========== NHÓM BÀI VIẾT, CHỦ ĐỀ & NỘI DUNG ==========
+-- =================================================================
+
+-- 7. Bảng `topics`
+CREATE TABLE topics (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(150) UNIQUE,
+  slug VARCHAR(150) UNIQUE,
+  icon_url VARCHAR(255),
+  description TEXT,
+  follower_count INT DEFAULT 0,
+  display_order INT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 8. Bảng `tags`
+CREATE TABLE tags (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(100) UNIQUE,
+  slug VARCHAR(100) UNIQUE
+);
+
+-- 9. Bảng `articles`
+CREATE TABLE articles (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  slug VARCHAR(255) UNIQUE,
+  summary TEXT,
+  content LONGTEXT,
+  main_image_url VARCHAR(500),
+  author_id BIGINT,
+  topic_id INT,
+  status ENUM('public','private','follower_only') DEFAULT 'public',
+  published_at DATETIME,
+  view_count INT DEFAULT 0,
+  comment_count INT DEFAULT 0,
+  is_hot BOOLEAN DEFAULT 0,
+  is_analysis BOOLEAN DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+);
+
+-- 10. Bảng `article_tags`
+CREATE TABLE article_tags (
+  article_id BIGINT,
+  tag_id INT,
+  PRIMARY KEY (article_id, tag_id),
+  FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+  FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+-- 11. Bảng `media`
+CREATE TABLE media (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  article_id BIGINT,
+  media_url VARCHAR(500),
+  media_type ENUM('image','video'),
+  caption TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE
+);
+
+-- 12. Bảng `comments`
+CREATE TABLE comments (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  article_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  parent_id BIGINT NULL,
+  content TEXT,
+  upvotes INT DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+);
+
+-- 13. Bảng `comment_global`
+CREATE TABLE comment_global (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  user_id BIGINT NOT NULL,
+  parent_id BIGINT NULL,
+  content TEXT,
+  upvotes INT DEFAULT 0,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (parent_id) REFERENCES comments(id) ON DELETE CASCADE
+);
+
+-- =================================================================
+-- ========== NHÓM TƯƠNG TÁC NGƯỜI DÙNG ==========
+-- =================================================================
+
+-- 14. Bảng `user_follows`
+CREATE TABLE user_follows (
+  follower_id BIGINT,
+  following_id BIGINT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (follower_id, following_id),
+  FOREIGN KEY (follower_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (following_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 15. Bảng `topic_follows`
+CREATE TABLE topic_follows (
+  user_id BIGINT,
+  topic_id INT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (user_id, topic_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+  FOREIGN KEY (topic_id) REFERENCES topics(id) ON DELETE CASCADE
+);
+
+-- 16. Bảng `article_likes`
+CREATE TABLE article_likes (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  article_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY (article_id, user_id),
+  FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 17. Bảng `article_saves`
+CREATE TABLE article_saves (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  article_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY (article_id, user_id),
+  FOREIGN KEY (article_id) REFERENCES articles(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- =================================================================
+-- ========== NHÓM SỰ KIỆN ==========
+-- =================================================================
+
+-- 18. Bảng `events`
+CREATE TABLE events (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(255),
+  event_url VARCHAR(500),
+  event_date DATE,
+  stock_ticker VARCHAR(50),
+  description TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
