@@ -2,209 +2,114 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Bài Post Tổng Hợp + Icon</title>
-  <!-- Font Awesome để lấy icon -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f0f2f5;
-      margin: 0;
-      padding: 20px;
-    }
-    .post {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 15px;
-      max-width: 600px;
-      margin: auto;
-    }
-    .post-header {
-      display: flex;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .avatar {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      margin-right: 10px;
-      object-fit: cover;
-    }
-    .author-info strong {
-      display: block;
-      font-size: 15px;
-    }
-    .author-info span {
-      color: #777;
-      font-size: 12px;
-    }
-    .post-title {
-      font-weight: bold;
-      font-size: 16px;
-      margin: 10px 0;
-    }
-    .post-content {
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 10px;
-      white-space: pre-line;
-    }
-    .post-image {
-      width: 100%;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-    .related {
-      background: #f9f9f9;
-      border-left: 3px solid #0073e6;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-    .related p {
-      margin: 5px 0;
-      font-size: 14px;
-    }
-    .tags span {
-      background: #eef3f8;
-      color: #0073e6;
-      padding: 3px 8px;
-      border-radius: 15px;
-      margin-right: 5px;
-      font-size: 12px;
-    }
-    .reactions {
-      display: flex;
-      justify-content: space-around;
-      font-size: 13px;
-      color: #555;
-      margin-top: 10px;
-      border-top: 1px solid #eee;
-      padding-top: 8px;
-    }
-    .reaction-btn {
-      cursor: pointer;
-      padding: 5px 10px;
-      border-radius: 5px;
-      transition: background 0.2s;
-    }
-    .reaction-btn:hover {
-      background: #f0f0f0;
-    }
-    .comment-box {
-      margin-top: 10px;
-      border-top: 1px solid #eee;
-      padding-top: 8px;
-    }
-    .comment {
-      display: flex;
-      margin-top: 8px;
-    }
-    .comment img {
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      margin-right: 8px;
-    }
-    .comment-content {
-      background: #f0f2f5;
-      padding: 6px 10px;
-      border-radius: 12px;
-      font-size: 13px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bài Post Mạng Xã Hội</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <div id="app"></div>
+<body class="bg-gray-100 p-6">
 
-  <script>
-    // ==== DỮ LIỆU JSON ====
-    const post = {
-      "postId": "z7004329174227",
-      "author": {
-        "id": "user_001",
-        "name": "Thành Công",
-        "profileUrl": "#",
-        "avatarUrl": "https://via.placeholder.com/45",
-        "role": "CEO WiGroup"
-      },
-      "createdAt": "2025-09-11T09:11:00+07:00",
-      "title": "CEO WiGroup: Chênh lệch lãi suất VND – USD thu hẹp, áp lực tỷ giá sẽ hạ nhiệt trong một năm tới",
-      "content": "Khoảng cách lãi suất giữa VND và USD đang dần thu hẹp, thặng dư thương mại được cải thiện và chính sách điều hành vàng có chuyển biến mới… là những yếu tố được kỳ vọng sẽ giúp giảm áp lực lên tỷ giá trong thời gian tới.\n\nHiện tỷ giá đã tăng khoảng 3,7–3,8% từ đầu năm, tức vẫn còn dư địa tăng thêm khoảng 1–2% nữa, khá hạn hẹp nếu xét về mức điều chỉnh tỷ giá trung bình hằng năm.",
-      "media": [
-        {
-          "id": "media_001",
-          "type": "image",
-          "url": "https://via.placeholder.com/600x300",
-          "alt": "CEO WiGroup phát biểu về tình hình tỷ giá VND - USD"
-        }
-      ],
-      "relatedTopics": [
-        { "id": "topic_001", "title": "Đồng USD trên thế giới giảm, song tỷ giá trong nước chưa hạ nhiệt", "url": "#" },
-        { "id": "topic_002", "title": "Tỷ giá thêm nóng", "url": "#" },
-        { "id": "topic_003", "title": "Chuyên gia: Áp lực tỷ giá có thể kéo dài đến năm 2026", "url": "#" }
-      ],
-      "tags": ["Trần Ngọc Bảo", "Tỷ giá", "USD"],
-      "reactions": { "likes": 3, "shares": 6, "comments": 1 },
-      "comments": [
-        {
-          "id": "cmt_001",
-          "author": {
-            "id": "user_002",
-            "name": "Người dùng A",
-            "avatarUrl": "https://via.placeholder.com/30"
-          },
-          "content": "Bài viết rất hay!",
-          "createdAt": "2025-09-11T10:00:00+07:00",
-          "likes": 2,
-          "replies": []
-        }
-      ]
-    };
-
-    // ==== HIỂN THỊ RA HTML ====
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
-      <div class="post">
-        <div class="post-header">
-          <img src="${post.author.avatarUrl}" alt="avatar" class="avatar">
-          <div class="author-info">
-            <strong>${post.author.name}</strong>
-            <span>${new Date(post.createdAt).toLocaleString("vi-VN")}</span>
-          </div>
-        </div>
-        <div class="post-title">${post.title}</div>
-        <div class="post-content">${post.content}</div>
-        ${post.media.map(m => `<img src="${m.url}" alt="${m.alt}" class="post-image">`).join("")}
-        <div class="related">
-          <strong><i class="fa-solid fa-link"></i> Chủ đề liên quan:</strong>
-          ${post.relatedTopics.map(t => `<p>🔹 <a href="${t.url}">${t.title}</a></p>`).join("")}
-        </div>
-        <div class="tags">
-          <i class="fa-solid fa-tags"></i> 
-          ${post.tags.map(tag => `<span>${tag}</span>`).join("")}
-        </div>
-        <div class="reactions">
-          <div class="reaction-btn"><i class="fa-solid fa-thumbs-up"></i> ${post.reactions.likes}</div>
-          <div class="reaction-btn"><i class="fa-solid fa-share"></i> ${post.reactions.shares} Chia sẻ</div>
-          <div class="reaction-btn"><i class="fa-solid fa-comment"></i> ${post.reactions.comments} Bình luận</div>
-        </div>
-        <div class="comment-box">
-          <strong><i class="fa-solid fa-comments"></i> Bình luận:</strong>
-          ${post.comments.map(c => `
-            <div class="comment">
-              <img src="${c.author.avatarUrl}" alt="${c.author.name}">
-              <div class="comment-content">
-                <strong>${c.author.name}</strong><br>
-                ${c.content}
-              </div>
-            </div>
-          `).join("")}
-        </div>
+  <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-4">
+    
+    <!-- Header -->
+    <div class="flex items-center mb-3">
+      <img src="https://i.pravatar.cc/100?img=5" class="w-12 h-12 rounded-full mr-3" alt="Avatar">
+      <div>
+        <p class="font-semibold">Thành Công</p>
+        <p class="text-sm text-gray-500">Thứ Năm, 12/9/2025, 9:01 (GMT+7)</p>
       </div>
-    `;
-  </script>
+    </div>
+
+    <!-- Title -->
+    <h2 class="text-lg font-bold mb-2">
+      CEO WiGroup: Chênh lệch lãi suất VND – USD thu hẹp, áp lực tỷ giá sẽ hạ nhiệt trong một năm tới
+    </h2>
+
+    <!-- Content -->
+    <p class="text-gray-700 mb-3">
+      Khoảng cách lãi suất giữa VND và USD đang dần thu hẹp, thặng dư thương mại được cải thiện và chính sách điều hành vĩ mô có chuyển biến mới... là những yếu tố được kỳ vọng sẽ giúp giảm áp lực lên tỷ giá trong thời gian tới.
+    </p>
+
+    <!-- Post Image -->
+    <img src="https://img.freepik.com/free-photo/businessman-interviewing-with-confident-smile_1262-18269.jpg" 
+         alt="CEO WiGroup" 
+         class="rounded-xl w-full mb-3">
+
+    <!-- Extra Content -->
+    <p class="text-gray-700 mb-3">
+      Hiện tỷ giá đã tăng khoảng 3,7–3,8% từ đầu năm, tức vẫn còn dư địa tăng thêm khoảng 1–2% nữa, khá hạn hẹp nếu xét về mức điều chỉnh tỷ giá trung bình hằng năm.
+    </p>
+
+    <!-- Related -->
+    <div class="bg-gray-100 rounded-lg p-3 mb-3">
+      <h4 class="font-semibold mb-2">📌 Nội dung liên quan</h4>
+      <ul class="list-disc list-inside text-gray-700 space-y-1 text-sm">
+        <li>Đồng USD trên thế giới giảm, song tỷ giá trong nước chưa hạ nhiệt</li>
+        <li>Tỷ giá thêm nóng</li>
+        <li>Chuyên gia: Áp lực tỷ giá có thể kéo dài đến năm 2026</li>
+      </ul>
+    </div>
+
+    <!-- Tags -->
+    <div class="flex flex-wrap gap-2 mb-3">
+      <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Trần Ngọc Bầu</span>
+      <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">Tỷ giá</span>
+      <span class="bg-gray-200 px-3 py-1 rounded-full text-sm">USD</span>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-around border-t border-b py-2 text-gray-600 text-sm mb-3">
+      <!-- Like -->
+      <button class="flex items-center gap-2 hover:text-blue-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 
+                   5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 4.5 2.09C13.09 
+                   3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 
+                   8.5c0 3.78-3.4 6.86-8.55 
+                   11.54L12 21.35z"/>
+        </svg>
+        Thích
+      </button>
+      <!-- Comment -->
+      <button class="flex items-center gap-2 hover:text-blue-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M20 2H4C2.9 2 2 2.9 2 
+                   4v14c0 1.1 0.9 2 2 
+                   2h14l4 4V4c0-1.1-0.9-2-2-2z"/>
+        </svg>
+        Bình luận
+      </button>
+      <!-- Share -->
+      <button class="flex items-center gap-2 hover:text-blue-600">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 
+                   12.7a2.5 2.5 0 0 0 0-1.39l7.02-4.11A2.5 
+                   2.5 0 1 0 14.5 5a2.5 2.5 0 0 0 
+                   0 5c.76 0 1.44-.3 1.96-.77l7.02 
+                   4.11a2.5 2.5 0 1 0 0 1.39l-7.02 
+                   4.11A2.5 2.5 0 1 0 18 16.08z"/>
+        </svg>
+        Chia sẻ
+      </button>
+      <!-- Report -->
+      <button class="flex items-center gap-2 hover:text-red-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 2C6.48 2 2 6.48 2 
+                   12s4.48 10 10 10 10-4.48 
+                   10-10S17.52 2 12 2zm1 
+                   15h-2v-2h2v2zm0-4h-2V7h2v6z"/>
+        </svg>
+        Báo cáo
+      </button>
+    </div>
+
+    <!-- Comment -->
+    <div class="flex items-center gap-2">
+      <img src="https://i.pravatar.cc/100?img=12" class="w-9 h-9 rounded-full" alt="User">
+      <input type="text" placeholder="Bạn nghĩ gì về nội dung này?" 
+             class="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-blue-400">
+    </div>
+
+  </div>
+
 </body>
 </html>
