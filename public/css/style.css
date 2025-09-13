@@ -28,6 +28,23 @@ a {
     position: relative;
 }
 
+/* Market data styling */
+.top-stock .per.positive {
+    color: #00c851;
+}
+
+.top-stock .per.negative {
+    color: #ff4444;
+}
+
+.top-stock .fa-arrow-up {
+    color: #00c851;
+}
+
+.top-stock .fa-arrow-down {
+    color: #ff4444;
+}
+
 a,
 hr {
     padding: 0
