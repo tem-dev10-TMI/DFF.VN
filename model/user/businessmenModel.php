@@ -138,7 +138,8 @@ class businessmenModel
                 b.user_id,
                 b.position,              
                 u.name,
-                u.username
+                u.username,
+                u.avatar_url as logo_url
             FROM businessmen b
             LEFT JOIN users u ON b.user_id = u.id
             ORDER BY b.id DESC";
@@ -146,6 +147,13 @@ class businessmenModel
     $stmt = $db->db->prepare($sql);
     $stmt->execute();
     $businessmen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Nếu không có dữ liệu, tạo dữ liệu mẫu
+    if (empty($businessmen)) {
+        businessmenModel::createSampleBusinessmen();
+        $stmt->execute();
+        $businessmen = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Fallback nếu trống
     foreach ($businessmen as &$biz) {
@@ -158,6 +166,44 @@ class businessmenModel
     }
 
     return $businessmen;
+}
+
+// Tạo dữ liệu mẫu cho businessmen
+public static function createSampleBusinessmen() {
+    $db = new connect();
+    
+    // Lấy một số users để tạo businessmen
+    $sql = "SELECT id, name, username FROM users LIMIT 3";
+    $stmt = $db->db->prepare($sql);
+    $stmt->execute();
+    $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (empty($users)) {
+        return false;
+    }
+    
+    $sampleData = [
+        ['position' => 'CEO', 'nationality' => 'Việt Nam', 'education' => 'MBA Harvard'],
+        ['position' => 'CTO', 'nationality' => 'Việt Nam', 'education' => 'PhD Computer Science'],
+        ['position' => 'CFO', 'nationality' => 'Việt Nam', 'education' => 'CPA']
+    ];
+    
+    foreach ($users as $index => $user) {
+        if (isset($sampleData[$index])) {
+            $sql = "INSERT IGNORE INTO businessmen (user_id, position, nationality, education, birth_year) 
+                    VALUES (:user_id, :position, :nationality, :education, :birth_year)";
+            $stmt = $db->db->prepare($sql);
+            $stmt->execute([
+                ':user_id' => $user['id'],
+                ':position' => $sampleData[$index]['position'],
+                ':nationality' => $sampleData[$index]['nationality'],
+                ':education' => $sampleData[$index]['education'],
+                ':birth_year' => 1980 + $index
+            ]);
+        }
+    }
+    
+    return true;
 }
 
 }

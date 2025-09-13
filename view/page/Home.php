@@ -57,29 +57,18 @@
     <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
 </h5>
 <div class="owl-slider">
-        < class="owl-carousel box-company">
+        <div class="owl-carousel box-company">
+            <!-- Debug: Kiểm tra dữ liệu businessmen -->
+            <?php 
+            echo "<!-- Debug: businessmen count = " . (isset($businessmen) ? count($businessmen) : 'undefined') . " -->";
+            if (isset($businessmen) && !empty($businessmen)) {
+                echo "<!-- Debug: First businessman = " . print_r($businessmen[0], true) . " -->";
+            }
+            ?>
+             <?php var_dump($businessmen); ?>
+
+            <?php if (!empty($businessmen)): ?>
                 <?php foreach ($businessmen as $biz): ?>
-                    <?php var_dump($businessmen); ?>   
-
-                <!--  cao nhân nào dô sửa này đi
-                  
-                     <div class="item">
-                                                <ul>
-                                                    <li>
-                                                        <img class="logo" alt=""
-                                                            src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
-                                                    </li>
-                                                    <li class="alias">Doanh nhân</li>
-                                                    <li class="name"><a href="/bui-thanh-nhon-t2017-8.html"> Bùi Thành
-                                                            Nhơn</a> </li>
-                                                    <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                            data-ref="2017" class="">
-                                                            <val> Theo dõi</val> <span class="number">308</span>
-                                                        </a></li>
-                                                </ul>
-                                            </div> 
-                 -->
-
                     <div class="item">
                         <ul>
                             <li>
@@ -100,6 +89,15 @@
                         </ul>
                     </div>
                 <?php endforeach; ?>
+            <?php else: ?>
+                <div class="item">
+                    <ul>
+                        <li class="text-center p-3">
+                            <p>Chưa có doanh nhân nào trong cơ sở dữ liệu.</p>
+                        </li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

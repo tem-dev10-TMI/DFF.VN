@@ -44,7 +44,7 @@
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">4</span>
+                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">0</span>
                         </span>
                     </li>
                     <li class="top-pro ">
