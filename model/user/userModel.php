@@ -79,4 +79,17 @@ class UserModel
 
         return false;
     }
+    // =============== Lấy tất cả bài viết theo author_id (id user) ===============
+    public static function getArticlesByAuthorId($author_id)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url 
+                FROM articles a
+                JOIN users u ON a.author_id = u.id
+                WHERE a.author_id = :author_id
+                ORDER BY a.published_at DESC";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':author_id' => $author_id]);
+        return $stmt->fetchAll();
+    }
 }
