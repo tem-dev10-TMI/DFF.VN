@@ -62,6 +62,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->trends();
         break;
+    case 'details_topic':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->details_topic();
+        break;
     case 'about':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
