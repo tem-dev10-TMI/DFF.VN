@@ -29,14 +29,16 @@ class loginController
                         'username' => $user['username'],
                         'email' => $user['email'],
                         'phone' => $user['phone'],
-                        'role' => $user['role']
+                        'role' => $user['role'],
+                        'avatar_url' => $user['avatar_url'] ?? null,
                     ];
                     // Lưu session khi login thành công
-                    $_SESSION['user_id']       = $user['id'];
-                    $_SESSION['user_name']     = $user['name'];
-                    $_SESSION['user_username'] = $user['username'];
-                    $_SESSION['user_email']    = $user['email'];
-                    $_SESSION['user_role']     = $user['role'];
+                    $_SESSION['user_id']           = $user['id'];
+                    $_SESSION['user_name']         = $user['name'];
+                    $_SESSION['user_username']     = $user['username'];
+                    $_SESSION['user_email']        = $user['email'];
+                    $_SESSION['user_role']         = $user['role'];
+                    $_SESSION['user_avatar_url']   = $user['avatar_url'] ?? null;
 
                     // Điều hướng về trang main
                     header('Location: ' . BASE_URL . '/');
