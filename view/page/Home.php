@@ -1,11 +1,3 @@
-<?php
-require_once __DIR__ . '/../../config/db.php';
-require_once __DIR__ . '/../../model/user/businessmenModel.php';
-
-$comments = CommentsModel::getComments();
-$articles = ArticlesModel::getAllArticles();
-$businessmen = businessmenModel::getAllBusinessmen();                                                                                                                                                                           
-?>
 
 <main class="main-content">
 
@@ -65,9 +57,29 @@ $businessmen = businessmenModel::getAllBusinessmen();
     <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
 </h5>
 <div class="owl-slider">
-        <div class="owl-carousel box-company">
-            <?php if (!empty($topBusinessmen)): ?>
-                <?php foreach ($topBusinessmen as $biz): ?>
+        < class="owl-carousel box-company">
+                <?php foreach ($businessmen as $biz): ?>
+                    <?php var_dump($businessmen); ?>   
+
+                <!--  cao nhân nào dô sửa này đi
+                  
+                     <div class="item">
+                                                <ul>
+                                                    <li>
+                                                        <img class="logo" alt=""
+                                                            src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
+                                                    </li>
+                                                    <li class="alias">Doanh nhân</li>
+                                                    <li class="name"><a href="/bui-thanh-nhon-t2017-8.html"> Bùi Thành
+                                                            Nhơn</a> </li>
+                                                    <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                                            data-ref="2017" class="">
+                                                            <val> Theo dõi</val> <span class="number">308</span>
+                                                        </a></li>
+                                                </ul>
+                                            </div> 
+                 -->
+
                     <div class="item">
                         <ul>
                             <li>
@@ -88,9 +100,6 @@ $businessmen = businessmenModel::getAllBusinessmen();
                         </ul>
                     </div>
                 <?php endforeach; ?>
-            <?php else: ?>
-                <p>Chưa có doanh nhân nào.</p>
-            <?php endif; ?>
         </div>
     </div>
 </div>
