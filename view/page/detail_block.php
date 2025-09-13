@@ -1,13 +1,4 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bài Post Mạng Xã Hội</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 p-6">
-
+<script src="https://cdn.tailwindcss.com"></script>
   <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-4">
     
     <!-- Header -->
@@ -110,6 +101,3 @@
     </div>
 
   </div>
-
-</body>
-</html>

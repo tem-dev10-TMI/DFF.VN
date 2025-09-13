@@ -60,7 +60,7 @@ switch ($url) {
     case 'trends':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
-        $controller->trens();
+        $controller->trends();
         break;
     case 'about':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
