@@ -1,28 +1,24 @@
 <?php
-require_once __DIR__ . '/config/db.php';
-require_once __DIR__ . '/config/config.php';
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
 
-// autoload
-spl_autoload_register(function ($class) {
-    $paths = [
-    __DIR__ . '/model/' . $class . '.php',
-    __DIR__ . '/controller/' . $class . '.php'
-];
+require_once 'config/db.php';
+require_once 'config/config.php';
 
-    foreach ($paths as $p) if (file_exists($p)) require_once $p;
-});
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-// Nếu url rỗng → home
-$url = $_GET['url'] ?? '';
+$url = isset($_GET['url']) ? $_GET['url'] : '';
 
 if (empty($url)) {
-    $ctrl = new homeController();
-    $ctrl->index();
+    require_once 'controller/homeController.php';
+    $controller = new homeController();
+    $controller->index();
     exit;
 }
 
 switch ($url) {
-
     case 'login':
         require_once 'controller/auth/loginController.php';
         $controller = new loginController();
@@ -36,12 +32,11 @@ switch ($url) {
         require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->profile();
-
         break;
     case 'trends':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
-        $controller->trens();
+        $controller->trends();
         break;
     case 'about':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -49,5 +44,11 @@ switch ($url) {
         $controller->about();
         break;
     default:
-        echo "404 Not Found";
+        //404 page
+        /*         require_once 'controller/error/404Controller.php';
+        $controller = new NotFoundController;
+        require_once 'controller/error/404Controller.php';
+        //$controller = new NotFoundController;
+        $controller->index();
+        break; */
 }

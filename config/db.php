@@ -1,15 +1,12 @@
 <?php
-// config/db.php
-
-// include config (dùng __DIR__ để path luôn đúng)
-require_once __DIR__ . '/config.php';
+require_once 'config.php';
 
 class connect {
     public $db = null;
 
     public function __construct(){
         $host = DB_HOST;
-        $port = defined('DB_PORT') ? DB_PORT : 3306;
+        $port = DB_PORT;
         $dbname = DB_NAME;
         $user = DB_USER;
         $pass = DB_PASS;
@@ -18,7 +15,7 @@ class connect {
         
         try {
             $this->db = new PDO($dsn, $user, $pass, array(
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4",
+                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8",
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ));
@@ -44,8 +41,11 @@ class connect {
         return $this->db->prepare($query);
     }
 
+    // ======================= Hàm tạo slug tự động =========================
+    // VD: Khi thêm bài viết "Phân tích thị trường chứng khoán" ==> phan-tich-thi-truong-chung-khoan
     public static function createSlug($string) {
         $slug = mb_strtolower($string, 'UTF-8');
+        //Bỏ dấu
         $slug = preg_replace(
             array('/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/',
                 '/(è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ)/',
@@ -57,26 +57,29 @@ class connect {
             array('a', 'e', 'i', 'o', 'u', 'y', 'd'),
             $slug
         );
+        //Bỏ kí tự đặt biệt
         $slug = preg_replace('/[^a-z0-9\s-]/', '', $slug);
         $slug = preg_replace('/\s+/', '-', $slug);
         return trim($slug, '-');
     }
 
+    // ======================= Tạo mã ngẫu nhiên =========================
+    // Tạo mã bài viết ngẫu nhiên
     public static function generateArticleCode($id) {
         $random = substr(str_shuffle('abcdefghijklmnopqrstuvwxyz0123456789'), 0, 7);
-        return 'DFF' . $random . $id;
+        return 'DFF' . $random . $id; // DFF + 7 ký tự + ID
     }
 
+    // ======================= Format tiền tệ =========================
     public static function formatCurrency($amount) {
         return number_format($amount, 0, ',', '.') . ' VNĐ';
     }
 
+    // ======================= Format ngày tháng =========================
     public static function formatDate($date, $format = 'd/m/Y H:i') {
         return date($format, strtotime($date));
     }
 }
 
-// Tạo biến $pdo để các file khác (index.php, admin.php, controller) có thể dùng ngay
-$pdo = (new connect())->db;
-// giữ $conn nếu bạn dùng chỗ khác
-$conn = $pdo;
+$conn = (new connect())->db;
+?>
