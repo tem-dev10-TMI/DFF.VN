@@ -1,121 +1,88 @@
 <?php
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
-}
 
-require_once "model/businessmenModel.php";
-require_once "model/profileUserModel.php";
+require_once __DIR__ . '/../models/user/businessmenModel.php';
 
-class businessmenController
+class BusinessmenController
 {
-    // Trang danh sách doanh nhân (top list)
-    public function index()
+    // Danh sách tất cả doanh nhân
+    public static function index()
     {
-        $businessmen = businessmenModel::getTopBusinessmen(20);
-        require_once "view/businessmen/index.php";
+        $businessmen = businessmenModel::getAllBusinessmen();
+
+        // Load view
+        require __DIR__ . '/../views/page/home.php';
     }
 
-    // Trang profile doanh nhân cụ thể
-    public function profile()
+    // Chi tiết 1 doanh nhân theo user_id
+    public static function show($user_id)
     {
-        $user_id = $_GET['user_id'] ?? null;
+        $biz = businessmenModel::getBusinessByUserId($user_id);
 
-        if (!$user_id) {
-            $_SESSION['error'] = "Không tìm thấy user!";
-            header("Location: " . BASE_URL . "/profileUser?msg=user_not_found");
-            exit;
+        if (!$biz) {
+            // Nếu không có dữ liệu → load 404
+            require __DIR__ . '/../views/errors/404.php';
+            return;
         }
 
-        $business = businessmenModel::getBusinessByUserId($user_id);
-        $profile  = profileUserModel::getProfileUserByUserId($user_id);
-
-        if (!$business) {
-            $_SESSION['error'] = "Người dùng chưa đăng ký doanh nhân!";
-            header("Location: " . BASE_URL . "/businessmen");
-            exit;
-        }
-
-        // Lấy quá trình công tác
-        $careers = businessmenModel::getCareersByBusinessmenId($business['id']);
-
-        require_once "view/businessmen/profile.php";
+        require __DIR__ . '/../views/businessmen/show.php';
     }
 
-    // Thêm quá trình công tác
-    public function addCareer()
+    // Form tạo doanh nhân
+    public static function create()
+    {
+        require __DIR__ . '/../views/businessmen/create.php';
+    }
+
+    // Xử lý lưu doanh nhân mới
+    public static function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $businessmen_id = $_POST['businessmen_id'];
-            $start_year     = $_POST['start_year'];
-            $end_year       = $_POST['end_year'];
-            $position       = $_POST['position'];
-            $company        = $_POST['company'];
-            $description    = $_POST['description'];
+            $user_id = $_POST['user_id'] ?? '';
+            $birth_year = $_POST['birth_year'] ?? '';
+            $nationality = $_POST['nationality'] ?? '';
+            $education = $_POST['education'] ?? '';
+            $position = $_POST['position'] ?? '';
 
-            $ok = businessmenModel::addBusinessmenCareers(
-                $businessmen_id,
-                $start_year,
-                $end_year,
-                $position,
-                $company,
-                $description
-            );
+            businessmenModel::registerBusiness($user_id, $birth_year, $nationality, $education, $position);
 
-            if ($ok) {
-                $_SESSION['success'] = "Thêm quá trình công tác thành công!";
-            } else {
-                $_SESSION['error'] = "Thêm quá trình công tác thất bại!";
-            }
-            header("Location: " . BASE_URL . "/businessmen/profile?user_id=" . $_SESSION['user_id']);
+            header('Location: index.php?controller=businessmen&action=index');
+
             exit;
         }
     }
 
-    // Cập nhật quá trình công tác
-    public function updateCareer()
+
+    // Form sửa doanh nhân
+    public static function edit($user_id)
+    {
+        $biz = businessmenModel::getBusinessByUserId($user_id);
+        require __DIR__ . '/../views/businessmen/edit.php';
+    }
+
+    // Xử lý update doanh nhân
+    public static function update($user_id)
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id          = $_POST['id'];
-            $start_year  = $_POST['start_year'];
-            $end_year    = $_POST['end_year'];
-            $position    = $_POST['position'];
-            $company     = $_POST['company'];
-            $description = $_POST['description'];
+            $birth_year = $_POST['birth_year'] ?? '';
+            $nationality = $_POST['nationality'] ?? '';
+            $education = $_POST['education'] ?? '';
+            $position = $_POST['position'] ?? '';
 
-            $ok = businessmenModel::updateBusinessmenCareers(
-                $id,
-                $start_year,
-                $end_year,
-                $position,
-                $company,
-                $description
-            );
+            businessmenModel::updateBusiness($user_id, $birth_year, $nationality, $education, $position);
 
-            if ($ok) {
-                $_SESSION['success'] = "Cập nhật quá trình công tác thành công!";
-            } else {
-                $_SESSION['error'] = "Cập nhật thất bại!";
-            }
-            header("Location: " . $_SERVER['HTTP_REFERER']);
+            header('Location: index.php?controller=businessmen&action=index');
+
             exit;
         }
     }
 
-    // Xoá quá trình công tác
-    public function deleteCareer()
+
+    // Xóa doanh nhân
+    public static function destroy($user_id)
     {
-        if (isset($_GET['id'])) {
-            $id = $_GET['id'];
+        businessmenModel::deleteBusiness($user_id);
+        header('Location: index.php?controller=businessmen&action=index');
+        exit;
 
-            $ok = businessmenModel::deleteBusinessmenCareers($id);
-
-            if ($ok) {
-                $_SESSION['success'] = "Xoá quá trình công tác thành công!";
-            } else {
-                $_SESSION['error'] = "Xoá thất bại!";
-            }
-            header("Location: " . $_SERVER['HTTP_REFERER']);
-            exit;
-        }
     }
 }

@@ -1,9 +1,12 @@
 <?php
-
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../model/article/articlesmodel.php';
+require_once __DIR__ . '/../../model/commentmodel.php';
+require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
 $comments = CommentsModel::getComments();
-$articles = ArticlesModel::getAllArticles();
-$topBusinessmen = businessmenModel::getTopBusinessmen(10);                                                                                                                                                                            
+$articles = ArticlesModel::getAllArticles();      
+$topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
 
 <main class="main-content">
@@ -57,45 +60,63 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
                     </div>
                     <!-- ////////////////////// -->
                     <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất</span>
-    </h5>
-    <div class="owl-slider">
-        <div class="owl-carousel box-company">
-            <?php if (!empty($topBusinessmen)): ?>
-                <?php foreach ($topBusinessmen as $biz): ?>
-                    <div class="item">
-                        <ul>
-                            <li>
-                                <img class="logo" alt="<?= htmlspecialchars($biz['username']) ?>"
-                                     src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
-                            </li>
-                            <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
-                            <li class="name">
-                                <a href="/business_detail.php?id=<?= $biz['id'] ?>">
-                                    <?= htmlspecialchars($biz['username']) ?>
-                                </a>
-                            </li>
-                            <li class="f-folw">
-                                <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
-                                    <val>Theo dõi</val>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Chưa có doanh nhân nào.</p>
-            <?php endif; ?>
+
+                        <h5>
+                            <span><a href="#">Top doanh nhân</a> </span>
+                            <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
+                        </h5>
+<div class="owl-slider">
+    <div class="owl-carousel box-company owl-loaded owl-drag">
+        <div class="owl-stage-outer owl-height" style="height: 256px;">
+            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen)-1)*10 ?>px;">
+                <?php if (!empty($topBusinessmen)): ?>
+                    <?php foreach ($topBusinessmen as $biz): ?>
+                        <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                            <div class="item">
+                                <ul>
+                                    <li>
+                                        <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                             src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                    </li>
+                                    <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
+                                    <li class="name">
+                                        <a href="/business_detail.php?id=<?= $biz['id'] ?>">
+                                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                        </a>
+                                    </li>
+                                    <li class="f-folw">
+                                        <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
+                                            <val>Theo dõi</val>
+                                            <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Chưa có doanh nhân nào.</p>
+                <?php endif; ?>
+            </div>
         </div>
+        <div class="owl-nav">
+            <button type="button" role="presentation" class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button>
+            <button type="button" role="presentation" class="owl-next"><i class="fa fa-chevron-right"></i></button>
+        </div>
+        <div class="owl-dots disabled"></div>
     </div>
 </div>
+                </div>
+
+
+
+                 
 
 
 
                     <!-- ///////////////////////////// -->
 
+                 
                     <!-- blog -->
                     <?php 
 
@@ -210,7 +231,6 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
 
                 </div>
 
-                
                 <!-- bài viết chính block end -->
 
 
@@ -577,6 +597,25 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
 
                         });
                     </script>
+                    <script>
+$(document).ready(function(){
+    $('.owl-carousel.box-company').owlCarousel({
+        loop:false,
+        margin:10,
+        nav:true,
+        dots:true,
+        navText: [
+            '<i class="fa fa-chevron-left"></i>',
+            '<i class="fa fa-chevron-right"></i>'
+        ],
+        responsive:{
+            0:{ items:1 },
+            600:{ items:3 },
+            1000:{ items:3 }
+        }
+    });
+});
+</script>
                 </div>
 
             </main>

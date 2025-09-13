@@ -22,16 +22,7 @@ if (empty($url)) {
 }
 
 switch ($url) {
-    case 'home':
 
-        $ctrl = new homeController();
-        $ctrl->index();
-        break;
-
-    // case 'profile':
-    //     $ctrl = new homeController();
-    //     $ctrl->profile();
-    //     break;
     case 'login':
         require_once 'controller/auth/loginController.php';
         $controller = new loginController();
