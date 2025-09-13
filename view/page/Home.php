@@ -55,42 +55,176 @@ $topBusinessmen = businessmenModel::getTopBusinessmen(10);
                         <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                             src="vendor/dffvn/content/img/img_small.jpg" width="30">
                     </div>
-                    <!-- ////////////////////// -->
-                    <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất</span>
-    </h5>
-    <div class="owl-slider">
-        <div class="owl-carousel box-company">
-            <?php if (!empty($topBusinessmen)): ?>
-                <?php foreach ($topBusinessmen as $biz): ?>
+
+                        <!-- ////////////////////// -->
+        <div class="block-k box-company-label">
+
+<h5>
+    <span><a href="#">Top doanh nhân</a> </span>
+    <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
+</h5>
+<div class="owl-slider">
+    <div class="owl-carousel box-company owl-loaded owl-drag">
+
+
+
+
+
+
+
+
+
+        <div class="owl-stage-outer owl-height" style="height: 256px;">
+            <div class="owl-stage"
+                style="transform: translate3d(0px, 0px, 0px); transition: all; width: 1542px;">
+                <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                     <div class="item">
                         <ul>
                             <li>
-                                <img class="logo" alt="<?= htmlspecialchars($biz['username']) ?>"
-                                     src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
                             </li>
-                            <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
-                            <li class="name">
-                                <a href="/business_detail.php?id=<?= $biz['id'] ?>">
-                                    <?= htmlspecialchars($biz['username']) ?>
-                                </a>
-                            </li>
-                            <li class="f-folw">
-                                <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
-                                    <val>Theo dõi</val>
-                                </a>
-                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/bui-thanh-nhon-t2017-8.html"> Bùi Thành
+                                    Nhơn</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="2017" class="">
+                                    <val> Theo dõi</val> <span class="number">308</span>
+                                </a></li>
                         </ul>
                     </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Chưa có doanh nhân nào.</p>
-            <?php endif; ?>
+                </div>
+                <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2025/05/06/dao-nam-hai-162134063.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/dao-nam-hai-t5787-8.html"> Đào Nam
+                                    Hải</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="5787" class="">
+                                    <val> Theo dõi</val> <span class="number">199</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2024/10/21/pham-nhat-vuong-103139367.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/pham-nhat-vuong-t3514-8.html"> Phạm Nhật
+                                    Vượng</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="3514" class="">
+                                    <val> Theo dõi</val> <span class="number">218</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2025/05/06/phan-duc-trung-175231454.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/phan-duc-trung-t5794-8.html"> Phan Đức
+                                    Trung</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="5794" class="">
+                                    <val> Theo dõi</val> <span class="number">148</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2024/10/21/nguyen-thi-phuong-thao-095943963.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/nguyen-thi-phuong-thao-t3511-8.html">
+                                    Nguyễn Thị Phương Thảo</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="3511" class="">
+                                    <val> Theo dõi</val> <span class="number">75</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2024/10/15/nguyen-van-tuan-161542258.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/nguyen-van-tuan-t2029-8.html"> Nguyễn Văn
+                                    Tuấn</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="2029" class="">
+                                    <val> Theo dõi</val> <span class="number">229</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn//Image/2024/10/21/tran-ba-duong-105316244.png">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/tran-ba-duong-t3516-8.html"> Trần Bá
+                                    Dương</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="3516" class="">
+                                    <val> Theo dõi</val> <span class="number">216</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
+                    <div class="item">
+                        <ul>
+                            <li>
+                                <img class="logo" alt=""
+                                    src="https://img.dff.vn/Image/business/638579368481459587_169.jpg">
+                            </li>
+                            <li class="alias">Doanh nhân</li>
+                            <li class="name"><a href="/pham-minh-huong-t2180-8.html"> Phạm Minh
+                                    Hương</a> </li>
+                            <li class="f-folw"><a data-type="5" href="javascript:void(0)"
+                                    data-ref="2180" class="">
+                                    <val> Theo dõi</val> <span class="number">163</span>
+                                </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
         </div>
+        <div class="owl-nav"><button type="button" role="presentation"
+                class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button><button
+                type="button" role="presentation" class="owl-next"><i
+                    class="fa fa-chevron-right"></i></button></div>
+        <div class="owl-dots disabled"></div>
     </div>
 </div>
+</div>
+
+
 
 
 
