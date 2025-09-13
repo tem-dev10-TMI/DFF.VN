@@ -65,6 +65,33 @@ class profileUserController
     }
 
     // ========== Quản lý Hồ sơ ==========
+    public static function addProfile()
+    {
+        require_once 'model/user/profileUserModel.php';
+        $modelProfile = new profileUserModel();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $display_name = $_POST['display_name'];
+            $birth_year = $_POST['birth_year'];
+            $workplace = $_POST['workplace'];
+            $studied_at = $_POST['studied_at'];
+            $live_at = $_POST['live_at'];
+
+            // Gọi model để thêm thông tin
+            if ($modelProfile->addProfileUser($user_id, $display_name, $birth_year, $workplace, $studied_at, $live_at)) {
+                // Quay lại profileUser với thông báo
+                header('Location: ' . BASE_URL . '/profileUser?msg=profile_added');
+                exit;
+            } else {
+                $error = "❌ Lỗi khi thêm thông tin cá nhân!";
+            }
+        }
+
+        // Hiển thị form thêm thông tin
+        require_once 'view/account/addProfile.php';
+    }
+
     public static function editProfile()
     {
         require_once 'model/user/profileUserModel.php';
@@ -136,6 +163,9 @@ View hiển thị thông báo
                 break;
             case "profile_updated":
                 alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
+                break;
+            case "profile_added":
+                alert("📝 Thông tin cá nhân đã được thêm thành công!");
                 break;
             case "password_changed":
                 alert("🔑 Mật khẩu đã được đổi thành công!");
