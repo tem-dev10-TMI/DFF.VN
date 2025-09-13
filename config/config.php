@@ -11,6 +11,7 @@ define('BASE_URL', 'http://localhost/DFF.VN');
 define('SITE_NAME', 'DFF.VN');
 define('SITE_DESCRIPTION', 'Diễn đàn Tài chính Việt Nam');
 
+
 // dinh nghia image
 define('UPLOADS_DIR', __DIR__ . '/../uploads');
 define('UPLOADS_URL', BASE_URL . '/uploads');
@@ -24,3 +25,4 @@ spl_autoload_register(function($class){
 });
 
 require_once __DIR__ . '/../helpers.php';
+

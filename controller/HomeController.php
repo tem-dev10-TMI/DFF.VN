@@ -13,14 +13,14 @@ class homeController
                 // Fetch data from database
                 $articles = ArticlesModel::getAllArticles();
                 $comments = CommentsModel::getComments();
-                $businessmen = businessmenModel::getAllBusinessmen();
+                $topBusinessmen = businessmenModel::getAllBusinessmen(10);
 
                 $marketData = MarketDataModel::getCachedMarketData();
 
                 //Load view
                 ob_start();
                 
-                require_once 'view/page/home.php';
+                require_once 'view/page/Home.php';
                 
                 $content = ob_get_clean();
 

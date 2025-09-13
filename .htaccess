@@ -1,39 +1,50 @@
 # Bật Rewrite Engine
 RewriteEngine On
-RewriteBase /DFF.VN/
 
 # ------------------------------------
-# 1. Bỏ qua file tĩnh (không redirect qua index.php hoặc admin.php)
+# 1. Bỏ qua file tĩnh (không redirect qua index.php)
 # ------------------------------------
 RewriteCond %{REQUEST_URI} \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|txt|mp4|webp)$ [NC]
 RewriteRule . - [L]
 
 # ------------------------------------
-# 2. Admin route
+# 2. Nếu không phải file/thư mục thì chuyển về index.php
 # ------------------------------------
-# Nếu URL bắt đầu bằng /admin thì chuyển về admin.php
+
+# Set the base directory
+RewriteBase /DFF.VN/
+
+# Prevent direct access to app directory
+
+# Redirect from /views/home/ to /
+RewriteRule /view/home/?$ / [R=301,L]
+
+# Handle all requests through index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^admin(?:/(.*))?$ admin.php?url=$1 [QSA,L]
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L] 
 
-# ------------------------------------
-# 3. Frontend route
-# ------------------------------------
-# Các request còn lại → index.php
+# Redirect to the admin dashboard
+RewriteRule /view/admin/?$ / [R=301,L]
+
+# Handle all requests through index.php
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+RewriteRule ^(.*)$ layoutAdmin.php?url=$1 [QSA,L] 
 
 # ------------------------------------
-# 4. Bảo mật
+# 3. Bảo mật
 # ------------------------------------
+# Ẩn thông tin phiên bản Apache/PHP
 ServerSignature Off
+
+# Chặn truy cập trực tiếp file nhạy cảm
 <FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak|inc|json)$">
     Require all denied
 </FilesMatch>
 
 # ------------------------------------
-# 5. Cache file tĩnh để tăng tốc độ
+# 4. Cache file tĩnh để tăng tốc độ
 # ------------------------------------
 <IfModule mod_expires.c>
     ExpiresActive On
