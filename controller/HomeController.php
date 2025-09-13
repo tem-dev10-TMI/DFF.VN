@@ -34,7 +34,8 @@ class homeController
 
                 //Load view
                 ob_start();
-                require_once 'view/page/Profileuse.php';
+                $profile_category='user';
+                require_once 'view/layout/Profile.php';
                 $content = ob_get_clean();
 
                 //Load layout
