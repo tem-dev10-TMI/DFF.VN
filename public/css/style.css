@@ -10,6 +10,17 @@ hr {
     padding: 0
 }
 
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.col-12 small.text-danger {
+    display: block;
+    margin-top: 4px;
+    /* sát input */
+    font-size: 13px;
+}
+
 article,
 aside,
 details,
@@ -2721,7 +2732,7 @@ article p a {
 
 .f-login .input-group,
 .f-register .input-group {
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .f-login .input-group-text,
@@ -6611,4 +6622,3 @@ ul.timeline .left-arrow:after {
     }
 
 }
-
