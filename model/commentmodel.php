@@ -66,4 +66,18 @@ class CommentsModel {
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+    // Lấy tất cả comment (không phân theo bài viết)
+public static function getComments() {
+    $db = new connect();
+    $sql = "SELECT c.id, c.user_id, c.content, c.upvotes, c.created_at,
+                   u.name AS user_name, u.avatar_url
+            FROM comment_global c
+            INNER JOIN users u ON c.user_id = u.id
+            ORDER BY c.created_at ASC";
+    $stmt = $db->db->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
 }
