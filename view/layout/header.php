@@ -307,6 +307,15 @@
 
 
 
+<?php
+// Load market data nếu chưa có
+if (!isset($marketData)) {
+    require_once __DIR__ . '/../../model/MarketDataModel.php';
+    $marketData = MarketDataModel::getCachedMarketData();
+}
+// Debug: Kiểm tra dữ liệu market
+echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData) : 'undefined') . " -->";
+?>
 <div class="top-stock">
     <div class="marquee">
         <div class="item co-VNINDEX">
@@ -326,6 +335,7 @@
             <div class="irow label">
                 <span>HNX</span>
                 <span class="value"><?= $marketData['HNX']['price'] ?? '245.33' ?></span>
+                <!-- Debug: <?= isset($marketData['HNX']) ? 'HNX data exists' : 'HNX data missing' ?> -->
             </div>
             <div class="irow content">
                 <span>

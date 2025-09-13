@@ -116,174 +116,113 @@ $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10
 
                     <!-- ///////////////////////////// -->
 
+                 
                     <!-- blog -->
+                    <?php 
 
-                    <!-- ///1 -->
-                    <div class="block-k ">
-                        <div class="view-carde f-frame">
-                            <div class="provider">
-                                <img class="logo" alt="" src="/Upload/img_static/bannerdao638824667798806492.jpg">
-                                <div class="p-covers">
-                                    <span class="name" title="">
-                                        <a href="/profile.html?q=663464303035383" title="Phương Nhi">Phương Nhi</a>
+                    //LẤY TRONG CSDL
+                    // Function to calculate time ago
+                    function timeAgo($datetime) {
+                        $time = time() - strtotime($datetime);
+                        if ($time < 60) return 'vừa xong';
+                        if ($time < 3600) return floor($time/60) . ' phút trước';
+                        if ($time < 86400) return floor($time/3600) . ' giờ trước';
+                        if ($time < 2592000) return floor($time/86400) . ' ngày trước';
+                        return date('d/m/Y', strtotime($datetime));
+                    }
+                    ?>
 
-                                    </span><span class="date"> 59 phút trước</span>
-                                </div>
+                    <?php if (!empty($articles)): ?>
+                        <?php foreach ($articles as $article): ?>
+                            <div class="block-k ">
+                                <div class="view-carde f-frame">
+                                    <div class="provider">
+                                        <?php 
+                                        $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                        ?>
+                                        <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                                        <div class="p-covers">
+                                            <span class="name" title="">
+                                                <a href="/profile.html?q=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                            </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                                        </div>
+                                    </div>
 
-                            </div>
+                                    <div class="title">
+                                        <a title="<?= htmlspecialchars($article['title']) ?>"
+                                            href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"><?= htmlspecialchars($article['title']) ?></a>
+                                    </div>
+                                    <div class="sapo">
+                                        <?= htmlspecialchars($article['summary']) ?>
+                                        <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html" class="d-more">Xem thêm</a>
+                                    </div>
 
-                            <div class="title">
-                                <a title="NHNN đang nghiên cứu lập sàn giao dịch vàng"
-                                    href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html">NHNN
-                                    đang nghiên cứu lập sàn giao dịch vàng </a>
-                            </div>
-                            <div class="sapo">
+                                    <?php if (!empty($article['main_image_url'])): ?>
+                                        <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                            title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
+                                    <?php endif; ?>
 
-                                <a href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                                    class="d-more">Xem thêm</a>
-                            </div>
-
-                            <iframe
-                                src="https://www.tiktok.com/player/v1/7548413933464325392?&amp;music_info=1&amp;description=1"
-                                allow="fullscreen" title="test"></iframe>
-
-                            <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="20250911084319328">
-                                    <span class="for-up">
-                                        <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                            icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <!--?lit$811032025$--><!--?lit$811032025$-->
-                                            <path
-                                                d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                            </path><!--?-->
-                                        </svg>
-                                    </span>
-                                    <span class="value" data-old="0"> 0</span>
-                                    <span class="for-down">
-                                        <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                            icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <!--?lit$811032025$--><!--?lit$811032025$-->
-                                            <path
-                                                d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                            </path><!--?-->
-                                        </svg>
-                                    </span>
-                                </div>
-                                <div class="button-ar">
-                                    <a
-                                        href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html#anc_comment">
-                                        <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                            height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                            </path><!--?-->
-                                        </svg>
-                                        <span>0</span>
-                                    </a>
-                                </div>
-                                <div class="button-ar">
-                                    <div class="dropdown home-item">
-                                        <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                            aria-expanded="false">Chia sẻ</span>
-                                        <ul class="dropdown-menu">
-                                            <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                                    data-url="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                                                    href="javascript:void(0)">Copy link</a></li>
-                                            <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                                    data-url="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                                                    href="javascript:void(0)">Share FB</a></li>
-                                        </ul>
+                                    <div class="item-bottom">
+                                        <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                                            <span class="for-up">
+                                                <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
+                                                    icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                            <span class="value" data-old="<?= $article['upvotes'] ?? 0 ?>"><?= $article['upvotes'] ?? 0 ?></span>
+                                            <span class="for-down">
+                                                <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
+                                                    icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
+                                                    </path>
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="button-ar">
+                                            <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html#anc_comment">
+                                                <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
+                                                    height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path
+                                                        d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
+                                                    </path>
+                                                </svg>
+                                                <span><?= $article['comment_count'] ?? 0 ?></span>
+                                            </a>
+                                        </div>
+                                        <div class="button-ar">
+                                            <div class="dropdown home-item">
+                                                <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
+                                                    aria-expanded="false">Chia sẻ</span>
+                                                <ul class="dropdown-menu">
+                                                    <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
+                                                            data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                            href="javascript:void(0)">Copy link</a></li>
+                                                    <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
+                                                            data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                            href="javascript:void(0)">Share FB</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- ///2 -->
-                    <div class="block-k ">
-                        <div class="view-carde f-frame">
-                            <div class="provider">
-                                <img class="logo" alt="" src="/Upload/img_static/bannerfii638590796760419265.png">
-                                <div class="p-covers">
-                                    <span class="name" title="">
-                                        <a href="/profile.html?q=383337373338633" title="Thanh Tùng">Thanh Tùng</a>
-                                        <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
-                                    </span><span class="date"> 1 giờ trước</span>
-                                </div>
-
-                            </div>
-
-                            <div class="title">
-                                <a title="S&amp;P 500 tiếp tục phá đỉnh"
-                                    href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html">S&amp;P 500 tiếp tục phá
-                                    đỉnh </a>
-                            </div>
-                            <div class="sapo">
-                                Chỉ số S&amp;P 500 lập đỉnh mới vào phiên 10/9 sau khi số liệu
-                                giá bán buôn bất ngờ giảm – một tín hiệu tích cực cho nhà đầu tư đang đặt cược
-                                rằng Cục Dự trữ Liên bang Mỹ (Fed) sẽ bắt đầu hạ lãi suất ngay trong tuần tới để
-                                thúc đẩy kinh tế.
-                                <a href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html" class="d-more">Xem thêm</a>
-                            </div>
-
-                            <img class="h-img" src="https://media.dff.vn//web/image/2025/9/sp-500638931745680168819.jpg"
-                                title="S&amp;P 500 tiếp tục phá đỉnh" alt="S&amp;P 500 tiếp tục phá đỉnh" border="0">
-
-                            <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="2025091108024863">
-                                    <span class="for-up">
-                                        <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                            icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <!--?lit$811032025$--><!--?lit$811032025$-->
-                                            <path
-                                                d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                            </path><!--?-->
-                                        </svg>
-                                    </span>
-                                    <span class="value" data-old="2"> 2</span>
-                                    <span class="for-down">
-                                        <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                            icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <!--?lit$811032025$--><!--?lit$811032025$-->
-                                            <path
-                                                d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                            </path><!--?-->
-                                        </svg>
-                                    </span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html#anc_comment">
-                                        <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                            height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                            xmlns="http://www.w3.org/2000/svg">
-                                            <path
-                                                d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                            </path><!--?-->
-                                        </svg>
-                                        <span>0</span>
-                                    </a>
-                                </div>
-                                <div class="button-ar">
-                                    <div class="dropdown home-item">
-                                        <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                            aria-expanded="false">Chia sẻ</span>
-                                        <ul class="dropdown-menu">
-                                            <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                                    data-url="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html"
-                                                    href="javascript:void(0)">Copy link</a></li>
-                                            <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                                    data-url="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html"
-                                                    href="javascript:void(0)">Share FB</a></li>
-                                        </ul>
-                                    </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="block-k ">
+                            <div class="view-carde f-frame">
+                                <div class="text-center p-4">
+                                    <p>Chưa có bài viết nào trong cơ sở dữ liệu.</p>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <?php endif; ?>
 
 
 
@@ -291,6 +230,7 @@ $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10
 
 
                 </div>
+
                 <!-- bài viết chính block end -->
 
 
