@@ -3,8 +3,20 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
+
 require_once 'config/db.php';
 require_once 'config/config.php';
+
+// autoload
+spl_autoload_register(function ($class) {
+    $paths = [
+    __DIR__ . '/model/' . $class . '.php',
+    __DIR__ . '/controller/' . $class . '.php'
+];
+
+    foreach ($paths as $p) if (file_exists($p)) require_once $p;
+});
+
 
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -19,12 +31,47 @@ if (empty($url)) {
 }
 
 switch ($url) {
-    case 'register':
-        require_once 'controller/auth/registerUserController.php';
-        $controller = new registerUserController();
-        $controller->index();
+
+    case 'home':
+
+        $ctrl = new homeController();
+        $ctrl->index();
         break;
 
+    // case 'profile':
+    //     $ctrl = new homeController();
+    //     $ctrl->profile();
+    //     break;
+
+    case 'login':
+        require_once 'controller/auth/loginController.php';
+        $controller = new loginController();
+        $controller->index();
+        break;
+    case 'logout':
+        session_destroy();
+        header("Location: " . BASE_URL . "");
+        break;
+    case 'profile':
+        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->profile();
+        break;
+    case 'trends':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->trends();
+        break;
+    case 'details_topic':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->details_topic();
+        break;
+    case 'about':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->about();
+        break;
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';

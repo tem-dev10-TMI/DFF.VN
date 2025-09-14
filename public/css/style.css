@@ -5,9 +5,60 @@ a {
     cursor: pointer;
 }
 
+/* Badge số cho Top doanh nhân */
+.badge-number {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #ff4444;
+    color: white;
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    border: 2px solid white;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.box-company .item li:first-child {
+    position: relative;
+}
+
+/* Market data styling */
+.top-stock .per.positive {
+    color: #00c851;
+}
+
+.top-stock .per.negative {
+    color: #ff4444;
+}
+
+.top-stock .fa-arrow-up {
+    color: #00c851;
+}
+
+.top-stock .fa-arrow-down {
+    color: #ff4444;
+}
+
 a,
 hr {
     padding: 0
+}
+
+.is-invalid {
+    border-color: #dc3545 !important;
+}
+
+.col-12 small.text-danger {
+    display: block;
+    margin-top: 4px;
+    /* sát input */
+    font-size: 13px;
 }
 
 article,
@@ -2721,7 +2772,7 @@ article p a {
 
 .f-login .input-group,
 .f-register .input-group {
-    margin-bottom: 20px;
+    margin-top: 20px;
 }
 
 .f-login .input-group-text,
@@ -6611,4 +6662,3 @@ ul.timeline .left-arrow:after {
     }
 
 }
-
