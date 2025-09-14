@@ -77,6 +77,7 @@ switch ($url) {
         $controller = new homeController();
         $controller->details_blog();
         break;
+        
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
