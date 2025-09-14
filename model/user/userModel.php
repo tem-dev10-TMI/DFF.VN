@@ -92,4 +92,5 @@ class UserModel
         $stmt->execute([':author_id' => $author_id]);
         return $stmt->fetchAll();
     }
+    
 }

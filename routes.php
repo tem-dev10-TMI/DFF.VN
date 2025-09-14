@@ -38,6 +38,10 @@ switch ($route) {
         $ctrl = new ArticleController($pdo);
         break;
 
+    case 'crypton':
+        require_login();
+        $ctrl = new CryptonController($pdo);
+        break;
     // thêm các route khác: topics, tags, media...
     
     default:
