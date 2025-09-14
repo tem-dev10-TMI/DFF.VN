@@ -6,7 +6,7 @@
     <title>DFF.VN - Mạng Xã Hội Kinh Tế Tài Chính</title>
     
     <!-- CSS -->
-    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/styles.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style_of_crypton.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
