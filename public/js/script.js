@@ -61,14 +61,14 @@ async function loadMarketData() {
         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
         let response;
         if (currentProvider === 'binance') {
-            response = await fetch('proxy.php?url=' + encodeURIComponent('https://api.binance.com/api/v3/ticker/24hr'), { signal: controller.signal });
+            response = await fetch('public/proxy.php?url=' + encodeURIComponent('https://api.binance.com/api/v3/ticker/24hr'), { signal: controller.signal });
         } else if (currentProvider === 'fmp') {
             // FinancialModelingPrep via proxy
-            response = await fetch('proxy.php?url=' + encodeURIComponent('https://financialmodelingprep.com/api/v3/quote/' + stockSymbols.join(',') + '?apikey=demo'), { signal: controller.signal });
+            response = await fetch('public/proxy.php?url=' + encodeURIComponent('https://financialmodelingprep.com/api/v3/quote/' + stockSymbols.join(',') + '?apikey=demo'), { signal: controller.signal });
         } else if (currentProvider === 'stooq') {
             // Stooq CSV endpoint -> convert to JSON
             // We'll fetch quotes individually for reliability
-            const quotes = await Promise.all(stockSymbols.map(sym => fetch('proxy.php?url=' + encodeURIComponent(`https://stooq.com/q/l/?s=${sym.toLowerCase()}&f=sd2t2ohlcv&h&e=json`))));
+            const quotes = await Promise.all(stockSymbols.map(sym => fetch('public/proxy.php?url=' + encodeURIComponent(`https://stooq.com/q/l/?s=${sym.toLowerCase()}&f=sd2t2ohlcv&h&e=json`))));
             const jsons = await Promise.all(quotes.map(r => r.json()));
             clearTimeout(timeoutId);
             const mapped = jsons.map(j => j.symbols[0]).filter(x => x && x.close !== 'N/D').map(x => ({
