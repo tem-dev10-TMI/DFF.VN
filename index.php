@@ -82,6 +82,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->details_blog();
         break;
+    case 'crypton':
+        require_once 'controller/CryptonController.php';
+        $controller = new CryptonController();
+        $controller->index();
+        break;
     case 'view_profile_user':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();

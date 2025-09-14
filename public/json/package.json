@@ -1,0 +1,36 @@
+{
+    "name": "dff-vn-trading-platform",
+    "version": "1.0.0",
+    "description": "Mạng xã hội kinh tế tài chính với dữ liệu crypto real-time",
+    "main": "index.html",
+    "scripts": {
+      "start": "python -m http.server 8000",
+      "serve": "npx http-server -p 8000 -c-1",
+      "dev": "npx live-server --port=8000 --open=index.html"
+    },
+    "keywords": [
+      "crypto",
+      "trading",
+      "binance",
+      "tradingview",
+      "real-time",
+      "vietnam",
+      "finance"
+    ],
+    "author": "DFF.VN Team",
+    "license": "MIT",
+    "devDependencies": {
+      "http-server": "^14.1.1",
+      "live-server": "^1.2.2"
+    },
+    "dependencies": {},
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/dff-vn/trading-platform.git"
+    },
+    "bugs": {
+      "url": "https://github.com/dff-vn/trading-platform/issues"
+    },
+    "homepage": "https://github.com/dff-vn/trading-platform#readme"
+  }
+  
