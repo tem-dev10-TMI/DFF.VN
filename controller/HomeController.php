@@ -28,13 +28,27 @@ class homeController
                 $profile = false; // đừng ai xóa
                 require_once 'view/layout/main.php';
         }
-        public static function profile() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
+        public static function profile_business() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
         {
                 //Load model
 
                 //Load view
                 ob_start();
                 $profile_category='businessmen';
+                require_once 'view/layout/Profile.php';
+                $content = ob_get_clean();
+
+                //Load layout
+                $profile = true; // đừng ai xóa
+                require_once 'view/layout/main.php';
+        }
+        public static function profile_user() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
+        {
+                //Load model
+
+                //Load view
+                ob_start();
+                $profile_category='user';
                 require_once 'view/layout/Profile.php';
                 $content = ob_get_clean();
 

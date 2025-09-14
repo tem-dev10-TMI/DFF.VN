@@ -4,7 +4,7 @@ class profileUserController
     // Trang hồ sơ người dùng
     public static function profileUser()
     {
-        require_once 'model/user/userModel.php';
+        /*require_once 'model/user/userModel.php';
         require_once 'model/article/articlesmodel.php';
         require_once 'model/user/profileUserModel.php';
 
@@ -18,8 +18,25 @@ class profileUserController
             $profile = $modelProfile->getProfileUserByUserId($userId);
             $articles = $modelArticle->getArticleById($userId);
 
-            require_once 'view/account/profileUser.php';
-        }
+            //require_once 'view/account/profileUser.php';
+        }*/
+        ob_start();
+
+        require_once 'view/page/viewProfileuser.php';
+
+        $content = ob_get_clean();
+
+        //Load layout
+        $profile = false; // đừng ai xóa
+        require_once 'view/layout/main.php';
+    }
+    public static function profileBusiness()
+    {
+        ob_start();
+        require_once 'view/page/viewProfilebusiness.php';
+        $content = ob_get_clean();
+        $profile = false; // đừng ai xóa
+        require_once 'view/layout/main.php';
     }
 
     // ========== Quản lý Bài viết ==========

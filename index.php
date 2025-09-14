@@ -52,10 +52,15 @@ switch ($url) {
         session_destroy();
         header("Location: " . BASE_URL . "");
         break;
-    case 'profile':
+    case 'profile_user':
         require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
-        $controller->profile();
+        $controller->profile_user();
+        break;
+    case 'profile_business':
+        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->profile_business();
         break;
     case 'trends':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -63,7 +68,7 @@ switch ($url) {
         $controller->trends();
         break;
     case 'details_topic':
-         require_once 'controller/admin/TopicController.php';        
+        require_once 'controller/admin/TopicController.php';
         $controller = new TopicController();
         $controller->details_topic();
         break;
@@ -76,6 +81,16 @@ switch ($url) {
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->details_blog();
+        break;
+    case 'view_profile_user':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->profileUser();
+        break;
+    case 'view_profile_business':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->profileBusiness();
         break;
     default:
         //404 page
