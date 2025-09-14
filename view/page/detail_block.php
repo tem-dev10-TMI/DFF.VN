@@ -1,5 +1,5 @@
 <script src="https://cdn.tailwindcss.com"></script>
-  <div class="max-w-xl mx-auto bg-white rounded-2xl shadow-md p-4">
+  <div class="max-w-lg mx-auto bg-white rounded-2xl shadow-md p-4">
     
     <!-- Header -->
     <div class="flex items-center mb-3">
