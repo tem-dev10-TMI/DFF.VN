@@ -17,7 +17,7 @@ RewriteRule ^(controller|model|view|config|helpers|public|vendor)/ - [F,L]
 # 1.6. Chặn truy cập trực tiếp vào các file PHP ở root (trừ index.php và admin.php)
 # ------------------------------------
 RewriteCond %{REQUEST_FILENAME} -f
-RewriteCond %{REQUEST_URI} !^/(index\.php|admin\.php)$
+RewriteCond %{REQUEST_URI} !^/DFF\.VN/(index\.php|admin\.php)$
 RewriteCond %{REQUEST_URI} \.php$
 RewriteRule . - [F,L]
 
