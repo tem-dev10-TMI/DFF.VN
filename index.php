@@ -92,6 +92,18 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->profileBusiness();
         break;
+    
+    // ========== API ROUTES ==========
+    case 'api/load-posts':
+        require_once 'controller/test-api-profile/loadPosts.php';
+        break;
+    case 'api/add-post':
+        require_once 'controller/test-api-profile/addPost.php';
+        break;
+    case 'api/toggle-like':
+        require_once 'controller/test-api-profile/toggleLike.php';
+        break;
+    
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
