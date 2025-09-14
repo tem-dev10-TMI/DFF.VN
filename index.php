@@ -10,9 +10,9 @@ require_once 'config/config.php';
 // autoload
 spl_autoload_register(function ($class) {
     $paths = [
-    __DIR__ . '/model/' . $class . '.php',
-    __DIR__ . '/controller/' . $class . '.php'
-];
+        __DIR__ . '/model/' . $class . '.php',
+        __DIR__ . '/controller/' . $class . '.php'
+    ];
 
     foreach ($paths as $p) if (file_exists($p)) require_once $p;
 });
@@ -71,6 +71,11 @@ switch ($url) {
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->about();
+        break;
+    case 'details_blog':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->details_blog();
         break;
     default:
         //404 page
