@@ -1,10 +1,19 @@
 <main class="main-content">
 <style>
-    body { font-family: Arial, sans-serif; background:#f6f8fa; padding:20px; }
-    .main-content { max-width:1200px; margin:0 auto; }
-    .input-group { display:flex; max-width:600px; margin-bottom:20px; }
-    .form-control { flex:1; padding:10px; border:1px solid #ccc; border-radius:4px 0 0 4px; }
-    .input-group-append button { border:1px solid #ccc; border-left:0; background:#fff; padding:10px 14px; border-radius:0 4px 4px 0; cursor:pointer; }
+    /* Stock market data đè lên header nhưng ở vị trí dưới header */
+    .top-stock {
+        position: fixed !important;
+        top: 66px !important;
+        z-index: 10001 !important;
+        width: 100% !important;
+        height: 50px !important;
+    }
+    
+    .trends-container { max-width:1200px; margin:0 auto; }
+    .input-group { display:flex; max-width:600px; margin-bottom:20px; align-items:stretch; }
+    .form-control { flex:1; padding:12px 15px; border:1px solid #ccc; border-radius:4px 0 0 4px; font-size:14px; height:auto; }
+    .input-group-append button { border:1px solid #ccc; border-left:0; background:#fff; padding:0; border-radius:0 4px 4px 0; cursor:pointer; display:flex; align-items:center; justify-content:center; min-width:50px; height:100%; }
+    .input-group-append button i { font-size:16px; color:#666; line-height:1; }
     .list-trend { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px,1fr)); gap:20px; }
     .box-trends { background:#fff; border:1px solid #e6e8eb; border-radius:6px; padding:14px; }
     .box-trends h5 { font-size:16px; margin-bottom:10px; color:#124889; display:flex; justify-content:space-between; align-items:center; }
@@ -18,6 +27,7 @@
     .more { display:inline-block; margin-top:10px; font-size:13px; color:#124889; text-decoration:none; }
     .more:hover { text-decoration:underline; }
   </style>
+  <div class="trends-container">
   <div class="input-group">
       <input class="form-control" type="search" placeholder="Tìm kiếm xu hướng">
       <span class="input-group-append">
@@ -57,6 +67,6 @@
         <a class="more" href="#">Xem thêm</a>
       </div>
     </div>
-
+  </div>
 
 </main>

@@ -6,7 +6,7 @@
                             class="fas fa-bars"></i></a></span>
             </div>
             <div class="header-logo">
-                <a href="index.html">
+                <a href="home">
                     <img alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
                         src="../img.dff.vn/static/img/logo.png" /></a>
                 <div class="box-search">
@@ -70,14 +70,14 @@
                                                 <!-- Có thể load profile user tại đây -->
                                             </ul>
                                             <div class="add">
-                                                <a href="index.html">Xem tất cả Profile</a>
+                                                <a href="home">Xem tất cả Profile</a>
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
+                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
+                                    <li><a class="dropdown-item" href="home"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i

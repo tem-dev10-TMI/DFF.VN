@@ -164,7 +164,7 @@
     <div class="func-mobile">
         <ul>
             <li>
-                <a href="index.html">
+                <a href="home">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>

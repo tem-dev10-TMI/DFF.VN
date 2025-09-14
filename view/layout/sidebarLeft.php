@@ -13,7 +13,7 @@
                                     d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
                                 </path><!--?-->
                             </svg>
-                            <a href="index.html" title="Trang chủ">Trang chủ</a>
+                            <a href="home" title="Trang chủ">Trang chủ</a>
                         </li>
                         <li class="item" data-ref="d">
                             <i class="bi bi-newspaper idiscuss"></i>
@@ -21,7 +21,7 @@
                         </li>
                         <li class="item">
                             <i class="bi bi-box-arrow-up-right trend-icon"></i>
-                            <a href="trends.html" title="Trang chủ">Xu hướng</a>
+                            <a href="trends" title="Trang chủ">Xu hướng</a>
                         </li>
                         <li class="item" data-ref="k">
                             <i class="bi bi-chat-left-text idiscuss"></i>
