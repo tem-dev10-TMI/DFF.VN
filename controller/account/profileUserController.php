@@ -19,7 +19,7 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
-        $profile = true;
+        
         $articles = $modelArticle->getArticleById($userId);
 
         $role = $_SESSION['user']['role'];
@@ -31,7 +31,7 @@ class profileUserController
             $profile_category = 'user';
             require_once 'view/layout/Profile.php';
             $content = ob_get_clean();
-
+            $profile = true;
             //Load layout
              // đừng ai xóa
             require_once 'view/layout/main.php';

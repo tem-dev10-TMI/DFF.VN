@@ -78,7 +78,7 @@
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
                                     <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user') {
-                                                                                            echo 'profile_user';
+                                                                                            echo 'profileUser';
                                                                                         } else {
                                                                                             echo 'profile_business';
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
