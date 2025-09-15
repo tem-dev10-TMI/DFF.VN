@@ -54,23 +54,23 @@ class UserController
                 $googleUser->email,
                 $avatarUrl
             );
-$_SESSION['user_id'] = $user['id'];
-$_SESSION['user_name'] = $user['name'];
-$_SESSION['user_username'] = $user['username'] ?? null;
-$_SESSION['user_email'] = $user['email'];
-$_SESSION['user_role'] = $user['role'] ?? 'user';
-$_SESSION['user_avatar_url'] = $user['avatar_url'] ?? $googleUser->picture; // link Google
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_username'] = $user['username'] ?? null;
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_role'] = $user['role'] ?? 'user';
+            $_SESSION['user_avatar_url'] = $user['avatar_url'] ?? $googleUser->picture; // link Google
 
-// Lấy avatar để hiển thị
-$avatarUrl = $_SESSION['user_avatar_url'] ?? null;
+            // Lấy avatar để hiển thị
+            $avatarUrl = $_SESSION['user_avatar_url'] ?? null;
 
-// Nếu rỗng hoặc null, dùng avatar mặc định
-if (!$avatarUrl || trim($avatarUrl) === '') {
-    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-}
+            // Nếu rỗng hoặc null, dùng avatar mặc định
+            if (!$avatarUrl || trim($avatarUrl) === '') {
+                $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+            }
 
-// Nếu là link Google, tăng kích thước avatar
-$avatarUrl = str_replace('s96-c', 's200-c', $avatarUrl);
+            // Nếu là link Google, tăng kích thước avatar
+            $avatarUrl = str_replace('s96-c', 's200-c', $avatarUrl);
 
 
             header('Location: ' . BASE_URL);

@@ -186,4 +186,39 @@ class UserModel
             return self::getUserByEmail($email);
         }
     }
+public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
+{
+    $db = new connect();
+
+    // Kiểm tra user đã tồn tại theo name
+    $stmt = $db->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
+    $stmt->execute(['name' => $name]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        return $user; // user đã tồn tại
+    }
+
+    // Nếu chưa có, tạo mới
+    $stmt = $db->prepare("
+        INSERT INTO users 
+        (name, avatar_url, role, created_at, updated_at) 
+        VALUES 
+        (:name, :avatar, 'user', NOW(), NOW())
+    ");
+    $stmt->execute([
+        'name' => $name,
+        'avatar' => $avatarUrl
+    ]);
+
+    // Lấy ID vừa tạo
+    $stmt = $db->prepare("SELECT id FROM users WHERE name = :name LIMIT 1");
+    $stmt->execute(['name' => $name]);
+    $id = $stmt->fetchColumn();
+
+    return self::getUserById($id);
+}
+
+
+
 }
