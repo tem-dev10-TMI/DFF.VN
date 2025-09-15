@@ -798,7 +798,7 @@
       <div class="provider">
         <img class="logo" alt="" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
         <div class="p-covers">
-          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px; cursor:pointer;" title="${post.review_reason ? post.review_reason.replace(/"/g,'&quot;') : ''}" onclick="showStatusReason(event, ${post.id})">${renderStatusText(post.status)}</span>
+          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px;" title="${post.review_reason ? post.review_reason.replace(/"/g,'&quot;') : ''}">${renderStatusText(post.status)}</span>
           <span class="name" title="">
             <a href="/profile.html?q=${post.author_id || post.user_id}" title="${post.author_name}">${post.author_name}</a>
           </span>
@@ -809,6 +809,13 @@
       <div class="title">
         <a title="${post.title || post.content.substring(0, 50)}" href="/post-${post.id}.html">${post.title || post.content.substring(0, 50)}</a>
       </div>
+      ${post.status && (post.status.toLowerCase()==='rejected' || post.status.toLowerCase()==='reject') && post.review_reason ? `
+      <div class="mt-1 mb-2">
+        <div class="alert alert-danger py-1 px-2 m-0">
+          <small><strong>Lý do:</strong> ${escapeHtml(post.review_reason)}</small>
+        </div>
+      </div>
+      ` : ''}
       <div class="sapo">
         ${post.content}
         ${post.content.length > 100 ? '<a href="/post-' + post.id + '.html" class="d-more">Xem thêm</a>' : ''}
@@ -890,17 +897,14 @@
     return 'bg-warning text-dark';
   }
 
-  function showStatusReason(evt, articleId) {
-    // Tìm reason từ dataset hiện có trong posts đã render
-    // Vì ta không lưu global list, dùng DOM closest để lấy nội dung title của badge
-    var el = evt.currentTarget;
-    var reason = el.getAttribute('title') || '';
-    if (reason && reason.trim().length > 0) {
-      // Hiển thị bằng alert đơn giản để nhẹ nhàng, có thể đổi sang modal sau
-      alert(reason);
-    } else {
-      alert('Không có lý do được lưu cho bài viết này.');
-    }
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   // Submit bài viết mới
