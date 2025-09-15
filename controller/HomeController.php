@@ -3,7 +3,7 @@ require_once 'model/article/articlesmodel.php';
 require_once 'model/commentmodel.php';
 require_once 'model/user/businessmenModel.php';
 require_once 'model/MarketDataModel.php';
-require_once 'model/TopicModel.php';
+
 
 class homeController
 {
@@ -18,11 +18,7 @@ class homeController
                 $topBusinessmen = businessmenModel::getAllBusinessmen(10);
 
                 $marketData = MarketDataModel::getCachedMarketData();
-                // Lấy chủ đề cho sidebar
-                $topicModel = new TopicModel();
-                $allTopics = $topicModel->getAll(); // tất cả chủ đề
-                $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
-                $moreTopics = array_slice($allTopics, 5);   // còn lại
+                
                 //Load view
                 ob_start();
 
