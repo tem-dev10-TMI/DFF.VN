@@ -48,6 +48,11 @@ switch ($url) {
         $controller = new loginController();
         $controller->index();
         break;
+    case 'register':
+        require_once 'controller/auth/registerUserController.php';
+        $controller = new loginController();
+        $controller->index();
+        break;
     case 'logout':
         session_destroy();
         header("Location: " . BASE_URL . "");
@@ -93,12 +98,12 @@ switch ($url) {
         $controller->about();
         break;
     case 'details_blog':
-    require_once 'controller/ArticlesController.php';
-    $controller = new ArticlesController();
+        require_once 'controller/ArticlesController.php';
+        $controller = new ArticlesController();
 
-    $id = $_GET['id'] ?? null;
-    $controller->details_blog($id);
-    break;
+        $id = $_GET['id'] ?? null;
+        $controller->details_blog($id);
+        break;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();
