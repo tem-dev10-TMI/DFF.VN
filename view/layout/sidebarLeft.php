@@ -17,7 +17,7 @@
             </li>
             <li class="item" data-ref="d">
                 <i class="bi bi-newspaper idiscuss"></i>
-                <a href="view/page/News.php" title="Trang chủ">Mới nhất</a>
+                <a href="news" title="Trang chủ">Mới nhất</a>
            </li> 
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>

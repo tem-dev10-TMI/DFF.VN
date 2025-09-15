@@ -98,11 +98,11 @@ switch ($url) {
         $controller->about();
         break;
     case 'details_blog':
-        /*require_once 'controller/ArticlesController.php';
+        require_once 'controller/ArticlesController.php';
         $controller = new ArticlesController();
 
         $id = $_GET['id'] ?? null;
-        $controller->details_blog($id);*/
+        $controller->details_blog($id);
         break;
     case 'news':
         require_once 'controller/NewsController.php';
