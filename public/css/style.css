@@ -6774,3 +6774,23 @@ ul.timeline .left-arrow:after {
   color: #333;          /* màu icon (có thể đổi sang #007bff để xanh) */
   margin-right: 6px;    /* tạo khoảng cách với chữ */
 }
+@media (max-width: 768px) {
+  /* Ngày giờ */
+  .time, .date, .date-time {
+    font-size: 16px !important; /* tăng size chữ */
+    font-weight: 600;           /* làm đậm */
+  }
+
+  /* Logo */
+  .logo img,
+  .logo svg {
+    width: 150px !important; /* to hơn */
+    height: auto !important;
+  }
+
+  /* Lịch sự kiện */
+  .event-link, .event, a[href*="su-kien"] {
+    font-size: 16px !important; /* chữ to hơn */
+    font-weight: 700 !important; /* đậm hơn */
+  }
+}
