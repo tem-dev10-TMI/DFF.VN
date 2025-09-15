@@ -202,7 +202,7 @@
                 <?php foreach ($articles as $article): ?>
                     <li class="new-style">
                         <a title="<?= htmlspecialchars($article['title']) ?>" 
-                           href="details_Blog?id=<?= $article['id'] ?>">
+                           href="details_blog?id=<?= $article['id'] ?>">
                             <?= htmlspecialchars($article['title']) ?>
                         </a>
                         
