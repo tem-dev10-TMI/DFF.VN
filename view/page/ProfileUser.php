@@ -5,27 +5,27 @@
       <h5 class="mb-3">Thông tin cá nhân</h5>
       <div class="info-item mb-2">
         <strong>Họ tên:</strong>
-        <span class="text-muted">Nguyễn Văn A</span>
+        <span class="text-muted"><?php echo htmlspecialchars($profileUser['name'] ?? 'Chưa cập nhật'); ?></span>
       </div>
+
       <div class="info-item mb-2">
         <strong>Email:</strong>
-        <span class="text-muted">nguyenvana@email.com</span>
+        <span class="text-muted"><?php echo htmlspecialchars($profileUser['email'] ?? 'Chưa cập nhật'); ?></span>
       </div>
+
       <div class="info-item mb-2">
         <strong>Nghề nghiệp:</strong>
-        <span class="text-muted">Nhà đầu tư</span>
+        <span class="text-muted"><?php echo htmlspecialchars($profileUser['workplace'] ?? 'Chưa cập nhật'); ?></span>
       </div>
-      <div class="info-item mb-2">
-        <strong>Kinh nghiệm:</strong>
-        <span class="text-muted">5 năm</span>
-      </div>
+
       <div class="info-item mb-2">
         <strong>Địa chỉ:</strong>
-        <span class="text-muted">Hà Nội, Việt Nam</span>
+        <span class="text-muted"><?php echo htmlspecialchars($profileUser['live_at'] ?? 'Chưa cập nhật'); ?></span>
       </div>
+
       <div class="info-item mb-2">
         <strong>Tham gia:</strong>
-        <span class="text-muted">Tháng 1/2023</span>
+        <span class="text-muted"><?php echo date("d/m/Y", strtotime($profileUser['user_created_at'])); ?></span>
       </div>
     </div>
 
@@ -34,21 +34,22 @@
       <h6 class="mb-3">Thống kê</h6>
       <div class="stat-item d-flex justify-content-between mb-2">
         <span>Bài viết:</span>
-        <span class="badge bg-primary">42</span>
+        <span class="badge bg-primary"><?php echo $stats['articles']; ?></span>
       </div>
       <div class="stat-item d-flex justify-content-between mb-2">
         <span>Người theo dõi:</span>
-        <span class="badge bg-success">156</span>
+        <span class="badge bg-success"><?php echo $stats['followers']; ?></span>
       </div>
       <div class="stat-item d-flex justify-content-between mb-2">
         <span>Đang theo dõi:</span>
-        <span class="badge bg-info">89</span>
+        <span class="badge bg-info"><?php echo $stats['following']; ?></span>
       </div>
       <div class="stat-item d-flex justify-content-between mb-2">
         <span>Lượt thích:</span>
-        <span class="badge bg-warning">1.2K</span>
+        <span class="badge bg-warning"><?php echo number_format($stats['likes']); ?></span>
       </div>
     </div>
+
 
     <!-- Sở thích/Chuyên môn -->
     <div class="user-interests mt-4">
@@ -64,7 +65,7 @@
 
     <!-- Nút hành động -->
     <div class="user-actions mt-4">
-      <button class="btn btn-outline-primary btn-sm w-100 mb-2">
+      <button class="btn btn-outline-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
         <i class="fas fa-edit me-1"></i> Chỉnh sửa hồ sơ
       </button>
       <button class="btn btn-outline-success btn-sm w-100 mb-2">

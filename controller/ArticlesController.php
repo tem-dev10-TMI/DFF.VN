@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/ArticlesModel.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
 
 class ArticlesController
 {
@@ -40,7 +40,7 @@ class ArticlesController
             $author  = $_POST['author_id'] ?? '';
             $topic   = $_POST['topic_id'] ?? '';
 
-            ArticlesModel::addArticle($title,$summary,$content,$image,$author,$topic);
+            ArticlesModel::addArticle($title, $summary, $content, $image, $author, $topic);
             header('Location: index.php?controller=articles&action=index');
             exit;
         }
@@ -79,5 +79,76 @@ class ArticlesController
         ArticlesModel::deleteArticle($id);
         header('Location: index.php?controller=articles&action=index');
         exit;
+    }
+
+
+
+
+    // protected $pdo;
+
+    // public function __construct($pdo)
+    // {
+    //     $this->pdo = $pdo;
+    // }
+
+    // Danh sách bài viết chờ duyệt
+    // public function reviewList()
+    // {
+    //     $stmt = $this->pdo->query(
+    //         "SELECT a.*, u.username AS author_name
+    //              FROM articles a
+    //              JOIN users u ON a.author_id = u.id
+    //              WHERE a.status = 'pending'
+    //              ORDER BY a.published_at DESC"
+    //     );
+    //     $articles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    //     include __DIR__ . '/../../view/admin/views/articles/review_list.php';
+    // }
+
+    // Thực hiện duyệt hoặc từ chối
+    // public function reviewAction()
+    // {
+    //     $article_id = $_GET['id'] ?? null;
+    //     $action = $_GET['do'] ?? null;
+    //     $reason = $_POST['reason'] ?? null;
+    //     $admin_id = $_SESSION['user']['id'] ?? null;
+
+    //     if ($article_id && in_array($action, ['approved', 'rejected'])) {
+    //         // Cập nhật trạng thái
+    //         $stmt = $this->pdo->prepare("UPDATE articles SET status = :status WHERE id = :id");
+    //         $stmt->execute([
+    //             ':status' => $action == 'approved' ? 'public' : 'rejected',
+    //             ':id' => $article_id
+    //         ]);
+
+    //         // Lưu lịch sử duyệt
+    //         require_once __DIR__ . '/../../model/admin/ArticleReview.php';
+    //         $reviewModel = new ArticleReview($this->pdo);
+    //         $reviewModel->addReview($article_id, $admin_id, $action, $reason);
+    //     }
+
+    //     header("Location: admin.php?route=article&action=reviewList");
+    //     exit;
+    // }
+    public static function details_blog($id)
+    {
+        require_once __DIR__ . '/../model/article/ArticlesModel.php';
+
+        // Lấy dữ liệu từ model
+        $article = ArticlesModel::getArticleById($id);
+        if (!$article) {
+            require __DIR__ . '/../views/errors/404.php';
+            return;
+        }
+
+        // Nạp view
+        ob_start();
+        require __DIR__ . '/../view/page/details_Blog.php';
+        $content = ob_get_clean();
+
+        // Layout chính
+        $profile = false;
+        require __DIR__ . '/../view/layout/main.php';
     }
 }

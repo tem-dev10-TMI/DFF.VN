@@ -5,7 +5,7 @@ define('DB_USER', 'avnadmin');
 define('DB_PASS', 'AVNS_brCrqfhHuYX88MkBMqS');
 define('DB_NAME', 'dff_db');
 define('DB_PORT', '27925');
-define('BASE_URL', 'http://localhost:8080/DFF.VN');
+define('BASE_URL', 'http://localhost/DFF.VN');
 
 // Site Configuration
 define('SITE_NAME', 'DFF.VN');
@@ -20,7 +20,7 @@ define('GOOGLE_REDIRECT_URI', BASE_URL . '/public/callback.php');
 define('UPLOADS_DIR', __DIR__ . '/../uploads');
 define('UPLOADS_URL', BASE_URL . '/uploads');
 // autoload models/controllers
-spl_autoload_register(function($class){
+spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '../model/admin' . $class . '.php',
         __DIR__ . '../model/admin' . $class . '.php'
@@ -29,4 +29,3 @@ spl_autoload_register(function($class){
 });
 
 require_once __DIR__ . '/../helpers.php';
-

@@ -35,8 +35,8 @@
             </li>
             <li class="item" data-ref="d">
                 <i class="bi bi-newspaper idiscuss"></i>
-                <a href="tin-moi.html" title="Trang chủ">Mới nhất</a>
-            </li>
+                <a href="news" title="Trang chủ">Mới nhất</a>
+           </li> 
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
@@ -99,11 +99,11 @@
 
         <ul class="nav nav-second-level about-c">
             <li><i class="bi bi-tv"></i>
-                <a href="?url=about">Về chúng tôi</a>
+                <a href="about#">Về chúng tôi</a>
             </li>
             <li class="mline">
                 <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service">Thỏa thuận cung cấp và sử dụng dịch vụ MXH</a>
+                <a href="about#gioithieu">Thỏa thuận cung cấp và sử dụng dịch vụ MXH</a>
             </li>
             <li><!-- <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline"
                                 viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
@@ -118,23 +118,18 @@
                                 </path>
                                 <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                             </svg> -->
-                <a href="policy.html#privacy-policy">Chính sách riêng tư</a>
+                <a href="about#thuthap">Chính sách riêng tư</a>
             </li>
-            <li><i class="bi bi-badge-ad"></i>
-                <a href="policy.html#advertisement">Quảng cáo </a>
-            </li>
-            <li><i class="bi bi-rss"></i>
-                <a href="rss.html">RSS </a>
-            </li>
+            
         </ul>
 
         <div class="line"></div>
         <ul class="nav nav-second-level h-info">
-            <li>Số Giấy phép: 125/GP-BTTTT ngày 11/03/2022</li>
-            <li>Tổ chức thiết lập: CTCP Tài chính số</li>
-            <li>Địa chỉ: Tầng 8, tòa Detech II, 107 Nguyễn Phong Sắc, Cầu Giấy, Hà Nội</li>
-            <li>Chịu trách nhiệm nội dung: Trần Đô Thành</li>
-            <li>Hotline: 0789 339 898 - Email: info@dff.vn</li>
+            <li>TEAM TIM (DEV - K25)</li>
+            <li>Viện Phát triển Đào tạo và Quản lý (TMI)</li>
+            <li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
+            <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
+            <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
 
 
         </ul>

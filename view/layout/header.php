@@ -8,9 +8,11 @@
             <div class="header-logo">
                 <a href="home">
 
+
                     <img style=" stroke: none !important;height: 50px; width:auto; "
                         alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
                         src="public/img/logo.svg" ; /></a>
+
                 <div class="box-search">
                     <div class="input-group ">
                         <span class="input-group-append">
@@ -88,7 +90,12 @@
                                     </li>
 
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="home"><i class="fas fa-user"></i> Profile</a></li>
+
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user') {
+                                                                                            echo 'profileUser';
+                                                                                        } else {
+                                                                                            echo 'profile_business';
+                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
@@ -102,7 +109,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg">
+                                    <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
                                 </a>
                             </span>
                         <?php endif; ?>
@@ -192,8 +199,9 @@
 
                         <div class="col-12">
                             <div class="input-social">
-                                <button type="button" class="login-with-google-btn"
-                                    onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+
+                                <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+
                                     Đăng nhập bằng Google
                                 </button>
                             </div>

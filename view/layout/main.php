@@ -111,7 +111,15 @@
 
 
 
-    <?php require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+    <?php
+
+    require_once 'model/TopicModel.php';
+
+    $topicModel = new TopicModel();
+    $allTopics = $topicModel->getAll(); // tất cả chủ đề
+    $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
+    $moreTopics = array_slice($allTopics, 5);
+    require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
     ?>
 
     <div class="m-top-info">
@@ -181,7 +189,7 @@
                 </a>
             </li>
             <li class="fitem2">
-                <a href="trends.html" class="m-trend">
+                <a href="trends" class="m-trend">
                     <i class="bi bi-lightning-charge-fill"></i>
                     <span>Xu hướng</span>
                 </a>
@@ -248,7 +256,7 @@
             </div>
         <?php endif; ?>
         <input type="hidden" id="hdd_id" value="24166" />
-            
+
         <script>
             $(function() {
 

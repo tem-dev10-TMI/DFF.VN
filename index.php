@@ -48,19 +48,39 @@ switch ($url) {
         $controller = new loginController();
         $controller->index();
         break;
+    case 'register':
+        require_once 'controller/auth/registerUserController.php';
+        $controller = new registerUserController();
+        $controller->index();
+        break;
     case 'logout':
         session_destroy();
         header("Location: " . BASE_URL . "");
         break;
-    case 'profile_user':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->profile_user();
+    case 'profileUser':
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->profileUser();
+        break;
+    case 'edit_profile':
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->editProfile();
         break;
     case 'profile_business':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->profile_business();
+        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new BusinessmenController();
+        $controller->index();
+        break;
+    case 'edit_business':
+        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new BusinessmenController();
+        $controller->editBusiness();
+        break;
+    case 'add_article':
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->addArticle();
         break;
     case 'trends':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -78,9 +98,18 @@ switch ($url) {
         $controller->about();
         break;
     case 'details_blog':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->details_blog();
+        require_once 'controller/ArticlesController.php';
+        $controller = new ArticlesController();
+
+        $id = $_GET['id'] ?? null;
+        $controller->details_blog($id);
+        break;
+    case 'news':
+        require_once 'controller/NewsController.php';
+        $controller = new NewsController();
+
+        
+        $controller->index();
         break;
     case 'crypton':
         require_once 'controller/CryptonController.php';
@@ -90,25 +119,33 @@ switch ($url) {
     case 'view_profile_user':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
-        $controller->profileUser();
+        $controller->viewprofileUser();
         break;
     case 'view_profile_business':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
-        $controller->profileBusiness();
+        $controller->viewprofileBusiness();
+
         break;
-    
+
     // ========== API ROUTES ==========
-    case 'api/load-posts':
-        require_once 'controller/test-api-profile/loadPosts.php';
-        break;
+    case 'api/addPost':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->addArticle();
+        exit;
+    case 'api/loadPost':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->loadArticle();
+        exit;
     case 'api/add-post':
-        require_once 'controller/test-api-profile/addPost.php';
+        require_once 'controller/account/profileUserController.php';
         break;
     case 'api/toggle-like':
-        require_once 'controller/test-api-profile/toggleLike.php';
+        require_once 'controller/account/profileUserController.php';
         break;
-    
+
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
