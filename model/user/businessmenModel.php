@@ -12,7 +12,8 @@ class businessmenModel
                 WHERE u.id = :user_id
                 LIMIT 1";
         $stmt = $db->db->prepare($sql);
-        $stmt->execute(['user_id' => $user_id]);
+$stmt->execute([':user_id' => $user_id]);
+
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -68,7 +69,7 @@ class businessmenModel
         $sql = "SELECT * FROM businessmen_careers WHERE businessmen_id = :businessmen_id ORDER BY start_year DESC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':businessmen_id' => $businessmen_id]);
-        return $stmt->fetchAll();
+return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // =============== Thêm quá trình công tác của doanh nhân ===============
