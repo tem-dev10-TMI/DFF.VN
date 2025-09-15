@@ -19,7 +19,7 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
-
+        $profile = true;
         $articles = $modelArticle->getArticleById($userId);
 
         $role = $_SESSION['user']['role'];
@@ -33,7 +33,7 @@ class profileUserController
             $content = ob_get_clean();
 
             //Load layout
-            $profile = true; // đừng ai xóa
+             // đừng ai xóa
             require_once 'view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
@@ -65,7 +65,7 @@ class profileUserController
         }
 
         // Kiểm tra đăng nhập
-        session_start();
+        
         if (!isset($_SESSION['user_id'])) {
             echo json_encode([
                 'success' => false,

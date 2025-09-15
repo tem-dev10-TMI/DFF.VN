@@ -2,7 +2,7 @@
 class ArticlesModel
 {
     // Thêm bài viết mới
-    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
+    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'pending', $is_hot = 0, $is_analysis = 0)
     {
         $db = new connect();
         $slug = connect::createSlug($title);

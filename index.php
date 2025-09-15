@@ -109,14 +109,16 @@ switch ($url) {
         break;
 
     // ========== API ROUTES ==========
-    case 'api/load-posts':
-        require_once 'controller/test-api-profile/loadPosts.php';
-        break;
+    case 'api/addPost':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->addArticle();
+        exit;
     case 'api/add-post':
-        require_once 'controller/test-api-profile/addPost.php';
+        require_once 'controller/account/profileUserController.php';
         break;
     case 'api/toggle-like':
-        require_once 'controller/test-api-profile/toggleLike.php';
+        require_once 'controller/account/profileUserController.php';
         break;
 
     default:

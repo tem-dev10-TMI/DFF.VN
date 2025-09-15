@@ -724,8 +724,9 @@
           loadingElement.style.display = 'none';
         }
 
-        if (data.success) {
-          displayPosts(data.posts);
+        if (data && (data.success === true || typeof data.success === 'undefined')) {
+          var posts = Array.isArray(data.posts) ? data.posts : (data.data && Array.isArray(data.data.posts) ? data.data.posts : []);
+          displayPosts(posts);
         } else {
           console.error('Lỗi load bài viết:', data.message);
           // Hiển thị thông báo lỗi
@@ -899,37 +900,27 @@
       formData.append('main_image_url', imageFile);
     }
 
-    fetch('controller/account/api/postArticleApi.php', {
+    fetch('api/addPost', {
         method: 'POST',
         body: formData
       })
-      .then(response => response.text()) // 👈 lấy raw text trước
-      .then(text => {
-        console.log("Raw response:", text); // log toàn bộ response để xem có lỗi PHP/SQL không
-
-        try {
-          var data = JSON.parse(text); // parse sang JSON
-        } catch (e) {
-          console.error("JSON parse error:", e);
-          alert("Phản hồi không phải JSON, xem log console!");
-          return;
-        }
-
-        // Xử lý JSON như cũ
+      .then(response => response.json())
+      .then(data => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
 
-        if (data.success) {
+        if (data && data.success) {
           document.getElementById('postTitle').value = '';
           document.getElementById('postSummary').value = '';
           document.getElementById('newPost').value = '';
           document.getElementById('postImage').value = '';
           document.getElementById('imagePreview').innerHTML = '';
 
+          // Refresh danh sách bài viết
           loadPosts();
-          showNotification('Đăng bài thành công!', 'success');
+          showNotification(data.message || 'Đăng bài thành công!', 'success');
         } else {
-          alert('Lỗi: ' + data.message);
+          alert('Lỗi: ' + (data && data.message ? data.message : 'Không xác định'));
         }
       })
       .catch(error => {
