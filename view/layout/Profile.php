@@ -293,7 +293,7 @@
             <h6 class="mb-0">
               <?php
               if ($profile_category == 'businessmen') {
-                echo htmlspecialchars($profileUser['name'] ?? 'Doanh nghiệp');
+                echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
               } else {
                 echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
               }
@@ -584,14 +584,6 @@
 <?php if (isset($_GET['msg'])): ?>
   <script>
     switch ("<?= $_GET['msg'] ?>") {
-      case "article_added":
-        alert("✅ Bài viết đã được thêm thành công và chờ duyệt!");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
-        break;
-      case "article_updated":
-        alert("✏️ Bài viết đã được cập nhật thành công!");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
-        break;
       case "profile_updated":
         alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
         window.location.href = "<?= BASE_URL ?>/profileUser";
@@ -600,9 +592,13 @@
         alert("❌ Cập nhật thất bại, vui lòng thử lại.");
         window.location.href = "<?= BASE_URL ?>/profileUser";
         break;
-      case "profile_added":
-        alert("📝 Thông tin cá nhân đã được thêm thành công!");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
+      case "business_updated":
+        alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "business_failed":
+        alert("❌ Cập nhật thất bại, vui lòng thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
         break;
       case "password_changed":
         alert("🔑 Mật khẩu đã được đổi thành công!");

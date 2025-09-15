@@ -20,8 +20,8 @@ class profileUserController
 
         $user = $modelUser->getUserById($userId);
 
-        $articles = $modelArticle->getArticleById($userId);
-
+        /*         $articles = $modelArticle->getArticleById($userId);
+ */
         $role = $_SESSION['user']['role'];
         if ($role === 'user') {
             $profileUser = $modelProfile->getProfileUserByUserId($userId);
@@ -199,34 +199,57 @@ class profileUserController
         require_once 'view/account/addProfile.php';
     }
 
-    public static function editProfile()
+    public function editProfile()
     {
-        if (!isset($_SESSION['user'])) {
+        // 1. Xác thực và Phân quyền
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        $userId = $_SESSION['user']['id'];
         require_once 'model/user/profileUserModel.php';
-        $modelProfile = new profileUserModel();
+        $userId = $_SESSION['user']['id'];
 
+        // 2. Khởi tạo Model
+        $profileModel = new profileUserModel();
+
+        // 3. Xử lý yêu cầu POST (gửi form)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $display_name = $_POST['display_name'] ?? null;
-            $birth_year   = $_POST['birth_year'] ?? null;
-            $workplace    = $_POST['workplace'] ?? null;
-            $studied_at   = $_POST['studied_at'] ?? null;
-            $live_at      = $_POST['live_at'] ?? null;
+            // Lấy và làm sạch dữ liệu đầu vào từ form
+            $display_name = htmlspecialchars($_POST['display_name'] ?? '');
+            $birth_year   = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
+            $workplace    = htmlspecialchars($_POST['workplace'] ?? '');
+            $studied_at   = htmlspecialchars($_POST['studied_at'] ?? '');
+            $live_at      = htmlspecialchars($_POST['live_at'] ?? '');
 
-            // Kiểm tra xem user đã có hồ sơ chưa
-            $profileUser  = $modelProfile->getProfileUserByUserId($userId);
-            if ($profileUser) {
-                // Có rồi → update
-                $result = $modelProfile->updateProfileUser($userId, $display_name, $birth_year, $workplace, $studied_at, $live_at);
+            // Kiểm tra sự tồn tại của profile người dùng
+            $existingProfile = $profileModel->getProfileUserByUserId($userId);
+
+            $success = false;
+            // Kiểm tra xem có bản ghi profile_id hay không. Nếu không, coi như profile chưa tồn tại.
+            if ($existingProfile && isset($existingProfile['profile_id'])) {
+                // Profile đã tồn tại -> Cập nhật
+                $success = $profileModel->updateProfileUser(
+                    $userId,
+                    $display_name,
+                    $birth_year,
+                    $workplace,
+                    $studied_at,
+                    $live_at
+                );
             } else {
-                // Chưa có → insert mới
-                $result = $modelProfile->addProfileUser($userId, $display_name, $birth_year, $workplace, $studied_at, $live_at);
+                // Profile chưa tồn tại -> Thêm mới
+                $success = $profileModel->addProfileUser(
+                    $userId,
+                    $display_name,
+                    $birth_year,
+                    $workplace,
+                    $studied_at,
+                    $live_at
+                );
             }
 
-            if ($result) {
+            // 4. Chuyển hướng dựa trên kết quả
+            if ($success) {
                 header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
                 exit;
             } else {
@@ -235,7 +258,11 @@ class profileUserController
             }
         }
 
-        $profileUser = $modelProfile->getProfileUserByUserId($userId);
+        // 5. Xử lý yêu cầu GET (hiển thị form)
+        // Lấy dữ liệu profile để điền vào form
+        $profileUser = $profileModel->getProfileUserByUserId($userId);
+
+        // Truyền dữ liệu đến View
         require_once "view/page/profileUser.php";
     }
 
