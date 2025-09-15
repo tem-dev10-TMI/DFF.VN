@@ -45,29 +45,101 @@ class profileUserController
         ob_start();
         require_once 'view/page/viewProfilebusiness.php';
         $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
+        $profile = true; // đừng ai xóa
         require_once 'view/layout/main.php';
     }
 
     // ========== Quản lý Bài viết ==========
     public static function addArticle()
     {
+        header('Content-Type: application/json');
         require_once 'model/article/articlesmodel.php';
-        $modelArticle = new ArticlesModel();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
-            $title = $_POST['title'];
-            $summary = $_POST['summary'];
-            $content = $_POST['content'];
-            $main_image_url = $_POST['main_image_url'] ?? null;
-            $topic_id = $_POST['topic_id'] ?? null;
-            $author_id = $_SESSION['user_id'];
-
-            $modelArticle->addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id);
-            header('Location: ' . BASE_URL . '/profileUser?msg=article_added');
+        // Chỉ chấp nhận POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Phương thức không được hỗ trợ!'
+            ]);
             exit;
         }
-        require_once 'view/account/addArticle.php';
+
+        // Kiểm tra đăng nhập
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Bạn cần đăng nhập để đăng bài!'
+            ]);
+            exit;
+        }
+
+        $modelArticle = new ArticlesModel();
+
+        // Lấy dữ liệu từ form
+        $title = isset($_POST['title']) ? trim($_POST['title']) : '';
+        $summary = isset($_POST['summary']) ? trim($_POST['summary']) : '';
+        $content = isset($_POST['content']) ? trim($_POST['content']) : '';
+        $topic_id = isset($_POST['topic_id']) ? intval($_POST['topic_id']) : null;
+        $author_id = $_SESSION['user_id'];
+        $main_image_url = null;
+
+        // Xử lý upload ảnh nếu có
+        if (isset($_FILES['main_image_url']) && $_FILES['main_image_url']['error'] === UPLOAD_ERR_OK) {
+            $upload_dir = 'public/img/articles/';
+            if (!file_exists($upload_dir)) {
+                mkdir($upload_dir, 0777, true);
+            }
+
+            $file_extension = pathinfo($_FILES['main_image_url']['name'], PATHINFO_EXTENSION);
+            $file_name = 'article_' . time() . '_' . rand(1000, 9999) . '.' . $file_extension;
+            $file_path = $upload_dir . $file_name;
+
+            if (move_uploaded_file($_FILES['main_image_url']['tmp_name'], $file_path)) {
+                $main_image_url = $file_path;
+            }
+        }
+
+        // Validation
+        if (empty($title) || empty($content)) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Vui lòng nhập đầy đủ tiêu đề và nội dung!'
+            ]);
+            exit;
+        }
+
+        if (strlen($content) < 10) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Nội dung bài viết phải có ít nhất 10 ký tự!'
+            ]);
+            exit;
+        }
+
+        // Thêm bài viết vào DB
+        $newArticleId = $modelArticle->addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id);
+
+        if ($newArticleId) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Đăng bài thành công!',
+                'article' => [
+                    'id' => $newArticleId,
+                    'title' => $title,
+                    'summary' => $summary,
+                    'content' => $content,
+                    'topic_id' => $topic_id,
+                    'author_id' => $author_id,
+                    'image' => $main_image_url
+                ]
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Lỗi khi thêm bài viết vào cơ sở dữ liệu!'
+            ]);
+        }
     }
 
     public static function editArticle($id)
@@ -83,7 +155,7 @@ class profileUserController
             $topic_id = $_POST['topic_id'] ?? null;
 
             $modelArticle->updateArticle($id, $title, $summary, $content, $main_image_url, $topic_id);
-            header('Location: ' . BASE_URL . '/profileUser?msg=article_updated');
+            header('Location: ' . BASE_URL . '/profile_user?msg=article_updated');
             exit;
         }
 
@@ -121,24 +193,42 @@ class profileUserController
 
     public static function editProfile()
     {
+        if (!isset($_SESSION['user'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        $userId = $_SESSION['user']['id'];
         require_once 'model/user/profileUserModel.php';
         $modelProfile = new profileUserModel();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
-            $user_id = $_SESSION['user_id'];
-            $display_name = $_POST['display_name'];
-            $birth_year = $_POST['birth_year'];
-            $workplace = $_POST['workplace'];
-            $studied_at = $_POST['studied_at'];
-            $live_at = $_POST['live_at'];
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $display_name = $_POST['display_name'] ?? null;
+            $birth_year   = $_POST['birth_year'] ?? null;
+            $workplace    = $_POST['workplace'] ?? null;
+            $studied_at   = $_POST['studied_at'] ?? null;
+            $live_at      = $_POST['live_at'] ?? null;
 
-            $modelProfile->updateProfileUser($user_id, $display_name, $birth_year, $workplace, $studied_at, $live_at);
-            header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
-            exit;
+            // Kiểm tra xem user đã có hồ sơ chưa
+            $profileUser  = $modelProfile->getProfileUserByUserId($userId);
+            if ($profileUser) {
+                // Có rồi → update
+                $result = $modelProfile->updateProfileUser($userId, $display_name, $birth_year, $workplace, $studied_at, $live_at);
+            } else {
+                // Chưa có → insert mới
+                $result = $modelProfile->addProfileUser($userId, $display_name, $birth_year, $workplace, $studied_at, $live_at);
+            }
+
+            if ($result) {
+                header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profileUser?msg=profile_failed');
+                exit;
+            }
         }
 
-        $profile = $modelProfile->getProfileUserByUserId($_SESSION['user_id']);
-        require_once 'view/account/editProfile.php';
+        $profileUser = $modelProfile->getProfileUserByUserId($userId);
+        require_once "view/page/profileUser.php";
     }
 
     // ========== Đổi mật khẩu ==========
@@ -176,27 +266,3 @@ class profileUserController
         require_once 'view/account/changePassword.php';
     }
 }
-
-/* 
-View hiển thị thông báo
-<?php if (isset($_GET['msg'])): ?>
-    <script>
-        switch ("<?= $_GET['msg'] ?>") {
-            case "article_added":
-                alert("✅ Bài viết đã được thêm thành công!");
-                break;
-            case "article_updated":
-                alert("✏️ Bài viết đã được cập nhật thành công!");
-                break;
-            case "profile_updated":
-                alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
-                break;
-            case "profile_added":
-                alert("📝 Thông tin cá nhân đã được thêm thành công!");
-                break;
-            case "password_changed":
-                alert("🔑 Mật khẩu đã được đổi thành công!");
-                break;
-        }
-    </script>
-<?php endif; ?> */

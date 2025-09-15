@@ -20,7 +20,7 @@ define('GOOGLE_REDIRECT_URI', BASE_URL . '/public/callback.php');
 define('UPLOADS_DIR', __DIR__ . '/../uploads');
 define('UPLOADS_URL', BASE_URL . '/uploads');
 // autoload models/controllers
-spl_autoload_register(function($class){
+spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '../model/admin' . $class . '.php',
         __DIR__ . '../model/admin' . $class . '.php'
@@ -29,4 +29,3 @@ spl_autoload_register(function($class){
 });
 
 require_once __DIR__ . '/../helpers.php';
-

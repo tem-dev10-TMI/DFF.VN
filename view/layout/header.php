@@ -77,7 +77,11 @@
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if($_SESSION['user']['role'] =='user'){echo 'profile_user';}else{echo 'profile_business';} ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user') {
+                                                                                            echo 'profile_user';
+                                                                                        } else {
+                                                                                            echo 'profile_business';
+                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
@@ -168,13 +172,13 @@
                         </div>
                         <div class="content-divider text-muted"> <span>OR</span> </div>
 
-<div class="col-12">
-    <div class="input-social">
-        <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
-            Đăng nhập bằng Google
-        </button>
-    </div>
-</div>
+                        <div class="col-12">
+                            <div class="input-social">
+                                <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+                                    Đăng nhập bằng Google
+                                </button>
+                            </div>
+                        </div>
 
 
                         <input type="hidden" name="action" value="login">
