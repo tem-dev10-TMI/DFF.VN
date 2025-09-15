@@ -1,7 +1,9 @@
 <?php
 class ArticlesModel
 {
+
     // Thêm bài viết mới -> mặc định pending
+
     public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'pending', $is_hot = 0, $is_analysis = 0)
     {
         $db = new connect();

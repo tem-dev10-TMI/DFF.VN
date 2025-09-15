@@ -19,7 +19,7 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
-
+        
         $articles = $modelArticle->getArticleById($userId);
 
         $role = $_SESSION['user']['role'];
@@ -31,9 +31,9 @@ class profileUserController
             $profile_category = 'user';
             require_once 'view/layout/Profile.php';
             $content = ob_get_clean();
-
+            $profile = true;
             //Load layout
-            $profile = true; // đừng ai xóa
+             // đừng ai xóa
             require_once 'view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
@@ -45,7 +45,7 @@ class profileUserController
         ob_start();
         require_once 'view/page/viewProfilebusiness.php';
         $content = ob_get_clean();
-        $profile = true; // đừng ai xóa
+        $profile = false; // đừng ai xóa
         require_once 'view/layout/main.php';
     }
 
@@ -65,7 +65,7 @@ class profileUserController
         }
 
         // Kiểm tra đăng nhập
-        session_start();
+        
         if (!isset($_SESSION['user_id'])) {
             echo json_encode([
                 'success' => false,
