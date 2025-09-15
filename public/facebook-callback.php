@@ -5,7 +5,7 @@ require_once __DIR__ . '/../model/user/userModel.php';
 
 $appId = '1518770855805260';
 $appSecret = '3249fccb64e15be8d78210d168985793';
-$redirectUri = 'http://localhost:8080/DFF.VN/public/facebook-callback.php';
+$redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
 
 // Kiểm tra state
 if (!isset($_GET['state']) || $_GET['state'] !== $_SESSION['fb_state']) {

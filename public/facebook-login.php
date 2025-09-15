@@ -3,7 +3,7 @@ session_start();
 
 // Facebook app info
 $appId = '1518770855805260';
-$redirectUri = 'http://localhost:8080/DFF.VN/public/facebook-callback.php';
+$redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
 $scope = 'public_profile,email';
 
 // Tạo state để bảo mật CSRF
