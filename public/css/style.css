@@ -6797,4 +6797,9 @@ ul.timeline .left-arrow:after {
     font-weight: 700 !important;
   }
 }
+header, 
+.header, 
+.top-header {
+  background-color: red !important; /* hoặc #ff0000 */
+}
 
