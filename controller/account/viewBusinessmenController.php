@@ -1,5 +1,5 @@
 <?php
-require_once "models/businessmenModel.php";
+require_once "model/user/businessmenModel.php";
 
 class viewBusinessmenController
 {
