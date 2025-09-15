@@ -273,4 +273,94 @@ class profileUserController
 
         require_once 'view/account/changePassword.php';
     }
+    
+    // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========
+    public static function loadArticle()
+    {
+        header('Content-Type: application/json');
+        require_once 'model/article/articlesmodel.php';
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Phương thức không được hỗ trợ!'
+            ]);
+            return;
+        }
+
+        // Nhận JSON input
+        $rawInput = file_get_contents('php://input');
+        $input = json_decode($rawInput, true);
+        if (!is_array($input)) {
+            // Cũng hỗ trợ form-encoded như fallback
+            $input = $_POST;
+        }
+
+        $profile_category = isset($input['profile_category']) ? $input['profile_category'] : '';
+        $user_id = isset($input['user_id']) ? (int)$input['user_id'] : 0;
+
+        try {
+            // Fallback user_id từ session nếu thiếu
+            if ($user_id === 0 && isset($_SESSION['user']['id'])) {
+                $user_id = (int)$_SESSION['user']['id'];
+            }
+
+            // Lấy bài viết theo author (bao gồm mọi trạng thái)
+            $filtered = ArticlesModel::getArticlesByAuthorId($user_id);
+
+            // Helper time ago
+            $toTimeAgo = function ($datetimeStr) {
+                if (empty($datetimeStr)) return '';
+                $ts = strtotime($datetimeStr);
+                if ($ts === false) return '';
+                $diff = time() - $ts;
+                if ($diff < 60) return $diff . ' giây trước';
+                if ($diff < 3600) return floor($diff / 60) . ' phút trước';
+                if ($diff < 86400) return floor($diff / 3600) . ' giờ trước';
+                $days = floor($diff / 86400);
+                return $days . ' ngày trước';
+            };
+
+            // Map về cấu trúc posts như sample loadPosts.php
+            $posts = array_map(function ($row) use ($profile_category, $user_id, $toTimeAgo) {
+                $articleId = (int)($row['id'] ?? 0);
+                $status = (string)($row['status'] ?? 'pending');
+                $reason = null;
+                if ($status === 'rejected' || $status === 'reject') {
+                    // Lý do mới nhất từ bảng review
+                    $reason = ArticlesModel::getLatestReviewReasonByArticleId($articleId);
+                }
+
+                return [
+                    'id' => $articleId,
+                    'title' => (string)($row['title'] ?? ''),
+                    'content' => (string)($row['summary'] ?? $row['content'] ?? ''),
+                    'author_name' => $profile_category === 'businessmen' ? ($row['author_name'] ?? 'Doanh nghiệp') : ($row['author_name'] ?? 'Người dùng'),
+                    'author_id' => (int)($row['author_id'] ?? $user_id),
+                    'avatar' => $row['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg',
+                    'time_ago' => $toTimeAgo($row['created_at'] ?? ''),
+                    'image' => $row['main_image_url'] ?? null,
+                    'likes_count' => (int)($row['likes_count'] ?? 0),
+                    'comments_count' => (int)($row['comment_count'] ?? 0),
+                    'status' => $status,
+                    'review_reason' => $reason,
+                ];
+            }, $filtered);
+
+            echo json_encode([
+                'success' => true,
+                'message' => 'Load bài viết thành công!',
+                'posts' => $posts,
+                'total' => count($posts),
+                'profile_category' => $profile_category,
+                'user_id' => $user_id
+            ]);
+        } catch (Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => 'Lỗi tải bài viết: ' . $e->getMessage()
+            ]);
+        }
+    }
+
 }

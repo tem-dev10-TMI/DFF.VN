@@ -130,4 +130,37 @@ class ArticlesModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    // Lấy bài viết theo author (bao gồm mọi trạng thái)
+    public static function getArticlesByAuthorId($author_id)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                WHERE a.author_id = :author_id
+                ORDER BY a.created_at DESC";
+
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':author_id', $author_id, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy lý do review mới nhất cho bài viết
+    public static function getLatestReviewReasonByArticleId($article_id)
+    {
+        $db = new connect();
+        $sql = "SELECT reason
+                FROM article_reviews
+                WHERE article_id = :article_id
+                ORDER BY created_at DESC
+                LIMIT 1";
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':article_id', $article_id, PDO::PARAM_INT);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row ? ($row['reason'] ?? null) : null;
+    }
 }

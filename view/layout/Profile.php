@@ -707,7 +707,7 @@
       loadingElement.style.display = 'block';
     }
 
-    fetch('controller/test-api-profile/loadPosts.php', {
+    fetch('api/loadPost', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -802,6 +802,7 @@
       <div class="provider">
         <img class="logo" alt="" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
         <div class="p-covers">
+          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px; cursor:pointer;" title="${post.review_reason ? post.review_reason.replace(/"/g,'&quot;') : ''}" onclick="showStatusReason(event, ${post.id})">${renderStatusText(post.status)}</span>
           <span class="name" title="">
             <a href="/profile.html?q=${post.author_id || post.user_id}" title="${post.author_name}">${post.author_name}</a>
           </span>
@@ -871,6 +872,39 @@
     </div>
   `;
     return postDiv;
+  }
+
+  function renderStatusText(status) {
+    var s = (status || '').toLowerCase();
+    if (s === 'public' || s === 'published') return 'Công khai';
+    if (s === 'pending' || s === 'review') return 'Chờ duyệt';
+    if (s === 'rejected' || s === 'reject') return 'Rejected';
+    if (s === 'draft') return 'Nháp';
+    if (s === 'private') return 'Riêng tư';
+    return status || 'Chờ duyệt';
+  }
+
+  function renderStatusBadgeClass(status) {
+    var s = (status || '').toLowerCase();
+    if (s === 'public' || s === 'published') return 'bg-success';
+    if (s === 'pending' || s === 'review') return 'bg-warning text-dark';
+    if (s === 'rejected' || s === 'reject') return 'bg-danger';
+    if (s === 'draft') return 'bg-secondary';
+    if (s === 'private') return 'bg-dark';
+    return 'bg-warning text-dark';
+  }
+
+  function showStatusReason(evt, articleId) {
+    // Tìm reason từ dataset hiện có trong posts đã render
+    // Vì ta không lưu global list, dùng DOM closest để lấy nội dung title của badge
+    var el = evt.currentTarget;
+    var reason = el.getAttribute('title') || '';
+    if (reason && reason.trim().length > 0) {
+      // Hiển thị bằng alert đơn giản để nhẹ nhàng, có thể đổi sang modal sau
+      alert(reason);
+    } else {
+      alert('Không có lý do được lưu cho bài viết này.');
+    }
   }
 
   // Submit bài viết mới
