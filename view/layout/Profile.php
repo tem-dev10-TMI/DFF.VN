@@ -626,10 +626,18 @@
         window.location.href = "<?= BASE_URL ?>/profileUser";
         break;
       case "business_updated":
-        alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
+        alert("📝 Thông tin doanh nhân đã được cập nhật thành công!");
         window.location.href = "<?= BASE_URL ?>/profile_business";
         break;
       case "business_failed":
+        alert("❌ Cập nhật thất bại, vui lòng thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "career_updated":
+        alert("📝 Quá trình công tác đã được cập nhật thành công!");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "career_failed":
         alert("❌ Cập nhật thất bại, vui lòng thử lại.");
         window.location.href = "<?= BASE_URL ?>/profile_business";
         break;

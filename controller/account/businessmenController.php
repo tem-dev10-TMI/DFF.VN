@@ -83,33 +83,84 @@ class BusinessmenController
     // Form sửa doanh nhân
     public static function editBusiness()
     {
-        // 1. Xác thực và Phân quyền: Đảm bảo người dùng đã đăng nhập.
+        // ... Mã xác thực và khởi tạo model (giữ nguyên)
         if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
             header("Location: " . BASE_URL . "/login");
             exit;
         }
         $userId = $_SESSION['user']['id'];
 
-        // 2. Khởi tạo Model (chỉ một lần)
         require_once 'model/user/businessmenModel.php';
-        $modelBusiness = new businessmenModel();
+        require_once 'model/user/userModel.php';
 
-        // 3. Xử lý yêu cầu POST (gửi form)
+        $modelBusiness = new businessmenModel();
+        $modelUser = new userModel();
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lấy và làm sạch dữ liệu đầu vào.
+            // Lấy thông tin người dùng hiện tại để lấy URL ảnh cũ
+            $currentUserData = $modelUser->getUserById($userId);
+
+            // --- Xử lý upload file ---
+            $avatar_url = $currentUserData['avatar_url']; // Giữ URL cũ nếu không có file mới
+            $cover_photo = $currentUserData['cover_photo']; // Giữ URL cũ nếu không có file mới
+
+            $avatarDir = "public/uploads/avatars/";
+            $coverDir = "public/uploads/covers/";
+
+            if (!is_dir($avatarDir)) {
+                mkdir($avatarDir, 0777, true);
+            }
+            if (!is_dir($coverDir)) {
+                mkdir($coverDir, 0777, true);
+            }
+
+            // Xử lý upload ảnh đại diện
+            if (isset($_FILES['avatar_file']) && $_FILES['avatar_file']['error'] == 0) {
+                $avatarName = uniqid('avatar_') . '_' . time() . '.' . pathinfo($_FILES['avatar_file']['name'], PATHINFO_EXTENSION);
+                $avatarPath = $avatarDir . $avatarName;
+                if (move_uploaded_file($_FILES['avatar_file']['tmp_name'], $avatarPath)) {
+                    $avatar_url = BASE_URL . '/' . $avatarPath;
+                }
+            }
+
+            // Xử lý upload ảnh bìa
+            if (isset($_FILES['cover_file']) && $_FILES['cover_file']['error'] == 0) {
+                $coverName = uniqid('cover_') . '_' . time() . '.' . pathinfo($_FILES['cover_file']['name'], PATHINFO_EXTENSION);
+                $coverPath = $coverDir . $coverName;
+                if (move_uploaded_file($_FILES['cover_file']['tmp_name'], $coverPath)) {
+                    $cover_photo = BASE_URL . '/' . $coverPath;
+                }
+            }
+
+            // Lấy và làm sạch dữ liệu từ form (bao gồm cả trường description mới)
+            $name        = htmlspecialchars($_POST['name'] ?? '');
+            $email       = htmlspecialchars($_POST['email'] ?? '');
+            $phone       = htmlspecialchars($_POST['phone'] ?? '');
+            $description = htmlspecialchars($_POST['description'] ?? '');
+
+            // Cập nhật thông tin trong bảng `users`
+            // Bây giờ, hàm updateUser sẽ nhận thêm avatar và cover
+            $successUser = $modelUser->updateUser(
+                $userId,
+                $name,
+                $email,
+                $phone,
+                $avatar_url,
+                $cover_photo,
+                $description
+            );
+
+            // ... Mã cập nhật bảng businessmen (giữ nguyên)
             $birth_year  = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
             $nationality = htmlspecialchars($_POST['nationality'] ?? '');
             $education   = htmlspecialchars($_POST['education'] ?? '');
             $position    = htmlspecialchars($_POST['position'] ?? '');
 
-            // Kiểm tra xem hồ sơ doanh nhân đã tồn tại hay chưa bằng cách xem kết quả từ Model.
             $existingBusiness = $modelBusiness->getBusinessByUserId($userId);
+            $successBusiness = false;
 
-            $result = false;
-            // Logic được cải thiện: Kiểm tra xem có bản ghi 'id' trong kết quả trả về không.
             if ($existingBusiness && isset($existingBusiness['id'])) {
-                // Có hồ sơ -> Cập nhật thông tin hiện có.
-                $result = $modelBusiness->updateBusiness(
+                $successBusiness = $modelBusiness->updateBusiness(
                     $userId,
                     $birth_year,
                     $nationality,
@@ -117,8 +168,7 @@ class BusinessmenController
                     $position
                 );
             } else {
-                // Chưa có hồ sơ -> Đăng ký hồ sơ mới.
-                $result = $modelBusiness->registerBusiness(
+                $successBusiness = $modelBusiness->registerBusiness(
                     $userId,
                     $birth_year,
                     $nationality,
@@ -127,8 +177,7 @@ class BusinessmenController
                 );
             }
 
-            // 4. Chuyển hướng người dùng dựa trên kết quả.
-            if ($result) {
+            if ($successUser && $successBusiness) {
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {
@@ -137,11 +186,7 @@ class BusinessmenController
             }
         }
 
-        // 5. Xử lý yêu cầu GET (hiển thị form)
-        // Lấy dữ liệu hồ sơ hiện tại để điền vào form chỉnh sửa.
-        $Business = $modelBusiness->getBusinessByUserId($userId);
-
-        // Tải trang view để hiển thị form.
+        $business = $modelBusiness->getBusinessByUserId($userId);
         require_once "view/page/profileUser.php";
     }
 
@@ -169,5 +214,58 @@ class BusinessmenController
         businessmenModel::deleteBusiness($user_id);
         header('Location: index.php?controller=businessmen&action=index');
         exit;
+    }
+
+    //Xử lý quá trình công tác 
+    public static function editBusinessCareer()
+    {
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        $userId = $_SESSION['user']['id'];
+        require_once 'model/user/businessmenModel.php';
+        $modelBusiness = new businessmenModel();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lấy businessman_id từ CSDL
+            $businessData = $modelBusiness->getBusinessByUserId($userId);
+            if (!$businessData || !isset($businessData['businessman_id'])) {
+                header('Location: ' . BASE_URL . '/profile_business?msg=no_business_profile');
+                exit;
+            }
+            $businessmen_id = $businessData['businessman_id'];
+
+            // Lấy dữ liệu từ form
+            $career_id = $_POST['career_id'] ?? null;
+            $start_year = filter_var($_POST['start_year'] ?? null, FILTER_VALIDATE_INT);
+            $end_year = filter_var($_POST['end_year'] ?? null, FILTER_VALIDATE_INT);
+            $position = htmlspecialchars($_POST['position'] ?? '');
+            $company = htmlspecialchars($_POST['company'] ?? '');
+            $description = htmlspecialchars($_POST['description'] ?? '');
+
+            if ($career_id) {
+                // Cập nhật quá trình công tác hiện có
+                $result = $modelBusiness->updateBusinessmenCareers($id, $start_year, $end_year, $position, $company, $description);
+            } else {
+                // Thêm mới quá trình công tác
+                $result = $modelBusiness->addBusinessmenCareers($businessmen_id, $start_year, $end_year, $position, $company, $description);
+            }
+
+            if ($result) {
+                header('Location: ' . BASE_URL . '/profile_business?msg=career_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profile_business?msg=career_failed');
+                exit;
+            }
+        }
+
+        // Xử lý GET, có thể lấy danh sách các quá trình công tác để hiển thị
+        $business = $modelBusiness->getBusinessByUserId($userId);
+        $careers = $modelBusiness->getCareersByBusinessmenId($business['businessman_id']);
+        // Truyền dữ liệu này đến View nếu bạn muốn hiển thị ngay khi load trang
+
+        require_once "view/page/profileUser.php";
     }
 }

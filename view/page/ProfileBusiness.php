@@ -82,7 +82,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form action="<?= BASE_URL ?>/edit_business" method="POST">
+      <form action="<?= BASE_URL ?>/edit_business" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
           <div class="row mb-3">
             <div class="col-md-6">
@@ -108,6 +108,28 @@
 
           <div class="row mb-3">
             <div class="col-md-6">
+              <label class="form-label">Ảnh đại diện</label>
+              <input type="file" class="form-control" name="avatar_file">
+              <?php if (!empty($business['avatar_url'])): ?>
+                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($business['avatar_url']) ?>" target="_blank">Xem</a></small>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ảnh bìa</label>
+              <input type="file" class="form-control" name="cover_file">
+              <?php if (!empty($business['cover_photo'])): ?>
+                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($business['cover_photo']) ?>" target="_blank">Xem</a></small>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mô tả bản thân</label>
+            <textarea class="form-control" name="description" rows="3"><?= htmlspecialchars($business['description'] ?? '') ?></textarea>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
               <label class="form-label">Quốc tịch</label>
               <input type="text" class="form-control" name="nationality" value="<?= htmlspecialchars($business['nationality'] ?? '') ?>">
             </div>
@@ -126,6 +148,64 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
           <button type="submit" class="btn btn-warning">Cập nhật</button>
+        </div>
+      </form>
+      <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#editCareersModal">
+            <i class="fas fa-history me-1"></i>Quá trình công tác
+          </button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-warning">Cập nhật</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="editCareersModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title"><i class="fas fa-briefcase me-2"></i>Quá trình công tác</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form action="<?= BASE_URL ?>/edit_business_career" method="POST" id="careerForm">
+        <div class="modal-body">
+          <input type="hidden" name="career_id" id="career_id">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Năm bắt đầu</label>
+              <input type="number" class="form-control" name="start_year" required>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Năm kết thúc</label>
+              <input type="number" class="form-control" name="end_year">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Chức vụ</label>
+            <input type="text" class="form-control" name="position" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Công ty/Tổ chức</label>
+            <input type="text" class="form-control" name="company" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Mô tả</label>
+            <textarea class="form-control" name="description" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-success w-100 mb-3">
+            <i class="fas fa-save me-1"></i>Lưu quá trình công tác
+          </button>
+
+          <hr>
+
+          <h5>Danh sách quá trình</h5>
+          <div id="career-list">
+          </div>
         </div>
       </form>
     </div>
