@@ -80,7 +80,7 @@
                                                 </li>
                                                 <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
                                                 <li class="name">
-                                                    <a href="/business_detail.php?id=<?= $biz['id'] ?>">
+                                                    <a href="/viewProfilebusiness.php?id=<?= $biz['id'] ?>">
                                                         <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
                                                     </a>
                                                 </li>
@@ -144,7 +144,7 @@
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                 <span class="name" title="">
-                                    <a href="/profile.html?q=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
                                 </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                             </div>
                         </div>
