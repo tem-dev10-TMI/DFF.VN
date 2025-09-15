@@ -158,7 +158,7 @@
 
                         <div class="sapo">
                             <?= htmlspecialchars($article['summary']) ?>
-                            <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
+                            <a href="details_Blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
                         </div>
 
                         <?php if (!empty($article['main_image_url'])): ?>
@@ -292,7 +292,7 @@
                 <?php foreach ($articles as $article): ?>
                     <li class="new-style">
                         <a title="<?= htmlspecialchars($article['title']) ?>" 
-                           href="detail_blog.php?id=<?= $article['id'] ?>">
+                           href="details_Blog?id=<?= $article['id'] ?>">
                             <?= htmlspecialchars($article['title']) ?>
                         </a>
                         
