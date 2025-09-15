@@ -68,7 +68,7 @@ class profileUserModel
             birth_year   = :birth_year, 
             workplace    = :workplace, 
             studied_at   = :studied_at, 
-            live_at      = :live_at
+            live_at      = :live_at,
         WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
 
