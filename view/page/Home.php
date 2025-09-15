@@ -149,10 +149,13 @@
                             </div>
                         </div>
 
-                        <div class="title">
-                            <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="details_blog?id=<?= $article['id'] ?>"><?= htmlspecialchars($article['title']) ?></a>
-                        </div>
+                     <div class="title">
+    <a title="<?= htmlspecialchars($article['title']) ?>"
+       href="details_blog?id=<?= $article['id'] ?>">
+       <?= htmlspecialchars($article['title']) ?>
+    </a>
+</div>
+
                         <div class="sapo">
                             <?= htmlspecialchars($article['summary']) ?>
                             <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
