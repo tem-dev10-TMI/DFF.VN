@@ -6797,9 +6797,6 @@ ul.timeline .left-arrow:after {
     font-weight: 700 !important;
   }
 }
-.header-top,
-.header-top * {
-  background-color: red !important;
-}
+
 
 
