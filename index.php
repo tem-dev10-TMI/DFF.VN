@@ -93,10 +93,12 @@ switch ($url) {
         $controller->about();
         break;
     case 'details_blog':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->details_blog();
-        break;
+    require_once 'controller/ArticlesController.php';
+    $controller = new ArticlesController();
+
+    $id = $_GET['id'] ?? null;
+    $controller->details_blog($id);
+    break;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();
@@ -114,14 +116,16 @@ switch ($url) {
         break;
 
     // ========== API ROUTES ==========
-    case 'api/load-posts':
-        require_once 'controller/test-api-profile/loadPosts.php';
-        break;
+    case 'api/addPost':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->addArticle();
+        exit;
     case 'api/add-post':
-        require_once 'controller/test-api-profile/addPost.php';
+        require_once 'controller/account/profileUserController.php';
         break;
     case 'api/toggle-like':
-        require_once 'controller/test-api-profile/toggleLike.php';
+        require_once 'controller/account/profileUserController.php';
         break;
 
     default:
