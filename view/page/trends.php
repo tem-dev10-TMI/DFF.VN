@@ -44,7 +44,7 @@
           <span class="c-note"><i class="fas fa-chart-line"></i> Top tìm kiếm nhiều nhất</span>
         </h5>
         <ul>
-          <li><a href="#">HDBS tính tăng vốn điều lệ</a> <span class="date"><i class="far fa-calendar-alt"></i> 1 giờ trước</span> <span class="name"><i class="far fa-user"></i> Hoàng Giang</span></li>
+          <li><a href="#">HDBS tính tăng vốn </a> <span class="date"><i class="far fa-calendar-alt"></i> 1 giờ trước</span> <span class="name"><i class="far fa-user"></i> Hoàng Giang</span></li>
           <li><a href="#">Chứng khoán DSC bị phạt hơn 700 triệu đồng</a> <span class="date"><i class="far fa-calendar-alt"></i> 4 giờ trước</span> <span class="name"><i class="far fa-user"></i> Đức Anh</span></li>
           <li><a href="#">SSI sắp chi 2.000 tỷ đồng chia cổ tức</a> <span class="date"><i class="far fa-calendar-alt"></i> 5 giờ trước</span> <span class="name"><i class="far fa-user"></i> Tâm Đan</span></li>
           <li><a href="#">PV Power muốn tăng vốn lên 30.600 tỷ đồng</a> <span class="date"><i class="far fa-calendar-alt"></i> 20 giờ trước</span> <span class="name"><i class="far fa-user"></i> Ngọc Lan</span></li>
