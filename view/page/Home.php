@@ -20,7 +20,7 @@
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="article_detail.php?id=<?= $article['id'] ?>">
+                                href="details_Blog?id=<?= $article['id'] ?>">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
@@ -151,11 +151,11 @@
 
                         <div class="title">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"><?= htmlspecialchars($article['title']) ?></a>
+                                href="details_blog?id=<?= $article['id'] ?>"><?= htmlspecialchars($article['title']) ?></a>
                         </div>
                         <div class="sapo">
                             <?= htmlspecialchars($article['summary']) ?>
-                            <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html" class="d-more">Xem thêm</a>
+                            <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
                         </div>
 
                         <?php if (!empty($article['main_image_url'])): ?>
@@ -186,7 +186,7 @@
                                 </span>
                             </div>
                             <div class="button-ar">
-                                <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html#anc_comment">
+                                <a href="details_Blog?id=<?= $article['id'] ?>#anc_comment">
                                     <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
                                         height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
                                         xmlns="http://www.w3.org/2000/svg">
@@ -203,10 +203,10 @@
                                         aria-expanded="false">Chia sẻ</span>
                                     <ul class="dropdown-menu">
                                         <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                data-url="details_Blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Copy link</a></li>
                                         <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                data-url="details_Blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Share FB</a></li>
                                     </ul>
                                 </div>
