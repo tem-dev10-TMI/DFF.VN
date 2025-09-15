@@ -65,7 +65,7 @@
 
     <!-- Nút hành động -->
     <div class="user-actions mt-4">
-      <button class="btn btn-outline-primary btn-sm w-100 mb-2">
+      <button class="btn btn-outline-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#editProfileModal">
         <i class="fas fa-edit me-1"></i> Chỉnh sửa hồ sơ
       </button>
       <button class="btn btn-outline-success btn-sm w-100 mb-2">

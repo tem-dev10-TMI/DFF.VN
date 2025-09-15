@@ -64,18 +64,27 @@ class profileUserModel
     {
         $db = new connect();
         $sql = "UPDATE profile_user 
-                SET display_name = :display_name, birth_year = :birth_year, workplace = :workplace, studied_at = :studied_at, live_at = :live_at 
-                WHERE user_id = :user_id";
+        SET display_name = :display_name, 
+            birth_year   = :birth_year, 
+            workplace    = :workplace, 
+            studied_at   = :studied_at, 
+            live_at      = :live_at
+        WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':user_id' => $user_id,
+
+        $success = $stmt->execute([
+            ':user_id'      => $user_id,
             ':display_name' => $display_name,
-            ':birth_year' => $birth_year,
-            ':workplace' => $workplace,
-            ':studied_at' => $studied_at,
-            ':live_at' => $live_at
+            ':birth_year'   => $birth_year,
+            ':workplace'    => $workplace,
+            ':studied_at'   => $studied_at,
+            ':live_at'      => $live_at,
         ]);
+
+        return $success; // chỉ cần trả về true/false
     }
+
+
     // =============== Xóa thông tin user ===============
     public static function deleteProfileUser($user_id)
     {

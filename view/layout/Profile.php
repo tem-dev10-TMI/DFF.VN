@@ -302,8 +302,17 @@
             <small class="text-muted"><?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?></small>
           </div>
         </div>
-        <textarea id="newPost" class="form-control mb-3" placeholder="Viết bài, chia sẻ, đặt câu hỏi..."></textarea>
-        <div class="d-flex justify-content-between align-items-center">
+        <!-- Tiêu đề -->
+        <input type="text" id="postTitle" class="form-control mb-2" placeholder="Nhập tiêu đề bài viết...">
+
+        <!-- Tóm tắt -->
+        <textarea id="postSummary" class="form-control mb-2" rows="2" placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+
+        <!-- Nội dung chính -->
+        <textarea id="newPost" class="form-control mb-3" rows="4" placeholder="Nội dung chính của bài viết..."></textarea>
+
+        <!-- Thanh công cụ -->
+        <div class="d-flex justify-content-between align-items-center post-box">
           <div class="d-flex gap-2">
             <label class="btn btn-outline-secondary btn-sm mb-0" for="postImage">
               <i class="fas fa-image me-1"></i> Hình ảnh
@@ -311,7 +320,7 @@
             <label class="btn btn-outline-secondary btn-sm mb-0" for="postVideo">
               <i class="fas fa-video me-1"></i> Video
             </label>
-            <button class="btn btn-outline-secondary btn-sm">
+            <button class="btn btn-outline-secondary btn-sm" type="button">
               <i class="fas fa-link me-1"></i> Link
             </button>
           </div>
@@ -319,13 +328,17 @@
             <i class="fas fa-paper-plane me-1"></i> Đăng bài
           </button>
         </div>
-        <input type="file" id="postImage" class="d-none" accept="image/*">
+        <!-- Input hidden -->
+        <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
         <input type="file" id="postVideo" class="d-none" accept="video/*">
       </div>
 
+      <!-- Preview ảnh -->
+      <div id="imagePreview" class="mt-2"></div>
+
       <!-- Posts -->
+      <!-- Danh sách bài viết -->
       <div id="posts">
-        <!-- Loading indicator -->
         <div class="block-k" id="loadingPosts">
           <div class="view-carde f-frame">
             <div class="text-center p-4">
@@ -517,6 +530,88 @@
     </div>
   </div>
 </div>
+
+<!-- Modal chỉnh sử thông tin người dùng  -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg" style="max-width: 650px;">
+    <div class="modal-content">
+      <div class="modal-header bg-warning text-dark">
+        <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Chỉnh sửa hồ sơ</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <form action="<?= BASE_URL ?>/edit_profile" method="POST">
+        <div class="modal-body">
+          <!-- Hiển thị thông tin hiện tại -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Tên hiển thị</label>
+              <input type="text" class="form-control" name="display_name" value="<?= htmlspecialchars($profileUser['display_name'] ?? '') ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Năm sinh</label>
+              <input type="number" class="form-control" name="birth_year" value="<?= htmlspecialchars($profileUser['birth_year'] ?? '') ?>">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nơi làm việc</label>
+            <input type="text" class="form-control" name="workplace" value="<?= htmlspecialchars($profileUser['workplace'] ?? '') ?>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Nơi học tập</label>
+            <input type="text" class="form-control" name="studied_at" value="<?= htmlspecialchars($profileUser['studied_at'] ?? '') ?>">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Địa chỉ</label>
+            <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($profileUser['live_at'] ?? '') ?>">
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-warning">Cập nhật</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<!-- Thông báo -->
+<?php if (isset($_GET['msg'])): ?>
+  <script>
+    switch ("<?= $_GET['msg'] ?>") {
+      case "article_added":
+        alert("✅ Bài viết đã được thêm thành công!");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+      case "article_updated":
+        alert("✏️ Bài viết đã được cập nhật thành công!");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+      case "profile_updated":
+        alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+      case "profile_failed":
+        alert("❌ Cập nhật thất bại, vui lòng thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+      case "profile_added":
+        alert("📝 Thông tin cá nhân đã được thêm thành công!");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+      case "password_changed":
+        alert("🔑 Mật khẩu đã được đổi thành công!");
+        window.location.href = "<?= BASE_URL ?>/profileUser";
+        break;
+    }
+  </script>
+<?php endif; ?>
+
 
 <script>
   function convertToBusiness() {
@@ -779,60 +874,85 @@
 
   // Submit bài viết mới
   function addPost() {
-    var postContent = document.getElementById('newPost').value;
-    if (!postContent.trim()) {
-      alert('Vui lòng nhập nội dung bài viết!');
+    var postTitle = document.getElementById('postTitle').value.trim();
+    var postSummary = document.getElementById('postSummary').value.trim();
+    var postContent = document.getElementById('newPost').value.trim();
+
+    if (!postTitle || !postContent) {
+      alert('Vui lòng nhập tiêu đề và nội dung!');
       return;
     }
 
-    // Hiển thị loading
     var submitBtn = document.querySelector('.post-box .btn-primary');
     var originalText = submitBtn.innerHTML;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang đăng...';
     submitBtn.disabled = true;
 
-    // Lấy file ảnh nếu có
-    var imageFile = document.getElementById('postImage').files[0];
     var formData = new FormData();
+    formData.append('title', postTitle);
+    formData.append('summary', postSummary);
     formData.append('content', postContent);
-    formData.append('profile_category', '<?php echo $profile_category; ?>');
-    formData.append('user_id', '<?php echo isset($user_id) ? $user_id : 0; ?>');
+    formData.append('topic_id', 1); // tạm fix cứng, hoặc để user chọn
+
+    var imageFile = document.getElementById('postImage').files[0];
     if (imageFile) {
-      formData.append('image', imageFile);
+      formData.append('main_image_url', imageFile);
     }
 
-    fetch('controller/test-api-profile/addPost.php', {
+    fetch('controller/account/api/postArticleApi.php', {
         method: 'POST',
         body: formData
       })
-      .then(response => response.json())
-      .then(data => {
-        // Reset button
+      .then(response => response.text()) // 👈 lấy raw text trước
+      .then(text => {
+        console.log("Raw response:", text); // log toàn bộ response để xem có lỗi PHP/SQL không
+
+        try {
+          var data = JSON.parse(text); // parse sang JSON
+        } catch (e) {
+          console.error("JSON parse error:", e);
+          alert("Phản hồi không phải JSON, xem log console!");
+          return;
+        }
+
+        // Xử lý JSON như cũ
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
 
         if (data.success) {
-          // Xóa nội dung textarea
+          document.getElementById('postTitle').value = '';
+          document.getElementById('postSummary').value = '';
           document.getElementById('newPost').value = '';
           document.getElementById('postImage').value = '';
+          document.getElementById('imagePreview').innerHTML = '';
 
-          // Reload danh sách bài viết
           loadPosts();
-
-          // Hiển thị thông báo thành công
           showNotification('Đăng bài thành công!', 'success');
         } else {
           alert('Lỗi: ' + data.message);
         }
       })
       .catch(error => {
-        // Reset button
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
-
-        console.error('Lỗi:', error);
-        alert('Có lỗi xảy ra khi đăng bài!');
+        console.error("Fetch error:", error);
+        alert("Có lỗi xảy ra khi gửi request!");
       });
+  }
+
+  // Xem trước ảnh trước khi đăng
+  function previewImage(event) {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = ''; // Xóa preview cũ
+
+    const file = event.target.files[0];
+    if (file) {
+      const img = document.createElement('img');
+      img.src = URL.createObjectURL(file);
+      img.classList.add('img-fluid', 'rounded', 'mt-2');
+      img.style.maxHeight = '200px';
+      preview.appendChild(img);
+    }
   }
 
   // Like/Unlike bài viết

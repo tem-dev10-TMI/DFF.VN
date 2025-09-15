@@ -52,15 +52,25 @@ switch ($url) {
         session_destroy();
         header("Location: " . BASE_URL . "");
         break;
-    case 'profile_user':
+    case 'profileUser':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
         $controller->profileUser();
+        break;
+    case 'edit_profile':
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->editProfile();
         break;
     case 'profile_business':
         require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->profile_business();
+        break;
+    case 'add_article':
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->addArticle();
         break;
     case 'trends':
         require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -97,7 +107,7 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->profileBusiness();
         break;
-    
+
     // ========== API ROUTES ==========
     case 'api/load-posts':
         require_once 'controller/test-api-profile/loadPosts.php';
@@ -108,7 +118,7 @@ switch ($url) {
     case 'api/toggle-like':
         require_once 'controller/test-api-profile/toggleLike.php';
         break;
-    
+
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
