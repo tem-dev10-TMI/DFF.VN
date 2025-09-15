@@ -45,7 +45,7 @@ class profileUserController
         ob_start();
         require_once 'view/page/viewProfilebusiness.php';
         $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
+        $profile = true; // đừng ai xóa
         require_once 'view/layout/main.php';
     }
 
