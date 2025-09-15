@@ -1,8 +1,8 @@
 <?php
 class ArticlesModel
 {
-    // Thêm bài viết mới
-    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
+    // Thêm bài viết mới -> mặc định pending
+    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'pending', $is_hot = 0, $is_analysis = 0)
     {
         $db = new connect();
         $slug = connect::createSlug($title);
@@ -21,13 +21,13 @@ class ArticlesModel
             ':main_image_url' => $main_image_url,
             ':author_id' => $author_id,
             ':topic_id' => $topic_id,
-            ':status' => $status,
+            ':status' => $status, // mặc định pending
             ':is_hot' => $is_hot,
             ':is_analysis' => $is_analysis
         ]);
     }
 
-    // Lấy tất cả bài viết
+    // Lấy tất cả bài viết (chỉ public)
     public static function getAllArticles()
     {
         $db = new connect();
@@ -35,13 +35,14 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.status = 'public'
                 ORDER BY a.created_at DESC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy bài viết theo ID
+    // Lấy bài viết theo ID (chỉ public)
     public static function getArticleById($id)
     {
         $db = new connect();
@@ -49,7 +50,7 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
-                WHERE a.id = :id";
+                WHERE a.id = :id AND a.status = 'public'";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -108,13 +109,15 @@ class ArticlesModel
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+
+    // Lấy bài viết theo topic (chỉ public)
     public static function getArticlesByTopicId($topic_id, $limit = 10)
     {
         $db = new connect();
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
-                WHERE a.topic_id = :topic_id
+                WHERE a.topic_id = :topic_id AND a.status = 'public'
                 ORDER BY a.created_at DESC
                 LIMIT :limit";
 
