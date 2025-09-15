@@ -585,7 +585,7 @@
   <script>
     switch ("<?= $_GET['msg'] ?>") {
       case "article_added":
-        alert("✅ Bài viết đã được thêm thành công!");
+        alert("✅ Bài viết đã được thêm thành công và chờ duyệt!");
         window.location.href = "<?= BASE_URL ?>/profileUser";
         break;
       case "article_updated":
