@@ -6775,22 +6775,26 @@ ul.timeline .left-arrow:after {
   margin-right: 6px;    /* tạo khoảng cách với chữ */
 }
 @media (max-width: 768px) {
+}
+/* Mobile rất nhỏ (≤ 400px) */
+@media (max-width: 400px) {
   /* Ngày giờ */
   .time, .date, .date-time {
-    font-size: 16px !important; /* tăng size chữ */
-    font-weight: 600;           /* làm đậm */
+    font-size: 18px !important;
+    font-weight: 600;
   }
 
   /* Logo */
   .logo img,
   .logo svg {
-    width: 150px !important; /* to hơn */
+    width: 170px !important;
     height: auto !important;
   }
 
   /* Lịch sự kiện */
   .event-link, .event, a[href*="su-kien"] {
-    font-size: 16px !important; /* chữ to hơn */
-    font-weight: 700 !important; /* đậm hơn */
+    font-size: 18px !important;
+    font-weight: 700 !important;
   }
 }
+
