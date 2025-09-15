@@ -207,28 +207,68 @@ class profileUserController
             exit;
         }
         require_once 'model/user/profileUserModel.php';
+        require_once 'model/user/userModel.php';
         $userId = $_SESSION['user']['id'];
 
-        // 2. Khởi tạo Model
         $profileModel = new profileUserModel();
+        $userModel = new userModel();
 
-        // 3. Xử lý yêu cầu POST (gửi form)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Lấy và làm sạch dữ liệu đầu vào từ form
+            $currentUser = $userModel->getUserById($userId);
+
+            // --- Xử lý upload file ---
+            $avatarDir = "public/img/avatar/";
+            $coverDir = "public/img/cover/";
+
+            // Tạo thư mục nếu chưa tồn tại
+            if (!is_dir($avatarDir)) {
+                mkdir($avatarDir, 0777, true);
+            }
+            if (!is_dir($coverDir)) {
+                mkdir($coverDir, 0777, true);
+            }
+
+            $avatar_url = $currentUser['avatar_url']; // Mặc định giữ lại ảnh cũ
+            $cover_photo = $currentUser['cover_photo']; // Mặc định giữ lại ảnh cũ
+
+            // Xử lý upload ảnh đại diện
+            if (isset($_FILES['avatar_file']) && $_FILES['avatar_file']['error'] == 0) {
+                $avatarName = uniqid('avatar_') . '_' . time() . '.' . pathinfo($_FILES['avatar_file']['name'], PATHINFO_EXTENSION);
+                $avatarPath = $avatarDir . $avatarName;
+                if (move_uploaded_file($_FILES['avatar_file']['tmp_name'], $avatarPath)) {
+                    $avatar_url = BASE_URL . '/' . $avatarPath;
+                }
+            }
+
+            // Xử lý upload ảnh bìa
+            if (isset($_FILES['cover_file']) && $_FILES['cover_file']['error'] == 0) {
+                $coverName = uniqid('cover_') . '_' . time() . '.' . pathinfo($_FILES['cover_file']['name'], PATHINFO_EXTENSION);
+                $coverPath = $coverDir . $coverName;
+                if (move_uploaded_file($_FILES['cover_file']['tmp_name'], $coverPath)) {
+                    $cover_photo = BASE_URL . '/' . $coverPath;
+                }
+            }
+
+            // Lấy và làm sạch dữ liệu từ form
+            $user_name = htmlspecialchars($_POST['user_name'] ?? '');
+            $email = htmlspecialchars($_POST['email'] ?? '');
+            $phone = htmlspecialchars($_POST['phone'] ?? '');
+            $description = htmlspecialchars($_POST['description'] ?? '');
+
             $display_name = htmlspecialchars($_POST['display_name'] ?? '');
-            $birth_year   = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
-            $workplace    = htmlspecialchars($_POST['workplace'] ?? '');
-            $studied_at   = htmlspecialchars($_POST['studied_at'] ?? '');
-            $live_at      = htmlspecialchars($_POST['live_at'] ?? '');
+            $birth_year = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
+            $workplace = htmlspecialchars($_POST['workplace'] ?? '');
+            $studied_at = htmlspecialchars($_POST['studied_at'] ?? '');
+            $live_at = htmlspecialchars($_POST['live_at'] ?? '');
 
-            // Kiểm tra sự tồn tại của profile người dùng
+            // Cập nhật bảng `users`
+            $successUser = $userModel->updateUser($userId, $user_name, $email, $phone, $avatar_url, $cover_photo, $description);
+
+            // Cập nhật bảng `profile_user` (giữ nguyên logic)
             $existingProfile = $profileModel->getProfileUserByUserId($userId);
-
-            $success = false;
-            // Kiểm tra xem có bản ghi profile_id hay không. Nếu không, coi như profile chưa tồn tại.
-            if ($existingProfile && isset($existingProfile['profile_id'])) {
-                // Profile đã tồn tại -> Cập nhật
-                $success = $profileModel->updateProfileUser(
+            $successProfile = false;
+            if ($existingProfile && isset($existingProfile['id'])) {
+                $successProfile = $profileModel->updateProfileUser(
                     $userId,
                     $display_name,
                     $birth_year,
@@ -237,8 +277,7 @@ class profileUserController
                     $live_at
                 );
             } else {
-                // Profile chưa tồn tại -> Thêm mới
-                $success = $profileModel->addProfileUser(
+                $successProfile = $profileModel->addProfileUser(
                     $userId,
                     $display_name,
                     $birth_year,
@@ -248,8 +287,8 @@ class profileUserController
                 );
             }
 
-            // 4. Chuyển hướng dựa trên kết quả
-            if ($success) {
+            // Chuyển hướng dựa trên kết quả
+            if ($successUser && $successProfile) {
                 header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
                 exit;
             } else {
@@ -259,10 +298,8 @@ class profileUserController
         }
 
         // 5. Xử lý yêu cầu GET (hiển thị form)
-        // Lấy dữ liệu profile để điền vào form
         $profileUser = $profileModel->getProfileUserByUserId($userId);
-
-        // Truyền dữ liệu đến View
+        $user = $userModel->getUserById($userId);
         require_once "view/page/profileUser.php";
     }
 
@@ -300,7 +337,7 @@ class profileUserController
 
         require_once 'view/account/changePassword.php';
     }
-    
+
     // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========
     public static function loadArticle()
     {
@@ -389,5 +426,4 @@ class profileUserController
             ]);
         }
     }
-
 }

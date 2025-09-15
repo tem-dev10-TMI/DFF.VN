@@ -77,6 +77,11 @@ switch ($url) {
         $controller = new BusinessmenController();
         $controller->editBusiness();
         break;
+    case 'edit_business_career':
+        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new BusinessmenController();
+        $controller->editBusinessCareer();
+        break;
     case 'add_article':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
@@ -108,7 +113,7 @@ switch ($url) {
         require_once 'controller/NewsController.php';
         $controller = new NewsController();
 
-        
+
         $controller->index();
         break;
     case 'crypton':

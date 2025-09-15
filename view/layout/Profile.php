@@ -257,7 +257,7 @@
   <div class="cover">
 
     <?php
-    $avatarUrl = $_SESSION['user_avatar_url'] ?? null;
+    $avatarUrl = $user['avatar_url'] ?? null;
     if (!$avatarUrl || trim($avatarUrl) === '') {
       $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
     }
@@ -282,13 +282,12 @@
       <div class="post-box mb-3">
         <div class="d-flex align-items-center mb-3">
           <?php
-          $avatarUrl = $_SESSION['user_avatar_url'] ?? null;
+          $avatarUrl = $user['avatar_url'] ?? null;
           if (!$avatarUrl || trim($avatarUrl) === '') {
             $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
           }
           ?>
           <img src="<?= htmlspecialchars($avatarUrl) ?>" class="rounded-circle me-2" alt="avatar" style="width: 40px; height: 40px;">
-          <!-- <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="avatar" style="width: 40px; height: 40px;"> -->
           <div>
             <h6 class="mb-0">
               <?php
@@ -540,9 +539,43 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form action="<?= BASE_URL ?>/edit_profile" method="POST">
+      <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
-          <!-- Hiển thị thông tin hiện tại -->
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Tên người dùng</label>
+              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Ảnh đại diện</label>
+              <input type="file" class="form-control" name="avatar_file">
+              <?php if (!empty($user['avatar_url'])): ?>
+                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['avatar_url']) ?>" target="_blank">Xem</a></small>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ảnh bìa</label>
+              <input type="file" class="form-control" name="cover_file">
+              <?php if (!empty($user['cover_photo'])): ?>
+                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['cover_photo']) ?>" target="_blank">Xem</a></small>
+              <?php endif; ?>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Mô tả bản thân</label>
+            <textarea class="form-control" name="description" rows="3"><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
+          </div>
+
+          <hr>
+
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">Tên hiển thị</label>
@@ -593,10 +626,18 @@
         window.location.href = "<?= BASE_URL ?>/profileUser";
         break;
       case "business_updated":
-        alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
+        alert("📝 Thông tin doanh nhân đã được cập nhật thành công!");
         window.location.href = "<?= BASE_URL ?>/profile_business";
         break;
       case "business_failed":
+        alert("❌ Cập nhật thất bại, vui lòng thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "career_updated":
+        alert("📝 Quá trình công tác đã được cập nhật thành công!");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "career_failed":
         alert("❌ Cập nhật thất bại, vui lòng thử lại.");
         window.location.href = "<?= BASE_URL ?>/profile_business";
         break;
