@@ -18,8 +18,8 @@
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
-                        <input class="form-control border-end-0 border rounded-pill"
-                            onkeypress="return OnEnter(event)" placeholder="Tìm kiếm" type="search" />
+                        <input class="form-control border-end-0 border rounded-pill" onkeypress="return OnEnter(event)"
+                            placeholder="Tìm kiếm" type="search" />
                     </div>
                     <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
                 </div>
@@ -28,13 +28,11 @@
             <div class="header-right">
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
-                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
-                                aria-expanded="false" title="Tạo mới" href="javascript:void(0)"><i
-                                    class="fas fa-plus"></i></a>
+                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
                             <ul class="dropdown-menu hide">
-                                <li><a style="position:relative" class="dropdown-item btquick"
-                                        href="javascript:void(0)" module-load="loadwrite"><i
-                                            class="fas fa-plus"></i><span class="number"><i
+                                <li><a style="position:relative" class="dropdown-item btquick" href="javascript:void(0)"
+                                        module-load="loadwrite"><i class="fas fa-plus"></i><span class="number"><i
                                                 class="bi bi-lightning-charge-fill"></i></span> Viết bài nhanh</a>
                                 </li>
                                 <li><a class="dropdown-item" href="javascript:void(0)" data-url="/write.html"
@@ -54,7 +52,8 @@
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <!-- Đã đăng nhập -->
                             <span class="dropdown signed" style="display: block;">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                                    href="javascript:void(0)">
                                     <img src="vendor/dffvn/content/img/user.svg">
                                 </a>
                                 <ul class="dropdown-menu">
@@ -70,8 +69,10 @@
                                     </li>
                                     <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a>
+                                    </li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
@@ -113,11 +114,13 @@
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
-<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
+    aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
+                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -148,19 +151,23 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
-                                <input name="userName" id="userName" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+                                <input name="userName" id="userName" type="text" class="form-control"
+                                    placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Nhập mật khẩu">
                             </div>
                         </div>
 
                         <div class="col-12 text-right">
-                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a
+                                class="color-logo" id="boxregister" href="javascript:void(0)"
+                                onclick="showRegisterModal()">Tạo tài khoản</a>
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
@@ -180,16 +187,20 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
 <!-- Modal đăng kí -->
-<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true" data-popup-id="8268" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
+    data-popup-id="8268" aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
+                </h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -209,13 +220,15 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
+                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên"
+                                    data-listener-added_14c2e35c="true">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
+                                <input name="username" id="username" type="text" class="form-control"
+                                    placeholder="Tên đăng nhập (Viết liền không Dấu)">
                             </div>
                         </div>
                         <div class="col-12">
@@ -227,13 +240,15 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-phone"></i></div>
-                                <input name="phone" id="phone" type="text" class="form-control" placeholder="Số điện thoại">
+                                <input name="phone" id="phone" type="text" class="form-control"
+                                    placeholder="Số điện thoại">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
@@ -256,7 +271,9 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
