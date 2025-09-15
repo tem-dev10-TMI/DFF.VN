@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/ArticlesModel.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
 
 class ArticlesController
 {
@@ -80,4 +80,25 @@ class ArticlesController
         header('Location: index.php?controller=articles&action=index');
         exit;
     }
+    public static function details_blog($id)
+{
+    require_once __DIR__ . '/../model/article/ArticlesModel.php';
+
+    // Lấy dữ liệu từ model
+    $article = ArticlesModel::getArticleById($id);
+    if (!$article) {
+        require __DIR__ . '/../views/errors/404.php';
+        return;
+    }    
+
+    // Nạp view
+    ob_start();
+    require __DIR__ . '/../view/page/detail_blog.php';
+    $content = ob_get_clean();
+
+    // Layout chính
+    $profile = false; 
+    require __DIR__ . '/../view/layout/main.php';
+}
+
 }
