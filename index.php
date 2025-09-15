@@ -63,9 +63,14 @@ switch ($url) {
         $controller->editProfile();
         break;
     case 'profile_business':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->profile_business();
+        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new BusinessmenController();
+        $controller->index();
+        break;
+    case 'edit_business':
+        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new BusinessmenController();
+        $controller->editBusiness();
         break;
     case 'add_article':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
