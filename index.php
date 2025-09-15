@@ -104,6 +104,13 @@ switch ($url) {
         $id = $_GET['id'] ?? null;
         $controller->details_blog($id);
         break;
+    case 'news':
+        require_once 'controller/NewsController.php';
+        $controller = new NewsController();
+
+        $id = $_GET['id'] ?? null;
+        $controller->details_blog($id);
+        break;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();
@@ -118,7 +125,7 @@ switch ($url) {
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->viewprofileBusiness();
-        
+
         break;
 
     // ========== API ROUTES ==========
@@ -126,6 +133,11 @@ switch ($url) {
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->addArticle();
+        exit;
+    case 'api/loadPost':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->loadArticle();
         exit;
     case 'api/add-post':
         require_once 'controller/account/profileUserController.php';
