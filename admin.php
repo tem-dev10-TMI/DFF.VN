@@ -95,6 +95,21 @@ switch ($route) {
         require_role('admin');
         include __DIR__ . '/view/admin/views/dashboard.php';
         break;
+
+        case 'article':
+            $controller = new ArticleController($pdo);
+        
+            if ($action === 'list') {
+                $controller->list();
+            } elseif ($action === 'form') {
+                $controller->form();
+            } elseif ($action === 'reviewList') {
+                $controller->reviewList();
+            } elseif ($action === 'reviewAction') {
+                $controller->reviewAction();
+            }
+            break;
+           
 }
 
 // Nếu controller có action thì gọi
