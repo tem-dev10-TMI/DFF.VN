@@ -50,7 +50,7 @@ switch ($url) {
         break;
     case 'register':
         require_once 'controller/auth/registerUserController.php';
-        $controller = new loginController();
+        $controller = new registerUserController();
         $controller->index();
         break;
     case 'logout':
