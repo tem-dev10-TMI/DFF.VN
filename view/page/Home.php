@@ -136,90 +136,81 @@
         ?>
 
         <?php if (!empty($articles)): ?>
-            <?php foreach ($articles as $article): ?>
-                <div class="block-k ">
-                    <div class="view-carde f-frame">
-                        <div class="provider">
-                            <?php
-                            $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                            ?>
-                            <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
-                            <div class="p-covers">
-                                <span class="name" title="">
-                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
-                                </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+            <!-- Bọc danh sách bài viết -->
+            <div id="articles-list">
+                <?php foreach ($articles as $i => $article): ?>
+                    <!-- Ẩn bài từ số 10 trở đi -->
+                    <div class="block-k article-item" style="<?= $i < 10 ? 'display:none;' : '' ?>">
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <?php
+                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                ?>
+                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                                <div class="p-covers">
+                                    <span class="name">
+                                        <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>">
+                                            <?= htmlspecialchars($article['author_name']) ?>
+                                        </a>
+                                    </span>
+                                    <span class="date"><?= timeAgo($article['created_at']) ?></span>
+                                </div>
                             </div>
-                        </div>
 
-                          <div class="title">
-                            <a title="<?= htmlspecialchars($article['title']) ?>"
-                            href="details_blog?id=<?= $article['id'] ?>">
-                            <?= htmlspecialchars($article['title']) ?>
-                            </a>
-                        </div>
-
-                        <div class="sapo">
-                            <?= htmlspecialchars($article['summary']) ?>
-                            <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
-                        </div>
-
-                        <?php if (!empty($article['main_image_url'])): ?>
-                            <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
-                        <?php endif; ?>
-
-                        <div class="item-bottom">
-                            <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
-                                <span class="for-up">
-                                    <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                        icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="value" data-old="<?= $article['upvotes'] ?? 0 ?>"><?= $article['upvotes'] ?? 0 ?></span>
-                                <span class="for-down">
-                                    <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                        icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                        </path>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="button-ar">
-                                <a href="details_Blog?id=<?= $article['id'] ?>#anc_comment">
-                                    <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                        height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                        </path>
-                                    </svg>
-                                    <span><?= $article['comment_count'] ?? 0 ?></span>
+                            <div class="title">
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
-                            <div class="button-ar">
-                                <div class="dropdown home-item">
-                                    <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                        aria-expanded="false">Chia sẻ</span>
-                                    <ul class="dropdown-menu">
-                                        <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                                data-url="details_Blog?id=<?= $article['id'] ?>"
+
+                            <div class="sapo">
+                                <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                Xem thêm
+                                </a>
+                            </div>
+
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img class="h-img"
+                                    src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php endif; ?>
+
+                            <!-- Giữ nguyên phần like, comment, share -->
+                            <div class="item-bottom">
+                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                                    <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
+                                </div>
+                                <div class="button-ar">
+                                    <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
+                                        <span><?= $article['comment_count'] ?? 0 ?></span>
+                                    </a>
+                                </div>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
+                                        <span data-bs-toggle="dropdown">Chia sẻ</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item copylink"
+                                                data-url="details_blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Copy link</a></li>
-                                        <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                                data-url="details_Blog?id=<?= $article['id'] ?>"
+                                            <li><a class="dropdown-item sharefb"
+                                                data-url="details_blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Share FB</a></li>
-                                    </ul>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
+
+            <!-- Loading hiển thị khi đang load thêm -->
+            <div id="loading" style="text-align:center; display:none; margin:20px;">
+                <em>Đang tải thêm...</em>
+            </div>
         <?php else: ?>
             <div class="block-k ">
                 <div class="view-carde f-frame">

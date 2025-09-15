@@ -326,6 +326,7 @@
 
         <script src="public/js/main1c07.js"></script>
         <script src="public/js/articleade1.js"></script>
+        <script src="/public/js/loadMore.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>

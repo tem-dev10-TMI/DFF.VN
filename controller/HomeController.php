@@ -9,27 +9,42 @@ class homeController
 {
         public static function index()
         {
-                //Load model
-                //require_once '/../../config/db.php';
+        // 1. Lấy dữ liệu từ Database
+        $dbArticles = ArticlesModel::getAllArticles();
+        $comments = CommentsModel::getComments();
+        $topBusinessmen = businessmenModel::getAllBusinessmen(10);
+        $marketData = MarketDataModel::getCachedMarketData();
 
-                // Fetch data from database
-                $articles = ArticlesModel::getAllArticles();
-                $comments = CommentsModel::getComments();
-                $topBusinessmen = businessmenModel::getAllBusinessmen(10);
+        // 2. Lấy RSS
+        require_once __DIR__ . '/../model/rss/RssModel.php';
 
-                $marketData = MarketDataModel::getCachedMarketData();
-                
-                //Load view
-                ob_start();
+        // RSS Báo Chính phủ
+        $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
 
-                require_once 'view/page/Home.php';
+        // RSS Doanhnhan.vn - Tài chính
+        $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
+        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
 
-                $content = ob_get_clean();
+        // 3. Gộp tất cả bài viết: RSS + DB
+        $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
 
-                //Load layout
-                $profile = false; // đừng ai xóa
-                require_once 'view/layout/main.php';
+        // 4. Sắp xếp theo created_at giảm dần
+        usort($articles, function ($a, $b) {
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
+
+        // 5. Load view Home
+        ob_start();
+        require_once 'view/page/Home.php';
+        $content = ob_get_clean();
+
+        // 6. Load layout chính
+        $profile = false; // giữ nguyên
+        require_once 'view/layout/main.php';
         }
+
+
         public static function profile_business() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
         {
                 //Load model
