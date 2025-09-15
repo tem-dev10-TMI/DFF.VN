@@ -583,7 +583,7 @@
         </div>
 
         <div class="modal show" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="6134" aria-modal="true" style="display: block;">
-            <div class="modal-dialog modal-lg" style="width:700px">
+            <!-- <div class="modal-dialog modal-lg" style="width:700px">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Tạo bài viết</span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
@@ -696,7 +696,7 @@
                                                                                 </div>
                                                                                 <div class="ce-popover-item" data-item-name="imageWithText">
                                                                                     <div class="ce-popover-item__icon ce-popover-item__icon--tool"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                                                                                            <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
+                                                                                            <!-- <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
                                                                                         </svg></div>
                                                                                     <div class="ce-popover-item__title">Image with Text</div>
                                                                                 </div>
@@ -916,9 +916,9 @@
                     </div>
                     <div class="modal-footer"></div>
                 </div>
-            </div>
-        </div>
-        <div role="dialog" aria-modal="true" aria-labelledby="swal2-title" aria-describedby="swal2-content" class="swal2-popup swal2-modal swal2-show" tabindex="-1" aria-live="assertive" style="width: 500px; padding: 20px; background: rgb(255, 255, 255); display: flex;">
+            </div> 
+        </div> -->
+        <!-- <div role="dialog" aria-modal="true" aria-labelledby="swal2-title" aria-describedby="swal2-content" class="swal2-popup swal2-modal swal2-show" tabindex="-1" aria-live="assertive" style="width: 500px; padding: 20px; background: rgb(255, 255, 255); display: flex;">
             <ul class="swal2-progresssteps" style="display: none;"></ul>
             <div class="swal2-icon swal2-error" style="display: none;"><span class="swal2-x-mark"><span class="swal2-x-mark-line-left"></span><span class="swal2-x-mark-line-right"></span></span></div>
             <div class="swal2-icon swal2-question" style="display: none;">?</div>
@@ -938,7 +938,7 @@
             <div class="swal2-radio" style="display: none;"></div><label for="swal2-checkbox" class="swal2-checkbox" style="display: none;"><input type="checkbox"></label><textarea class="swal2-textarea" style="display: none;"></textarea>
             <div class="swal2-validationerror" id="swal2-validationerror" style="display: none;"></div>
             <div class="swal2-buttonswrapper" style="display: flex;"><button type="button" class="swal2-confirm swal2-styled" aria-label="" style="background-color: rgb(48, 133, 214); border-left-color: rgb(48, 133, 214); border-right-color: rgb(48, 133, 214);">OK</button><button type="button" class="swal2-cancel swal2-styled" aria-label="" style="display: none; background-color: rgb(170, 170, 170);">Cancel</button></div><button type="button" class="swal2-close" style="display: none;">×</button>
-        </div>
+        </div> -->
 
         <script>
             $(function() {
