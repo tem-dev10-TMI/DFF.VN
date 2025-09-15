@@ -176,7 +176,7 @@
                 </a>
             </li>
             <li class="fitem2">
-                <a href="trends.html" class="m-trend">
+                <a href="trends" class="m-trend">
                     <i class="bi bi-lightning-charge-fill"></i>
                     <span>Xu hướng</span>
                 </a>
