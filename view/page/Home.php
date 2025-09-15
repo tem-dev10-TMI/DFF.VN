@@ -80,7 +80,9 @@
                                                 </li>
                                                 <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
                                                 <li class="name">
-                                                    <a href="/viewProfilebusiness.php?id=<?= $biz['id'] ?>">
+
+                                                    <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
+                                                    <a href="/DFF.VN/view_profile_business?id=<?= $biz['id'] ?>">
                                                         <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
                                                     </a>
                                                 </li>
