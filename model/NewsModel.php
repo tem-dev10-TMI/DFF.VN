@@ -12,7 +12,7 @@ class NewsModel
                     FROM articles a
                     LEFT JOIN users u ON a.author_id = u.id
                     LEFT JOIN topics t ON a.topic_id = t.id
-                    WHERE a.status = 'published'
+                    WHERE a.status = 'public'
                     ORDER BY a.published_at DESC
                     LIMIT :limit";
             $stmt = $db->db->prepare($sql);
@@ -34,7 +34,7 @@ class NewsModel
                     FROM articles a
                     LEFT JOIN users u ON a.author_id = u.id
                     LEFT JOIN topics t ON a.topic_id = t.id
-                    WHERE a.id = :id AND a.status = 'published'
+                    WHERE a.id = :id AND a.status = 'public'
                     LIMIT 1";
             $stmt = $db->db->prepare($sql);
             $stmt->bindValue(':id', $id, PDO::PARAM_INT);
