@@ -1,5 +1,6 @@
 <?php
-require_once 'models/userModel.php';
+require_once __DIR__ . '/../../model/user/userModel.php';
+
 
 class viewUserController
 {
@@ -11,6 +12,8 @@ class viewUserController
         }
 
         $user_id = intval($_GET['id']);
+
+        // Lấy thông tin user
         $user = UserModel::getUserById($user_id);
 
         if (!$user) {
@@ -18,14 +21,14 @@ class viewUserController
             exit;
         }
 
-        // Lấy bài viết của user
+        // Lấy bài viết
         $articles = UserModel::getArticlesByAuthorId($user_id);
 
-        // Gọi view
+        // Gọi view + truyền biến
         include 'view/page/viewProfileuser.php';
     }
 }
 
-// Gọi controller
+// Chạy controller
 $controller = new viewUserController();
 $controller->detail();
