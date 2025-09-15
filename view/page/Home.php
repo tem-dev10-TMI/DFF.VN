@@ -582,7 +582,7 @@
             <div class="box-follow"></div>
         </div>
 
-        <div class="modal show" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="6134" aria-modal="true" style="display: block;">
+        <!-- <div class="modal show" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="6134" aria-modal="true" style="display: block;"> -->
             <!-- <div class="modal-dialog modal-lg" style="width:700px">
                 <div class="modal-content">
                     <div class="modal-header">
