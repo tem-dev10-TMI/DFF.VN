@@ -179,6 +179,31 @@
                                 </button>
                             </div>
                         </div>
+                        <div class="col-12">
+<div class="input-social">
+    <!-- Facebook Login -->
+    <button type="button"
+            onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
+            style="
+                background-color:#1877f2;
+                color:#fff;
+                border:none;
+                padding:10px 20px;
+                border-radius:6px;
+                font-size:14px;
+                font-weight:bold;
+                cursor:pointer;
+                width:100%;
+                transition:background-color 0.3s ease;
+            "
+            onmouseover="this.style.backgroundColor='#145dbf';"
+            onmouseout="this.style.backgroundColor='#1877f2';">
+        Đăng nhập bằng Facebook
+    </button>
+</div>
+
+
+</div>
 
 
                         <input type="hidden" name="action" value="login">
