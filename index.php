@@ -82,6 +82,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->details_blog();
         break;
+    case 'crypton':
+        require_once 'controller/CryptonController.php';
+        $controller = new CryptonController();
+        $controller->index();
+        break;
     case 'view_profile_user':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
@@ -92,6 +97,18 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->profileBusiness();
         break;
+    
+    // ========== API ROUTES ==========
+    case 'api/load-posts':
+        require_once 'controller/test-api-profile/loadPosts.php';
+        break;
+    case 'api/add-post':
+        require_once 'controller/test-api-profile/addPost.php';
+        break;
+    case 'api/toggle-like':
+        require_once 'controller/test-api-profile/toggleLike.php';
+        break;
+    
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
