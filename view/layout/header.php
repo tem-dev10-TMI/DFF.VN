@@ -168,11 +168,14 @@
                         </div>
                         <div class="content-divider text-muted"> <span>OR</span> </div>
 
-                        <div class="col-12">
-                            <div class="input-social">
-                                <button type="button" class="login-with-google-btn">Đăng nhập bằng Google</button>
-                            </div>
-                        </div>
+<div class="col-12">
+    <div class="input-social">
+        <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+            Đăng nhập bằng Google
+        </button>
+    </div>
+</div>
+
 
                         <input type="hidden" name="action" value="login">
                         <input type="hidden" name="t" value="3">

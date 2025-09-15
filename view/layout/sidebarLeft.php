@@ -42,7 +42,7 @@
                         <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
                             alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
                         <a title="<?= htmlspecialchars($topic['name']) ?>"
-                            href="<?= htmlspecialchars($topic['slug']) . '-t' . $topic['id'] . '-1.html' ?>">
+                            href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
                             <?= htmlspecialchars($topic['name']) ?>
                         </a>
                         <i class="fas fa-plus icon-right"></i>
@@ -62,7 +62,7 @@
                                 title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 border="0" />
                             <a title="<?= htmlspecialchars($topic['name']) ?>"
-                                href="<?= htmlspecialchars($topic['slug']) . '-t' . $topic['id'] . '-1.html' ?>">
+                                href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
                                 <?= htmlspecialchars($topic['name']) ?>
                             </a>
                             <i class="fas fa-plus icon-right"></i>
@@ -75,6 +75,7 @@
                     aria-expanded="false" aria-controls="flush-collapseOne"></i>
             </div>
         <?php endif; ?>
+
         <div class="line"></div>
 
 

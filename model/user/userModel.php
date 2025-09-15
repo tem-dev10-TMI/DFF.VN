@@ -1,6 +1,7 @@
 <?php
 class UserModel
 {
+
     // Đăng ký user mới
     public static function registerUser($name, $username, $email, $password, $phone, $role = 'user', $avatar_url = null, $cover_photo = null, $description = null)
     {
@@ -91,5 +92,59 @@ class UserModel
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':author_id' => $author_id]);
         return $stmt->fetchAll();
+    }
+    // ===================== Google login =====================
+    // Kiểm tra user theo email
+    public static function getUserByEmail($email)
+    {
+        $db = new connect();
+        $stmt = $db->db->prepare("SELECT * FROM users WHERE email = :email");
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function loginOrRegisterGoogleUser($name, $email, $avatar_url = null)
+    {
+        $user = self::getUserByEmail($email);
+
+        if ($user) {
+            // Cập nhật avatar nếu chưa có hoặc khác
+            if ($avatar_url && $user['avatar_url'] !== $avatar_url) {
+                $db = new connect();
+                $stmt = $db->db->prepare("UPDATE users SET avatar_url = :avatar_url WHERE id = :id");
+                $stmt->execute([
+                    ':avatar_url' => $avatar_url,
+                    ':id' => $user['id']
+                ]);
+            }
+            // Fetch lại user từ DB để chắc chắn avatar_url là link
+            return self::getUserByEmail($email);
+        } else {
+            // Nếu chưa có user -> tạo mới
+            $db = new connect();
+
+            // Tạo username từ name, nếu trùng thì thêm số random
+            $baseUsername = preg_replace('/\s+/', '', strtolower($name));
+            $username = $baseUsername;
+            $i = 1;
+            while (self::checkUsernameOrEmailExists($username, $email)) {
+                $username = $baseUsername . rand(100, 999);
+                $i++;
+                if ($i > 10)
+                    break; // phòng lặp vô hạn
+            }
+
+            $sql = "INSERT INTO users (name, username, email, avatar_url, role) 
+                VALUES (:name, :username, :email, :avatar_url, 'user')";
+            $stmt = $db->db->prepare($sql);
+            $stmt->execute([
+                ':name' => $name,
+                ':username' => $username,
+                ':email' => $email,
+                ':avatar_url' => $avatar_url
+            ]);
+
+            return self::getUserByEmail($email);
+        }
     }
 }
