@@ -45,4 +45,24 @@ class NewsModel
             return null;
         }
     }
+    public static function getLatestArticles($limit = 6)
+{
+    $db = new connect();
+    $sql = "SELECT a.*, 
+                   u.name AS author_name, 
+                   u.avatar_url, 
+                   t.name AS topic_name
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id = t.id
+            WHERE a.status = 'public'
+            ORDER BY a.created_at DESC, a.id DESC
+            LIMIT :limit";
+
+    $stmt = $db->db->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

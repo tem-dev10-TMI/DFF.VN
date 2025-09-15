@@ -192,95 +192,32 @@
 
 
 
-        <div class="block-k bg-box-a">
-            <div class="tieu-diem">
-                <h2>
-
-                    <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
-                </h2>
-                <ul>
-
+        <?php if (!empty($articles)): ?>
+    <div class="block-k bg-box-a">
+        <div class="tieu-diem">
+            <h2>
+                <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+            </h2>
+            <ul>
+                <?php foreach ($articles as $article): ?>
                     <li class="new-style">
-                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng" href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
-                            muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
-                            lý nợ vốn 100 tỷ đồng
-
+                        <a title="<?= htmlspecialchars($article['title']) ?>" 
+                           href="detail_blog.php?id=<?= $article['id'] ?>">
+                            <?= htmlspecialchars($article['title']) ?>
                         </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg" title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng" alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng" border="0" />
+                        
+                        <?php if (!empty($article['main_image_url'])): ?>
+                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>" 
+                                 title="<?= htmlspecialchars($article['title']) ?>" 
+                                 alt="<?= htmlspecialchars($article['title']) ?>" 
+                                 border="0" />
+                        <?php endif; ?>
                     </li>
-
-                    <li class="new-style">
-                        <a title="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến làm Chủ tịch, ông chủ Kita Nguyễn Duy Kiên làm Phó Chủ tịch"
-                            href="chuong-moi-o-rcc-cuu-ceo-shs-vu-duc-tien-lam-chu-tich-ong-chu-kita-nguyen-duy-kien-lam-pho-chu-tich-p2025082712131457.html">Chương
-                            mới ở RCC: Cựu CEO SHS Vũ Đức Tiến làm Chủ tịch, ông chủ Kita Nguyễn Duy Kiên
-                            làm Phó Chủ tịch
-
-                        </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/egm-2025-rcc638918935939949422.jpg"
-                            title="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến l&#224;m Chủ tịch, &#244;ng chủ Kita Nguyễn Duy Ki&#234;n l&#224;m Ph&#243; Chủ tịch"
-                            alt="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến l&#224;m Chủ tịch, &#244;ng chủ Kita Nguyễn Duy Ki&#234;n l&#224;m Ph&#243; Chủ tịch"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="NHNN bơm ròng gần 3.000 tỷ đồng tuần qua, lãi suất liên ngân hàng tăng nhẹ"
-                            href="nhnn-bom-rong-gan-3000-ty-dong-tuan-qua-lai-suat-lien-ngan-hang-tang-nhe-p20250825074521390.html">NHNN
-                            bơm ròng gần 3.000 tỷ đồng tuần qua, lãi suất liên ngân hàng tăng nhẹ
-
-                        </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/tien638917047213072765.jpg"
-                            title="NHNN bơm r&#242;ng gần 3.000 tỷ đồng tuần qua, l&#227;i suất li&#234;n ng&#226;n h&#224;ng tăng nhẹ"
-                            alt="NHNN bơm r&#242;ng gần 3.000 tỷ đồng tuần qua, l&#227;i suất li&#234;n ng&#226;n h&#224;ng tăng nhẹ"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="570.000 tỷ đồng tồn kho của loạt 'ông trùm' địa ốc"
-                            href="570000-ty-dong-ton-kho-cua-loat-ong-trum-dia-oc-p20250825093523869.html">570.000
-                            tỷ đồng tồn kho của loạt 'ông trùm' địa ốc
-
-                        </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/ton-kho-bat-dong-san638917113238077644.jpg"
-                            title="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="Con trai 'bầu' Đức đăng ký gom thêm 25 triệu cổ phiếu HAG"
-                            href="con-trai-bau-duc-dang-ky-gom-them-25-trieu-co-phieu-hag-p20250825110742354.html">Con
-                            trai 'bầu' Đức đăng ký gom thêm 25 triệu cổ phiếu HAG
-
-                        </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/bau-duc638917168623228185.jpg"
-                            title="Con trai &#39;bầu&#39; Đức đăng k&#253; gom th&#234;m 25 triệu cổ phiếu HAG"
-                            alt="Con trai &#39;bầu&#39; Đức đăng k&#253; gom th&#234;m 25 triệu cổ phiếu HAG"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="Taseco Land muốn chào bán 48 triệu cổ phiếu, tăng vốn điều lệ lên 3.600 tỷ đồng"
-                            href="taseco-land-muon-chao-ban-48-trieu-co-phieu-tang-von-dieu-le-len-3600-ty-dong-p20250825120759448.html">Taseco
-                            Land muốn chào bán 48 triệu cổ phiếu, tăng vốn điều lệ lên 3.600 tỷ đồng
-
-                        </a>
-
-                        <img src="../media.dff.vn/web/image/2025/8/taseco-land-tal638917204793700058.jpg"
-                            title="Taseco Land muốn ch&#224;o b&#225;n 48 triệu cổ phiếu, tăng vốn điều lệ l&#234;n 3.600 tỷ đồng"
-                            alt="Taseco Land muốn ch&#224;o b&#225;n 48 triệu cổ phiếu, tăng vốn điều lệ l&#234;n 3.600 tỷ đồng"
-                            border="0" />
-                    </li>
-
-
-
-                </ul>
-            </div>
+                <?php endforeach; ?>
+            </ul>
         </div>
+    </div>
+<?php endif; ?>
 
 
 

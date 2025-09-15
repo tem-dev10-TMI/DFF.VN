@@ -14,6 +14,7 @@ class homeController
 
                 // Fetch data from database
                 $articles = ArticlesModel::getAllArticles();
+                $articles = ArticlesModel::getLatestArticles($limit = 6);
                 $comments = CommentsModel::getComments();
                 $topBusinessmen = businessmenModel::getAllBusinessmen(10);
 
