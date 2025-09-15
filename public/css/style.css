@@ -6768,3 +6768,9 @@ ul.timeline .left-arrow:after {
   object-fit: contain;
   display: inline-block;
 }
+/* Icon cho mục Xu hướng */
+.m-trend i {
+  font-size: 20px;      /* kích thước icon */
+  color: #333;          /* màu icon (có thể đổi sang #007bff để xanh) */
+  margin-right: 6px;    /* tạo khoảng cách với chữ */
+}
