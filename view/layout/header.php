@@ -7,8 +7,8 @@
             </div>
             <div class="header-logo">
                 <a href="home">
-                    <img alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
-                        src="../img.dff.vn/static/img/logo.png" /></a>
+                    <img styles=" stroke: none !important;" alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
+                        src="<?= BASE_URL ?>/public/img/logo.svg" /></a>
                 <div class="box-search">
                     <div class="input-group ">
                         <span class="input-group-append">
