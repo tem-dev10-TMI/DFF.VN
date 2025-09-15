@@ -1,3 +1,20 @@
+<style>
+    ul li.active svg,
+    ul li.active i {
+        color: red;
+        border: 2px solid red;
+        border-radius: 6px;
+        padding: 2px;
+        display: inline-block;
+    }
+    ul li svg,
+    ul li i {
+        border: none;
+        padding: 0;
+        color: inherit;
+    }
+</style>
+
 <div class="collapse navbar-collapse m-menu-i" id="navbarNav5">
 
         <ul class="">
@@ -87,3 +104,17 @@
 
 
     </div>
+    <script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const allLis = document.querySelectorAll("ul li");
+        allLis.forEach(li => {
+            const a = li.querySelector("a");
+            if (a) {
+                a.addEventListener("click", function(e) {
+                    allLis.forEach(item => item.classList.remove("active"));
+                    li.classList.add("active");
+                });
+            }
+        });
+    });
+</script>
