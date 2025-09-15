@@ -1,16 +1,44 @@
 <?php
-
-require_once __DIR__ . '/../models/user/businessmenModel.php';
-
 class BusinessmenController
 {
     // Danh sách tất cả doanh nhân
     public static function index()
     {
-        $businessmen = businessmenModel::getAllBusinessmen();
+        if (!isset($_SESSION['user'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        require_once 'model/user/userModel.php';
+        require_once 'model/user/businessmenModel.php';
+        require_once 'model/article/articlesmodel.php';
 
-        // Load view
-        require __DIR__ . '/../views/page/home.php';
+        $modelArticle = new ArticlesModel();
+        $modelUser = new UserModel();
+        $modelBusiness = new businessmenModel();
+
+        $userId = $_SESSION['user']['id'];
+
+        $user = $modelUser->getUserById($userId);
+
+        $articles = $modelArticle->getArticleById($userId);
+
+        $role = $_SESSION['user']['role'];
+        if ($role === 'businessmen') {
+            $business = $modelBusiness->getBusinessByUserId($userId);
+            $stats = $modelBusiness->getBusinessStats($userId);
+            //Load view
+            ob_start();
+            $profile_category = 'businessmen';
+            require_once 'view/layout/Profile.php';
+            $content = ob_get_clean();
+
+            //Load layout
+            $profile = true; // đừng ai xóa
+            require_once 'view/layout/main.php';
+        } else {
+            header("Location: " . BASE_URL);
+            exit;
+        }
     }
 
     // Chi tiết 1 doanh nhân theo user_id
@@ -53,10 +81,43 @@ class BusinessmenController
 
 
     // Form sửa doanh nhân
-    public static function edit($user_id)
+    public static function editBusiness()
     {
-        $biz = businessmenModel::getBusinessByUserId($user_id);
-        require __DIR__ . '/../views/businessmen/edit.php';
+        if (!isset($_SESSION['user'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        $userId = $_SESSION['user']['id'];
+        require_once 'model/user/businessmenModel.php';
+        $modelBusiness = new businessmenModel();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $birth_year = $_POST['birth_year'] ?? null;
+            $nationality   = $_POST['nationality'] ?? null;
+            $education   = $_POST['education'] ?? null;
+            $position   = $_POST['position'] ?? null;
+
+            // Kiểm tra xem user đã có hồ sơ chưa
+            $Business  = $modelBusiness->getBusinessByUserId($userId);
+            if ($Business) {
+                // Có rồi → update
+                $result = $modelBusiness->updateBusiness($userId, $birth_year, $nationality, $education, $position);
+            } else {
+                // Chưa có → insert mới
+                $result = $modelBusiness->registerBusiness($userId, $birth_year, $nationality, $education, $position);
+            }
+
+            if ($result) {
+                header('Location: ' . BASE_URL . '/profile_business?msg=profile_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profile_business?msg=profile_failed');
+                exit;
+            }
+        }
+
+        $Business  = $modelBusiness->getBusinessByUserId($userId);
+        require_once "view/page/profileUser.php";
     }
 
     // Xử lý update doanh nhân
@@ -83,6 +144,5 @@ class BusinessmenController
         businessmenModel::deleteBusiness($user_id);
         header('Location: index.php?controller=businessmen&action=index');
         exit;
-
     }
 }
