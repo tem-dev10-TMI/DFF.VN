@@ -9,7 +9,7 @@
       </div>
       <div class="card-body">
 
-        <form method="post" action="<?=BASE_URL?>/index.php?route=topics&action=<?= $isEdit ? 'update&id='.$topic['id'] : 'store'?>">
+        <form method="post" action="<?=BASE_URL?>/admin.php?route=topics&action=<?= $isEdit ? 'update&id='.$topic['id'] : 'store'?>">
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Tên topic</label>
@@ -27,7 +27,7 @@
           </div>
 
           <div class="text-end">
-            <a href="<?=BASE_URL?>/index.php?route=topics" class="btn btn-secondary">Hủy</a>
+            <a href="<?=BASE_URL?>/admin.php?route=topics" class="btn btn-secondary">Hủy</a>
             <button class="btn btn-primary"><?= $isEdit ? 'Cập nhật' : 'Tạo mới' ?></button>
           </div>
 

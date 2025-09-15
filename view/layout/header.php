@@ -6,9 +6,11 @@
                             class="fas fa-bars"></i></a></span>
             </div>
             <div class="header-logo">
-                <a href="index.html">
-                    <img alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
-                        src="../img.dff.vn/static/img/logo.png" /></a>
+                <a href="home">
+
+                    <img style=" stroke: none !important;height: 50px; width:auto; "
+                        alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
+                        src="public/img/logo.svg" ; /></a>
                 <div class="box-search">
                     <div class="input-group ">
                         <span class="input-group-append">
@@ -42,19 +44,30 @@
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">4</span>
+                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">0</span>
                         </span>
                     </li>
                     <li class="top-pro ">
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
-                                    src="vendor/dffvn/content/img/user.svg"></a> 
+                                    src="public/img/user.svg"></a> 
                         </span> -->
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <!-- Đã đăng nhập -->
-                            <span class="dropdown signed" style="display: block;">
+                            <span class="dropdown signed" style="display: block;
+                                <a class=" dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                                href="javascript:void(0)">
+                                <img src="vendor/dffvn/content/img/user.svg">
+
                                 <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
                                     href="javascript:void(0)">
-                                    <img src="vendor/dffvn/content/img/user.svg">
+                                    <?php
+                                    $avatarUrl = $_SESSION['user_avatar_url'] ?? null;
+                                    if (!$avatarUrl || trim($avatarUrl) === '') {
+                                        $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                    }
+                                    ?>
+                                    <img src="<?= htmlspecialchars($avatarUrl) ?>">
+
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -63,21 +76,25 @@
                                                 <!-- Có thể load profile user tại đây -->
                                             </ul>
                                             <div class="add">
-                                                <a href="index.html">Xem tất cả Profile</a>
+                                                <a href="home">Xem tất cả Profile</a>
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="menu-ai"><a class="dropdown-item" href="index.html"><i
-                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i class="fas fa-dice-d20"></i>
+                                            Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a>
                                     </li>
                                     <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a>
                                     </li>
+
+                                    <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
+                                    <li><a class="dropdown-item" href="home"><i class="fas fa-user"></i> Profile</a></li>
+
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="logout"><i
+                                    <li><a class="dropdown-item" module-load="logout" href="<?= BASE_URL ?>/logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
@@ -85,7 +102,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="vendor/dffvn/content/img/user.svg">
+                                    <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg">
                                 </a>
                             </span>
                         <?php endif; ?>
@@ -126,32 +143,29 @@
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
-                            <?php
-                            // Hiển thị thông báo lỗi
-                            if (isset($_SESSION['login_errors']) && !empty($_SESSION['login_errors'])) {
-                                echo '<div class="alert alert-danger">';
-                                foreach ($_SESSION['login_errors'] as $error) {
-                                    echo '<p>' . htmlspecialchars($error) . '</p>';
-                                }
-                                echo '</div>';
-                                unset($_SESSION['login_errors']);
-                            }
+                            <?php if (!empty($error)) : ?>
+                                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
+                            <?php endif; ?>
 
-                            // Hiển thị thông báo thành công
-                            if (isset($_SESSION['login_success'])) {
-                                echo '<div class="alert alert-success">' . htmlspecialchars($_SESSION['login_success']) . '</div>';
-                                unset($_SESSION['login_success']);
-                            }
-                            ?>
+                            <?php if (isset($_SESSION['success'])): ?>
+                                <div class="alert alert-success">
+                                    <?= $_SESSION['success'] ?>
+                                    <?php unset($_SESSION['success']); ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
-                <form id="login" method="POST" action="controller/UserController.php" novalidate="novalidate">
+                <form id="login" method="POST" action="<?= BASE_URL ?>/login" novalidate="novalidate">
                     <div class="f-login">
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
+
                                 <input name="userName" id="userName" type="text" class="form-control"
+                                    placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+
+                                <input name="username" id="username" type="text" class="form-control"
                                     placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
@@ -171,16 +185,20 @@
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
-                                <button type="submit" id="submit" href="javascript:void(0)">Đăng nhập</button>
+                                <button type="submit" id="submit">Đăng nhập</button>
                             </div>
                         </div>
                         <div class="content-divider text-muted"> <span>OR</span> </div>
 
                         <div class="col-12">
                             <div class="input-social">
-                                <button type="button" class="login-with-google-btn">Đăng nhập bằng Google</button>
+                                <button type="button" class="login-with-google-btn"
+                                    onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+                                    Đăng nhập bằng Google
+                                </button>
                             </div>
                         </div>
+
 
                         <input type="hidden" name="action" value="login">
                         <input type="hidden" name="t" value="3">
@@ -252,6 +270,13 @@
                             </div>
                         </div>
                         <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="password_confirm" name="password_confirm" type="password"
+                                    class="form-control" placeholder="Xác nhận mật khẩu">
+                            </div>
+                        </div>
+                        <div class="col-12">
                             <div class="f-submit">
                                 <button type="submit" id="submit">Đăng ký</button>
                             </div>
@@ -319,145 +344,171 @@
 
 
 
+<?php
+// Load market data nếu chưa có
+if (!isset($marketData)) {
+    require_once __DIR__ . '/../../model/MarketDataModel.php';
+    $marketData = MarketDataModel::getCachedMarketData();
+}
+// Debug: Kiểm tra dữ liệu market
+echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData) : 'undefined') . " -->";
+?>
 <div class="top-stock">
     <div class="marquee">
         <div class="item co-VNINDEX">
             <div class="irow label">
                 <span>VNINDEX</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['VNINDEX']['price'] ?? '1,667.26' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['VNINDEX']['change'] ?? '9.51' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
             </div>
         </div>
         <div class="item co-HNX">
             <div class="irow label">
                 <span>HNX</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['HNX']['price'] ?? '245.33' ?></span>
+                <!-- Debug: <?= isset($marketData['HNX']) ? 'HNX data exists' : 'HNX data missing' ?> -->
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['HNX']['change'] ?? '2.33' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30F1M">
             <div class="irow label">
                 <span>VN30F1M</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['VN30F1M']['price'] ?? '276.51' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['VN30F1M']['change'] ?? '5.5' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30">
             <div class="irow label">
                 <span>VN30</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['VN30']['price'] ?? '1,859.00' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['VN30']['change'] ?? '10.37' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
             </div>
         </div>
         <div class="item co-UPCOM">
             <div class="irow label">
                 <span>UPCOM</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['UPCOM']['price'] ?? '1,865.45' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['UPCOM']['change'] ?? '-0.01' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
             </div>
         </div>
 
         <div class="item co-Slave">
             <div class="irow label">
                 <span>Bạc</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['Silver']['price'] ?? '110.09' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['Silver']['change'] ?? '0.68' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
             </div>
         </div>
         <div class="item co-Oil">
             <div class="irow label">
                 <span>Dầu Thô WTI</span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['Oil']['price'] ?? '42.83' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['Oil']['change'] ?? '0.32' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
             </div>
         </div>
-
 
         <div class="item co-BTC">
             <div class="irow label">
                 <span><a target="_blank" href="coins-bitcoin.html">Bitcoin</a></span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['Bitcoin']['price'] ?? '62.69' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['Bitcoin']['change'] ?? '745.53' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
             </div>
         </div>
 
         <div class="item co-ETH">
             <div class="irow label">
                 <span><a target="_blank" href="coins-ethereum.html">Ethereum</a></span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['Ethereum']['price'] ?? '115,974.00' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['Ethereum']['change'] ?? '271.52' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
             </div>
         </div>
 
         <div class="item co-BNB">
             <div class="irow label">
                 <span><a target="_blank" href="coins-binancecoin.html">BNB</a></span>
-                <span class="value"></span>
+                <span class="value"><?= $marketData['BNB']['price'] ?? '4,760.21' ?></span>
             </div>
             <div class="irow content">
                 <span>
-                    <i class=""></i>
-                    <index></index>
+                    <i
+                        class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <index><?= $marketData['BNB']['change'] ?? '25.54' ?></index>
                 </span>
-                <span class="per"></span>
+                <span
+                    class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
             </div>
         </div>
-
-
-
     </div>
 </div>

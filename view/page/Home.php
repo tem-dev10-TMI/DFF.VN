@@ -1,140 +1,48 @@
+<?php
+// require_once __DIR__ . '/../../config/db.php';
+// require_once __DIR__ . '/../../model/article/articlesmodel.php';
+// require_once __DIR__ . '/../../model/commentmodel.php';
+// require_once __DIR__ . '/../../model/user/businessmenModel.php';
+
+// $comments = CommentsModel::getComments();
+// $articles = ArticlesModel::getAllArticles();      
+// $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
+?>
+
 <main class="main-content">
 
 
     <!-- 4 cục bài viết nổi bật start -->
     <div class="owl-slider home-slider">
         <div id="home_slider" class="owl-carousel">
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="BSR muốn chia thưởng cổ phiếu 'khủng', đổi tên thành Lọc hóa dầu Việt Nam"
-                        href="bsr-muon-chia-thuong-co-phieu-khung-doi-ten-thanh-loc-hoa-dau-viet-nam-p20250910150159435.html">
-                        <div class="mmavatar">BSR muốn chia thưởng cổ phiếu 'khủng', đổi tên thành Lọc hóa
-                            dầu Việt Nam</div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/bsr-2638931133191544185.jpg"
-                        title="BSR muốn chia thưởng cổ phiếu &#39;khủng&#39;, đổi t&#234;n th&#224;nh Lọc h&#243;a dầu Việt Nam"
-                        alt="BSR muốn chia thưởng cổ phiếu &#39;khủng&#39;, đổi t&#234;n th&#224;nh Lọc h&#243;a dầu Việt Nam"
-                        border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="BSR muốn chia thưởng cổ phiếu 'khủng', đổi tên thành Lọc hóa dầu Việt Nam"
-                            href="bsr-muon-chia-thuong-co-phieu-khung-doi-ten-thanh-loc-hoa-dau-viet-nam-p20250910150159435.html">BSR
-                            muốn chia thưởng cổ phiếu 'khủng', đổi tên thành Lọc hóa dầu Việt Nam</a> </h4>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="NHNN sẽ sớm cấp phép sản xuất vàng miếng cho ngân hàng, doanh nghiệp"
-                        href="nhnn-se-som-cap-phep-san-xuat-vang-mieng-cho-ngan-hang-doanh-nghiep-p20250910112819544.html">
-                        <div class="mmavatar">NHNN sẽ sớm cấp phép sản xuất vàng miếng cho ngân hàng, doanh
-                            nghiệp</div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/pham-quang-dung-nhnn638931004995135967.jpg"
-                        title="NHNN sẽ sớm cấp ph&#233;p sản xuất v&#224;ng miếng cho ng&#226;n h&#224;ng, doanh nghiệp"
-                        alt="NHNN sẽ sớm cấp ph&#233;p sản xuất v&#224;ng miếng cho ng&#226;n h&#224;ng, doanh nghiệp"
-                        border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="NHNN sẽ sớm cấp phép sản xuất vàng miếng cho ngân hàng, doanh nghiệp"
-                            href="nhnn-se-som-cap-phep-san-xuat-vang-mieng-cho-ngan-hang-doanh-nghiep-p20250910112819544.html">NHNN
-                            sẽ sớm cấp phép sản xuất vàng miếng cho ngân hàng, doanh nghiệp</a> </h4>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="Sun Group làm hai đại đô thị 68.000 tỷ đồng tại Khu kinh tế Vân Phong"
-                        href="sun-group-lam-hai-dai-do-thi-68000-ty-dong-tai-khu-kinh-te-van-phong-p20250910101422513.html">
-                        <div class="mmavatar">Sun Group làm hai đại đô thị 68.000 tỷ đồng tại Khu kinh tế
-                            Vân Phong</div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/khanh-hoa638930960624826164.jpg"
-                        title="Sun Group l&#224;m hai đại đ&#244; thị 68.000 tỷ đồng tại Khu kinh tế V&#226;n Phong"
-                        alt="Sun Group l&#224;m hai đại đ&#244; thị 68.000 tỷ đồng tại Khu kinh tế V&#226;n Phong"
-                        border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="Sun Group làm hai đại đô thị 68.000 tỷ đồng tại Khu kinh tế Vân Phong"
-                            href="sun-group-lam-hai-dai-do-thi-68000-ty-dong-tai-khu-kinh-te-van-phong-p20250910101422513.html">Sun
-                            Group làm hai đại đô thị 68.000 tỷ đồng tại Khu kinh tế Vân Phong</a> </h4>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="Nhà đầu tư mở gần 260.000 tài khoản chứng khoán trong tháng 8"
-                        href="nha-dau-tu-mo-gan-260000-tai-khoan-chung-khoan-trong-thang-8-p20250910094748462.html">
-                        <div class="mmavatar">Nhà đầu tư mở gần 260.000 tài khoản chứng khoán trong tháng 8
+            <?php if (!empty($articles)): ?>
+                <?php foreach ($articles as $article): ?>
+                    <div class="item">
+                        <div class="" style="display: none">
+                            <a title="<?= htmlspecialchars($article['title']) ?>"
+                                href="article_detail.php?id=<?= $article['id'] ?>">
+                                <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
+                            </a>
                         </div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/chung-khoan-1638930944683526240.jpg"
-                        title="Nh&#224; đầu tư mở gần 260.000 t&#224;i khoản chứng kho&#225;n trong th&#225;ng 8"
-                        alt="Nh&#224; đầu tư mở gần 260.000 t&#224;i khoản chứng kho&#225;n trong th&#225;ng 8"
-                        border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="Nhà đầu tư mở gần 260.000 tài khoản chứng khoán trong tháng 8"
-                            href="nha-dau-tu-mo-gan-260000-tai-khoan-chung-khoan-trong-thang-8-p20250910094748462.html">Nhà
-                            đầu tư mở gần 260.000 tài khoản chứng khoán trong tháng 8</a> </h4>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="Thủ tướng yêu cầu thí điểm bỏ 'room' tín dụng từ năm 2026"
-                        href="thu-tuong-yeu-cau-thi-diem-bo-room-tin-dung-tu-nam-2026-p20250910085550634.html">
-                        <div class="mmavatar">Thủ tướng yêu cầu thí điểm bỏ 'room' tín dụng từ năm 2026
+                        <div class="cover-hover" style="">
+                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                title="<?= htmlspecialchars($article['title']) ?>"
+                                alt="<?= htmlspecialchars($article['title']) ?>"
+                                border="0" />
                         </div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/thu-tuong638930913505245554.jpg"
-                        title="Thủ tướng y&#234;u cầu th&#237; điểm bỏ &#39;room&#39; t&#237;n dụng từ năm 2026"
-                        alt="Thủ tướng y&#234;u cầu th&#237; điểm bỏ &#39;room&#39; t&#237;n dụng từ năm 2026"
-                        border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="Thủ tướng yêu cầu thí điểm bỏ 'room' tín dụng từ năm 2026"
-                            href="thu-tuong-yeu-cau-thi-diem-bo-room-tin-dung-tu-nam-2026-p20250910085550634.html">Thủ
-                            tướng yêu cầu thí điểm bỏ 'room' tín dụng từ năm 2026</a> </h4>
-                </div>
-            </div>
-
-            <div class="item">
-                <div class="" style="display: none">
-                    <a title="Chứng khoán Mỹ tăng mạnh bất chấp lo ngại về việc làm"
-                        href="chung-khoan-my-tang-manh-bat-chap-lo-ngai-ve-viec-lam-p20250910073044790.html">
-                        <div class="mmavatar">Chứng khoán Mỹ tăng mạnh bất chấp lo ngại về việc làm</div>
-                    </a>
-                </div>
-                <div class="cover-hover" style="">
-                    <img src="../media.dff.vn/web/image/2025/9/dow-jones-2638930862447746523.jpg"
-                        title="Chứng kho&#225;n Mỹ tăng mạnh bất chấp lo ngại về việc l&#224;m"
-                        alt="Chứng kho&#225;n Mỹ tăng mạnh bất chấp lo ngại về việc l&#224;m" border="0" />
-
-                </div>
-                <div class="text" style="">
-                    <h4><a title="Chứng khoán Mỹ tăng mạnh bất chấp lo ngại về việc làm"
-                            href="chung-khoan-my-tang-manh-bat-chap-lo-ngai-ve-viec-lam-p20250910073044790.html">Chứng
-                            khoán Mỹ tăng mạnh bất chấp lo ngại về việc làm</a> </h4>
-                </div>
-            </div>
-
+                        <div class="text" style="">
+                            <h4>
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="article_detail.php?id=<?= $article['id'] ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Không có bài viết nào trong cơ sở dữ liệu.</p>
+            <?php endif; ?>
         </div>
     </div>
     <!-- 4 cục bài viết nổi bật end -->
@@ -148,7 +56,7 @@
                             chia sẻ, đặt câu hỏi…</span></a></div>
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
-                src="vendor/dffvn/content/img/img_small.jpg" width="30">
+                src="public/img/image.svg" width="30">
         </div>
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
@@ -159,160 +67,42 @@
             </h5>
             <div class="owl-slider">
                 <div class="owl-carousel box-company owl-loaded owl-drag">
-
-
-
-
-
-
-
-
-
                     <div class="owl-stage-outer owl-height" style="height: 256px;">
-                        <div class="owl-stage"
-                            style="transform: translate3d(0px, 0px, 0px); transition: all; width: 1542px;">
-                            <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/bui-thanh-nhon-t2017-8.html"> Bùi Thành
-                                                Nhơn</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="2017" class="">
-                                                <val> Theo dõi</val> <span class="number">308</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2025/05/06/dao-nam-hai-162134063.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/dao-nam-hai-t5787-8.html"> Đào Nam
-                                                Hải</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="5787" class="">
-                                                <val> Theo dõi</val> <span class="number">199</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2024/10/21/pham-nhat-vuong-103139367.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/pham-nhat-vuong-t3514-8.html"> Phạm Nhật
-                                                Vượng</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="3514" class="">
-                                                <val> Theo dõi</val> <span class="number">218</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2025/05/06/phan-duc-trung-175231454.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/phan-duc-trung-t5794-8.html"> Phan Đức
-                                                Trung</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="5794" class="">
-                                                <val> Theo dõi</val> <span class="number">148</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2024/10/21/nguyen-thi-phuong-thao-095943963.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/nguyen-thi-phuong-thao-t3511-8.html">
-                                                Nguyễn Thị Phương Thảo</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="3511" class="">
-                                                <val> Theo dõi</val> <span class="number">75</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2024/10/15/nguyen-van-tuan-161542258.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/nguyen-van-tuan-t2029-8.html"> Nguyễn Văn
-                                                Tuấn</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="2029" class="">
-                                                <val> Theo dõi</val> <span class="number">229</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn//Image/2024/10/21/tran-ba-duong-105316244.png">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/tran-ba-duong-t3516-8.html"> Trần Bá
-                                                Dương</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="3516" class="">
-                                                <val> Theo dõi</val> <span class="number">216</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="owl-item" style="width: 182.667px; margin-right: 10px;">
-                                <div class="item">
-                                    <ul>
-                                        <li>
-                                            <img class="logo" alt=""
-                                                src="https://img.dff.vn/Image/business/638579368481459587_169.jpg">
-                                        </li>
-                                        <li class="alias">Doanh nhân</li>
-                                        <li class="name"><a href="/pham-minh-huong-t2180-8.html"> Phạm Minh
-                                                Hương</a> </li>
-                                        <li class="f-folw"><a data-type="5" href="javascript:void(0)"
-                                                data-ref="2180" class="">
-                                                <val> Theo dõi</val> <span class="number">163</span>
-                                            </a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
+                            <?php if (!empty($topBusinessmen)): ?>
+                                <?php foreach ($topBusinessmen as $biz): ?>
+                                    <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                                        <div class="item">
+                                            <ul>
+                                                <li>
+                                                    <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                                        src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                                </li>
+                                                <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
+                                                <li class="name">
+                                                    <a href="/viewProfilebusiness.php?id=<?= $biz['id'] ?>">
+                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                    </a>
+                                                </li>
+                                                <li class="f-folw">
+                                                    <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
+                                                        <val>Theo dõi</val>
+                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Chưa có doanh nhân nào.</p>
+                            <?php endif; ?>
                         </div>
                     </div>
-                    <div class="owl-nav"><button type="button" role="presentation"
-                            class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button><button
-                            type="button" role="presentation" class="owl-next"><i
-                                class="fa fa-chevron-right"></i></button></div>
+                    <div class="owl-nav">
+                        <button type="button" role="presentation" class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button>
+                        <button type="button" role="presentation" class="owl-next"><i class="fa fa-chevron-right"></i></button>
+                    </div>
                     <div class="owl-dots disabled"></div>
                 </div>
             </div>
@@ -320,176 +110,120 @@
 
 
 
+
+
+
+
         <!-- ///////////////////////////// -->
 
+
         <!-- blog -->
+        <?php
 
-        <!-- ///1 -->
-        <div class="block-k ">
-            <div class="view-carde f-frame">
-                <div class="provider">
-                    <img class="logo" alt="" src="/Upload/img_static/bannerdao638824667798806492.jpg">
-                    <div class="p-covers">
-                        <span class="name" title="">
-                            <a href="/profile.html?q=663464303035383" title="Phương Nhi">Phương Nhi</a>
+        //LẤY TRONG CSDL
+        // Function to calculate time ago
+        function timeAgo($datetime)
+        {
+            $time = time() - strtotime($datetime);
+            if ($time < 60) return 'vừa xong';
+            if ($time < 3600) return floor($time / 60) . ' phút trước';
+            if ($time < 86400) return floor($time / 3600) . ' giờ trước';
+            if ($time < 2592000) return floor($time / 86400) . ' ngày trước';
+            return date('d/m/Y', strtotime($datetime));
+        }
+        ?>
 
-                        </span><span class="date"> 59 phút trước</span>
-                    </div>
+        <?php if (!empty($articles)): ?>
+            <?php foreach ($articles as $article): ?>
+                <div class="block-k ">
+                    <div class="view-carde f-frame">
+                        <div class="provider">
+                            <?php
+                            $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                            ?>
+                            <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                            <div class="p-covers">
+                                <span class="name" title="">
+                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                            </div>
+                        </div>
 
-                </div>
+                        <div class="title">
+                            <a title="<?= htmlspecialchars($article['title']) ?>"
+                                href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"><?= htmlspecialchars($article['title']) ?></a>
+                        </div>
+                        <div class="sapo">
+                            <?= htmlspecialchars($article['summary']) ?>
+                            <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html" class="d-more">Xem thêm</a>
+                        </div>
 
-                <div class="title">
-                    <a title="NHNN đang nghiên cứu lập sàn giao dịch vàng"
-                        href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html">NHNN
-                        đang nghiên cứu lập sàn giao dịch vàng </a>
-                </div>
-                <div class="sapo">
+                        <?php if (!empty($article['main_image_url'])): ?>
+                            <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
+                        <?php endif; ?>
 
-                    <a href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                        class="d-more">Xem thêm</a>
-                </div>
-
-                <iframe
-                    src="https://www.tiktok.com/player/v1/7548413933464325392?&amp;music_info=1&amp;description=1"
-                    allow="fullscreen" title="test"></iframe>
-
-                <div class="item-bottom">
-                    <div class="bt-cover com-like" data-id="20250911084319328">
-                        <span class="for-up">
-                            <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!--?lit$811032025$--><!--?lit$811032025$-->
-                                <path
-                                    d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                </path><!--?-->
-                            </svg>
-                        </span>
-                        <span class="value" data-old="0"> 0</span>
-                        <span class="for-down">
-                            <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!--?lit$811032025$--><!--?lit$811032025$-->
-                                <path
-                                    d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                </path><!--?-->
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="button-ar">
-                        <a
-                            href="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html#anc_comment">
-                            <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                </path><!--?-->
-                            </svg>
-                            <span>0</span>
-                        </a>
-                    </div>
-                    <div class="button-ar">
-                        <div class="dropdown home-item">
-                            <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                aria-expanded="false">Chia sẻ</span>
-                            <ul class="dropdown-menu">
-                                <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                        data-url="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                                        href="javascript:void(0)">Copy link</a></li>
-                                <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                        data-url="/nhnn-dang-nghien-cuu-lap-san-giao-dich-vang-p20250911084319328.html"
-                                        href="javascript:void(0)">Share FB</a></li>
-                            </ul>
+                        <div class="item-bottom">
+                            <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                                <span class="for-up">
+                                    <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
+                                        icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                                <span class="value" data-old="<?= $article['upvotes'] ?? 0 ?>"><?= $article['upvotes'] ?? 0 ?></span>
+                                <span class="for-down">
+                                    <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
+                                        icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
+                                        </path>
+                                    </svg>
+                                </span>
+                            </div>
+                            <div class="button-ar">
+                                <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html#anc_comment">
+                                    <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
+                                        height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
+                                        </path>
+                                    </svg>
+                                    <span><?= $article['comment_count'] ?? 0 ?></span>
+                                </a>
+                            </div>
+                            <div class="button-ar">
+                                <div class="dropdown home-item">
+                                    <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
+                                        aria-expanded="false">Chia sẻ</span>
+                                    <ul class="dropdown-menu">
+                                        <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
+                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                href="javascript:void(0)">Copy link</a></li>
+                                        <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
+                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                href="javascript:void(0)">Share FB</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <!-- ///2 -->
-        <div class="block-k ">
-            <div class="view-carde f-frame">
-                <div class="provider">
-                    <img class="logo" alt="" src="/Upload/img_static/bannerfii638590796760419265.png">
-                    <div class="p-covers">
-                        <span class="name" title="">
-                            <a href="/profile.html?q=383337373338633" title="Thanh Tùng">Thanh Tùng</a>
-                            <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
-                        </span><span class="date"> 1 giờ trước</span>
-                    </div>
-
-                </div>
-
-                <div class="title">
-                    <a title="S&amp;P 500 tiếp tục phá đỉnh"
-                        href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html">S&amp;P 500 tiếp tục phá
-                        đỉnh </a>
-                </div>
-                <div class="sapo">
-                    Chỉ số S&amp;P 500 lập đỉnh mới vào phiên 10/9 sau khi số liệu
-                    giá bán buôn bất ngờ giảm – một tín hiệu tích cực cho nhà đầu tư đang đặt cược
-                    rằng Cục Dự trữ Liên bang Mỹ (Fed) sẽ bắt đầu hạ lãi suất ngay trong tuần tới để
-                    thúc đẩy kinh tế.
-                    <a href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html" class="d-more">Xem thêm</a>
-                </div>
-
-                <img class="h-img" src="https://media.dff.vn//web/image/2025/9/sp-500638931745680168819.jpg"
-                    title="S&amp;P 500 tiếp tục phá đỉnh" alt="S&amp;P 500 tiếp tục phá đỉnh" border="0">
-
-                <div class="item-bottom">
-                    <div class="bt-cover com-like" data-id="2025091108024863">
-                        <span class="for-up">
-                            <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!--?lit$811032025$--><!--?lit$811032025$-->
-                                <path
-                                    d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                </path><!--?-->
-                            </svg>
-                        </span>
-                        <span class="value" data-old="2"> 2</span>
-                        <span class="for-down">
-                            <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <!--?lit$811032025$--><!--?lit$811032025$-->
-                                <path
-                                    d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                </path><!--?-->
-                            </svg>
-                        </span>
-                    </div>
-                    <div class="button-ar">
-                        <a href="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html#anc_comment">
-                            <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path
-                                    d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                </path><!--?-->
-                            </svg>
-                            <span>0</span>
-                        </a>
-                    </div>
-                    <div class="button-ar">
-                        <div class="dropdown home-item">
-                            <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                aria-expanded="false">Chia sẻ</span>
-                            <ul class="dropdown-menu">
-                                <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                        data-url="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html"
-                                        href="javascript:void(0)">Copy link</a></li>
-                                <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                        data-url="/sp-500-tiep-tuc-pha-dinh-p2025091108024863.html"
-                                        href="javascript:void(0)">Share FB</a></li>
-                            </ul>
-                        </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <div class="block-k ">
+                <div class="view-carde f-frame">
+                    <div class="text-center p-4">
+                        <p>Chưa có bài viết nào trong cơ sở dữ liệu.</p>
                     </div>
                 </div>
             </div>
-        </div>
+        <?php endif; ?>
 
 
 
@@ -497,9 +231,10 @@
 
 
     </div>
+
     <!-- bài viết chính block end -->
 
-    
+
     <div class="content-right">
         <div class="block-k bs-coin">
             <div class="search-container">
@@ -519,6 +254,57 @@
             <div class="comment-cover">
                 <div class="fr-content">
                     <ul class="list_comment col-md-12">
+                <script>
+  const comments = [
+    {
+      name: "Hải Nam",
+      time: "3 giờ trước",
+      text: "TT cần tích lũy thêm vài phiên để vượt 1.7k và xa hơn là 1.8k",
+      avatar: "https://i.pravatar.cc/40?img=4"
+    },
+    {
+      name: "Việt Chung",
+      time: "3 giờ trước",
+      text: "Phiên nay khá quan trọng",
+      avatar: "https://i.pravatar.cc/40?img=5"
+    },
+    {
+      name: "Hải Đăng",
+      time: "4 giờ trước",
+      text: "TT đang có sự phân hoá lớn, dòng tiền chỉ tập trung ở một nhóm nhỏ ở một số ngành, chưa có sự lan toả",
+      avatar: "https://i.pravatar.cc/40?img=6"
+    }
+  ];
+
+  // Lấy ul.list_comment
+  const list = document.querySelector(".list_comment");
+
+  // Render từng comment
+  comments.forEach(c => {
+    const li = document.createElement("li");
+    li.className = "comment-item";
+    li.innerHTML = `
+      <div class="comment">
+        <img src="${c.avatar}" alt="avatar" class="avatar">
+        <div class="content">
+          <div class="top">
+            <strong>${c.name}</strong> <span class="time">${c.time}</span>
+          </div>
+          <p class="text">${c.text}</p>
+          <div class="actions">
+            <button class="vote-btn">⬆ 0</button>
+            <button class="vote-btn">⬇ 0</button>
+            <a href="#" class="reply">Trả lời</a>
+          </div>
+        </div>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+</script>
+
+                
+
                     </ul>
                     <div class="cm-more">Xem thêm</div>
                 </div>
@@ -861,6 +647,31 @@
                 Page.flSuggest();
 
 
+            });
+        </script>
+        <script>
+            $(document).ready(function() {
+                $('.owl-carousel.box-company').owlCarousel({
+                    loop: false,
+                    margin: 10,
+                    nav: true,
+                    dots: true,
+                    navText: [
+                        '<i class="fa fa-chevron-left"></i>',
+                        '<i class="fa fa-chevron-right"></i>'
+                    ],
+                    responsive: {
+                        0: {
+                            items: 1
+                        },
+                        600: {
+                            items: 3
+                        },
+                        1000: {
+                            items: 3
+                        }
+                    }
+                });
             });
         </script>
     </div>

@@ -3,7 +3,7 @@
 <div class="card shadow-sm border-0">
   <div class="card-header bg-white d-flex justify-content-between align-items-center">
     <h5 class="mb-0">Danh sách Media</h5>
-    <a href="<?=BASE_URL?>/index.php?route=media&action=create" class="btn btn-success btn-sm">
+    <a href="<?=BASE_URL?>/admin.php?route=media&action=create" class="btn btn-success btn-sm">
       <i class="bi bi-upload me-1"></i> Upload
     </a>
   </div>
@@ -34,7 +34,7 @@
             </td>
             <td class="text-end">
               <a class="btn btn-sm btn-outline-danger" 
-                 href="<?=BASE_URL?>/index.php?route=media&action=delete&id=<?=$m['id']?>" 
+                 href="<?=BASE_URL?>/admin.php?route=media&action=delete&id=<?=$m['id']?>" 
                  onclick="return confirm('Bạn có chắc muốn xóa media này?');">
                 <i class="bi bi-trash"></i>
               </a>

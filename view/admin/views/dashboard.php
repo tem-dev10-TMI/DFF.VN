@@ -11,7 +11,7 @@
         <h5 class="card-title">Người dùng</h5>
         <?php $countUsers = $pdo->query("SELECT COUNT(*) FROM users")->fetchColumn(); ?>
         <p class="display-6 fw-bold"><?=intval($countUsers)?></p>
-        <a href="<?=BASE_URL?>/index.php?route=users" class="btn btn-outline-primary btn-sm">Quản lý</a>
+        <a href="<?=BASE_URL?>/admin.php?route=users" class="btn btn-outline-primary btn-sm">Quản lý</a>
       </div>
     </div>
   </div>
@@ -26,7 +26,7 @@
         <h5 class="card-title">Bài viết</h5>
         <?php $countArticles = $pdo->query("SELECT COUNT(*) FROM articles")->fetchColumn(); ?>
         <p class="display-6 fw-bold"><?=intval($countArticles)?></p>
-        <a href="<?=BASE_URL?>/index.php?route=articles" class="btn btn-outline-success btn-sm">Quản lý</a>
+        <a href="<?=BASE_URL?>/admin.php?route=articles" class="btn btn-outline-success btn-sm">Quản lý</a>
       </div>
     </div>
   </div>

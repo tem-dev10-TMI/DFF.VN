@@ -18,7 +18,7 @@
         <?php endif; ?>
 
         <!-- Form -->
-        <form method="post" action="<?=BASE_URL?>/index.php?route=users&action=<?=$isEdit ? 'update&id='.$user['id'] : 'store'?>">
+        <form method="post" action="<?=BASE_URL?>/admin.php?route=users&action=<?=$isEdit ? 'update&id='.$user['id'] : 'store'?>">
           <div class="mb-3">
             <label class="form-label fw-semibold">Tên</label>
             <input name="name" class="form-control" value="<?=$isEdit?e($user['name']):''?>" required>
@@ -44,7 +44,7 @@
             </select>
           </div>
           <div class="text-end">
-            <a href="<?=BASE_URL?>/index.php?route=users" class="btn btn-secondary">Hủy</a>
+            <a href="<?=BASE_URL?>/admin.php?route=users" class="btn btn-secondary">Hủy</a>
             <button class="btn btn-primary"><?=$isEdit ? 'Cập nhật' : 'Tạo mới'?></button>
           </div>
         </form>

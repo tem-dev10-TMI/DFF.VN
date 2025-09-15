@@ -23,7 +23,7 @@
 <nav class="navbar navbar-expand-lg bg-white shadow-sm">
   <div class="container-fluid">
     <!-- Logo -->
-    <a class="navbar-brand fw-bold text-primary" href="<?=BASE_URL?>/index.php">
+    <a class="navbar-brand fw-bold text-primary" href="<?=BASE_URL?>/admin.php">
       <i class="bi bi-speedometer2 me-1"></i> TMI Admin
     </a>
 
@@ -35,17 +35,17 @@
     <!-- Menu -->
     <div class="collapse navbar-collapse" id="navMain">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link <?=($route=='dashboard'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=dashboard"><i class="bi bi-house-door me-1"></i> Dashboard</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='users'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=users"><i class="bi bi-people me-1"></i> Users</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='articles'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=articles"><i class="bi bi-file-earmark-text me-1"></i> Articles</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='topics'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=topics"><i class="bi bi-bookmarks me-1"></i> Topics</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='tags'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=tags"><i class="bi bi-tags me-1"></i> Tags</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='media'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=media"><i class="bi bi-images me-1"></i> Media</a></li>
-        <li class="nav-item"><a class="nav-link <?=($route=='comments'?'active':'')?>" href="<?=BASE_URL?>/index.php?route=comments"><i class="bi bi-chat-dots me-1"></i> Comments</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='dashboard'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=dashboard"><i class="bi bi-house-door me-1"></i> Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='users'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=users"><i class="bi bi-people me-1"></i> Users</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='articles'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=articles"><i class="bi bi-file-earmark-text me-1"></i> Articles</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='topics'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=topics"><i class="bi bi-bookmarks me-1"></i> Topics</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='tags'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=tags"><i class="bi bi-tags me-1"></i> Tags</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='media'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=media"><i class="bi bi-images me-1"></i> Media</a></li>
+        <li class="nav-item"><a class="nav-link <?=($route=='comments'?'active':'')?>" href="<?=BASE_URL?>/admin.php?route=comments"><i class="bi bi-chat-dots me-1"></i> Comments</a></li>
       </ul>
 
       <!-- Search -->
-      <form class="d-flex me-3" method="GET" action="<?=BASE_URL?>/index.php">
+      <form class="d-flex me-3" method="GET" action="<?=BASE_URL?>/admin.php">
         <input type="hidden" name="route" value="articles">
         <input class="form-control form-control-sm me-2" name="q" type="search" placeholder="Tìm bài viết...">
         <button class="btn btn-outline-primary btn-sm" type="submit"><i class="bi bi-search"></i></button>
@@ -60,7 +60,7 @@
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li><a class="dropdown-item" href="#">Profile</a></li>
-            <li><a class="dropdown-item" href="<?=BASE_URL?>/index.php?route=logout"><i class="bi bi-box-arrow-right me-1"></i> Đăng xuất</a></li>
+            <li><a class="dropdown-item" href="<?=BASE_URL?>/admin.php?route=logout"><i class="bi bi-box-arrow-right me-1"></i> Đăng xuất</a></li>
           </ul>
         </div>
       <?php endif; ?>

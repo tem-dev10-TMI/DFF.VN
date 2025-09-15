@@ -4,7 +4,7 @@
 <!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:46 GMT -->
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="content-language" content="vi" />
@@ -38,7 +38,7 @@
         href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
 
 
-    <link rel="stylesheet" href="public/css/style.css">
+    <link rel="stylesheet" href="public/css/style.css?v=6" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -169,7 +169,7 @@
     <div class="func-mobile">
         <ul>
             <li>
-                <a href="index.html">
+                <a href="home">
                     <i class="fas fa-home"></i>
                     <span>Home</span>
                 </a>
@@ -248,7 +248,7 @@
             </div>
         <?php endif; ?>
         <input type="hidden" id="hdd_id" value="24166" />
-
+            
         <script>
             $(function() {
 
@@ -321,8 +321,8 @@
 
         </footer>
 
-        <script src="public/js/main1c07.js?v=17"></script>
-        <script src="public/js/articleade1.js?v=35"></script>
+        <script src="public/js/main1c07.js"></script>
+        <script src="public/js/articleade1.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>
@@ -348,6 +348,7 @@
 
         });
     </script>
+    <script src="<?= BASE_URL ?>/public/js/main.js"></script>
 </body>
 
 <!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:53 GMT -->
