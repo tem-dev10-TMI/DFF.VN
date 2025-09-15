@@ -2,7 +2,7 @@
 
 
     <style>
-        <style>
+        
         .left-sidebar .block-k ul.nav-second-level li.item a,
         .left-sidebar .block-k ul.nav-second-level.top-item li a,
         .left-sidebar .block-k ul.nav-second-level.about-c li a,
@@ -21,7 +21,7 @@
         }
     </style>
     
-    </style>
+    
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
             <li class="item active"><svg class="home-icon" rpl="" fill="currentColor" height="20"
