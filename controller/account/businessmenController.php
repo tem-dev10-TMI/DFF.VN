@@ -104,8 +104,8 @@ class BusinessmenController
             $avatar_url = $currentUserData['avatar_url']; // Giữ URL cũ nếu không có file mới
             $cover_photo = $currentUserData['cover_photo']; // Giữ URL cũ nếu không có file mới
 
-            $avatarDir = "public/uploads/avatars/";
-            $coverDir = "public/uploads/covers/";
+            $avatarDir = "public/img/avatar/";
+            $coverDir = "public/img/cover/";
 
             if (!is_dir($avatarDir)) {
                 mkdir($avatarDir, 0777, true);

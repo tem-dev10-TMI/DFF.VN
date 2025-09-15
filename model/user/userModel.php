@@ -34,11 +34,12 @@ class UserModel
     }
 
     // Cập nhật thông tin user
-    public static function updateUser($user_id, $name, $phone, $avatar_url, $cover_photo, $description)
+    public static function updateUser($user_id, $name, $email, $phone, $avatar_url, $cover_photo, $description)
     {
         $db = new connect();
         $sql = "UPDATE users SET 
                 name = :name, 
+                email = :email, 
                 phone = :phone, 
                 avatar_url = :avatar_url,
                 cover_photo = :cover_photo,
@@ -48,6 +49,7 @@ class UserModel
         return $stmt->execute([
             ':user_id' => $user_id,
             ':name' => $name,
+            ':email' => $email,
             ':phone' => $phone,
             ':avatar_url' => $avatar_url,
             ':cover_photo' => $cover_photo,

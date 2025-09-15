@@ -141,24 +141,18 @@
 
           <div class="mb-3">
             <label class="form-label">Chức vụ hiện tại</label>
-            <input type="text" class="form-control" name="position" value="<?= htmlspecialchars($business['position'] ?? '') ?>">
+            <input type="text" class="form-control" name="position" value="<?= htmlspecialchars($business['current_position'] ?? '') ?>">
           </div>
         </div>
 
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-warning">Cập nhật</button>
-        </div>
-      </form>
-      <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-footer">
           <button type="button" class="btn btn-info me-auto" data-bs-toggle="modal" data-bs-target="#editCareersModal">
-            <i class="fas fa-history me-1"></i>Quá trình công tác
+            Quá trình công tác
           </button>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
           <button type="submit" class="btn btn-warning">Cập nhật</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 </div>
