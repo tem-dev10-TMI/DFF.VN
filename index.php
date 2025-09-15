@@ -53,9 +53,9 @@ switch ($url) {
         header("Location: " . BASE_URL . "");
         break;
     case 'profile_user':
-        require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->profile_user();
+        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new profileUserController();
+        $controller->profileUser();
         break;
     case 'profile_business':
         require_once 'controller/homeController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha

@@ -77,7 +77,7 @@
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="home"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/profile_user"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i

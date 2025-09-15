@@ -4,7 +4,11 @@ class profileUserController
     // Trang hồ sơ người dùng
     public static function profileUser()
     {
-        /*require_once 'model/user/userModel.php';
+        if (!isset($_SESSION['user'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        require_once 'model/user/userModel.php';
         require_once 'model/article/articlesmodel.php';
         require_once 'model/user/profileUserModel.php';
 
@@ -12,23 +16,29 @@ class profileUserController
         $modelUser = new UserModel();
         $modelProfile = new profileUserModel();
 
-        if (isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
-            $user = $modelUser->getUserById($userId);
-            $profile = $modelProfile->getProfileUserByUserId($userId);
-            $articles = $modelArticle->getArticleById($userId);
+        $userId = $_SESSION['user']['id'];
 
-            //require_once 'view/account/profileUser.php';
-        }*/
-        ob_start();
+        $user = $modelUser->getUserById($userId);
 
-        require_once 'view/page/viewProfileuser.php';
+        $articles = $modelArticle->getArticleById($userId);
 
-        $content = ob_get_clean();
+        $role = $_SESSION['user']['role'];
+        if ($role === 'user') {
+            $profileUser = $modelProfile->getProfileUserByUserId($userId);
+            $stats = $modelProfile->getUserStats($userId);
+            //Load view
+            ob_start();
+            $profile_category = 'user';
+            require_once 'view/layout/Profile.php';
+            $content = ob_get_clean();
 
-        //Load layout
-        $profile = false; // đừng ai xóa
-        require_once 'view/layout/main.php';
+            //Load layout
+            $profile = true; // đừng ai xóa
+            require_once 'view/layout/main.php';
+        } else {
+            header("Location: " . BASE_URL);
+            exit;
+        }
     }
     public static function profileBusiness()
     {
