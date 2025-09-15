@@ -8,7 +8,7 @@
             <div class="header-logo">
                 <a href="home">
             
-                    <img style=" stroke: none !important;height:70px; width:auto; " alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
+                    <img style=" stroke: none !important;height: 60px; width:auto; " alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
                         src="public/img/logo.svg" ;/></a>
                 <div class="box-search">
                     <div class="input-group ">
