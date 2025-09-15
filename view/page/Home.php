@@ -254,26 +254,25 @@
             <div class="comment-cover">
                 <div class="fr-content">
                     <ul class="list_comment col-md-12">
-                        <script>
-  // Mẫu dữ liệu bình luận
+                <script>
   const comments = [
     {
-      name: "Minh Anh",
-      time: "2 phút trước",
-      text: "Bài viết này hay quá, mong admin chia sẻ thêm!",
-      avatar: "https://i.pravatar.cc/40?img=1"
+      name: "Hải Nam",
+      time: "3 giờ trước",
+      text: "TT cần tích lũy thêm vài phiên để vượt 1.7k và xa hơn là 1.8k",
+      avatar: "https://i.pravatar.cc/40?img=4"
     },
     {
-      name: "Quốc Huy",
-      time: "5 phút trước",
-      text: "Theo mình thì xu hướng crypto tuần này đang khá tích cực 😃",
-      avatar: "https://i.pravatar.cc/40?img=2"
+      name: "Việt Chung",
+      time: "3 giờ trước",
+      text: "Phiên nay khá quan trọng",
+      avatar: "https://i.pravatar.cc/40?img=5"
     },
     {
-      name: "Thanh Trúc",
-      time: "10 phút trước",
-      text: "Mình vừa theo dõi thêm VHM, mọi người có đánh giá gì không?",
-      avatar: "https://i.pravatar.cc/40?img=3"
+      name: "Hải Đăng",
+      time: "4 giờ trước",
+      text: "TT đang có sự phân hoá lớn, dòng tiền chỉ tập trung ở một nhóm nhỏ ở một số ngành, chưa có sự lan toả",
+      avatar: "https://i.pravatar.cc/40?img=6"
     }
   ];
 
@@ -288,14 +287,23 @@
       <div class="comment">
         <img src="${c.avatar}" alt="avatar" class="avatar">
         <div class="content">
-          <strong>${c.name}</strong> <span class="time">${c.time}</span>
-          <p>${c.text}</p>
+          <div class="top">
+            <strong>${c.name}</strong> <span class="time">${c.time}</span>
+          </div>
+          <p class="text">${c.text}</p>
+          <div class="actions">
+            <button class="vote-btn">⬆ 0</button>
+            <button class="vote-btn">⬇ 0</button>
+            <a href="#" class="reply">Trả lời</a>
+          </div>
         </div>
       </div>
     `;
     list.appendChild(li);
   });
 </script>
+
+                
 
                     </ul>
                     <div class="cm-more">Xem thêm</div>
