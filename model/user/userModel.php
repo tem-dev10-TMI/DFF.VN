@@ -93,8 +93,10 @@ class UserModel
         $stmt->execute([':author_id' => $author_id]);
         return $stmt->fetchAll();
     }
+
+
     // ===================== Google login =====================
-    // Kiểm tra user theo email
+// Kiểm tra user theo email
     public static function getUserByEmail($email)
     {
         $db = new connect();
@@ -147,4 +149,6 @@ class UserModel
             return self::getUserByEmail($email);
         }
     }
+
+
 }

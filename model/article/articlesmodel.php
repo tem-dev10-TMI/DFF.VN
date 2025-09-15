@@ -1,10 +1,8 @@
 <?php
 class ArticlesModel
 {
-
-    // Thêm bài viết mới -> mặc định pending
-
-    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'pending', $is_hot = 0, $is_analysis = 0)
+    // Thêm bài viết mới
+    public static function addArticle($title, $summary, $content, $main_image_url, $author_id, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
     {
         $db = new connect();
         $slug = connect::createSlug($title);
@@ -23,13 +21,13 @@ class ArticlesModel
             ':main_image_url' => $main_image_url,
             ':author_id' => $author_id,
             ':topic_id' => $topic_id,
-            ':status' => $status, // mặc định pending
+            ':status' => $status,
             ':is_hot' => $is_hot,
             ':is_analysis' => $is_analysis
         ]);
     }
 
-    // Lấy tất cả bài viết (chỉ public)
+    // Lấy tất cả bài viết
     public static function getAllArticles()
     {
         $db = new connect();
@@ -37,14 +35,13 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
-                WHERE a.status = 'public'
-                ORDER BY a.created_at DESC, a.id DESC";
+                ORDER BY a.created_at DESC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy bài viết theo ID (chỉ public)
+    // Lấy bài viết theo ID
     public static function getArticleById($id)
     {
         $db = new connect();
@@ -52,7 +49,7 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
-                WHERE a.id = :id AND a.status = 'public'";
+                WHERE a.id = :id";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':id' => $id]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -111,16 +108,14 @@ class ArticlesModel
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
-
-    // Lấy bài viết theo topic (chỉ public)
     public static function getArticlesByTopicId($topic_id, $limit = 10)
     {
         $db = new connect();
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
-                WHERE a.topic_id = :topic_id AND a.status = 'public'
-                ORDER BY a.created_at DESC, a.id DESC
+                WHERE a.topic_id = :topic_id
+                ORDER BY a.created_at DESC
                 LIMIT :limit";
 
         $stmt = $db->db->prepare($sql);
@@ -129,38 +124,5 @@ class ArticlesModel
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Lấy bài viết theo author (bao gồm mọi trạng thái)
-    public static function getArticlesByAuthorId($author_id)
-    {
-        $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-                WHERE a.author_id = :author_id
-                ORDER BY a.created_at DESC, a.id DESC";
-
-        $stmt = $db->db->prepare($sql);
-        $stmt->bindValue(':author_id', $author_id, PDO::PARAM_INT);
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Lấy lý do review mới nhất cho bài viết
-    public static function getLatestReviewReasonByArticleId($article_id)
-    {
-        $db = new connect();
-        $sql = "SELECT reason
-                FROM article_reviews
-                WHERE article_id = :article_id
-                ORDER BY id DESC
-                LIMIT 1";
-        $stmt = $db->db->prepare($sql);
-        $stmt->bindValue(':article_id', $article_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $row ? ($row['reason'] ?? null) : null;
     }
 }
