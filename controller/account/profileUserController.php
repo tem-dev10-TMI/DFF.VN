@@ -40,10 +40,18 @@ class profileUserController
             exit;
         }
     }
-    public static function profileBusiness()
+    public static function viewprofileBusiness()
     {
         ob_start();
         require_once 'view/page/viewProfilebusiness.php';
+        $content = ob_get_clean();
+        $profile = false; // đừng ai xóa
+        require_once 'view/layout/main.php';
+    }
+    public static function viewprofileUser()
+    {
+        ob_start();
+        require_once 'view/page/viewProfileuser.php';
         $content = ob_get_clean();
         $profile = false; // đừng ai xóa
         require_once 'view/layout/main.php';
