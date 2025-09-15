@@ -31,7 +31,7 @@
       </div>
       <div class="info-item mb-2">
         <strong>Chức vụ hiện tại:</strong>
-        <span class="text-muted"><?php echo htmlspecialchars($business['position'] ?? 'Chưa cập nhật'); ?></span>
+        <span class="text-muted"><?php echo htmlspecialchars($business['current_position'] ?? 'Chưa cập nhật'); ?></span>
       </div>
     </div>
 
