@@ -78,10 +78,12 @@ switch ($url) {
         $controller->about();
         break;
     case 'details_blog':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new homeController();
-        $controller->details_blog();
-        break;
+    require_once 'controller/ArticlesController.php';
+    $controller = new ArticlesController();
+
+    $id = $_GET['id'] ?? null;
+    $controller->details_blog($id);
+    break;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();

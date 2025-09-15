@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/ArticlesModel.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
 
 class ArticlesController
 {
@@ -81,6 +81,7 @@ class ArticlesController
         exit;
     }
 
+
   
   
         protected $pdo;
@@ -129,5 +130,6 @@ class ArticlesController
         }
     }
     
+
 
 
