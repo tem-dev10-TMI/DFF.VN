@@ -94,7 +94,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg">
+                                    <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
                                 </a>
                             </span>
                         <?php endif; ?>

@@ -50,13 +50,13 @@
     <!-- bài viết chính block start -->
     <div class="content-left cover-page">
         <div class="block-k box-write">
-            <a href="javascript:void(0)" class="img-own"> <img src="vendor/dffvn/content/img/user.svg"> </a>
+            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg"> </a>
             <div class="input-group box-search">
                 <div class="post-input"><a href="javascript:void(0)" module-load="loadwrite"><span>Viết bài,
                             chia sẻ, đặt câu hỏi…</span></a></div>
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
-                src="vendor/dffvn/content/img/img_small.jpg" width="30">
+                src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
