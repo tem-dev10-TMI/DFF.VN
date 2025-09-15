@@ -1,4 +1,5 @@
 <?php
+
 function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 function flash($k, $v = null){
     if ($v === null) {
