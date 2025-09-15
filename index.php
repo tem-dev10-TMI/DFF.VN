@@ -112,12 +112,13 @@ switch ($url) {
     case 'view_profile_user':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
-        $controller->profileUser();
+        $controller->viewprofileUser();
         break;
     case 'view_profile_business':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
-        $controller->profileBusiness();
+        $controller->viewprofileBusiness();
+        
         break;
 
     // ========== API ROUTES ==========
