@@ -84,8 +84,7 @@
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                                    <li><a class="dropdown-item" href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#changePasswordModal"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
                                     <li><a class="dropdown-item" module-load="logout" href="<?= BASE_URL ?>/logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
@@ -297,6 +296,44 @@
         </div>
     </div>
 </div>
+<!-- Modal đổi mật khẩu  -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" style="width:450px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePasswordModalLabel">Đổi mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form id="changePassForm" method="POST" action="<?= BASE_URL ?>/change_password">
+                <div class="modal-body">
+                    <?php if (!empty($changePasswordMessage)): ?>
+                        <div class="alert alert-<?= htmlspecialchars($messageType) ?>" role="alert">
+                            <?= htmlspecialchars($changePasswordMessage) ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <div class="mb-3">
+                        <label for="old_password" class="form-label">Mật khẩu cũ</label>
+                        <input type="password" class="form-control" id="old_password" name="old_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="new_password" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="new_password" name="new_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm_new_password" class="form-label">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <!-- Xử lý ẩn hiện modal -->
 <script>
     $(function() {
@@ -335,6 +372,15 @@
             if (registerModal) registerModal.hide();
         });
     });
+</script>
+
+<script>
+    // Kiểm tra xem có thông báo đổi mật khẩu không
+    <?php if (!empty($changePasswordMessage)): ?>
+        // Nếu có, tự động mở modal
+        var changePasswordModal = new bootstrap.Modal(document.getElementById('changePasswordModal'));
+        changePasswordModal.show();
+    <?php endif; ?>
 </script>
 
 

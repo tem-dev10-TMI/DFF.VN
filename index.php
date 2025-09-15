@@ -57,6 +57,11 @@ switch ($url) {
         session_destroy();
         header("Location: " . BASE_URL . "");
         break;
+    case 'change_password':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->changePassword();
+        break;
     case 'profileUser':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();

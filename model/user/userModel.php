@@ -86,6 +86,21 @@ class UserModel
         return $stmt->execute([':id' => $id]);
     }
 
+    // Đổi mật khẩu
+    public static function updatePassword($user_id, $new_password_hash)
+    {
+        $db = new connect();
+
+        $sql = "UPDATE users SET password_hash = :password_hash WHERE id = :user_id";
+
+        $stmt = $db->db->prepare($sql);
+
+        return $stmt->execute([
+            ':password_hash' => $new_password_hash,
+            ':user_id' => $user_id
+        ]);
+    }
+
     //Xác thực người dùng bằng username và mât khẩu
     public static function verifyUser($username, $password)
     {

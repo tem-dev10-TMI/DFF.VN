@@ -304,38 +304,57 @@ class profileUserController
     }
 
     // ========== Đổi mật khẩu ==========
-    public static function changePassword()
+    // Trong Controller của bạn
+    public function changePassword()
     {
-        require_once 'model/user/userModel.php';
-        $modelUser = new UserModel();
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
-            $userId = $_SESSION['user_id'];
-            $user = $modelUser->getUserById($userId);
-
-            $oldPassword = $_POST['old_password'];
-            $newPassword = $_POST['new_password'];
-            $confirmPassword = $_POST['confirm_password'];
-
-            if (password_verify($oldPassword, $user['password_hash'])) {
-                if ($newPassword === $confirmPassword) {
-                    $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
-                    $db = new connect();
-                    $sql = "UPDATE users SET password_hash = :password WHERE id = :id";
-                    $stmt = $db->db->prepare($sql);
-                    $stmt->execute([':password' => $hashed, ':id' => $userId]);
-
-                    header('Location: ' . BASE_URL . '/profileUser?msg=password_changed');
-                    exit;
-                } else {
-                    $error = "Mật khẩu mới không khớp!";
-                }
-            } else {
-                $error = "Mật khẩu cũ không đúng!";
-            }
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
         }
 
-        require_once 'view/account/changePassword.php';
+        $userId = $_SESSION['user_id'];
+        require_once 'model/user/userModel.php';
+        $userModel = new userModel();
+        $user = $userModel->getUserById($userId);
+
+        // Khởi tạo các biến thông báo
+        $changePasswordMessage = '';
+        $messageType = '';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $old_password = $_POST['old_password'] ?? '';
+            $new_password = $_POST['new_password'] ?? '';
+            $confirm_new_password = $_POST['confirm_new_password'] ?? '';
+
+            if (!password_verify($old_password, $user['password_hash'])) {
+                $changePasswordMessage = "Mật khẩu cũ không chính xác.";
+                $messageType = 'danger';
+            } elseif ($new_password !== $confirm_new_password) {
+                $changePasswordMessage = "Mật khẩu mới và xác nhận không khớp.";
+                $messageType = 'danger';
+            } elseif (strlen($new_password) < 8) {
+                $changePasswordMessage = "Mật khẩu mới phải có ít nhất 8 ký tự.";
+                $messageType = 'danger';
+            } else {
+                $new_password_hash = password_hash($new_password, PASSWORD_DEFAULT);
+                $success = $userModel->updatePassword($userId, $new_password_hash);
+
+                if ($success) {
+                    $changePasswordMessage = "Đổi mật khẩu thành công!";
+                    $messageType = 'success';
+                } else {
+                    $changePasswordMessage = "Đã xảy ra lỗi khi đổi mật khẩu.";
+                    $messageType = 'danger';
+                }
+            }
+        }
+        //Load view
+        ob_start();
+        require_once 'view/layout/header.php';
+        $content = ob_get_clean();
+        $profile = false;
+        //Load layout;
+        require_once 'view/layout/main.php';
     }
 
     // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========
