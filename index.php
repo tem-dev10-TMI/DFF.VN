@@ -108,8 +108,8 @@ switch ($url) {
         require_once 'controller/NewsController.php';
         $controller = new NewsController();
 
-        $id = $_GET['id'] ?? null;
-        $controller->details_blog($id);
+        
+        $controller->index();
         break;
     case 'crypton':
         require_once 'controller/CryptonController.php';

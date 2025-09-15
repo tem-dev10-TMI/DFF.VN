@@ -38,7 +38,7 @@ class ArticlesModel
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
                 WHERE a.status = 'public'
-                ORDER BY a.created_at DESC";
+                ORDER BY a.created_at DESC, a.id DESC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -120,7 +120,7 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 WHERE a.topic_id = :topic_id AND a.status = 'public'
-                ORDER BY a.created_at DESC
+                ORDER BY a.created_at DESC, a.id DESC
                 LIMIT :limit";
 
         $stmt = $db->db->prepare($sql);
@@ -139,7 +139,7 @@ class ArticlesModel
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 WHERE a.author_id = :author_id
-                ORDER BY a.created_at DESC";
+                ORDER BY a.created_at DESC, a.id DESC";
 
         $stmt = $db->db->prepare($sql);
         $stmt->bindValue(':author_id', $author_id, PDO::PARAM_INT);
@@ -155,7 +155,7 @@ class ArticlesModel
         $sql = "SELECT reason
                 FROM article_reviews
                 WHERE article_id = :article_id
-                ORDER BY created_at DESC
+                ORDER BY id DESC
                 LIMIT 1";
         $stmt = $db->db->prepare($sql);
         $stmt->bindValue(':article_id', $article_id, PDO::PARAM_INT);

@@ -59,14 +59,17 @@
                             </div>
                         </div>
 
-                        <div class="title">
+                          <div class="title">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"><?= htmlspecialchars($article['title']) ?></a>
+                            href="details_blog?id=<?= $article['id'] ?>">
+                            <?= htmlspecialchars($article['title']) ?>
+                            </a>
                         </div>
-                        <div class="sapo">
+                                                <div class="sapo">
                             <?= htmlspecialchars($article['summary']) ?>
-                            <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html" class="d-more">Xem thêm</a>
+                            <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
                         </div>
+
 
                         <?php if (!empty($article['main_image_url'])): ?>
                             <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
