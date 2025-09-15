@@ -10,7 +10,7 @@ class NewsController
 
         // Load view
         ob_start();
-        require_once 'view/news/list.php';
+        require_once 'view/page/News.php';
         $content = ob_get_clean();
 
         // Load layout
