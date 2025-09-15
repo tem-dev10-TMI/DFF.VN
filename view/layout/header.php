@@ -50,7 +50,7 @@
                     </li>
                     <li class="top-pro ">
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
-                                    src="vendor/dffvn/content/img/user.svg"></a> 
+                                    src="public/img/user.svg"></a> 
                         </span> -->
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <!-- Đã đăng nhập -->

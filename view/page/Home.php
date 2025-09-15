@@ -56,7 +56,7 @@
                             chia sẻ, đặt câu hỏi…</span></a></div>
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
-                src="vendor/dffvn/content/img/img_small.jpg" width="30">
+                src="public/img/image.svg" width="30">
         </div>
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
