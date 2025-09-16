@@ -44,6 +44,24 @@ class ArticlesModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Lấy bài viết phân trang (chỉ public)
+    public static function getArticlesPaged(int $offset, int $limit)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.status = 'public'
+                ORDER BY a.created_at DESC, a.id DESC
+                LIMIT :limit OFFSET :offset";
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Lấy bài viết theo ID (chỉ public)
     public static function getArticleById($id)
     {
@@ -58,6 +76,14 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getByUserId($userId)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT * FROM articles WHERE author_id = ? ORDER BY created_at DESC");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }   
+    
     // Cập nhật bài viết
     public static function updateArticle($id, $title, $summary, $content, $main_image_url, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
     {

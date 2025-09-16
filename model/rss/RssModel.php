@@ -3,6 +3,10 @@ class RssModel
 {
     /**
      * Lấy items từ nhiều feed (trả về mảng tương thích view)
+     * @param array $feedUrls mảng url RSS
+     * @param int $limit tổng số bài viết muốn lấy
+     * @param int $cacheMinutes thời gian cache (phút)
+     * @return array
      */
     public static function getMultipleFeeds(array $feedUrls, int $limit = 50, int $cacheMinutes = 15): array
     {
@@ -39,7 +43,15 @@ class RssModel
 
         // Fetch feed mới
         $xmlString = self::fetchUrl($feedUrl);
-        if (!$xmlString) return [];
+        if (!$xmlString) {
+            // Fallback: nếu fetch thất bại nhưng có cache cũ, dùng tạm cache cũ
+            if (file_exists($cacheFile)) {
+                $json = file_get_contents($cacheFile);
+                $data = json_decode($json, true);
+                if (is_array($data)) return array_slice($data, 0, $limit);
+            }
+            return [];
+        }
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($xmlString, 'SimpleXMLElement', LIBXML_NOCDATA);
@@ -78,7 +90,7 @@ class RssModel
         return $items;
     }
 
-    private static function mapRssItem($item, string $feedUrl): array
+    private static function mapRssItem($item, $feedUrl): array
     {
         $link = (string)($item->link ?? '#');
         $description = (string)($item->description ?? '');
@@ -87,20 +99,20 @@ class RssModel
         // Kiểm tra enclosure & media:content
         if (!$image && isset($item->enclosure['url'])) $image = (string)$item->enclosure['url'];
         $media = $item->children('media', true);
-        if (!$image && isset($media->content) && isset($media->content->attributes()->url)) {
-            $image = (string)$media->content->attributes()->url;
-        }
+        if (!$image && isset($media->content) && isset($media->content->attributes()->url)) $image = (string)$media->content->attributes()->url;
 
         $pubDate = (string)($item->pubDate ?? '');
         $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
+
+        $author_name = self::getAuthorName($item, $feedUrl);
 
         return [
             'id' => md5($link),
             'title' => (string)($item->title ?? ''),
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
-            'author_name' => self::getAuthorName($feedUrl),
-            'author_id' => self::getAuthorIdByFeed($feedUrl),
+            'author_name' => $author_name,
+            'author_id' => 66,
             'avatar_url' => self::getAvatarByFeed($feedUrl),
             'created_at' => $created_at,
             'upvotes' => 0,
@@ -110,7 +122,7 @@ class RssModel
         ];
     }
 
-    private static function mapAtomItem($entry, string $feedUrl): array
+    private static function mapAtomItem($entry, $feedUrl): array
     {
         $link = '#';
         if (isset($entry->link)) {
@@ -122,13 +134,15 @@ class RssModel
         $pubDate = (string)($entry->updated ?? $entry->published ?? '');
         $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
 
+        $author_name = self::getAuthorName($entry, $feedUrl);
+
         return [
             'id' => md5($link),
             'title' => (string)($entry->title ?? ''),
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
-            'author_name' => self::getAuthorName($feedUrl),
-            'author_id' => self::getAuthorIdByFeed($feedUrl),
+            'author_name' => $author_name,
+            'author_id' => 66,
             'avatar_url' => self::getAvatarByFeed($feedUrl),
             'created_at' => $created_at,
             'upvotes' => 0,
@@ -139,7 +153,7 @@ class RssModel
     }
 
     // Lấy avatar theo feed
-    private static function getAvatarByFeed(string $feedUrl): string
+    private static function getAvatarByFeed($feedUrl): string
     {
         if (strpos($feedUrl, 'baochinhphu') !== false) return 'public/img/avatar/baochinhphu.png';
         if (strpos($feedUrl, 'thanhnien') !== false) return 'public/img/avatar/thanhnien.png';
@@ -147,20 +161,12 @@ class RssModel
     }
 
     // Lấy author name theo feed
-    private static function getAuthorName(string $feedUrl): string
+    private static function getAuthorName($item, $feedUrl): string
     {
         if (strpos($feedUrl, 'baochinhphu') !== false) return 'Báo Chính Phủ';
         if (strpos($feedUrl, 'thanhnien') !== false) return 'Thanh Niên';
         return 'RSS';
     }
-
-    private static function getAuthorIdByFeed(string $feedUrl): int
-    {
-        if (stripos($feedUrl, 'baochinhphu') !== false) return 66;
-        if (stripos($feedUrl, 'thanhnien') !== false) return 67;
-        return 0;
-    }
-
 
     // Fetch URL bằng cURL/fallback
     private static function fetchUrl(string $url): ?string

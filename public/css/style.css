@@ -4834,6 +4834,146 @@ div[data-notify="container"] .close {
     color: #fff;
 }
 
+/* Khung chat */
+.cover-chat {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Header */
+.cover-chat h5 {
+    background: #0d47a1;
+    color: #fff;
+    margin: 0;
+    padding: 10px 15px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Danh sách comment */
+.list_comment {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+/* Item */
+.chat-item {
+    display: flex;
+    gap: 10px;
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-item:last-child {
+    border-bottom: none;
+}
+
+/* Avatar */
+.chat-avatar {
+    flex-shrink: 0;
+}
+
+.chat-avatar img,
+.avatar-fallback {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    background: #1976d2;
+    color: #fff;
+    font-size: 16px;
+}
+
+/* Nội dung */
+.chat-body {
+    flex: 1;
+}
+
+.chat-meta {
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.chat-meta .chat-time {
+    font-size: 12px;
+    color: #999;
+    margin-left: 8px;
+    font-weight: normal;
+}
+
+.chat-content {
+    font-size: 14px;
+    margin: 4px 0 8px;
+    color: #444;
+}
+
+/* Vote + reply */
+.chat-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #555;
+}
+
+.chat-actions button {
+    border: none;
+    background: #f1f1f1;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.chat-actions button:hover {
+    background: #e0e0e0;
+}
+
+.vote-count {
+    font-size: 13px;
+    min-width: 14px;
+    text-align: center;
+}
+
+/* Ô nhập bình luận */
+.h-comment {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-top: 1px solid #ddd;
+}
+
+.h-comment textarea {
+  flex: 1;
+  min-height: 50px;   /* tăng chiều cao mặc định */
+  max-height: 120px;  /* không để quá cao */
+  resize: none;       /* chặn resize bằng tay, cho gọn */
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+.h-comment i {
+    font-size: 18px;
+    color: #0d47a1;
+    cursor: pointer;
+}
 .d-balimage {
     background-color: #f5efef;
     padding: 7px 15px 0 15px;
@@ -6851,5 +6991,7 @@ ul.timeline .left-arrow:after {
         width: calc(100% - 250px);
         padding: 30px 0 0 50px;
     }
+
+    
 
 }
