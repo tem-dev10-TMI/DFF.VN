@@ -21,7 +21,7 @@ a {
     font-size: 12px;
     font-weight: bold;
     border: 2px solid white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .box-company .item li:first-child {

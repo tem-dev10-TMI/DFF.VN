@@ -42,6 +42,13 @@
                             </ul>
                         </span>
                     </li>
+                    <li class="n-chatbot">
+                        <span>
+                            <a href="javascript:void(0)" title="Chatbot" onclick="toggleChatbotBox()">
+                                <i class="bi bi-chat-dots"></i>
+                            </a>
+                        </span>
+                    </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
                                 title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">0</span>
@@ -179,10 +186,10 @@
                                 </button>
                             </div>
                         </div>
-<div class="input-social" style="margin-top:10px;">
-    <button type="button" class="login-with-facebook-btn" 
-            onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
-            style="
+                        <div class="input-social" style="margin-top:10px;">
+                            <button type="button" class="login-with-facebook-btn"
+                                onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
+                                style="
                 background-color:#1877f2;
                 color:#fff;
                 border:none;
@@ -194,11 +201,11 @@
                 width:100%;
                 transition: background-color 0.3s ease;
             "
-            onmouseover="this.style.backgroundColor='#145dbf';"
-            onmouseout="this.style.backgroundColor='#1877f2';">
-        Đăng nhập bằng Facebook
-    </button>
-</div>
+                                onmouseover="this.style.backgroundColor='#145dbf';"
+                                onmouseout="this.style.backgroundColor='#1877f2';">
+                                Đăng nhập bằng Facebook
+                            </button>
+                        </div>
 
 
 
@@ -486,3 +493,60 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
 
     </div>
 </div>
+
+<!-- Chatbot Box -->
+<div id="chatbot-box" style="display:none; position:fixed; bottom:80px; right:30px; width:350px; max-width:95vw; z-index:9999; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.15); border:1px solid #eee;">
+    <div style="padding:10px 15px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
+        <span><i class="fas fa-robot"></i> Chatbot DFF</span>
+        <button onclick="toggleChatbotBox()" style="background:none; border:none; font-size:18px; color:#888;"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="chatbot-content" style="height:320px; overflow-y:auto; padding:10px;">
+        <div style="color:#888; text-align:center; margin-top:40px;">Xin chào! Tôi là trợ lý DFF. Hãy nhập câu hỏi của bạn bên dưới.</div>
+    </div>
+    <div style="padding:10px; border-top:1px solid #eee;">
+        <form id="chatbot-form" onsubmit="return sendChatbotMessage()">
+            <div style="display:flex;">
+                <input type="text" id="chatbot-input" class="form-control" placeholder="Nhập tin nhắn..." style="flex:1; border-radius:20px 0 0 20px;">
+                <button type="submit" style="border:none; background:#007bff; color:#fff; border-radius:0 20px 20px 0; padding:0 18px;"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Đóng/mở khung chatbot
+    function toggleChatbotBox() {
+        var box = document.getElementById('chatbot-box');
+        if (box.style.display === 'none' || box.style.display === '') {
+            box.style.display = 'block';
+        } else {
+            box.style.display = 'none';
+        }
+    }
+
+    // Gửi tin nhắn (demo, bạn có thể tích hợp API thực tế)
+    function sendChatbotMessage() {
+        var input = document.getElementById('chatbot-input');
+        var content = document.getElementById('chatbot-content');
+        var msg = input.value.trim();
+        if (!msg) return false;
+        // Hiển thị tin nhắn người dùng
+        var userMsg = document.createElement('div');
+        userMsg.style = "margin:8px 0;text-align:right;";
+        userMsg.innerHTML = '<span style="background:#007bff;color:#fff;padding:7px 14px;border-radius:16px;display:inline-block;">' + msg + '</span>';
+        content.appendChild(userMsg);
+        input.value = '';
+        content.scrollTop = content.scrollHeight;
+
+        // Hiển thị phản hồi mẫu (bạn thay bằng gọi API thực tế)
+        setTimeout(function() {
+            var botMsg = document.createElement('div');
+            botMsg.style = "margin:8px 0;text-align:left;";
+            botMsg.innerHTML = '<span style="background:#f1f1f1;color:#333;padding:7px 14px;border-radius:16px;display:inline-block;">Cảm ơn bạn đã hỏi: "' + msg + '"<br>Chức năng chatbot sẽ được cập nhật sớm!</span>';
+            content.appendChild(botMsg);
+            content.scrollTop = content.scrollHeight;
+        }, 700);
+
+        return false;
+    }
+</script>
