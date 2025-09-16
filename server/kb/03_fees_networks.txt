@@ -1,0 +1,16 @@
+Phí giao dịch và mạng lưới
+
+Khái niệm:
+- Bitcoin: phí phụ thuộc mempool, sat/vByte.
+- Ethereum: gas price (gwei) * gas used; thời điểm cao điểm phí tăng.
+- Stablecoin: USDT/USDC có nhiều chain (ETH, Tron, BSC). Chọn chain phù hợp phí/nhu cầu.
+
+Khuyến nghị thương mại điện tử:
+- Niêm yết rõ chain được chấp nhận (VD: USDT-TRC20, USDC-ERC20).
+- Tự động tính phí mạng, hiển thị tổng tiền phải trả.
+- Yêu cầu N xác nhận trước khi ghi nhận thanh toán (VD: BTC 1-2, ETH 12 block).
+
+Tích hợp kỹ thuật:
+- Webhook xác nhận: xử lý idempotent.
+- Kiểm tra số tiền đủ/thiếu: cho phép chênh lệch nhỏ, hoặc tạo lại hóa đơn.
+
