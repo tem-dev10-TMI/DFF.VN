@@ -86,8 +86,8 @@
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user') {
-                                                                                            echo 'profileUser';
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] =='admin'  ) {
+                                                                                            echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
@@ -95,7 +95,10 @@
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" module-load="logout" href="?url=logout"><i
+                                    <li>
+                                    <!-- module-load="logout" cai nay trong the a dang xuat     -->
+                                    <a class="dropdown-item"  href="<?= BASE_URL ?>/logout"><i
+                                    
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
