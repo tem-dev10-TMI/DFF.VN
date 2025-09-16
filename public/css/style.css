@@ -6978,6 +6978,24 @@ ul.timeline .left-arrow:after {
     display: block;
   }
 }
+/* Mặc định (chưa active) */
+.left-sidebar .block-k ul.nav-second-level li,
+.left-sidebar .block-k ul.nav-second-level li a,
+.left-sidebar .block-k ul.nav-second-level li svg,
+.left-sidebar .block-k ul.nav-second-level li i {
+    color: #000 !important;
+    fill: #000 !important;
+}
+
+/* Khi active */
+.left-sidebar .block-k ul.nav-second-level li.active,
+.left-sidebar .block-k ul.nav-second-level li.active a,
+.left-sidebar .block-k ul.nav-second-level li.active svg,
+.left-sidebar .block-k ul.nav-second-level li.active i {
+    color: #ef1105ff !important;
+    fill: #ef1105ff !important;
+    font-weight: bold !important;
+}
 
 
 
