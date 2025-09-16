@@ -1,25 +1,36 @@
 <?php
-require_once "model/user/businessmenModel.php";
+// controller/viewBusinessmenController.php
+require_once __DIR__ . "/../../model/user/businessmenModel.php";
 
 class viewBusinessmenController
 {
-    // Hiển thị thông tin chi tiết doanh nhân khi click vào
-    public function detail($id)
+    public function detail($user_id = null)
     {
-        // lấy thông tin doanh nhân theo user_id
-        $businessman = businessmenModel::getBusinessByUserId($id);
+        if ($user_id === null) {
+            $user_id = isset($_GET['id']) ? (int) $_GET['id'] : null;
+        }
+
+        if (empty($user_id)) {
+            echo "<p>ID không hợp lệ.</p>";
+            return;
+        }
+
+        // Lấy thông tin user + businessman
+        $businessman = businessmenModel::getBusinessByUserId($user_id);
 
         if (!$businessman) {
             echo "<p>Không tìm thấy doanh nhân.</p>";
             return;
         }
 
-        // lấy danh sách quá trình công tác
-        $careers   = businessmenModel::getCareersByBusinessmenId($businessman['id']);
-        $followers = businessmenModel::getFollowersCount($businessman['user_id']);
-        $likes     = businessmenModel::getLikesCount($businessman['user_id']);
+        // Lấy quá trình công tác (cần businessman_id)
+        $careers = businessmenModel::getCareersByBusinessmenId($businessman['businessman_id']);
 
-        // gọi view
-        include "views/businessmen/detail.php";
+        // Lấy thống kê
+        $stats = businessmenModel::getBusinessStats($businessman['user_id']);
+
+        // Gọi view
+        include __DIR__ . "/../view/page/viewProfilebusiness.php";
     }
 }
+

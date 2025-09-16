@@ -33,6 +33,30 @@ class UserModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    // Cập nhật thông tin user
+    public static function updateUser($user_id, $name, $email, $phone, $avatar_url, $cover_photo, $description)
+    {
+        $db = new connect();
+        $sql = "UPDATE users SET 
+                name = :name, 
+                email = :email, 
+                phone = :phone, 
+                avatar_url = :avatar_url,
+                cover_photo = :cover_photo,
+                description = :description
+                WHERE id = :user_id";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([
+            ':user_id' => $user_id,
+            ':name' => $name,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':avatar_url' => $avatar_url,
+            ':cover_photo' => $cover_photo,
+            ':description' => $description
+        ]);
+    }
+
     // Lấy thông tin user theo username/email (phục vụ login)
     public static function getUserByUsernameOrEmail($usernameOrEmail)
     {
@@ -60,6 +84,21 @@ class UserModel
         $sql = "DELETE FROM users WHERE id = :id";
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
+    }
+
+    // Đổi mật khẩu
+    public static function updatePassword($user_id, $new_password_hash)
+    {
+        $db = new connect();
+
+        $sql = "UPDATE users SET password_hash = :password_hash WHERE id = :user_id";
+
+        $stmt = $db->db->prepare($sql);
+
+        return $stmt->execute([
+            ':password_hash' => $new_password_hash,
+            ':user_id' => $user_id
+        ]);
     }
 
     //Xác thực người dùng bằng username và mât khẩu
@@ -93,10 +132,8 @@ class UserModel
         $stmt->execute([':author_id' => $author_id]);
         return $stmt->fetchAll();
     }
-
-
     // ===================== Google login =====================
-// Kiểm tra user theo email
+    // Kiểm tra user theo email
     public static function getUserByEmail($email)
     {
         $db = new connect();
@@ -149,6 +186,39 @@ class UserModel
             return self::getUserByEmail($email);
         }
     }
+public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
+{
+    $db = new connect();
+
+    // Kiểm tra user đã tồn tại theo name
+    $stmt = $db->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
+    $stmt->execute(['name' => $name]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($user) {
+        return $user; // user đã tồn tại
+    }
+
+    // Nếu chưa có, tạo mới
+    $stmt = $db->prepare("
+        INSERT INTO users 
+        (name, avatar_url, role, created_at, updated_at) 
+        VALUES 
+        (:name, :avatar, 'user', NOW(), NOW())
+    ");
+    $stmt->execute([
+        'name' => $name,
+        'avatar' => $avatarUrl
+    ]);
+
+    // Lấy ID vừa tạo
+    $stmt = $db->prepare("SELECT id FROM users WHERE name = :name LIMIT 1");
+    $stmt->execute(['name' => $name]);
+    $id = $stmt->fetchColumn();
+
+    return self::getUserById($id);
+}
+
 
 
 }

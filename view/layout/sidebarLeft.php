@@ -9,15 +9,38 @@
         color: #000;
         text-decoration: none;
     }
-
     .left-sidebar .block-k ul.nav-second-level li.item.active a,
     .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
     .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
     .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
-        color: #ef1105ff;
+        
+        color: #ef1105ff ;
         font-weight: bold;
-
     }
+    .left-sidebar .block-k ul.nav-second-level li.item a,
+.left-sidebar .block-k ul.nav-second-level.top-item li a,
+.left-sidebar .block-k ul.nav-second-level.about-c li a,
+.left-sidebar .block-k ul.nav-second-level.h-info li a {
+    color: #000;
+    text-decoration: none;
+}
+
+.left-sidebar .block-k ul.nav-second-level li.item.active a,
+.left-sidebar .block-k ul.nav-second-level.top-item li.active a,
+.left-sidebar .block-k ul.nav-second-level.about-c li.active a,
+.left-sidebar .block-k ul.nav-second-level.h-info li.active a {
+    color: #ef1105ff !important;
+    font-weight: bold !important;
+}   
+@media (max-width: 768px) {
+    .left-sidebar .block-k ul.nav-second-level li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.top-item li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.about-c li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.h-info li.active > a {
+        color: #ef1105ff !important;
+        font-weight: bold !important;
+    }
+}
     </style>
 
 
@@ -44,7 +67,7 @@
             </li>
             <li class="item" data-ref="k">
                 <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="comment-tong.php" title="Trang chủ">Bình luận</a>
+                <a href="?url=comments" title="Trang chủ">Bình luận</a>
             </li>
 
         </ul>
@@ -120,7 +143,7 @@
                                 </path>
                                 <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                             </svg> -->
-                <a href="policy.html#privacy-policy">Chính sách riêng tư</a>
+                <a href="?url=aboutme">Chính sách riêng tư</a>
             </li>
             <li><i class="bi bi-badge-ad"></i>
                 <a href="policy.html#advertisement">Quảng cáo </a>

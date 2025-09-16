@@ -1,74 +1,80 @@
+
 <main class="main-content">
     <div class="content-left cover-page">
-    <div class="block-k box-company-label">
-        <h5>
-            <span><a href="#">Người dùng</a></span>
-            <span class="c-note"><i class="fas fa-user"></i> Phùng Thanh Khoa</span>
-        </h5>
-        <div class="box-company">
-            <div class="item">
-                <ul>
-                    <li>
-                        <img class="logo" alt="Phùng Thanh Khoa"
-                            src="https://i.pravatar.cc/100?img=5">
-                    </li>
-                    <li class="alias">Người dùng</li>
-                    <li class="name">
-                        <a href="#">Phùng Thanh Khoa</a>
-                    </li>
-                    <li class="f-folw">
-                        <a data-type="5" href="javascript:void(0)" data-ref="user-profile">
-                            <val>Theo dõi</val>
-                            <span class="number">2</span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
+        <div class="block-k box-company-label">
+            <h5>
+                <span><a href="#">Người dùng</a></span>
+                <span class="c-note">
+                    <i class="fas fa-user"></i> <?= htmlspecialchars($user['name'] ?? 'Không rõ') ?>
+                </span>
+            </h5>
+            <div class="box-company">
+                <div class="item">
+                    <ul>
+                        <li>
+                            <img class="logo" alt="<?= htmlspecialchars($user['name'] ?? 'Người dùng') ?>" src="<?= !empty($user['avatar_url'])
+                                    ? htmlspecialchars($user['avatar_url'])
+                                    : 'https://i.pravatar.cc/100' ?>"
+                                style="width:100px; height:100px; object-fit:cover; border-radius:50%;">
 
-    <?php if (!empty($articles)): ?>
-        <?php foreach ($articles as $article): ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="provider">
-                        <img class="logo"
-                            src="<?= htmlspecialchars($article['avatar_url'] ?? 'https://via.placeholder.com/50') ?>"
-                            alt="<?= htmlspecialchars($article['author_name']) ?>">
-                        <div class="p-covers">
-                            <span class="name">
-                                <a href="/profile.html?q=<?= $article['author_id'] ?>">
-                                    <?= htmlspecialchars($article['author_name']) ?>
-                                </a>
-                            </span>
-                            <!-- Bỏ timeAgo, thay bằng hiển thị ngày giờ -->
-                            <span class="date"><?= date("d/m/Y H:i", strtotime($article['created_at'])) ?></span>
-                        </div>
-                    </div>
-
-                    <div class="title">
-                        <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html">
-                            <?= htmlspecialchars($article['title']) ?>
-                        </a>
-                    </div>
-
-                    <div class="sapo">
-                        <?= htmlspecialchars($article['summary']) ?>
-                    </div>
-
-                    <?php if (!empty($article['main_image_url'])): ?>
-                        <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                            alt="<?= htmlspecialchars($article['title']) ?>">
-                    <?php endif; ?>
+                        </li>
+                        <li class="name">
+                            <a href="#"><?= htmlspecialchars($user['name'] ?? 'Không rõ') ?></a>
+                        </li>
+                        <li class="f-folw">
+                            <a data-type="5" href="javascript:void(0)" data-ref="user-profile">
+                                <val>Theo dõi</val>
+                                <span class="number">0</span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Chưa có bài viết nào từ người dùng này.</p>
-    <?php endif; ?>
-        </div>
-    <!-- bài viết chính block end -->
 
+            <?php if (!empty($articles)): ?>
+                <?php foreach ($articles as $article): ?>
+                    <div class="block-k article-item">
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <img class="logo" src="<?= $article['avatar_url'] ?>" alt="">
+                                <div class="p-covers">
+                                    <span class="name">
+                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                            <?= htmlspecialchars($article['author_name']) ?>
+                                        </a>
+                                    </span>
+                                    <span class="date"><?= date("d/m/Y H:i", strtotime($article['created_at'])) ?></span>
+                                </div>
+                            </div>
+
+                            <div class="title">
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
+                            </div>
+
+                            <div class="sapo">
+                                <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                Xem thêm
+                                </a>
+                            </div>
+
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>Chưa có bài viết nào.</p>
+            <?php endif; ?>
+
+        </div>
+        <!-- bài viết chính block end -->
+    </div>
 
     <div class="content-right">
         <div class="block-k bs-coin">
@@ -102,9 +108,9 @@
             </div>
         </div>
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline"
-                data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
-                data-hide-cover="false" data-show-facepile="true">
+            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline" data-width=""
+                data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+                data-show-facepile="true">
                 <blockquote cite="https://www.facebook.com/dffvn.official" class="fb-xfbml-parse-ignore"><a
                         href="../www.facebook.com/dffvn.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
                 </blockquote>
@@ -123,13 +129,17 @@
                 <ul>
 
                     <li class="new-style">
-                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng" href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
+                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng"
+                            href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
                             muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
                             lý nợ vốn 100 tỷ đồng
 
                         </a>
 
-                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg" title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng" alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng" border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg"
+                            title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng"
+                            alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng"
+                            border="0" />
                     </li>
 
                     <li class="new-style">
@@ -168,8 +178,7 @@
 
                         <img src="../media.dff.vn/web/image/2025/8/ton-kho-bat-dong-san638917113238077644.jpg"
                             title="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            border="0" />
+                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc" border="0" />
                     </li>
 
                     <li class="new-style">
@@ -298,22 +307,22 @@
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/btc638914838374635395.jpg"
                             title="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            border="0" />
+                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?" border="0" />
                     </li>
 
                     <li class="new-style">
                         <a title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 "
+                            href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
 
 
 
@@ -323,28 +332,27 @@
 
 
                         </a>
-                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg"
-                            title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " alt="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg" title="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " alt="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " border="0" />
                     </li>
 
                     <li class="new-style">
@@ -352,8 +360,8 @@
                             chuẩn bị IPO?
 
                         </a>
-                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg"
-                            title="VPS chuẩn bị IPO?" alt="VPS chuẩn bị IPO?" border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg" title="VPS chuẩn bị IPO?"
+                            alt="VPS chuẩn bị IPO?" border="0" />
                     </li>
 
                     <li class="new-style">
@@ -364,16 +372,16 @@
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/acbs638913967448542399.jpg"
                             title="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            border="0" />
+                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?" border="0" />
                     </li>
 
                     <li class="new-style">
                         <a title="
-									 
-									 Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
-								 
-								 " href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
+                                     
+                                     Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
+                                 
+                                 "
+                            href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
 
                             Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt
                             khe?
@@ -382,14 +390,14 @@
 
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/vn1638913114644334454.jpg" title="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " alt="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " border="0" />
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " alt="
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " border="0" />
                     </li>
 
 
@@ -413,9 +421,9 @@
 
 
         <script>
-            $(function() {
+            $(function () {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function() {
+                $(window).scroll(function () {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -430,7 +438,7 @@
             });
         </script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,

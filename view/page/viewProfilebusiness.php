@@ -1,11 +1,40 @@
-<?php
-
-?>
-
 <main class="main-content">
 
 
 
+    <?php
+    // view/page/viewProfilebusiness.php (đầu file)
+    
+    if (!isset($businessman) || !is_array($businessman)) {
+        // Nếu có id trên URL thì cố load dữ liệu (quick-fix)
+        if (isset($_GET['id']) && is_numeric($_GET['id'])) {
+            require_once __DIR__ . '/../../model/user/businessmenModel.php';
+            $businessman = businessmenModel::getBusinessByUserId((int) $_GET['id']);
+            $careers = !empty($businessman['businessman_id'])
+                ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
+                : [];
+            $stats = !empty($businessman['user_id'])
+                ? businessmenModel::getBusinessStats($businessman['user_id'])
+                : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
+        } else {
+            // fallback để tránh warnings
+            $businessman = [
+                'name' => 'Chưa có tên',
+                'user_id' => 0,
+                'avatar_url' => '/Upload/img_static/profile_default.png',
+                'birth_year' => null,
+                'nationality' => null,
+                'education' => null,
+                'current_position' => null,
+                'user_description' => null,
+                'businessman_id' => null
+            ];
+            $careers = [];
+            $stats = ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
+        }
+    }
+
+    ?>
 
     <!-- bài viết chính block start -->
     <div class="content-left cover-page" bis_skin_checked="1">
@@ -13,122 +42,106 @@
         <div class="block-k box-company-label">
             <div class="block-t p-t-20" bis_skin_checked="1">
                 <div class="block-t-top" bis_skin_checked="1">
-                    <img alt="image" class="profile-img" src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
+                    <img alt="image" class="profile-img"
+                        src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
                 </div>
-                <div class="h-topic" bis_skin_checked="1">
+                <div class="h-topic">
                     <ul>
                         <li class="alias">Doanh nhân</li>
-                        <li><a href="#" class="nam-follow">Bùi Thành Nhơn</a></li>
-                        <li class="fle-center"><a href="javascript:void(0)" data-type="5" module-load="follow" data-ref="2017">
+                        <li>
+                            <a href="#" class="nam-follow">
+                        <li><a href="#" class="nam-follow"><?= e($businessman['name']) ?></a></li>
+
+                        </a>
+                        </li>
+                        <li class="fle-center">
+                            <a href="javascript:void(0)" data-type="5" module-load="follow"
+                                data-ref="<?= $businessman['user_id'] ?? 0 ?>">
                                 <val class="label_fl">Đang theo dõi</val>
-                            </a></li>
+                            </a>
+                        </li>
                     </ul>
-
                 </div>
+
             </div>
         </div>
 
-        <div class="box-history" bis_skin_checked="1">
+<div class="box-history" bis_skin_checked="1">
+    <div class="persion-mmn" bis_skin_checked="1">
+        <ul>
 
-            <div class="persion-mmn" bis_skin_checked="1">
-                <ul>
+            <li>
+                <span>Họ và tên</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['name'] ?? 'Chưa có tên') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Họ và tên</span>
-                        <div bis_skin_checked="1">
-                            <pre>Bùi Thành Nhơn</pre>
-                        </div>
-                    </li>
+            <li>
+                <span>Ngày sinh</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['birth_year'] ?? 'Chưa có ngày sinh') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Ngày sinh</span>
-                        <div bis_skin_checked="1">
-                            <pre>03/02/1958 </pre>
-                        </div>
-                    </li>
+            <li>
+                <span>Quốc tịch</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['nationality'] ?? 'Chưa có quốc tịch') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Quốc tịch </span>
-                        <div bis_skin_checked="1">
-                            <pre>Việt Nam</pre>
-                        </div>
-                    </li>
+            <li>
+                <span>Trình độ</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['education'] ?? 'Chưa có trình độ') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Trình độ </span>
-                        <div bis_skin_checked="1">
-                            <pre>Cử nhân Nông nghiệp 
-Tốt nghiệp Executive MBA, HSB-TUCK, Đại học Dartmouth, Hoa Kỳ</pre>
-                        </div>
-                    </li>
+            <li>
+                <span>Chức vụ</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['current_position'] ?? 'Chưa có chức vụ') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Chức vụ </span>
-                        <div bis_skin_checked="1">
-                            <pre>Chủ tịch HĐQT Tập đoàn Đầu tư Địa ốc No Va (Mã CK: NVL)</pre>
-                        </div>
-                    </li>
+            <li>
+                <span>Vị trí khác</span>
+                <div bis_skin_checked="1">
+                    <pre><?= e($businessman['user_description'] ?? 'Chưa có mô tả') ?></pre>
+                </div>
+            </li>
 
-                    <li>
-                        <span>Vị trí khác</span>
-                        <div bis_skin_checked="1">
-                            <pre>Chủ tịch Công ty TNHH Volcano Western
-Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</pre>
-                        </div>
-                    </li>
-
-
-                    <li>
-                        <span>Quá trình công tác</span>
-                        <ul class="ul-history">
-
+            <li>
+                <span>Quá trình công tác</span>
+                <ul class="ul-history">
+                    <?php if (!empty($careers)): ?>
+                        <?php foreach ($careers as $career): ?>
                             <li>
                                 <div class="cv-history" bis_skin_checked="1"></div>
-                                <h3>1992 - 2007</h3>
+                                <h3><?= e($career['start_year'] ?? '') ?> - <?= e($career['end_year'] ?? 'nay') ?></h3>
                                 <div class="item" bis_skin_checked="1">
-                                    <pre>Chủ tịch Hội đồng Thành viên, CT TNHH Thương Mại Thành Nhơn</pre>
+                                    <pre><?= e($career['position'] ?? '') ?>, <?= e($career['company'] ?? '') ?></pre>
+                                    <pre><?= e($career['description'] ?? '') ?></pre>
                                 </div>
-
                             </li>
-
-                            <li>
-                                <div class="cv-history" bis_skin_checked="1"></div>
-                                <h3>2007 - 01/2022</h3>
-                                <div class="item" bis_skin_checked="1">
-                                    <pre>Chủ tịch HĐQT, CTCP Tập đoàn Đầu tư Địa ốc No Va</pre>
-                                </div>
-
-                            </li>
-
-                            <li>
-                                <div class="cv-history" bis_skin_checked="1"></div>
-                                <h3>01/2022 - 04/2022</h3>
-                                <div class="item" bis_skin_checked="1">
-                                    <pre>Thành viên HĐQT, CTCP Tập đoàn Đầu tư Địa ốc No Va</pre>
-                                </div>
-
-                            </li>
-
-                            <li>
-                                <div class="cv-history" bis_skin_checked="1"></div>
-                                <h3>02/2023 - nay</h3>
-                                <div class="item" bis_skin_checked="1">
-                                    <pre>Thành viên HĐQT, Chủ tịch HĐQT, CTCP Tập đoàn Đầu tư Địa ốc No Va</pre>
-                                </div>
-
-                            </li>
-
-                        </ul>
-                    </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li><pre>Chưa có quá trình công tác</pre></li>
+                    <?php endif; ?>
                 </ul>
-            </div>
+            </li>
 
-        </div>
+        </ul>
+    </div>
+</div>
+
 
         <div class="block-k" bis_skin_checked="1">
             <h5 class="total-cm"><i class="fas fa-comments"></i>Bình luận <span></span></h5>
             <div class="comment-box" bis_skin_checked="1">
-                <a href="javascript:void(0)" class="img-own"><img class="logo" alt="" src="/Upload/img_static//profile_638930336755560936.png"></a>
+                <a href="javascript:void(0)" class="img-own"><img class="logo" alt=""
+                        src="/Upload/img_static//profile_638930336755560936.png"></a>
                 <textarea class="form-control autoresizing" placeholder=" Bạn nghĩ gì về nội dung này?"></textarea>
                 <i class="fas fa-paper-plane" data-id="2017" module-load="csend"></i>
             </div>
@@ -184,9 +197,9 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
             </div>
         </div>
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline"
-                data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
-                data-hide-cover="false" data-show-facepile="true">
+            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline" data-width=""
+                data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+                data-show-facepile="true">
                 <blockquote cite="https://www.facebook.com/dffvn.official" class="fb-xfbml-parse-ignore"><a
                         href="../www.facebook.com/dffvn.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
                 </blockquote>
@@ -205,13 +218,17 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
                 <ul>
 
                     <li class="new-style">
-                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng" href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
+                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng"
+                            href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
                             muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
                             lý nợ vốn 100 tỷ đồng
 
                         </a>
 
-                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg" title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng" alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng" border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg"
+                            title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng"
+                            alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng"
+                            border="0" />
                     </li>
 
                     <li class="new-style">
@@ -250,8 +267,7 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
 
                         <img src="../media.dff.vn/web/image/2025/8/ton-kho-bat-dong-san638917113238077644.jpg"
                             title="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
-                            border="0" />
+                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc" border="0" />
                     </li>
 
                     <li class="new-style">
@@ -381,22 +397,21 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/btc638914838374635395.jpg"
                             title="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            border="0" />
+                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?" border="0" />
                     </li>
 
                     <li class="new-style">
                         <a title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
 
 
 
@@ -409,28 +424,27 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
 
 
                         </a>
-                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg"
-                            title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " alt="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg" title="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " alt="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " border="0" />
                     </li>
 
                     <li class="new-style">
@@ -438,8 +452,8 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
                             chuẩn bị IPO?
 
                         </a>
-                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg"
-                            title="VPS chuẩn bị IPO?" alt="VPS chuẩn bị IPO?" border="0" />
+                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg" title="VPS chuẩn bị IPO?"
+                            alt="VPS chuẩn bị IPO?" border="0" />
                     </li>
 
                     <li class="new-style">
@@ -450,16 +464,15 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/acbs638913967448542399.jpg"
                             title="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            border="0" />
+                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?" border="0" />
                     </li>
 
                     <li class="new-style">
                         <a title="
-									 
-									 Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
-								 
-								 " href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
+                                     
+                                     Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
+                                 
+                                 " href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
 
                             Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt
                             khe?
@@ -468,14 +481,14 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
 
                         </a>
                         <img src="../media.dff.vn/web/image/2025/8/vn1638913114644334454.jpg" title="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " alt="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " border="0" />
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " alt="
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " border="0" />
                     </li>
 
 
@@ -499,9 +512,9 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
 
 
         <script>
-            $(function() {
+            $(function () {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function() {
+                $(window).scroll(function () {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -516,7 +529,7 @@ Thành viên HĐQT CTCP Diamond Properties, CTCP NovaGroup, CTCP Nova Holding</p
             });
         </script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,

@@ -1,0 +1,223 @@
+# Macro → Ảnh hưởng tới Crypto & E-commerce
+
+---
+
+## 1. Tóm tắt nhanh (Executive summary)
+- **Lãi suất & chính sách tiền tệ** (FED/ECB/BOJ/NHNN) thay đổi chi phí vốn và thanh khoản, quyết định “dòng tiền rủi ro” (risk-on/risk-off). Lãi suất tăng làm giảm nhu cầu nắm giữ tài sản không sinh lãi như BTC; nới lỏng (QE) thường đẩy giá tài sản rủi ro lên.  
+- **Lạm phát (CPI/PPI)**: kỳ vọng lạm phát cao làm tăng nhu cầu lưu trữ giá trị — đôi khi hỗ trợ BTC như “vàng số”, đồng thời đẩy chi phí hoạt động e-commerce (vận chuyển, nguyên liệu).  
+- **Chỉ số USD (DXY)**: USD mạnh thường gây áp lực giảm lên crypto và các tài sản rủi ro toàn cầu; USD yếu thường hỗ trợ.  
+- **Tỷ giá VND/USD**: ảnh hưởng trực tiếp tới giá local (VND) cho OTC, thanh toán tiền mã hóa bằng VND, chi phí nhập khẩu, và thu nhập thương nhân.  
+
+---
+
+## 2. Các khái niệm chính & cơ chế truyền dẫn
+
+### 2.1 Lãi suất chính sách → truyền dẫn tới crypto/e-commerce
+- **Kênh 1 — Opportunity cost:** Khi lãi suất tiền gửi/trái phiếu tăng, chi phí cơ hội nắm giữ tài sản không trả lãi (BTC, ETH) tăng ⇒ có xu hướng bán để nắm giữ tài sản có lãi ⇒ áp lực giảm giá.
+- **Kênh 2 — Leverage & funding:** Lãi suất tăng làm chi phí vay (margin/funding) tăng → giảm leverage trong thị trường crypto → giảm đòn bẩy mua (downside pressure).
+- **Kênh 3 — Thanh khoản hệ thống:** Nới lỏng (QE, cắt RR) bơm thanh khoản → nhiều tiền rủi ro chảy vào thị trường crypto; thắt chặt thì ngược lại.
+- **Áp dụng cho e-commerce:** lãi suất cao → chi phí vốn doanh nghiệp tăng (lợi nhuận nhỏ đi) → có thể tăng giá bán, giảm khuyến mại, tăng tần suất chuyển crypto → fiat.
+
+### 2.2 Lạm phát (CPI/PPI) → hành xử nhà đầu tư & chi phí
+- **CPI cao → tiền mua sắm giảm sức mua**; người tiêu dùng thận trọng hơn, chi tiêu e-commerce có thể giảm.  
+- **Producer prices (PPI)** phản ánh chi phí đầu vào (vận chuyển, nguyên liệu) → tác động tới giá bán lẻ và shipping.  
+- **Kết luận:** Lạm phát cao có thể vừa đẩy một bộ phận mua crypto (lưu trữ) vừa làm giảm doanh số e-commerce ở nhóm nhạy cảm giá.
+
+### 2.3 DXY (US Dollar Index)
+- **Mô tả:** DXY đo sức mạnh USD so giỏ tiền tệ.  
+- **Cơ chế:** USD mạnh → tài sản denom USD rẻ hơn cho người nắm USD nhưng đắt cho người ngoại tệ → dòng vốn dịch chuyển; crypto (dollar-priced) thường giảm khi DXY tăng.  
+- **Ứng dụng VN:** DXY tăng thường đi kèm VND suy yếu → giá crypto tính bằng VND tăng hơn (khi price_usd cố định).
+
+### 2.4 Tỷ giá VND/USD & can thiệp NHNN
+- **Tỷ giá tăng (VND yếu):** chi phí nhập khẩu (vật liệu, năng lượng) tăng → merchant có thể tăng giá bán VND; OTC crypto (mua bán bằng VND) sẽ phản ứng nhanh theo tỷ giá.  
+- **NHNN can thiệp:** can thiệp ngoại hối, chính sách dự trữ ngoại tệ, lãi suất VND ngắn hạn ảnh hưởng tới chi phí vay VND → ảnh hưởng trực tiếp đến chi phí vốn doanh nghiệp.
+
+---
+
+## 3. Chỉ số/đầu vào cần theo dõi (với tần suất gợi ý)
+- **Hàng ngày:** DXY, USD/VND spot, Bitcoin price (USD), ETH price (USD), US 2y/10y yields, implied volatility (VIX), Oil price (Brent).  
+- **Hàng tuần:** US CPI m/m & y/y (monthly release), PPI, Initial jobless claims (khi cần).  
+- **Hàng tháng / theo chu kỳ:** Fed funds rate decision, ECB policy, NHNN announcements, CPI, PPI, PMI.  
+- **On-chain / thị trường crypto:** Funding rates perp, stablecoin supply delta (USDT/USDC), exchange net flows, open interest futures.  
+- **Nguồn:** dữ liệu kinh tế chính thức (BLS, Eurostat), DXY (Bloomberg/WS/ public APIs), treasuries (US Treasury), CoinGecko/CoinMarketCap (crypto), Glassnode/Chainalysis (on-chain).
+
+---
+
+## 4. Công thức & kỹ thuật phân tích (mẫu áp dụng)
+
+### 4.1 Real interest rate (lãi suất thực)
+real_rate ≈ nominal_interest_rate − expected_inflation
+
+less
+Sao chép mã
+- expected_inflation có thể lấy từ breakeven inflation (10y TIPS) hoặc survey expectations.
+
+### 4.2 Correlation & rolling correlation (ví dụ BTC vs DXY)
+- Rolling correlation (window = 30 ngày) để quan sát mối tương quan thay đổi theo thời gian.
+
+### 4.3 Z-score volatility (để cảnh báo)
+z = (current_30d_vol - mean_90d_vol) / std_90d_vol
+
+pgsql
+Sao chép mã
+- nếu z > 2 → volatility spike alert.
+
+---
+
+## 5. SQL mẫu — rolling correlation BTC returns vs DXY returns
+```sql
+-- giả sử bảng price_history(symbol, ts_utc, price)
+WITH btc AS (
+  SELECT ts_utc, price AS btc_price,
+         LAG(price) OVER (ORDER BY ts_utc) AS btc_prev
+  FROM price_history WHERE symbol='BTC'
+),
+dxy AS (
+  SELECT ts_utc, price AS dxy_price,
+         LAG(price) OVER (ORDER BY ts_utc) AS dxy_prev
+  FROM price_history WHERE symbol='DXY'
+),
+ret AS (
+  SELECT b.ts_utc,
+         LOG(b.btc_price / b.btc_prev) AS btc_ret,
+         LOG(d.dxy_price / d.dxy_prev) AS dxy_ret
+  FROM btc b JOIN dxy d ON b.ts_utc = d.ts_utc
+)
+SELECT ts_utc,
+       CORR(btc_ret, dxy_ret) OVER (ORDER BY ts_utc ROWS BETWEEN 29 PRECEDING AND CURRENT ROW) AS rolling_corr_30
+FROM ret
+ORDER BY ts_utc DESC
+LIMIT 200;
+6. Python mẫu — tính real rate, rolling vol, alerts (pandas)
+python
+Sao chép mã
+import pandas as pd
+# df: columns ['date','btc_price','dxy','us10y','cpi_next12m_expect']
+df['btc_ret'] = df['btc_price'].pct_change()
+df['dxy_ret'] = df['dxy'].pct_change()
+df['btc_vol_30'] = df['btc_ret'].rolling(30).std() * (30**0.5)
+df['rolling_corr'] = df['btc_ret'].rolling(30).corr(df['dxy_ret'])
+df['real_rate'] = df['us10y'] - df['cpi_next12m_expect']
+# alerts
+if df['btc_vol_30'].iloc[-1] > df['btc_vol_30'].rolling(90).mean().iloc[-1] * 1.5:
+    print("ALERT: BTC volatility spike")
+7. Kịch bản & hành động (policy triggers cho merchant / ops)
+Trigger A — Fed tăng 75 bps (ví dụ) / or policy shift to hawkish
+Tác động thường thấy: risk-off, Bitcoin/crypto có thể điều chỉnh; funding rate chuyển negative.
+Hành động gợi ý:
+
+Tăng frequency chuyển crypto → fiat (từ daily → intraday) nếu exposure > threshold.
+
+Tăng confirmations threshold cho đơn hàng lớn.
+
+Bật warning UX: “Lưu ý: thị trường đang biến động do lãi suất tăng.”
+
+Re-evaluate marketing & promotions (giảm chi phí khuyến mại).
+
+Trigger B — CPI surprise lớn (CPI > forecast +0.5%)
+Tác động: Lạm phát tăng → có khả năng có 2 hướng: (1) asset inflation hedge demand (BTC up), hoặc (2) Fed tightening kỳ vọng → BTC down. Tùy sentiment.
+Hành động:
+
+Treasury: cân nhắc hedging (futures).
+
+Pricing: revise shipping surcharge vì chi phí thực tăng.
+
+Trigger C — DXY tăng > 2% trong 7 ngày
+Tác động: áp lực giảm cho crypto (USD strength), VND có thể yếu tương đương.
+Hành động:
+
+Lock invoice price (reduce expiry?) or shorten invoice expiry to limit FX risk.
+
+Nếu merchant định giá bằng USD → cân nhắc điều chỉnh VND price.
+
+8. Treasury & Hedging — đề xuất cụ thể cho merchant
+8.1 Exposure policy (ví dụ)
+Operational buffer: hold cash fiat = X% monthly revenue (thể chấp nhận 7–14 days of operations).
+
+Crypto exposure cap: do not hold > Y% of cash reserves in crypto (Y configurable, e.g., 5–20%).
+
+Auto-convert rules: if invoice value > $Z or market volatility (30d vol) > threshold → auto-convert to fiat on confirmation.
+
+8.2 Hedging instruments
+Futures: hedge USD value of expected crypto holdings.
+
+Options (collar): cap downside while allowing upside.
+
+Stablecoins: use highly liquid, audited stablecoins for settlement.
+
+FX forwards: hedge VND/USD exposures for importing costs.
+
+9. E-commerce-specific checklist & UX rules
+Pricing & checkout UX
+Always show: amount_fiat, crypto_equivalent, rate_timestamp, fee_estimate, expiry.
+
+If macro alerts active (see triggers), show prominent notice and recommended alternative (e.g., use stablecoin TRC20).
+
+Refunds & settlements
+For high volatility periods: require KYC for refunds above threshold; prefer refund in fiat when possible.
+
+Store price_used and timestamp for each invoice for accounting + tax.
+
+Shipping & fuel surcharge
+Calculate dynamic fuel surcharge: if oil price increase > X% in 30 days → apply surcharge %. Communicate clearly.
+
+10. Dashboard KPIs & alerts to implement
+BTC/ETH price + 24h/7d/30d volatility.
+
+DXY & USD/VND hourly/daily.
+
+Rolling correlation BTC vs DXY (30/90 days).
+
+Real yield (10y Treasury − expected inflation).
+
+Exchange net flows & stablecoin supply delta (24h, 7d).
+
+Invoice expiry rate (invoices expired due to price movement).
+
+Number of refunds & time to settle.
+
+11. Canned chatbot replies (copy-ready)
+Q: “Lãi suất FED tăng có ảnh hưởng đến crypto không?”
+A: “Có. Lãi suất tăng làm chi phí cơ hội nắm giữ tài sản không sinh lãi (như BTC) tăng — thường thấy dòng vốn rút khỏi tài sản rủi ro. Công ty của bạn muốn mình kiểm tra tác động lên doanh thu/thanh toán crypto trong 30 ngày gần nhất không?”
+
+Q: “Tỷ giá VND tăng liệu tôi có nên đổi crypto sang VND nhanh hơn?”
+A: “Nếu VND suy yếu, giá crypto tính theo VND sẽ tăng — nhưng nếu bạn muốn hạn chế rủi ro FX, bạn có thể bật auto-convert sang VND hoặc USD khi nhận thanh toán. Mình có thể gợi ý policy auto-convert theo threshold bạn đặt.”
+
+Q: “DXY là gì và tại sao quan trọng?”
+A: “DXY đo sức mạnh USD so rổ tiền tệ. USD mạnh thường gây áp lực giảm cho các tài sản rủi ro (bao gồm nhiều tiền mã hóa) vì vốn thường quay về USD.”
+
+12. Mẹo vận hành & best practices (ngắn gọn)
+Tự động hóa: kết nối feed DXY, treasuries, CPI → tạo alerts tự động cho ops.
+
+Minimize manual intervention: có playbook rõ (triggers → actions).
+
+Communication: bất kỳ policy change (surcharge, disabled payment rails) phải thông báo rõ trên checkout & email.
+
+Stress testing: backtest treasury policy against historical rate shocks (2008, 2020, 2022).
+
+13. Gợi ý dữ liệu & API (để bot trỏ user kiểm tra)
+Macro: FRED, OECD, Bloomberg, Yahoo Finance.
+
+Rates: Federal Reserve (FOMC), ECB, BOJ, NHNN announcements.
+
+FX: RBI/central bank feeds, exchangerate.host, OANDA.
+
+Crypto: CoinGecko, CoinMarketCap, Glassnode.
+
+Lưu ý: một số nguồn cần API key/paid access khi dùng quy mô lớn.
+
+14. Disclaimer
+Nội dung trên nhằm mục đích thông tin vận hành & kỹ thuật — không phải tư vấn đầu tư hay tư vấn pháp lý. Trước khi triển khai chính sách tài chính (hedging, treasury), hãy tham vấn bộ phận tài chính/counsel và kiểm tra tính pháp lý tại quốc gia hoạt động.
+
+15. Quick copy checklist (để dán vào KB/chatbot)
+ Kết nối nguồn DXY & USD/VND real-time.
+
+ Tính và lưu real_rate hàng ngày.
+
+ Rolling vol báo động (z-score) tích hợp alerts.
+
+ Policy auto-convert & exposure caps documented.
+
+ UX: hiển thị rate_timestamp & expiry rõ ràng.
+
+ Treasury: define hedging instruments & triggers.
