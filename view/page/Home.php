@@ -251,6 +251,49 @@
             <div class="comment-cover">
                 <div class="fr-content">
                     <ul class="list_comment col-md-12">
+                        <script>
+  // Mẫu dữ liệu bình luận
+  const comments = [
+    {
+      name: "Minh Anh",
+      time: "2 phút trước",
+      text: "Bài viết này hay quá, mong admin chia sẻ thêm!",
+      avatar: "https://i.pravatar.cc/40?img=1"
+    },
+    {
+      name: "Quốc Huy",
+      time: "5 phút trước",
+      text: "Theo mình thì xu hướng crypto tuần này đang khá tích cực 😃",
+      avatar: "https://i.pravatar.cc/40?img=2"
+    },
+    {
+      name: "Thanh Trúc",
+      time: "10 phút trước",
+      text: "Mình vừa theo dõi thêm VHM, mọi người có đánh giá gì không?",
+      avatar: "https://i.pravatar.cc/40?img=3"
+    }
+  ];
+
+  // Lấy ul.list_comment
+  const list = document.querySelector(".list_comment");
+
+  // Render từng comment
+  comments.forEach(c => {
+    const li = document.createElement("li");
+    li.className = "comment-item";
+    li.innerHTML = `
+      <div class="comment">
+        <img src="${c.avatar}" alt="avatar" class="avatar">
+        <div class="content">
+          <strong>${c.name}</strong> <span class="time">${c.time}</span>
+          <p>${c.text}</p>
+        </div>
+      </div>
+    `;
+    list.appendChild(li);
+  });
+</script>
+
                     </ul>
                     <div class="cm-more">Xem thêm</div>
                 </div>

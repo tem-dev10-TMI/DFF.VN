@@ -1,89 +1,220 @@
-<div class="collapse navbar-collapse m-menu-i" id="navbarNav5">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sidebar Mobile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* --- Sidebar Mobile --- */
+    .sidebar-mobile {
+      width: 240px;
+      background: #f8f9fa;
+      border-right: 1px solid #ddd;
+      height: 100vh;
+      overflow-y: auto;
+      position: fixed;
+      top: 0;
+      left: 0;
+      transition: all 0.3s ease;
+    }
 
-        <ul class="">
-            <li class="item"><svg class="home-icon" rpl="" fill="currentColor" height="20" icon-name="home-outline"
-                    viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                    <!--?lit$03863286$--><!--?lit$03863286$-->
-                    <path
-                        d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
-                    </path><!--?-->
-                </svg>
-                <a href="index.html" title="Trang chủ">Trang chủ</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-newspaper idiscuss"></i>
-                <a href="tin-moi.html" title="Trang chủ">Mới nhất</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-box-arrow-up-right trend-icon"></i>
-                <a href="trends.html" title="Trang chủ">Xu hướng</a>
-            </li>
-            <li class="item">
-                <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
-            </li>
+    .sidebar-mobile ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
 
-        </ul>
-        <div class="line"></div>
+    .sidebar-mobile ul li a {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      text-decoration: none;
+      color: #333;
+      font-size: 14px;
+    }
 
-        <label class="bg-tranparent">CHỦ ĐỀ</label>
-        <ul class=" top-item">
+    /* Active */
+    .sidebar-mobile ul li.active a,
+    .sidebar-mobile ul li.active i,
+    .sidebar-mobile ul li.active svg {
+      color: red;
+      font-weight: 600;
+    }
+    .sidebar-mobile ul li.active i,
+    .sidebar-mobile ul li.active svg {
+      border: 2px solid red;
+      border-radius: 6px;
+      padding: 2px;
+      display: inline-block;
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/07/17/ktvm-104446377.png"><a title="Vĩ mô" href="vi-mo-t128-1.html">
-                    Vĩ mô</a> </li>
+    /* Icon mặc định */
+    .sidebar-mobile ul li i,
+    .sidebar-mobile ul li svg {
+      border: none;
+      padding: 0;
+      width: 18px;
+      height: 18px;
+      font-size: 18px;
+      color: inherit;
+      display: inline-block;
+      text-align: center;
+      line-height: 18px;
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/07/17/ck-153008757.png"><a title="Thị trường"
-                    href="thi-truong-t129-1.html"> Thị trường</a> </li>
+    .sidebar-mobile ul li img.topic-thumb {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/08/12/2-12045699.png"><a title="Crypto " href="crypto-t2202-1.html">
-                    Crypto </a> </li>
+    /* fallback icon (ẩn mặc định) */
+    .sidebar-mobile .fallback {
+      display: none;
+      width: 18px;
+      height: 18px;
+      font-size: 16px;
+      line-height: 18px;
+      text-align: center;
+      vertical-align: middle;
+      color: inherit;
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/07/17/dn-104202856.png"><a title="360° Doanh nghiệp"
-                    href="360-doanh-nghiep-t123-1.html"> 360° Doanh nghiệp</a> </li>
+    /* Section Title */
+    .sidebar-mobile ul li.section-title {
+      font-size: 12px;
+      font-weight: bold;
+      color: #777;
+      margin-top: 10px;
+      padding: 8px 14px;
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/07/17/nh-154022179.png"><a title="Tài chính"
-                    href="tai-chinh-t139-1.html"> Tài chính</a> </li>
+    /* Responsive: thu nhỏ sidebar */
+    @media (max-width: 768px) {
+      .sidebar-mobile {
+        width: 60px;
+      }
+      .sidebar-mobile ul li a span {
+        display: none;
+      }
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/07/17/bds-153325898.png"><a title="Nhà đất"
-                    href="nha-dat-t140-1.html"> Nhà đất</a> </li>
+    /* Responsive: dạng off-canvas */
+    @media (max-width: 480px) {
+      .sidebar-mobile {
+        left: -240px;
+      }
+      .sidebar-mobile.active {
+        left: 0;
+      }
+    }
 
-            <li><img src="../img.dff.vn/Image/2024/08/12/1-120418263.png"><a title="Quốc tế "
-                    href="quoc-te-t2201-1.html"> Quốc tế </a> </li>
+    /* Toggle button */
+    #toggleMenu {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 6px 10px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 1001;
+    }
+  </style>
+</head>
+<body>
 
-            <li><img src="../img.dff.vn/Image/2024/08/12/3-120542176.png"><a title="Thảo luận"
-                    href="thao-luan-t2203-1.html"> Thảo luận</a> </li>
+<!-- Toggle button -->
+<button id="toggleMenu" aria-label="Mở menu">☰</button>
 
-        </ul>
+<!-- START: Sidebar -->
+<nav class="sidebar-mobile" aria-label="Thanh điều hướng">
+  <ul class="menu">
+    <li><a href="/"><i class="fas fa-home"></i> <span>Trang chủ</span></a></li>
+    <li><a href="/latest"><i class="far fa-clock"></i> <span>Mới nhất</span></a></li>
+    <li><a href="/trends"><i class="fas fa-fire"></i> <span>Xu hướng</span></a></li>
+    <li><a href="/comments"><i class="far fa-comment-dots"></i> <span>Bình luận</span></a></li>
 
-        <div class="line"></div>
-        <ul class=" about-c">
-            <li><i class="bi bi-tv"></i>
-                <a href="policy.html#about"> Về chúng tôi</a>
-            </li>
-            <li>
-                <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service"> Chính sách nội dung</a>
-            </li>
-            <li><svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z">
-                    </path>
-                    <path
-                        d="M6.617 10H.625a.625.625 0 0 0-.625.625 3.62 3.62 0 1 0 7.242 0A.625.625 0 0 0 6.617 10Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.58A2.376 2.376 0 0 1 3.621 13h-.004Z">
-                    </path>
-                    <path
-                        d="M19.375 10h-5.992a.624.624 0 0 0-.625.625 3.622 3.622 0 0 0 6.966 1.386c.182-.44.276-.91.276-1.386a.624.624 0 0 0-.625-.625Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.576A2.375 2.375 0 0 1 16.379 13h-.004Z">
-                    </path>
-                    <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
-                </svg>
-                <a href="policy.html#privacy-policy"> Chính sách riêng tư</a>
-            </li>
-            <li><i class="bi bi-badge-ad"></i>
-                <a href="policy.html#advertisement"> Quảng cáo </a>
-            </li>
-        </ul>
+    <li class="section-title">CHỦ ĐỀ</li>
 
+    <!-- THAY ĐỔI: thêm span.icon + fallback cho img để tránh broken image -->
+    <li>
+      <a href="/topic/vi-mo">
+        <span class="icon">
+          <img class="topic-thumb"
+               src="public/img/topic-vimo.svg"
+               alt="Vĩ mô"
+               onerror="this.style.display='none'; var fb=this.parentNode.querySelector('.fallback'); if(fb) fb.style.display='inline-block';">
+          <i class="fas fa-chart-line fallback" aria-hidden="true"></i>
+        </span>
+        <span>Vĩ mô</span>
+      </a>
+    </li>
 
+    <li>
+      <a href="/topic/thi-truong">
+        <span class="icon">
+          <img class="topic-thumb"
+               src="public/img/topic-thitruong.svg"
+               alt="Thị trường"
+               onerror="this.style.display='none'; var fb=this.parentNode.querySelector('.fallback'); if(fb) fb.style.display='inline-block';">
+          <i class="fas fa-chart-bar fallback" aria-hidden="true"></i>
+        </span>
+        <span>Thị trường</span>
+      </a>
+    </li>
 
-    </div>
+    <!-- mục dùng icon font thì giữ nguyên -->
+    <li><a href="/topic/crypto"><i class="fab fa-bitcoin"></i> <span>Crypto</span></a></li>
+    <li><a href="/topic/360"><i class="fas fa-industry"></i> <span>360° Doanh nghiệp</span></a></li>
+    <li><a href="/topic/tai-chinh"><i class="fas fa-wallet"></i> <span>Tài chính</span></a></li>
+    <li><a href="/topic/nha-dat"><i class="fas fa-building"></i> <span>Nhà đất</span></a></li>
+    <li><a href="/topic/quoc-te"><i class="fas fa-globe"></i> <span>Quốc tế</span></a></li>
+    <li><a href="/topic/thao-luan"><i class="fas fa-comments"></i> <span>Thảo luận</span></a></li>
+
+    <li class="section-title">VỀ</li>
+    <li><a href="/about"><i class="fas fa-users"></i> <span>Về chúng tôi</span></a></li>
+    <li><a href="/policy-content"><i class="fas fa-file-contract"></i> <span>Chính sách nội dung</span></a></li>
+    <li><a href="/privacy"><i class="fas fa-shield-alt"></i> <span>Chính sách riêng tư</span></a></li>
+    <li><a href="/ads"><i class="fas fa-ad"></i> <span>Quảng cáo</span></a></li>
+  </ul>
+</nav>
+<!-- END: Sidebar -->
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.querySelector(".sidebar-mobile");
+    const toggleBtn = document.getElementById("toggleMenu");
+    const allLis = document.querySelectorAll(".sidebar-mobile ul li");
+    const currentPath = window.location.pathname;
+
+    // Toggle sidebar cho mobile nhỏ
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("active");
+    });
+
+    // Auto active theo URL
+    allLis.forEach(li => {
+      const a = li.querySelector("a");
+      if (a) {
+        try {
+          if (currentPath.startsWith(a.getAttribute("href"))) {
+            li.classList.add("active");
+          }
+        } catch (e) {}
+        a.addEventListener("click", function() {
+          allLis.forEach(item => item.classList.remove("active"));
+          li.classList.add("active");
+        });
+      }
+    });
+  });
+</script>
+
+</body>
+</html>

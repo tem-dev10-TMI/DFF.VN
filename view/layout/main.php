@@ -4,7 +4,7 @@
 <!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:46 GMT -->
 <!-- Added by HTTrack -->
 <meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 <head>
     <meta charset="UTF-8" />
     <meta http-equiv="content-language" content="vi" />
@@ -28,24 +28,28 @@
 
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=1.3" />
+    <link rel="stylesheet" href="public/css/style.css?v=6" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js">
+    </script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
@@ -100,8 +104,6 @@
 "url": "https://dff.vn"
 }</script><link href="index.html" rel="canonical" /></head> -->
 
-
-
 <body>
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
@@ -109,17 +111,7 @@
 
 
 
-    <?php
-    
-    
-
-    require_once 'model/TopicModel.php';
-
-    $topicModel = new TopicModel();
-    $allTopics = $topicModel->getAll(); // tất cả chủ đề
-    $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
-    $moreTopics = array_slice($allTopics, 5);
-    require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+    <?php require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
     ?>
 
     <div class="m-top-info">
@@ -189,7 +181,7 @@
                 </a>
             </li>
             <li class="fitem2">
-                <a href="trends" class="m-trend">
+                <a href="trends.html" class="m-trend">
                     <i class="bi bi-lightning-charge-fill"></i>
                     <span>Xu hướng</span>
                 </a>
@@ -229,18 +221,21 @@
                 }
             }
         </style>
-       ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
-        <?php if (!empty($profile)): ?>   <!-- ✅ fix: thay if ($profile) -->
+        <?php if ($profile): ?>
             <?= $content ?>
 
         <?php else: ?>
             <div class="main">
 
+
+
                 <!-- ?php require_once 'view/page/Home.php'; -->
                 <?= $content ?>
 
+
                 <?php require_once 'view/layout/sidebarLeft.php'; ?>
+
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-coin mb-coins" viewBox="0 0 16 16">
@@ -252,10 +247,8 @@
                 <i class="bi bi-chat-left-text-fill mb-chat"></i>
             </div>
         <?php endif; ?>
-...
-
         <input type="hidden" id="hdd_id" value="24166" />
-
+            
         <script>
             $(function() {
 
@@ -266,9 +259,9 @@
                     margin: 20,
                     dots: false,
                     /*
-                   animateOut: 'fadeOut',
-                   animateIn: 'fadeIn',
-                   */
+                       animateOut: 'fadeOut',
+                       animateIn: 'fadeIn',
+                       */
                     responsiveClass: true,
                     autoHeight: true,
                     autoplayTimeout: 7000,

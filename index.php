@@ -111,6 +111,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->about();
         break;
+    case 'aboutme':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->about();
+        break;
     case 'details_blog':
         require_once 'controller/ArticlesController.php';
         $controller = new ArticlesController();
@@ -129,6 +134,14 @@ switch ($url) {
         $controller = new NewsController();
         $controller->index();
         break;
+
+    case 'comments':
+        require_once 'controller/CommentController.php';
+        $controller = new CommentController();
+        $controller->Comments();
+        break;
+
+
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();

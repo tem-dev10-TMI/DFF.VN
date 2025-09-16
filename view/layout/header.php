@@ -7,8 +7,10 @@
             </div>
             <div class="header-logo">
                 <a href="home">
-                    <img alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
-                        src="https://img.dff.vn/static/img/logo.png" /></a>
+
+                    <img style=" stroke: none !important;height: 50px; width:auto; "
+                        alt="Mạng xã hội kinh tế tài chính DFF" title="Mạng xã hội kinh tế tài chính DFF"
+                        src="public/img/logo.svg" ; /></a>
                 <div class="box-search">
                     <div class="input-group ">
                         <span class="input-group-append">
@@ -18,8 +20,8 @@
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
-                        <input class="form-control border-end-0 border rounded-pill"
-                            onkeypress="return OnEnter(event)" placeholder="Tìm kiếm" type="search" />
+                        <input class="form-control border-end-0 border rounded-pill" onkeypress="return OnEnter(event)"
+                            placeholder="Tìm kiếm" type="search" />
                     </div>
                     <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
                 </div>
@@ -28,25 +30,16 @@
             <div class="header-right">
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
-                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
-                                aria-expanded="false" title="Tạo mới" href="javascript:void(0)"><i
-                                    class="fas fa-plus"></i></a>
+                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
                             <ul class="dropdown-menu hide">
-                                <li><a style="position:relative" class="dropdown-item btquick"
-                                        href="javascript:void(0)" module-load="loadwrite"><i
-                                            class="fas fa-plus"></i><span class="number"><i
+                                <li><a style="position:relative" class="dropdown-item btquick" href="javascript:void(0)"
+                                        module-load="loadwrite"><i class="fas fa-plus"></i><span class="number"><i
                                                 class="bi bi-lightning-charge-fill"></i></span> Viết bài nhanh</a>
                                 </li>
                                 <li><a class="dropdown-item" href="javascript:void(0)" data-url="/write.html"
                                         module-load="redirect"><i class="fas fa-plus"></i> Viết bài thường</a></li>
                             </ul>
-                        </span>
-                    </li>
-                    <li class="n-chatbot">
-                        <span>
-                            <a href="javascript:void(0)" title="Chatbot" onclick="toggleChatbotBox()">
-                                <i class="bi bi-chat-dots"></i>
-                            </a>
                         </span>
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
@@ -56,12 +49,17 @@
                     </li>
                     <li class="top-pro ">
                         <!-- <span class="signin"><a module-load="signin" href="javascript:void(0)"><img
-                                    src="vendor/dffvn/content/img/user.svg"></a> 
+                                    src="public/img/user.svg"></a> 
                         </span> -->
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <!-- Đã đăng nhập -->
-                            <span class="dropdown signed" style="display: block;">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                            <span class="dropdown signed" style="display: block;
+                                <a class=" dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                                href="javascript:void(0)">
+                                <img src="vendor/dffvn/content/img/user.svg">
+
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                                    href="javascript:void(0)">
                                     <?php
                                     // Ưu tiên lấy avatar từ session sau khi đăng nhập thành công
                                     $avatarUrl = $_SESSION['user_avatar_url']
@@ -71,6 +69,7 @@
                                     }
                                     ?>
                                     <img src="<?= htmlspecialchars($avatarUrl) ?>">
+
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li>
@@ -83,22 +82,21 @@
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i
-                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i class="fas fa-dice-d20"></i>
+                                            Hỗ trợ AI</a></li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-plus"></i> Viết bài</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="index.html"><i class="fas fa-user"></i> Profile</a>
+                                    </li>
+
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] =='admin'  ) {
-                                                                                            echo 'profile_user';
-                                                                                        } else {
-                                                                                            echo 'profile_business';
-                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="home"><i class="fas fa-user"></i> Profile</a></li>
+
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li>
-                                    <!-- module-load="logout" cai nay trong the a dang xuat     -->
-                                    <a class="dropdown-item"  href="<?= BASE_URL ?>/logout"><i
-                                    
+                                    <li><a class="dropdown-item" module-load="logout" href="?url=logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
@@ -106,7 +104,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
+                                    <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg">
                                 </a>
                             </span>
                         <?php endif; ?>
@@ -135,11 +133,13 @@
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
-<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
+    aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
+                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -163,19 +163,27 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+
+                                <input name="userName" id="userName" type="text" class="form-control"
+                                    placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+
+                                <input name="username" id="username" type="text" class="form-control"
+                                    placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Nhập mật khẩu">
                             </div>
                         </div>
 
                         <div class="col-12 text-right">
-                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a
+                                class="color-logo" id="boxregister" href="javascript:void(0)"
+                                onclick="showRegisterModal()">Tạo tài khoản</a>
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
@@ -186,15 +194,16 @@
 
                         <div class="col-12">
                             <div class="input-social">
-                                <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+                                <button type="button" class="login-with-google-btn"
+                                    onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
                                     Đăng nhập bằng Google
                                 </button>
                             </div>
                         </div>
-                        <div class="input-social" style="margin-top:10px;">
-                            <button type="button" class="login-with-facebook-btn"
-                                onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
-                                style="
+<div class="input-social" style="margin-top:10px;">
+    <button type="button" class="login-with-facebook-btn" 
+            onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
+            style="
                 background-color:#1877f2;
                 color:#fff;
                 border:none;
@@ -206,11 +215,11 @@
                 width:100%;
                 transition: background-color 0.3s ease;
             "
-                                onmouseover="this.style.backgroundColor='#145dbf';"
-                                onmouseout="this.style.backgroundColor='#1877f2';">
-                                Đăng nhập bằng Facebook
-                            </button>
-                        </div>
+            onmouseover="this.style.backgroundColor='#145dbf';"
+            onmouseout="this.style.backgroundColor='#1877f2';">
+        Đăng nhập bằng Facebook
+    </button>
+</div>
 
 
 
@@ -219,16 +228,20 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
 <!-- Modal đăng kí -->
-<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true" data-popup-id="8268" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
+    data-popup-id="8268" aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
+                </h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -248,13 +261,15 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
+                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên"
+                                    data-listener-added_14c2e35c="true">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
+                                <input name="username" id="username" type="text" class="form-control"
+                                    placeholder="Tên đăng nhập (Viết liền không Dấu)">
                             </div>
                         </div>
                         <div class="col-12">
@@ -266,19 +281,22 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-phone"></i></div>
-                                <input name="phone" id="phone" type="text" class="form-control" placeholder="Số điện thoại">
+                                <input name="phone" id="phone" type="text" class="form-control"
+                                    placeholder="Số điện thoại">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                                <input id="password_confirm" name="password_confirm" type="password"
+                                    class="form-control" placeholder="Xác nhận mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
@@ -301,7 +319,9 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
@@ -365,10 +385,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VNINDEX']['change'] ?? '9.51' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
             </div>
         </div>
         <div class="item co-HNX">
@@ -379,10 +401,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['HNX']['change'] ?? '2.33' ?></index>
                 </span>
-                <span class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
+                <span
+                    class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30F1M">
@@ -392,10 +416,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VN30F1M']['change'] ?? '5.5' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30">
@@ -405,10 +431,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VN30']['change'] ?? '10.37' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
             </div>
         </div>
         <div class="item co-UPCOM">
@@ -418,10 +446,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['UPCOM']['change'] ?? '-0.01' ?></index>
                 </span>
-                <span class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
+                <span
+                    class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
             </div>
         </div>
 
@@ -432,10 +462,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Silver']['change'] ?? '0.68' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
             </div>
         </div>
         <div class="item co-Oil">
@@ -445,10 +477,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Oil']['change'] ?? '0.32' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
             </div>
         </div>
 
@@ -459,10 +493,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Bitcoin']['change'] ?? '745.53' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
             </div>
         </div>
 
@@ -473,10 +509,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Ethereum']['change'] ?? '271.52' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
             </div>
         </div>
 
@@ -487,241 +525,13 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['BNB']['change'] ?? '25.54' ?></index>
                 </span>
-                <span class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
+                <span
+                    class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
             </div>
         </div>
-
-
-
     </div>
 </div>
-
-<!-- Chatbot Box -->
-<div id="chatbot-box" style="display:none; position:fixed; bottom:80px; right:30px; width:350px; max-width:95vw; z-index:9999; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.15); border:1px solid #eee;">
-    <main class="chat">
-        <!-- Header -->
-        <header class="chat-header">
-            <div class="agent">
-                <div class="agent-avatar">🤖</div>
-                <div>
-                    <div class="agent-name">Chatbot TMI</div>
-                </div>
-            </div>
-            <div class="status" id="status">Sẵn sàng</div>
-        </header>
-
-        <!-- Nội dung chat -->
-        <section id="messages" class="messages" aria-live="polite"></section>
-
-        <!-- Footer -->
-        <footer class="composer">
-            <form id="chat-form">
-                <textarea id="input" rows="1" placeholder="Nhập tin nhắn..." required></textarea>
-                <div class="toolbar">
-                    <button type="submit" class="send">Gửi</button>
-                </div>
-            </form>
-        </footer>
-    </main>
-</div>
-
-<script>
-    // Toggle hiển thị hộp chatbot
-    function toggleChatbotBox() {
-        const box = document.getElementById("chatbot-box");
-        if (box) { // Đảm bảo phần tử tồn tại trước khi thao tác
-            if (box.style.display === "none" || box.style.display === "") {
-                box.style.display = "block";
-            } else {
-                box.style.display = "none";
-            }
-        }
-    }
-    // Khởi tạo biến DOM
-    const messagesEl = document.getElementById('messages'); // container chứa tất cả message
-    const formEl = document.getElementById('chat-form'); // form gửi message
-    const inputEl = document.getElementById('input'); // textarea / input cho người dùng
-    const statusEl = document.getElementById('status'); // phần hiển thị trạng thái (ví dụ: Đang suy nghĩ...)
-    // Lưu trữ lịch sử cuộc hội thoại
-    const conversation = [];
-    // Tăng/giảm chiều cao textarea theo nội dung
-    function autoGrow(el) {
-        el.style.height = 'auto';
-        el.style.height = Math.min(el.scrollHeight, 160) + 'px';
-    }
-    // Trả về chuỗi thời gian theo locale 'vi-VN'
-    function nowIso() {
-        return new Date().toLocaleString('vi-VN');
-    }
-    // Hàm tạo và hiển thị một message vào DOM
-    function renderMessage(role, html, sources = []) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'msg' + (role === 'user' ? ' user' : '');
-
-        const avatar = document.createElement('div');
-        avatar.className = 'avatar';
-        avatar.textContent = role === 'user' ? '🧑' : '🤖';
-
-        const bubble = document.createElement('div');
-        bubble.className = 'bubble' + (role === 'user' ? ' user' : '');
-
-        const meta = document.createElement('div');
-        meta.className = 'meta';
-        meta.textContent = (role === 'user' ? 'Bạn' : 'Chatbot TMI') + ' • ' + nowIso();
-
-        const content = document.createElement('div');
-        content.className = 'content';
-        content.innerHTML = html;
-
-        bubble.appendChild(meta);
-        bubble.appendChild(content);
-
-        if (sources && sources.length > 0) {
-            const ul = document.createElement('ul');
-            ul.className = 'source-list';
-            sources.forEach((s) => {
-                const li = document.createElement('li');
-                li.textContent = s;
-                ul.appendChild(li);
-            });
-            bubble.appendChild(ul);
-        }
-
-        wrapper.appendChild(avatar);
-        wrapper.appendChild(bubble);
-        messagesEl.appendChild(wrapper);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-    // Cập nhật trạng thái phía dưới input
-    function setStatus(text) {
-        statusEl.textContent = text;
-    }
-    // Hàm chính: gửi message lên server và xử lý phản hồi
-    async function sendMessage(text) {
-        setStatus('Đang suy nghĩ...');
-        renderMessage('user', escapeHtml(text));
-        const sendBtn = document.querySelector('.send');
-        if (sendBtn) sendBtn.disabled = true;
-
-        const payload = {
-            message: text,
-            history: conversation,
-        };
-
-        try {
-            const res = await fetch('server/chat.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(payload),
-            });
-
-            if (!res.ok) {
-                const errText = await res.text();
-                throw new Error('HTTP ' + res.status + ': ' + errText);
-            }
-
-            const data = await res.json();
-            const answer = data.reply || 'Xin lỗi, tôi chưa có câu trả lời.';
-            const html = markdownToHtml(answer);
-            renderMessage('assistant', html, data.sources || []);
-
-            conversation.push({
-                role: 'user',
-                content: text
-            });
-            conversation.push({
-                role: 'assistant',
-                content: answer
-            });
-        } catch (e) {
-            console.error(e);
-            renderMessage('assistant', '❌ Lỗi: ' + escapeHtml(e.message));
-        } finally {
-            setStatus('Sẵn sàng');
-            if (sendBtn) sendBtn.disabled = false;
-        }
-    }
-    // Escape các ký tự HTML để tránh XSS khi render bằng innerHTML
-    function escapeHtml(str) {
-        return str
-            .replace(/&/g, '&amp;')
-            .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;')
-            .replace(/"/g, '&quot;')
-            .replace(/'/g, '&#039;');
-    }
-    // Chuyển Markdown rất cơ bản sang HTML
-    function markdownToHtml(md) {
-        // Minimal MD to HTML: paragraphs, bold, italic, code, links, lists
-        let html = md;
-        html = escapeHtml(html);
-        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1<\/strong>');
-        html = html.replace(/\*(.*?)\*/g, '<em>$1<\/em>');
-        html = html.replace(/`([^`]+)`/g, '<code>$1<\/code>');
-        html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="nofollow noopener">$1<\/a>');
-        // lists
-        html = html.replace(/(^|\n)-\s+(.*?)(?=\n(?!-\s)|$)/gs, (m) => {
-            const items = m.trim().split(/\n-\s+/).map(s => s.replace(/^(-\s+)/, ''));
-            return '<ul>' + items.map(i => '<li>' + i + '<\/li>').join('') + '<\/ul>';
-        });
-        html = html.replace(/\n\n/g, '<br><br>');
-        return html;
-    }
-
-    // Handle form
-    inputEl.addEventListener('input', () => autoGrow(inputEl));
-    formEl.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const text = inputEl.value.trim();
-        if (!text) return;
-        inputEl.value = '';
-        autoGrow(inputEl);
-        sendMessage(text);
-    });
-
-    // Suggest buttons
-    document.querySelectorAll('.suggest').forEach(btn => {
-        btn.addEventListener('click', () => {
-            sendMessage(btn.textContent);
-        });
-    });
-
-    // Mobile sidebar toggle
-    const sidebar = document.getElementById('sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-
-    function toggleSidebar() {
-        sidebar.classList.toggle('open');
-        sidebarOverlay.classList.toggle('active');
-    }
-
-    function closeSidebar() {
-        sidebar.classList.remove('open');
-        sidebarOverlay.classList.remove('active');
-    }
-
-    mobileMenuBtn.addEventListener('click', toggleSidebar);
-    sidebarOverlay.addEventListener('click', closeSidebar);
-
-    // Close sidebar when clicking suggest buttons on mobile
-    document.querySelectorAll('.suggest').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (window.innerWidth <= 980) {
-                closeSidebar();
-            }
-        });
-    });
-
-    // Handle window resize
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 980) {
-            closeSidebar();
-        }
-    });
-</script>
