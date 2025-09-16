@@ -44,7 +44,7 @@
             </li>
             <li class="item" data-ref="k">
                 <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="/view//page/comment-tong.php" title="Trang chủ">Bình luận</a>
+                <a href="?url=comment-tong" title="Trang chủ">Bình luận</a>
             </li>
 
         </ul>
@@ -120,7 +120,7 @@
                                 </path>
                                 <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                             </svg> -->
-                <a href="policy.html#privacy-policy">Chính sách riêng tư</a>
+                <a href="?url=about_me">Chính sách riêng tư</a>
             </li>
             <li><i class="bi bi-badge-ad"></i>
                 <a href="policy.html#advertisement">Quảng cáo </a>
