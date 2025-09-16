@@ -1,0 +1,14 @@
+Gợi ý phân tích thị trường theo ngày (Daily)
+
+Mục tiêu: tóm tắt biến động trong 24h, thay đổi vốn hóa, top tăng/giảm, sự kiện ngắn hạn.
+
+Khung trình bày:
+1) Tóm tắt 1-2 câu về xu hướng 24h (xanh/đỏ, biến động mạnh/yếu)
+2) Vốn hóa & thống kê nhanh: tổng market cap, dominance BTC/ETH (nếu có)
+3) Top mover: 3-5 coin tăng/giảm đáng chú ý, lý do sơ bộ (nếu biết)
+4) Sự kiện/Thông tin: niêm yết sàn, tin pháp lý, nâng cấp mạng, thanh lý lớn
+5) Tác động tới thương mại điện tử: phí mạng, ổn định stablecoin, rủi ro thanh toán
+6) Cảnh báo: rủi ro biến động, tránh FOMO; đây không phải khuyến nghị đầu tư
+
+Lưu ý: nếu không có dữ liệu mới trong KB, trả lời theo khung hướng dẫn chung và khuyến khích người dùng kiểm tra nguồn số liệu thời gian thực từ API uy tín.
+

@@ -1,0 +1,12 @@
+Gợi ý phân tích thị trường theo tháng (Monthly)
+
+Mục tiêu: tổng kết xu hướng 30 ngày, các chất xúc tác chính, dòng tiền, hành vi nhà đầu tư.
+
+Khung trình bày:
+1) Tóm tắt xu hướng tháng: tăng/giảm, biến động (volatility)
+2) Chủ đề nổi bật: ETF, nâng cấp chain, pháp lý, L2, memecoin/stablecoin
+3) Dòng tiền: vốn hóa thay đổi, dominance, thanh khoản DEX/CEX (nếu biết)
+4) Tác động tới e-commerce: phí mạng bình quân, độ ổn định stablecoin, độ tin cậy cổng thanh toán
+5) Triển vọng tháng tới: kịch bản thận trọng, rủi ro chính, checklist cần theo dõi
+6) Lưu ý không phải lời khuyên đầu tư
+
