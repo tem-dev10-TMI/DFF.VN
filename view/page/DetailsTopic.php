@@ -92,53 +92,6 @@
                 <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
             </h5>
             <div class="comment-cover">
-                <script>
-  const comments = [
-    {
-      name: "Hải Nam",
-      time: "3 giờ trước",
-      text: "TT cần tích lũy thêm vài phiên để vượt 1.7k và xa hơn là 1.8k",
-      avatar: "https://i.pravatar.cc/40?img=4"
-    },
-    {
-      name: "Việt Chung",
-      time: "3 giờ trước",
-      text: "Phiên nay khá quan trọng",
-      avatar: "https://i.pravatar.cc/40?img=5"
-    },
-    {
-      name: "Hải Đăng",
-      time: "4 giờ trước",
-      text: "TT đang có sự phân hoá lớn, dòng tiền chỉ tập trung ở một nhóm nhỏ ở một số ngành, chưa có sự lan toả",
-      avatar: "https://i.pravatar.cc/40?img=6"
-    }
-  ];
-
-  const list = document.querySelector(".list_comment");
-
-  comments.forEach(c => {
-    const li = document.createElement("li");
-    li.className = "comment-item";
-    li.innerHTML = `
-      <div class="comment">
-        <img src="${c.avatar}" alt="avatar" class="avatar">
-        <div class="content">
-          <div class="top">
-            <strong>${c.name}</strong> <span class="time">${c.time}</span>
-          </div>
-          <p class="text">${c.text}</p>
-          <div class="actions">
-            <button class="vote-btn">⬆ 0</button>
-            <button class="vote-btn">⬇ 0</button>
-            <a href="#" class="reply">Trả lời</a>
-          </div>
-        </div>
-      </div>
-    `;
-    list.appendChild(li);
-  });
-</script>
-
                 <div class="fr-content">
                     <ul class="list_comment col-md-12">
                     </ul>
