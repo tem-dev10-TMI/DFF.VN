@@ -46,12 +46,24 @@ $fbUser = UserModel::loginOrRegisterFacebookUser(
     $user['name'] ?? '',
     $user['picture']['data']['url'] ?? null
 );
+// Lưu session khi đăng nhập bằng Facebook
+$_SESSION['user'] = [
+    'id' => $fbUser['id'],
+    'name' => $fbUser['name'],
+    'username' => $fbUser['username'] ?? null, // nếu FB không có username
+    'email' => $fbUser['email'] ?? null,
+    'role' => $fbUser['role'] ?? 'user',
+    'avatar_url' => $fbUser['avatar_url'] ?? ($fbUser['picture']['data']['url'] ?? null)
+];
 
-// Lưu session
+// Các biến session riêng lẻ (nếu vẫn cần)
 $_SESSION['user_id'] = $fbUser['id'];
 $_SESSION['user_name'] = $fbUser['name'];
+$_SESSION['user_username'] = $fbUser['username'] ?? null;
+$_SESSION['user_email'] = $fbUser['email'] ?? null;
 $_SESSION['user_role'] = $fbUser['role'] ?? 'user';
-$_SESSION['user_avatar_url'] = $fbUser['avatar_url'] ?? ($user['picture']['data']['url'] ?? null);
+$_SESSION['user_avatar_url'] = $fbUser['avatar_url'] ?? ($fbUser['picture']['data']['url'] ?? null);
+
 
 // Redirect về homepage
 header('Location: http://localhost/DFF.VN/');
