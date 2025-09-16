@@ -1,4 +1,7 @@
 <?php
+
+require_once __DIR__ . '/helpers.php';
+
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
@@ -12,6 +15,7 @@ spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/' . $class . '.php',
         __DIR__ . '/controller/' . $class . '.php'
+        
     ];
 
     foreach ($paths as $p) if (file_exists($p)) require_once $p;

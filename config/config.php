@@ -15,16 +15,23 @@ define('GOOGLE_CLIENT_ID', '883631790996-ivg36caiogkoqbaptil3k9l7jumg1aif.apps.g
 define('GOOGLE_CLIENT_SECRET', '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');
 define('GOOGLE_REDIRECT_URI', BASE_URL . '/public/callback.php');
 
-// dinh nghia image
+// Uploads
 define('UPLOADS_DIR', __DIR__ . '/../uploads');
 define('UPLOADS_URL', BASE_URL . '/uploads');
-// autoload models/controllers
+
+// Autoload models/controllers
 spl_autoload_register(function ($class) {
     $paths = [
-        __DIR__ . '../model/admin' . $class . '.php',
-        __DIR__ . '../model/admin' . $class . '.php'
+        __DIR__ . '/../model/admin/' . $class . '.php',
+        __DIR__ . '/../controller/admin/' . $class . '.php'
     ];
-    foreach ($paths as $p) if (file_exists($p)) require_once $p;
+    foreach ($paths as $p) {
+        if (file_exists($p)) {
+            require_once $p;
+            return;
+        }
+    }
 });
 
+// Helpers
 require_once __DIR__ . '/../helpers.php';
