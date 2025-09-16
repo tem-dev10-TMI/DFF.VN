@@ -2,7 +2,7 @@
 class profileUserController
 {
     // Trang hồ sơ người dùng
-    public static function profileUser()
+    public static function index()
     {
         if (!isset($_SESSION['user'])) {
             header("Location: " . BASE_URL . "/login");
@@ -40,18 +40,45 @@ class profileUserController
             exit;
         }
     }
-    public static function viewprofileBusiness()
+    
+    public static function viewprofileUser() // cái này để xem người ta nó tự tách phân biết nào là user và nào là doanh nhân
     {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+            header("Location: index.php");
+            exit;
+        }
+
+        require_once 'model/user/userModel.php';
+
+        $user_id = intval($_GET['id']);
+
+        // Lấy thông tin user
+        $user = UserModel::getUserById($user_id);
+
+        if (!$user) {
+            echo "Không tìm thấy người dùng!";
+            exit;
+        }
+
+        // Lấy bài viết của user để truyền sang view
+        $articles = UserModel::getArticlesByAuthorId($user_id);
+
+        // Render view theo role
         ob_start();
-        require_once 'view/page/viewProfilebusiness.php';
-        $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
-        require_once 'view/layout/main.php';
-    }
-    public static function viewprofileUser()
-    {
-        ob_start();
-        require_once 'view/page/viewProfileuser.php';
+        if (!empty($user['role']) && $user['role'] === 'businessmen') {
+            require_once 'model/user/businessmenModel.php';
+            $businessman = businessmenModel::getBusinessByUserId($user_id);
+            $careers = !empty($businessman['businessman_id'])
+                ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
+                : [];
+            $stats = !empty($businessman['user_id'])
+                ? businessmenModel::getBusinessStats($businessman['user_id'])
+                : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
+
+            require_once 'view/page/viewProfilebusiness.php';
+        } else {
+            require_once 'view/page/viewProfileuser.php';
+        }
         $content = ob_get_clean();
         $profile = false; // đừng ai xóa
         require_once 'view/layout/main.php';

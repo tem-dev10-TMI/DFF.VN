@@ -1,6 +1,4 @@
-<?php
-require_once 'controller/account/viewUserController.php';
-?>
+
 <main class="main-content">
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
