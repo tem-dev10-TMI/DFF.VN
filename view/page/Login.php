@@ -181,7 +181,7 @@
         <img id="userPhoto" src="" alt="Avatar">
         <h3 id="userName"></h3>
         <p id="userEmail"></p>
-        <a href="<?= BASE_URL ?>/admin.php?route=logout">Đăng xuất</a>
+        <a href="<?= BASE_URL ?>/logout">Đăng xuất</a>
 
       </div>
 
