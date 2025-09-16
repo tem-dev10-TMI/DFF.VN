@@ -40,7 +40,7 @@ class profileUserController
             exit;
         }
     }
-    
+
     public static function viewprofileUser()
     {
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
@@ -75,7 +75,7 @@ class profileUserController
             $articles = RssModel::getMultipleFeeds($feedUrls, 50, 15);
 
             // Sắp xếp giảm dần theo ngày tạo
-            usort($articles, function($a, $b){
+            usort($articles, function ($a, $b) {
                 return strtotime($b['created_at']) - strtotime($a['created_at']);
             });
         } else {
@@ -339,10 +339,10 @@ class profileUserController
 
             // Chuyển hướng dựa trên kết quả
             if ($successUser && $successProfile) {
-                header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
+                header('Location: ' . BASE_URL . '/profile_user?msg=profile_updated');
                 exit;
             } else {
-                header('Location: ' . BASE_URL . '/profileUser?msg=profile_failed');
+                header('Location: ' . BASE_URL . '/profile_user?msg=profile_failed');
                 exit;
             }
         }
@@ -352,7 +352,37 @@ class profileUserController
         $user = $userModel->getUserById($userId);
         require_once "view/page/profileUser.php";
     }
+    // ========== Đăng kí làm doanh nhân ==========
+    public static function registerBusiness()
+    {
+        require_once 'model/user/profileUserModel.php';
+        // 1. Xác thực và Phân quyền
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id     = $_SESSION['user']['id'];
+            $birth_year  = $_POST['birth_year'] ?? null;
+            $nationality = $_POST['nationality'] ?? null;
+            $education   = $_POST['education'] ?? null;
+            $position    = $_POST['position'] ?? null;
 
+            $registerBusinessModel = new profileUserModel();
+            $result = $registerBusinessModel->createBusinessmen($user_id, $birth_year, $nationality, $education, $position);
+
+            if ($result) {
+                // Cập nhật session role
+                $_SESSION['user']['role'] = 'businessmen';
+
+                header('Location: ' . BASE_URL . '/profile_user?msg=user_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profile_user?msg=user_failed');
+                exit;
+            }
+        }
+    }
     // ========== Đổi mật khẩu ==========
     // Trong Controller của bạn
     public function changePassword()

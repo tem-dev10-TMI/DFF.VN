@@ -383,131 +383,47 @@
 <div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
+
       <div class="modal-header bg-warning text-dark">
         <h5 class="modal-title" id="convertModalLabel">
-          <i class="fas fa-building me-2"></i>Đăng ký tài khoản doanh nghiệp
+          <i class="fas fa-building me-2"></i>Đăng ký tài khoản doanh nhân
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body">
-        <!-- Thông tin hiện tại - Compact version -->
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <div class="card border-primary h-100">
-              <div class="card-header bg-primary text-white py-2">
-                <h6 class="mb-0"><i class="fas fa-user me-2"></i>Tài khoản hiện tại</h6>
-              </div>
-              <div class="card-body py-2">
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Loại:</strong></small>
-                  <span class="badge bg-info">Cá nhân</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Bài viết:</strong></small>
-                  <span class="badge bg-primary"><?php echo isset($user_posts) ? $user_posts : '0'; ?></span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Theo dõi:</strong></small>
-                  <span class="badge bg-success"><?php echo isset($user_followers) ? $user_followers : '0'; ?></span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <small><strong>Đang theo:</strong></small>
-                  <span class="badge bg-warning"><?php echo isset($user_following) ? $user_following : '0'; ?></span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="card border-warning h-100">
-              <div class="card-header bg-warning text-dark py-2">
-                <h6 class="mb-0"><i class="fas fa-building me-2"></i>Sau khi chuyển đổi</h6>
-              </div>
-              <div class="card-body py-2">
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Loại:</strong></small>
-                  <span class="badge bg-warning">Doanh nghiệp</span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Bài viết:</strong></small>
-                  <span class="badge bg-primary"><?php echo isset($user_posts) ? $user_posts : '0'; ?></span>
-                </div>
-                <div class="d-flex justify-content-between mb-1">
-                  <small><strong>Theo dõi:</strong></small>
-                  <span class="badge bg-success"><?php echo isset($user_followers) ? $user_followers : '0'; ?></span>
-                </div>
-                <div class="d-flex justify-content-between">
-                  <small><strong>Đang theo:</strong></small>
-                  <span class="badge bg-warning"><?php echo isset($user_following) ? $user_following : '0'; ?></span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
-        <!-- Cảnh báo - Compact version -->
+      <div class="modal-body">
+        <!-- Thông tin hiện tại -->
+        <!-- Cảnh báo -->
         <div class="alert alert-warning py-2">
           <i class="fas fa-exclamation-triangle me-2"></i>
           <strong>Lưu ý:</strong>
           <small class="d-block mt-1">
-            Chuyển đổi sang doanh nghiệp • Cần thông tin hợp lệ • Xét duyệt 1-3 ngày • Một số tính năng bị hạn chế
+            Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1-3 ngày • Một số tính năng bị hạn chế
           </small>
         </div>
 
-        <!-- Form đăng ký doanh nghiệp - Compact version -->
-        <form id="convertForm" method="POST" action="controller/convertToBusiness.php">
+        <!-- Form đăng ký doanh nhân -->
+        <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business">
           <div class="row">
-            <div class="col-md-6">
-              <div class="mb-2">
-                <label for="companyName" class="form-label small">Tên công ty <span class="text-danger">*</span></label>
-                <input type="text" class="form-control form-control-sm" id="companyName" name="company_name" placeholder="Nhập tên công ty" required>
-              </div>
+            <div class="col-md-6 mb-2">
+              <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>
+              <input type="number" min="1900" max="2099" class="form-control form-control-sm" id="birthYear" name="birth_year" required>
             </div>
-            <div class="col-md-6">
-              <div class="mb-2">
-                <label for="taxCode" class="form-label small">Mã số thuế <span class="text-danger">*</span></label>
-                <input type="text" class="form-control form-control-sm" id="taxCode" name="tax_code" placeholder="Nhập mã số thuế" required>
-              </div>
+            <div class="col-md-6 mb-2">
+              <label for="nationality" class="form-label small">Quốc tịch <span class="text-danger">*</span></label>
+              <input type="text" class="form-control form-control-sm" id="nationality" name="nationality" required>
             </div>
           </div>
 
           <div class="row">
-            <div class="col-md-6">
-              <div class="mb-2">
-                <label for="businessField" class="form-label small">Lĩnh vực hoạt động <span class="text-danger">*</span></label>
-                <select class="form-select form-select-sm" id="businessField" name="business_field" required>
-                  <option value="">Chọn lĩnh vực</option>
-                  <option value="fintech">Công nghệ tài chính</option>
-                  <option value="banking">Ngân hàng</option>
-                  <option value="investment">Đầu tư</option>
-                  <option value="insurance">Bảo hiểm</option>
-                  <option value="securities">Chứng khoán</option>
-                  <option value="other">Khác</option>
-                </select>
-              </div>
+            <div class="col-md-6 mb-2">
+              <label for="education" class="form-label small">Học vấn</label>
+              <input type="text" class="form-control form-control-sm" id="education" name="education" placeholder="VD: Cử nhân Kinh tế">
             </div>
-            <div class="col-md-6">
-              <div class="mb-2">
-                <label for="companySize" class="form-label small">Quy mô nhân sự</label>
-                <select class="form-select form-select-sm" id="companySize" name="company_size">
-                  <option value="">Chọn quy mô</option>
-                  <option value="1-10">1-10 nhân viên</option>
-                  <option value="11-50">11-50 nhân viên</option>
-                  <option value="51-200">51-200 nhân viên</option>
-                  <option value="201-500">201-500 nhân viên</option>
-                  <option value="500+">Trên 500 nhân viên</option>
-                </select>
-              </div>
+            <div class="col-md-6 mb-2">
+              <label for="position" class="form-label small">Chức vụ</label>
+              <input type="text" class="form-control form-control-sm" id="position" name="position" placeholder="VD: CEO, Founder">
             </div>
-          </div>
-
-          <div class="mb-2">
-            <label for="businessAddress" class="form-label small">Địa chỉ trụ sở <span class="text-danger">*</span></label>
-            <textarea class="form-control form-control-sm" id="businessAddress" name="business_address" rows="2" placeholder="Nhập địa chỉ trụ sở chính" required></textarea>
-          </div>
-
-          <div class="mb-2">
-            <label for="website" class="form-label small">Website công ty</label>
-            <input type="url" class="form-control form-control-sm" id="website" name="website" placeholder="https://example.com">
           </div>
 
           <div class="form-check mb-2">
@@ -518,17 +434,20 @@
           </div>
         </form>
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
           <i class="fas fa-times me-1"></i>Hủy
         </button>
-        <button type="button" class="btn btn-warning" onclick="submitConversion()">
+        <button type="submit" class="btn btn-warning" onclick="submitConversion()">
           <i class="fas fa-building me-1"></i>Chuyển đổi
         </button>
       </div>
+
     </div>
   </div>
 </div>
+
 
 <!-- Modal chỉnh sử thông tin người dùng  -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
@@ -626,11 +545,11 @@
     switch ("<?= $_GET['msg'] ?>") {
       case "profile_updated":
         alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
+        window.location.href = "<?= BASE_URL ?>/profile_user";
         break;
       case "profile_failed":
         alert("❌ Cập nhật thất bại, vui lòng thử lại.");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
+        window.location.href = "<?= BASE_URL ?>/profile_user";
         break;
       case "business_updated":
         alert("📝 Thông tin doanh nhân đã được cập nhật thành công!");
@@ -648,9 +567,17 @@
         alert("❌ Cập nhật thất bại, vui lòng thử lại.");
         window.location.href = "<?= BASE_URL ?>/profile_business";
         break;
+      case "user_updated":
+        alert("📝 Đăng kí doanh nhân thành công!");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
+      case "user_failed":
+        alert("❌ Đăng kí doanh nhân thất bại, vui lòng thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_business";
+        break;
       case "password_changed":
         alert("🔑 Mật khẩu đã được đổi thành công!");
-        window.location.href = "<?= BASE_URL ?>/profileUser";
+        window.location.href = "<?= BASE_URL ?>/profile_user";
         break;
     }
   </script>
