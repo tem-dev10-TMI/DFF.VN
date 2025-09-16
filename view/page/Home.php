@@ -128,19 +128,27 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
         <!-- blog -->
         <?php
+date_default_timezone_set('Asia/Ho_Chi_Minh'); // set VN timezone
 
-        //LẤY TRONG CSDL
-        // Function to calculate time ago
-        function timeAgo($datetime)
-        {
-            $time = time() - strtotime($datetime);
-            if ($time < 60) return 'vừa xong';
-            if ($time < 3600) return floor($time / 60) . ' phút trước';
-            if ($time < 86400) return floor($time / 3600) . ' giờ trước';
-            if ($time < 2592000) return floor($time / 86400) . ' ngày trước';
-            return date('d/m/Y', strtotime($datetime));
-        }
-        ?>
+function timeAgo($datetime)
+{
+    $timestamp = strtotime($datetime);   // convert string -> timestamp
+    $diff = time() - $timestamp;         // tính lệch với hiện tại
+
+    if ($diff < 60) {
+        return 'vừa xong';
+    } elseif ($diff < 3600) {
+        return floor($diff / 60) . ' phút trước';
+    } elseif ($diff < 86400) {
+        return floor($diff / 3600) . ' giờ trước';
+    } elseif ($diff < 2592000) {
+        return floor($diff / 86400) . ' ngày trước';
+    } else {
+        return date('d/m/Y H:i', $timestamp);
+    }
+}
+?>
+
 
         <?php if (!empty($articles)): ?>
             <!-- Bọc danh sách bài viết -->
@@ -330,10 +338,10 @@ document.getElementById("send-comment").addEventListener("click", () => {
             const li = createCommentElement(data.comment);
 
             // ✅ thêm xuống cuối
-            ul.append(li);
+            ul.prepend(li);
 
-            // ✅ auto scroll xuống cuối
-            ul.scrollTop = ul.scrollHeight;
+            // ✅ auto scroll lên trên
+            ul.scrollTop = 0; 
 
             if (data.comment.id > lastId) lastId = data.comment.id;
         } else {
@@ -365,10 +373,10 @@ function loadNewComments() {
                         const li = createCommentElement(c);
 
                         // ✅ cũng append xuống cuối
-                        ul.append(li);
+                        ul.prepend(li);
 
                         // ✅ scroll xuống cuối khi có comment mới
-                        ul.scrollTop = ul.scrollHeight;
+                        ul.scrollTop = 0;
 
                         if (c.id > lastId) lastId = c.id;
                     }
