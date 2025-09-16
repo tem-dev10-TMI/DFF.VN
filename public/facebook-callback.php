@@ -3,8 +3,8 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../model/user/userModel.php';
 
-$appId = '813811857990201';
-$appSecret = '87d73962040afdd642d7419686017f68';
+$appId = '1518770855805260';
+$appSecret = '3249fccb64e15be8d78210d168985793';
 $redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
 
 // Kiểm tra state
@@ -46,26 +46,14 @@ $fbUser = UserModel::loginOrRegisterFacebookUser(
     $user['name'] ?? '',
     $user['picture']['data']['url'] ?? null
 );
-// Lưu session khi đăng nhập bằng Facebook
-$_SESSION['user'] = [
-    'id' => $fbUser['id'],
-    'name' => $fbUser['name'],
-    'username' => $fbUser['username'] ?? null, // nếu FB không có username
-    'email' => $fbUser['email'] ?? null,
-    'role' => $fbUser['role'] ?? 'user',
-    'avatar_url' => $fbUser['avatar_url'] ?? ($fbUser['picture']['data']['url'] ?? null)
-];
 
-// Các biến session riêng lẻ (nếu vẫn cần)
+// Lưu session
 $_SESSION['user_id'] = $fbUser['id'];
 $_SESSION['user_name'] = $fbUser['name'];
-$_SESSION['user_username'] = $fbUser['username'] ?? null;
-$_SESSION['user_email'] = $fbUser['email'] ?? null;
 $_SESSION['user_role'] = $fbUser['role'] ?? 'user';
-$_SESSION['user_avatar_url'] = $fbUser['avatar_url'] ?? ($fbUser['picture']['data']['url'] ?? null);
-
+$_SESSION['user_avatar_url'] = $fbUser['avatar_url'] ?? ($user['picture']['data']['url'] ?? null);
 
 // Redirect về homepage
-header('Location: http://localhost/DFF.VN/');
+header('Location: http://localhost:8080/DFF.VN/');
 exit();
 

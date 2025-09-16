@@ -3,7 +3,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../model/user/userModel.php';
 
-
 // ===================== UserController.php =====================
 use Google\Client as GoogleClient;
 use Google\Service\Oauth2 as GoogleServiceOauth2;
@@ -55,7 +54,6 @@ class UserController
                 $googleUser->email,
                 $avatarUrl
             );
-            $_SESSION['user'] = [ 'id' => $user['id'], 'name' => $user['name'], 'username' => $user['username'] ?? null, 'email' => $user['email'], 'role' => $user['role'] ?? 'user', 'avatar_url' => $user['avatar_url'] ?? $googleUser->picture ];
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_username'] = $user['username'] ?? null;

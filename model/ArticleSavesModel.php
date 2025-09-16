@@ -5,14 +5,6 @@ class ArticleSavesModel {
      * Lưu (bookmark) một bài viết cho người dùng
      * Trả về true/false tùy theo thao tác thành công hay không.
      */
-    public static function getArticlesByUserId($userId)
-    {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM articles WHERE author_id = ? ORDER BY created_at DESC");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
     public static function addSave($article_id, $user_id) {
         $db = new connect();
         $sql = "INSERT INTO article_saves (article_id, user_id)

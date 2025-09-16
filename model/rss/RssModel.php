@@ -1,7 +1,7 @@
 <?php
 class RssModel
 {
-    // Lấy items từ feed (trả về mảng maps tương thích view)
+    // Lấy items từ feed (trả về mảng maps tương thích view của bạn)
     public static function getFeedItems(string $feedUrl, int $limit = 50, int $cacheMinutes = 15): array
     {
         $cacheDir = __DIR__ . '/../../cache/rss';
@@ -10,117 +10,101 @@ class RssModel
         }
         $cacheFile = $cacheDir . '/' . md5($feedUrl) . '.json';
 
-        // Dùng cache nếu còn hạn
+        // Dùng cache
         if (file_exists($cacheFile) && (time() - filemtime($cacheFile)) < $cacheMinutes * 60) {
             $json = file_get_contents($cacheFile);
             $data = json_decode($json, true);
             if (is_array($data)) return array_slice($data, 0, $limit);
         }
 
-        // Fetch feed mới
         $xmlString = self::fetchUrl($feedUrl);
         if (!$xmlString) return [];
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($xmlString, 'SimpleXMLElement', LIBXML_NOCDATA);
-        if (!$xml) {
-            foreach (libxml_get_errors() as $err) {
-                error_log("RSS XML error: " . $err->message);
-            }
-            libxml_clear_errors();
-            return [];
-        }
+        if (!$xml) return [];
 
         $items = [];
         $count = 0;
 
-        // RSS feed chuẩn
+        // RSS chuẩn
         if (isset($xml->channel->item)) {
             foreach ($xml->channel->item as $item) {
                 if ($count >= $limit) break;
-                $items[] = self::mapRssItem($item);
+
+                $link = (string)$item->link;
+                $description = (string)$item->description;
+                $image = self::extractImageFromHtml($description) ?: (
+                    isset($item->enclosure['url']) ? (string)$item->enclosure['url'] : null
+                );
+                // fallback media:content
+                if (!$image && $item->children('media', true)->content) {
+                    $image = (string)$item->children('media', true)->content->attributes()->url;
+                }
+
+                $pubDate = (string)$item->pubDate ?: '';
+                $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
+
+                $author_name = (string)$item->author ?: ((string)$item->children('dc', true)->creator ?: 'RSS Author');
+
+                $items[] = [
+                    'id' => md5($link),
+                    'title' => (string)$item->title,
+                    'summary' => self::makeSummary($description, 220),
+                    'main_image_url' => $image,
+                    'author_name' => $author_name,
+                    'author_id' => 0,
+                    'avatar_url' => '/vendor/dffvn/content/img/user.svg',
+                    'created_at' => $created_at,
+                    'upvotes' => 0,
+                    'comment_count' => 0,
+                    'link' => $link,
+                    'is_rss' => true,
+                ];
+
                 $count++;
             }
         }
 
         // Atom feed fallback
-        if ($count == 0 && isset($xml->entry)) {
+        if (empty($items) && isset($xml->entry)) {
             foreach ($xml->entry as $entry) {
                 if ($count >= $limit) break;
-                $items[] = self::mapAtomItem($entry);
+
+                $link = (string)$entry->link['href'] ?? (string)$entry->link;
+                $description = (string)$entry->summary ?: (string)$entry->content;
+                $image = self::extractImageFromHtml($description);
+                $pubDate = (string)$entry->updated ?: (string)$entry->published;
+                $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
+                $author_name = (string)$entry->author->name ?: 'RSS Author';
+
+                $items[] = [
+                    'id' => md5($link),
+                    'title' => (string)$entry->title,
+                    'summary' => self::makeSummary($description, 220),
+                    'main_image_url' => $image,
+                    'author_name' => $author_name,
+                    'author_id' => 0,
+                    'avatar_url' => '/vendor/dffvn/content/img/user.svg',
+                    'created_at' => $created_at,
+                    'upvotes' => 0,
+                    'comment_count' => 0,
+                    'link' => $link,
+                    'is_rss' => true,
+                ];
+
                 $count++;
             }
         }
 
-        // Lưu cache nếu có item
-        if (!empty($items)) {
-            file_put_contents($cacheFile, json_encode($items, JSON_UNESCAPED_UNICODE));
-        }
+        // Lưu cache
+        file_put_contents($cacheFile, json_encode($items, JSON_UNESCAPED_UNICODE));
 
         return $items;
     }
 
-    // Map RSS item sang mảng
-    private static function mapRssItem($item): array
-    {
-        $link = (string)$item->link;
-        $description = (string)$item->description;
-        $image = self::extractImageFromHtml($description) ?: (
-            isset($item->enclosure['url']) ? (string)$item->enclosure['url'] : null
-        );
-        // media:content fallback
-        $media = $item->children('media', true);
-        if (!$image && isset($media->content)) {
-            $image = (string)$media->content->attributes()->url;
-        }
 
-        $pubDate = (string)$item->pubDate ?: '';
-        $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
-        $author_name = (string)$item->author ?: ((string)$item->children('dc', true)->creator ?: 'Báo Chính Phủ');
-
-        return [
-            'id' => md5($link),
-            'title' => (string)$item->title,
-            'summary' => self::makeSummary($description, 220),
-            'main_image_url' => $image,
-            'author_name' => $author_name,
-            'author_id' => 66,
-            'avatar_url' => 'public/img/avatar/baochinhphu.png',
-            'created_at' => $created_at,
-            'upvotes' => 0,
-            'comment_count' => 0,
-            'link' => $link,
-            'is_rss' => true,
-        ];
-    }
-
-    // Map Atom item sang mảng
-    private static function mapAtomItem($entry): array
-    {
-        $link = (string)($entry->link['href'] ?? $entry->link);
-        $description = (string)($entry->summary ?: $entry->content);
-        $image = self::extractImageFromHtml($description);
-        $pubDate = (string)($entry->updated ?: $entry->published);
-        $created_at = $pubDate ? date('Y-m-d H:i:s', strtotime($pubDate)) : date('Y-m-d H:i:s');
-        $author_name = (string)($entry->author->name ?: 'Doanh Nhân');
-
-        return [
-            'id' => md5($link),
-            'title' => (string)$entry->title,
-            'summary' => self::makeSummary($description, 220),
-            'main_image_url' => $image,
-            'author_name' => $author_name,
-            'author_id' => 66,
-            'avatar_url' => 'public/img/avatar/baochinhphu.png',
-            'created_at' => $created_at,
-            'upvotes' => 0,
-            'comment_count' => 0,
-            'link' => $link,
-            'is_rss' => true,
-        ];
-    }
-
-    // Fetch URL bằng cURL, fallback file_get_contents
+    // Fetch bằng cURL (fallback file_get_contents)
     private static function fetchUrl(string $url): ?string
     {
         if (function_exists('curl_init')) {
@@ -139,7 +123,7 @@ class RssModel
         }
     }
 
-    // Lấy ảnh đầu tiên từ HTML
+    // Lấy ảnh đầu tiên trong HTML (description)
     private static function extractImageFromHtml(string $html): ?string
     {
         if (preg_match('/<img[^>]+src=[\'"]([^\'"]+)[\'"]/i', $html, $m)) {
@@ -148,7 +132,7 @@ class RssModel
         return null;
     }
 
-    // Tạo summary từ HTML
+    // Tạo summary (strip tags + rút gọn)
     private static function makeSummary(string $html, int $len = 200): string
     {
         $text = trim(strip_tags(html_entity_decode($html)));
@@ -158,7 +142,7 @@ class RssModel
         return $text;
     }
 
-    // (Tùy chọn) tự động detect feed từ trang HTML
+    // (Tùy chọn) cố gắng tìm feed trên một trang HTML (tự động detect)
     public static function findRssLinksOnPage(string $pageUrl): array
     {
         $html = self::fetchUrl($pageUrl);
@@ -179,23 +163,20 @@ class RssModel
         }
         return array_unique($results);
     }
-
-    // Lấy feed thô (không xử lý)
-    public static function getFeedRaw(string $url): array
+    // Lấy feed dưới dạng mảng thô (không xử lý)
+    public static function getFeed($url)
     {
         $rss = @simplexml_load_file($url);
         if (!$rss) return [];
 
         $feed = [];
-        if (isset($rss->channel->item)) {
-            foreach ($rss->channel->item as $item) {
-                $feed[] = [
-                    'title' => (string)$item->title,
-                    'link' => (string)$item->link,
-                    'pubDate' => (string)$item->pubDate,
-                    'description' => (string)$item->description
-                ];
-            }
+        foreach ($rss->channel->item as $item) {
+            $feed[] = [
+                'title' => (string)$item->title,
+                'link' => (string)$item->link,
+                'pubDate' => (string)$item->pubDate,
+                'description' => (string)$item->description
+            ];
         }
         return $feed;
     }

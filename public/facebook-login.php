@@ -2,7 +2,7 @@
 session_start();
 
 // Facebook app info
-$appId = '813811857990201';
+$appId = '1518770855805260';
 $redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
 $scope = 'public_profile,email';
 

@@ -26,57 +26,45 @@ class homeController
 {
     public static function index()
     {
-        // ================= 1. Lấy dữ liệu từ Database =================
-        $dbArticles = ArticlesModel::getAllArticles(); // Bài viết DB
-        $comments = CommentsModel::getComments();      // Bình luận
-        $topBusinessmen = businessmenModel::getAllBusinessmen(); // Doanh nhân
-        $marketData = MarketDataModel::getCachedMarketData();    // Thị trường
-
+        // 1. Lấy dữ liệu từ Database
+        $dbArticles = ArticlesModel::getAllArticles();
+        
+        $comments = CommentsModel::getComments();
+        $topBusinessmen = businessmenModel::getAllBusinessmen();
+        $marketData = MarketDataModel::getCachedMarketData();
+        
         // Lấy dữ liệu sự kiện
         $eventsModel = new Events();
-        $events = $eventsModel->getAll(10); // Lấy tối đa 10 sự kiện gần nhất
+        $events = $eventsModel->getAll();
 
-        // ================= 2. Lấy RSS =================
+        // 2. Lấy RSS
         require_once __DIR__ . '/../model/rss/RssModel.php';
-        $rssArticles = [];
 
+        // RSS Báo Chính phủ
+        $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
+        $rssArticles3 = RssModel::getFeedItems($feedUrl1, 6, 15);
+        // RSS Doanhnhan.vn - Tài chính
+        $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
+        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
+        $rssArticles4 = RssModel::getFeedItems($feedUrl1, 6, 15);
 
-
-        // Danh sách feed RSS
-        $feedUrls = [
-            'https://baochinhphu.vn/kinh-te.rss',
-            'https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss'
-        ];
-
-        foreach ($feedUrls as $url) {
-            $items = RssModel::getFeedItems($url, 50, 15); // limit 50, cache 15 phút
-            if (!empty($items)) {
-                $rssArticles = array_merge($rssArticles, $items);
-            }
-        }
-
-        // ================= 3. Gộp tất cả bài viết =================
-        $articles = array_merge($rssArticles, $dbArticles);
-
-        // ================= 4. Sắp xếp theo created_at giảm dần =================
-
+        // 3. Gộp tất cả bài viết: RSS + DB
+        $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
+        // 4. Sắp xếp theo created_at giảm dần
         usort($articles, function ($a, $b) {
-            $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
-            $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
-            return $timeB - $timeA;
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
 
-        // ================= 5. Truyền dữ liệu cho view Home =================
+        // 5. Load view Home
         ob_start();
         require_once 'view/page/Home.php';
         $content = ob_get_clean();
 
-        // ================= 6. Load layout chính =================
-        $profile = false; // Biến xác định đang ở Home hay profile
+        // 6. Load layout chính
+        $profile = false; // giữ nguyên
         require_once 'view/layout/main.php';
     }
-
-
 
     public static function profile_business()
     {
@@ -85,11 +73,9 @@ class homeController
         require_once 'view/layout/Profile.php';
         $content = ob_get_clean();
 
-
         $profile = true;
         require_once 'view/layout/main.php';
     }
-
 
     public static function profile_user()
     {

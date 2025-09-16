@@ -83,7 +83,7 @@
                                                 <li class="name">
 
                                                     <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                    <a href="/DFF.VN/view_profile?id=<?= $biz['user_id'] ?>">
+                                                    <a href="/DFF.VN/view_profile_business?id=<?= $biz['user_id'] ?>">
                                                         <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
                                                     </a>
                                                 </li>
@@ -150,7 +150,7 @@
                                 <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                                 <div class="p-covers">
                                     <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
