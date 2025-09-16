@@ -59,12 +59,29 @@
       height: 18px;
       font-size: 18px;
       color: inherit;
+      display: inline-block;
+      text-align: center;
+      line-height: 18px;
     }
 
     .sidebar-mobile ul li img.topic-thumb {
       width: 18px;
       height: 18px;
       object-fit: contain;
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    /* fallback icon (ẩn mặc định) */
+    .sidebar-mobile .fallback {
+      display: none;
+      width: 18px;
+      height: 18px;
+      font-size: 16px;
+      line-height: 18px;
+      text-align: center;
+      vertical-align: middle;
+      color: inherit;
     }
 
     /* Section Title */
@@ -124,8 +141,35 @@
     <li><a href="/comments"><i class="far fa-comment-dots"></i> <span>Bình luận</span></a></li>
 
     <li class="section-title">CHỦ ĐỀ</li>
-    <li><a href="/topic/vi-mo"><img class="topic-thumb" src="public/img/topic-vimo.svg" alt=""> <span>Vĩ mô</span></a></li>
-    <li><a href="/topic/thi-truong"><img class="topic-thumb" src="public/img/topic-thitruong.svg" alt=""> <span>Thị trường</span></a></li>
+
+    <!-- THAY ĐỔI: thêm span.icon + fallback cho img để tránh broken image -->
+    <li>
+      <a href="/topic/vi-mo">
+        <span class="icon">
+          <img class="topic-thumb"
+               src="public/img/topic-vimo.svg"
+               alt="Vĩ mô"
+               onerror="this.style.display='none'; var fb=this.parentNode.querySelector('.fallback'); if(fb) fb.style.display='inline-block';">
+          <i class="fas fa-chart-line fallback" aria-hidden="true"></i>
+        </span>
+        <span>Vĩ mô</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="/topic/thi-truong">
+        <span class="icon">
+          <img class="topic-thumb"
+               src="public/img/topic-thitruong.svg"
+               alt="Thị trường"
+               onerror="this.style.display='none'; var fb=this.parentNode.querySelector('.fallback'); if(fb) fb.style.display='inline-block';">
+          <i class="fas fa-chart-bar fallback" aria-hidden="true"></i>
+        </span>
+        <span>Thị trường</span>
+      </a>
+    </li>
+
+    <!-- mục dùng icon font thì giữ nguyên -->
     <li><a href="/topic/crypto"><i class="fab fa-bitcoin"></i> <span>Crypto</span></a></li>
     <li><a href="/topic/360"><i class="fas fa-industry"></i> <span>360° Doanh nghiệp</span></a></li>
     <li><a href="/topic/tai-chinh"><i class="fas fa-wallet"></i> <span>Tài chính</span></a></li>
@@ -158,9 +202,11 @@
     allLis.forEach(li => {
       const a = li.querySelector("a");
       if (a) {
-        if (currentPath.startsWith(a.getAttribute("href"))) {
-          li.classList.add("active");
-        }
+        try {
+          if (currentPath.startsWith(a.getAttribute("href"))) {
+            li.classList.add("active");
+          }
+        } catch (e) {}
         a.addEventListener("click", function() {
           allLis.forEach(item => item.classList.remove("active"));
           li.classList.add("active");
