@@ -1,4 +1,17 @@
 <div class="collapse navbar-collapse m-menu-i" id="navbarNav5">
+        <style>
+            @media (max-width: 991.98px) {
+                .m-menu-i {
+                    max-height: calc(100vh - 60px);
+                    overflow-y: auto;
+                    overscroll-behavior: contain;
+                    -webkit-overflow-scrolling: touch;
+                    background: #fff;
+                }
+                .m-menu-i .line { margin: 10px 0; }
+                .m-menu-i .top-item li { margin-bottom: 8px; }
+            }
+        </style>
 
         <ul class="">
             <li class="item"><svg class="home-icon" rpl="" fill="currentColor" height="20" icon-name="home-outline"
@@ -8,52 +21,54 @@
                         d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
                     </path><!--?-->
                 </svg>
-                <a href="index.html" title="Trang chủ">Trang chủ</a>
+                <a href="home" title="Trang chủ">Trang chủ</a>
             </li>
             <li class="item">
                 <i class="bi bi-newspaper idiscuss"></i>
-                <a href="tin-moi.html" title="Trang chủ">Mới nhất</a>
+                <a href="news" title="Trang chủ">Mới nhất</a>
             </li>
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
-                <a href="trends.html" title="Trang chủ">Xu hướng</a>
+                <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
-            <li class="item">
-                <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
-            </li>
+            
 
         </ul>
         <div class="line"></div>
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
+        <?php if (!empty($topTopics)): ?>
         <ul class=" top-item">
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/ktvm-104446377.png"><a title="Vĩ mô" href="vi-mo-t128-1.html">
-                    Vĩ mô</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/ck-153008757.png"><a title="Thị trường"
-                    href="thi-truong-t129-1.html"> Thị trường</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/2-12045699.png"><a title="Crypto " href="crypto-t2202-1.html">
-                    Crypto </a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/dn-104202856.png"><a title="360° Doanh nghiệp"
-                    href="360-doanh-nghiep-t123-1.html"> 360° Doanh nghiệp</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/nh-154022179.png"><a title="Tài chính"
-                    href="tai-chinh-t139-1.html"> Tài chính</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/07/17/bds-153325898.png"><a title="Nhà đất"
-                    href="nha-dat-t140-1.html"> Nhà đất</a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/1-120418263.png"><a title="Quốc tế "
-                    href="quoc-te-t2201-1.html"> Quốc tế </a> </li>
-
-            <li><img src="../img.dff.vn/Image/2024/08/12/3-120542176.png"><a title="Thảo luận"
-                    href="thao-luan-t2203-1.html"> Thảo luận</a> </li>
-
+            <?php foreach ($topTopics as $topic): ?>
+            <li>
+                <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>">
+                <a title="<?= htmlspecialchars($topic['name']) ?>" href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                    <?= htmlspecialchars($topic['name']) ?>
+                </a>
+            </li>
+            <?php endforeach; ?>
         </ul>
+        <?php else: ?>
+            <p>Chưa có chủ đề nào</p>
+        <?php endif; ?>
+
+        <?php if (!empty($moreTopics)): ?>
+        <div id="m-collapseTopics" class="accordion-collapse collapse">
+            <ul class=" top-item">
+                <?php foreach ($moreTopics as $topic): ?>
+                <li>
+                    <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>">
+                    <a title="<?= htmlspecialchars($topic['name']) ?>" href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                        <?= htmlspecialchars($topic['name']) ?>
+                    </a>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="to-expend">
+            <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#m-collapseTopics" aria-expanded="false" aria-controls="m-collapseTopics"></i>
+        </div>
+        <?php endif; ?>
 
         <div class="line"></div>
         <ul class=" about-c">
@@ -87,3 +102,15 @@
 
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var nav = document.getElementById('navbarNav5');
+            if (!nav) return;
+            nav.addEventListener('shown.bs.collapse', function () {
+                document.body.style.overflow = 'hidden';
+            });
+            nav.addEventListener('hidden.bs.collapse', function () {
+                document.body.style.overflow = '';
+            });
+        });
+    </script>
