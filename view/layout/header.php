@@ -496,57 +496,227 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
 
 <!-- Chatbot Box -->
 <div id="chatbot-box" style="display:none; position:fixed; bottom:80px; right:30px; width:350px; max-width:95vw; z-index:9999; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.15); border:1px solid #eee;">
-    <div style="padding:10px 15px; border-bottom:1px solid #eee; display:flex; align-items:center; justify-content:space-between;">
-        <span><i class="fas fa-robot"></i> Chatbot DFF</span>
-        <button onclick="toggleChatbotBox()" style="background:none; border:none; font-size:18px; color:#888;"><i class="fas fa-times"></i></button>
-    </div>
-    <div id="chatbot-content" style="height:320px; overflow-y:auto; padding:10px;">
-        <div style="color:#888; text-align:center; margin-top:40px;">Xin chào! Tôi là trợ lý DFF. Hãy nhập câu hỏi của bạn bên dưới.</div>
-    </div>
-    <div style="padding:10px; border-top:1px solid #eee;">
-        <form id="chatbot-form" onsubmit="return sendChatbotMessage()">
-            <div style="display:flex;">
-                <input type="text" id="chatbot-input" class="form-control" placeholder="Nhập tin nhắn..." style="flex:1; border-radius:20px 0 0 20px;">
-                <button type="submit" style="border:none; background:#007bff; color:#fff; border-radius:0 20px 20px 0; padding:0 18px;"><i class="fas fa-paper-plane"></i></button>
+    <main class="chat">
+        <!-- Header -->
+        <header class="chat-header">
+            <div class="agent">
+                <div class="agent-avatar">🤖</div>
+                <div>
+                    <div class="agent-name">Chatbot DFF</div>
+                </div>
             </div>
-        </form>
-    </div>
+            <div class="status" id="status">Sẵn sàng</div>
+        </header>
+
+        <!-- Nội dung chat -->
+        <section id="messages" class="messages" aria-live="polite"></section>
+
+        <!-- Footer -->
+        <footer class="composer">
+            <form id="chat-form">
+                <textarea id="input" rows="1" placeholder="Nhập tin nhắn..." required></textarea>
+                <div class="toolbar">
+                    <button type="submit" class="send">Gửi</button>
+                </div>
+            </form>
+        </footer>
+    </main>
 </div>
 
 <script>
-    // Đóng/mở khung chatbot
+    // Toggle hiển thị hộp chatbot
     function toggleChatbotBox() {
-        var box = document.getElementById('chatbot-box');
-        if (box.style.display === 'none' || box.style.display === '') {
-            box.style.display = 'block';
-        } else {
-            box.style.display = 'none';
+        const box = document.getElementById("chatbot-box");
+        if (box) { // Đảm bảo phần tử tồn tại trước khi thao tác
+            if (box.style.display === "none" || box.style.display === "") {
+                box.style.display = "block";
+            } else {
+                box.style.display = "none";
+            }
         }
     }
-
-    // Gửi tin nhắn (demo, bạn có thể tích hợp API thực tế)
-    function sendChatbotMessage() {
-        var input = document.getElementById('chatbot-input');
-        var content = document.getElementById('chatbot-content');
-        var msg = input.value.trim();
-        if (!msg) return false;
-        // Hiển thị tin nhắn người dùng
-        var userMsg = document.createElement('div');
-        userMsg.style = "margin:8px 0;text-align:right;";
-        userMsg.innerHTML = '<span style="background:#007bff;color:#fff;padding:7px 14px;border-radius:16px;display:inline-block;">' + msg + '</span>';
-        content.appendChild(userMsg);
-        input.value = '';
-        content.scrollTop = content.scrollHeight;
-
-        // Hiển thị phản hồi mẫu (bạn thay bằng gọi API thực tế)
-        setTimeout(function() {
-            var botMsg = document.createElement('div');
-            botMsg.style = "margin:8px 0;text-align:left;";
-            botMsg.innerHTML = '<span style="background:#f1f1f1;color:#333;padding:7px 14px;border-radius:16px;display:inline-block;">Cảm ơn bạn đã hỏi: "' + msg + '"<br>Chức năng chatbot sẽ được cập nhật sớm!</span>';
-            content.appendChild(botMsg);
-            content.scrollTop = content.scrollHeight;
-        }, 700);
-
-        return false;
+    // Khởi tạo biến DOM
+    const messagesEl = document.getElementById('messages'); // container chứa tất cả message
+    const formEl = document.getElementById('chat-form'); // form gửi message
+    const inputEl = document.getElementById('input'); // textarea / input cho người dùng
+    const statusEl = document.getElementById('status'); // phần hiển thị trạng thái (ví dụ: Đang suy nghĩ...)
+    // Lưu trữ lịch sử cuộc hội thoại
+    const conversation = [];
+    // Tăng/giảm chiều cao textarea theo nội dung
+    function autoGrow(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 160) + 'px';
     }
+    // Trả về chuỗi thời gian theo locale 'vi-VN'
+    function nowIso() {
+        return new Date().toLocaleString('vi-VN');
+    }
+    // Hàm tạo và hiển thị một message vào DOM
+    function renderMessage(role, html, sources = []) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'msg' + (role === 'user' ? ' user' : '');
+
+        const avatar = document.createElement('div');
+        avatar.className = 'avatar';
+        avatar.textContent = role === 'user' ? '🧑' : '🤖';
+
+        const bubble = document.createElement('div');
+        bubble.className = 'bubble' + (role === 'user' ? ' user' : '');
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        meta.textContent = (role === 'user' ? 'Bạn' : 'Gemini') + ' • ' + nowIso();
+
+        const content = document.createElement('div');
+        content.className = 'content';
+        content.innerHTML = html;
+
+        bubble.appendChild(meta);
+        bubble.appendChild(content);
+
+        if (sources && sources.length > 0) {
+            const ul = document.createElement('ul');
+            ul.className = 'source-list';
+            sources.forEach((s) => {
+                const li = document.createElement('li');
+                li.textContent = s;
+                ul.appendChild(li);
+            });
+            bubble.appendChild(ul);
+        }
+
+        wrapper.appendChild(avatar);
+        wrapper.appendChild(bubble);
+        messagesEl.appendChild(wrapper);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+    // Cập nhật trạng thái phía dưới input
+    function setStatus(text) {
+        statusEl.textContent = text;
+    }
+    // Hàm chính: gửi message lên server và xử lý phản hồi
+    async function sendMessage(text) {
+        setStatus('Đang suy nghĩ...');
+        renderMessage('user', escapeHtml(text));
+        const sendBtn = document.querySelector('.send');
+        if (sendBtn) sendBtn.disabled = true;
+
+        const payload = {
+            message: text,
+            history: conversation,
+        };
+
+        try {
+            const res = await fetch('server/chat.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error('HTTP ' + res.status + ': ' + errText);
+            }
+
+            const data = await res.json();
+            const answer = data.reply || 'Xin lỗi, tôi chưa có câu trả lời.';
+            const html = markdownToHtml(answer);
+            renderMessage('assistant', html, data.sources || []);
+
+            conversation.push({
+                role: 'user',
+                content: text
+            });
+            conversation.push({
+                role: 'assistant',
+                content: answer
+            });
+        } catch (e) {
+            console.error(e);
+            renderMessage('assistant', '❌ Lỗi: ' + escapeHtml(e.message));
+        } finally {
+            setStatus('Sẵn sàng');
+            if (sendBtn) sendBtn.disabled = false;
+        }
+    }
+    // Escape các ký tự HTML để tránh XSS khi render bằng innerHTML
+    function escapeHtml(str) {
+        return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+    // Chuyển Markdown rất cơ bản sang HTML
+    function markdownToHtml(md) {
+        // Minimal MD to HTML: paragraphs, bold, italic, code, links, lists
+        let html = md;
+        html = escapeHtml(html);
+        html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1<\/strong>');
+        html = html.replace(/\*(.*?)\*/g, '<em>$1<\/em>');
+        html = html.replace(/`([^`]+)`/g, '<code>$1<\/code>');
+        html = html.replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" rel="nofollow noopener">$1<\/a>');
+        // lists
+        html = html.replace(/(^|\n)-\s+(.*?)(?=\n(?!-\s)|$)/gs, (m) => {
+            const items = m.trim().split(/\n-\s+/).map(s => s.replace(/^(-\s+)/, ''));
+            return '<ul>' + items.map(i => '<li>' + i + '<\/li>').join('') + '<\/ul>';
+        });
+        html = html.replace(/\n\n/g, '<br><br>');
+        return html;
+    }
+
+    // Handle form
+    inputEl.addEventListener('input', () => autoGrow(inputEl));
+    formEl.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const text = inputEl.value.trim();
+        if (!text) return;
+        inputEl.value = '';
+        autoGrow(inputEl);
+        sendMessage(text);
+    });
+
+    // Suggest buttons
+    document.querySelectorAll('.suggest').forEach(btn => {
+        btn.addEventListener('click', () => {
+            sendMessage(btn.textContent);
+        });
+    });
+
+    // Mobile sidebar toggle
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebar-overlay');
+    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+
+    function toggleSidebar() {
+        sidebar.classList.toggle('open');
+        sidebarOverlay.classList.toggle('active');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        sidebarOverlay.classList.remove('active');
+    }
+
+    mobileMenuBtn.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar when clicking suggest buttons on mobile
+    document.querySelectorAll('.suggest').forEach(btn => {
+        btn.addEventListener('click', () => {
+            if (window.innerWidth <= 980) {
+                closeSidebar();
+            }
+        });
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 980) {
+            closeSidebar();
+        }
+    });
 </script>

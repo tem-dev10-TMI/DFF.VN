@@ -1,0 +1,16 @@
+Bảo mật ví crypto cho cửa hàng và khách hàng
+
+Khuyến nghị:
+- Phân tách ví nhận thanh toán và ví lưu trữ (ví lạnh).
+- Bật 2FA, dùng phần cứng: Ledger, Trezor.
+- Quản lý khóa riêng/seed phrase: tuyệt đối không chụp ảnh, không lưu cloud.
+- Dùng địa chỉ mới mỗi đơn hàng (HD wallet) để cải thiện riêng tư.
+
+Chính sách hoàn tiền:
+- Xác thực danh tính khách (nếu cần), xác nhận txid và địa chỉ ban đầu.
+- Hoàn tiền về cùng chain/token; cảnh báo phí mạng.
+
+Gian lận phổ biến:
+- Phishing: kiểm tra domain, chứng chỉ; không quét QR lạ.
+- Rug pull/token giả: chỉ nhận coin/token phổ biến, có thanh khoản.
+
