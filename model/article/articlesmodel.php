@@ -58,14 +58,6 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getByUserId($userId)
-    {
-        global $pdo;
-        $stmt = $pdo->prepare("SELECT * FROM articles WHERE author_id = ? ORDER BY created_at DESC");
-        $stmt->execute([$userId]);
-        return $stmt->fetchAll();
-    }   
-    
     // Cập nhật bài viết
     public static function updateArticle($id, $title, $summary, $content, $main_image_url, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
     {

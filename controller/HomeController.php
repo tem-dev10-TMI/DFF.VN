@@ -28,11 +28,11 @@ class homeController
     {
         // 1. Lấy dữ liệu từ Database
         $dbArticles = ArticlesModel::getAllArticles();
-
+        
         $comments = CommentsModel::getComments();
         $topBusinessmen = businessmenModel::getAllBusinessmen();
         $marketData = MarketDataModel::getCachedMarketData();
-
+        
         // Lấy dữ liệu sự kiện
         $eventsModel = new Events();
         $events = $eventsModel->getAll();
@@ -42,43 +42,29 @@ class homeController
 
         // RSS Báo Chính phủ
         $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15);
+        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
+        $rssArticles3 = RssModel::getFeedItems($feedUrl1, 6, 15);
+        // RSS Doanhnhan.vn - Tài chính
+        $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
+        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
+        $rssArticles4 = RssModel::getFeedItems($feedUrl1, 6, 15);
 
-        // RSS Thanh Niên
-        $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
-        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15);
-
-        // Gộp RSS + DB articles
+        // 3. Gộp tất cả bài viết: RSS + DB
         $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
-
-        // Thiết lập avatar riêng theo nguồn RSS
-        foreach ($articles as &$art) {
-            if (!empty($art['is_rss'])) {
-                if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
-                    $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
-                } else {
-                    $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
-                }
-                $art['author_id'] = 66; // id mặc định cho RSS
-            }
-        }
-        unset($art);
-
-        // 3. Sắp xếp theo created_at giảm dần
+        // 4. Sắp xếp theo created_at giảm dần
         usort($articles, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
 
-        // 4. Load view Home
+        // 5. Load view Home
         ob_start();
         require_once 'view/page/Home.php';
         $content = ob_get_clean();
 
-        // 5. Load layout chính
-        $profile = false;
+        // 6. Load layout chính
+        $profile = false; // giữ nguyên
         require_once 'view/layout/main.php';
     }
-
 
     public static function profile_business()
     {
