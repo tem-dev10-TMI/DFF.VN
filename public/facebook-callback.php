@@ -3,8 +3,8 @@ session_start();
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../model/user/userModel.php';
 
-$appId = '1518770855805260';
-$appSecret = '3249fccb64e15be8d78210d168985793';
+$appId = '813811857990201';
+$appSecret = '87d73962040afdd642d7419686017f68';
 $redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
 
 // Kiểm tra state
@@ -54,6 +54,6 @@ $_SESSION['user_role'] = $fbUser['role'] ?? 'user';
 $_SESSION['user_avatar_url'] = $fbUser['avatar_url'] ?? ($user['picture']['data']['url'] ?? null);
 
 // Redirect về homepage
-header('Location: http://localhost:8080/DFF.VN/');
+header('Location: http://localhost/DFF.VN/');
 exit();
 

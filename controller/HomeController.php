@@ -39,7 +39,30 @@ class homeController
 
         // 2. Lấy RSS
         require_once __DIR__ . '/../model/rss/RssModel.php';
+        
+        // Danh sách feed
+        $feedUrls = [
+                'https://baochinhphu.vn/kinh-te.rss',
+                'https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss'
+        ];
 
+<<<<<<< HEAD
+        foreach ($feedUrls as $url) {
+                $items = RssModel::getFeedItems($url, 50, 15);
+                if (!empty($items)) {
+                $rssArticles = array_merge($rssArticles, $items);
+                }
+        }
+
+        // 3. Gộp DB + RSS
+        $articles = array_merge($rssArticles, $dbArticles);
+
+        // 4. Sắp xếp theo created_at giảm dần
+        usort($articles, function ($a, $b) {
+                $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
+                $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
+                return $timeB - $timeA;
+=======
         // RSS Báo Chính phủ
         $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
         $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
@@ -54,15 +77,16 @@ class homeController
         // 4. Sắp xếp theo created_at giảm dần
         usort($articles, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
+>>>>>>> 3c4de45c5fb8b0d9c46b333ebfd03c06fd43b574
         });
 
-        // 5. Load view Home
+        // 5. Truyền dữ liệu cho view Home
         ob_start();
         require_once 'view/page/Home.php';
         $content = ob_get_clean();
 
         // 6. Load layout chính
-        $profile = false; // giữ nguyên
+        $profile = false;
         require_once 'view/layout/main.php';
     }
 
@@ -73,9 +97,16 @@ class homeController
         require_once 'view/layout/Profile.php';
         $content = ob_get_clean();
 
+<<<<<<< HEAD
+
+        public static function profile_business() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
+        {
+                //Load model
+=======
         $profile = true;
         require_once 'view/layout/main.php';
     }
+>>>>>>> 3c4de45c5fb8b0d9c46b333ebfd03c06fd43b574
 
     public static function profile_user()
     {
