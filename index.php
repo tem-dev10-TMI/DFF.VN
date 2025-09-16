@@ -129,6 +129,11 @@ switch ($url) {
         $controller = new NewsController();
         $controller->index();
         break;
+    case 'api/loadMoreArticles':
+        require_once 'controller/HomeController.php';
+        $controller = new homeController();
+        $controller->loadMoreArticles();
+        exit;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();

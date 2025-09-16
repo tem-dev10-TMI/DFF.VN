@@ -33,7 +33,7 @@ class profileUserController
             $content = ob_get_clean();
             $profile = true;
             //Load layout
-            // đừng ai xóa
+             // đừng ai xóa
             require_once 'view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
@@ -129,7 +129,7 @@ class profileUserController
                 ? businessmenModel::getBusinessStats($businessman['user_id'])
                 : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
 
-            require_once 'view/page/viewProfilebusiness.php';
+        require_once 'view/page/viewProfilebusiness.php';
         } else {
             require_once 'view/page/viewProfileuser.php';
         }
