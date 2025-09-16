@@ -71,6 +71,12 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->index();
         break;
+    case 'register_business':
+        require_once 'controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->registerBusiness();
+        break;
+
     case 'edit_profile':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
@@ -129,6 +135,11 @@ switch ($url) {
         $controller = new NewsController();
         $controller->index();
         break;
+    case 'api/loadMoreArticles':
+        require_once 'controller/HomeController.php';
+        $controller = new homeController();
+        $controller->loadMoreArticles();
+        exit;
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();
@@ -141,11 +152,11 @@ switch ($url) {
         break;
 
     case 'event':
-    require_once 'controller/EventDetailController.php';
-    $controller = new EventDetailController($pdo);
-    $id = $_GET['id'] ?? null;
-    $controller->details($id);
-    break;
+        require_once 'controller/EventDetailController.php';
+        $controller = new EventDetailController($pdo);
+        $id = $_GET['id'] ?? null;
+        $controller->details($id);
+        break;
 
 
 

@@ -135,4 +135,39 @@ class profileUserModel
             'likes' => $likesCount
         ];
     }
+
+    // Đăng kí làm doanh nhân 
+    public function createBusinessmen($user_id, $birth_year, $nationality, $education, $position)
+    {
+        $db = new connect();
+
+        try {
+            // Bắt đầu transaction
+            $db->db->beginTransaction();
+
+            // 1. Insert vào bảng businessmen
+            $stmt = $db->db->prepare("
+                INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
+                VALUES (:user_id, :birth_year, :nationality, :education, :position)
+            ");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':birth_year' => $birth_year,
+                ':nationality' => $nationality,
+                ':education' => $education,
+                ':position' => $position
+            ]);
+
+            // 2. Update role trong bảng users
+            $stmt2 = $db->db->prepare("UPDATE users SET role = 'businessmen' WHERE id = :user_id");
+            $stmt2->execute([':user_id' => $user_id]);
+
+            // Commit
+            $db->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->db->rollBack();
+            return false;
+        }
+    }
 }

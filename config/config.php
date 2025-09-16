@@ -14,6 +14,11 @@ define('SITE_DESCRIPTION', 'Diễn đàn Tài chính Việt Nam');
 define('GOOGLE_CLIENT_ID', '883631790996-ivg36caiogkoqbaptil3k9l7jumg1aif.apps.googleusercontent.com');
 define('GOOGLE_CLIENT_SECRET', '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');
 define('GOOGLE_REDIRECT_URI', BASE_URL . '/public/callback.php');
+// Facebook API
+define('FACEBOOK_APP_ID', '813811857990201');
+define('FACEBOOK_APP_SECRET', '87d73962040afdd642d7419686017f68');
+define('FACEBOOK_REDIRECT_URI', BASE_URL . '/public/facebook-callback.php');
+define('FACEBOOK_SCOPE', 'public_profile,email');
 
 // Uploads
 define('UPLOADS_DIR', __DIR__ . '/../uploads');

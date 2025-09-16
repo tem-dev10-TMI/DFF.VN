@@ -43,7 +43,15 @@ class RssModel
 
         // Fetch feed mới
         $xmlString = self::fetchUrl($feedUrl);
-        if (!$xmlString) return [];
+        if (!$xmlString) {
+            // Fallback: nếu fetch thất bại nhưng có cache cũ, dùng tạm cache cũ
+            if (file_exists($cacheFile)) {
+                $json = file_get_contents($cacheFile);
+                $data = json_decode($json, true);
+                if (is_array($data)) return array_slice($data, 0, $limit);
+            }
+            return [];
+        }
 
         libxml_use_internal_errors(true);
         $xml = simplexml_load_string($xmlString, 'SimpleXMLElement', LIBXML_NOCDATA);

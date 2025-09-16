@@ -110,8 +110,8 @@
 
 
     <?php
-    
-    
+
+
 
     require_once 'model/TopicModel.php';
 
@@ -119,7 +119,24 @@
     $allTopics = $topicModel->getAll(); // tất cả chủ đề
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
-    require_once 'view/layout/sidebarMobile.php'; // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+    require_once 'view/layout/sidebarMobile.php';
+
+
+
+
+
+    // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
+
+
+
+    require_once 'model/event/Events.php';
+    if (!isset($pdo)) {
+        require_once __DIR__ . '/../../config/db.php';
+    }
+    global $pdo;
+    $eventModelHeader = new EventModel($pdo);
+    $headerEvents = $eventModelHeader->all(5);
+
     ?>
 
     <div class="m-top-info">
@@ -174,6 +191,16 @@
     <!-- script chạy thị trường end -->
 
 
+    <?php
+    if (!isset($headerEvents)) {
+        require_once 'model/event/Events.php';
+        if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
+        global $pdo;
+        $eventModelMobile = new EventModel($pdo);
+        $headerEvents = $eventModelMobile->all(5);
+    }
+    $mobileNotifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
+    ?>
     <div class="func-mobile">
         <ul>
             <li>
@@ -183,7 +210,7 @@
                 </a>
             </li>
             <li class="fitem1">
-                <a href="javascript:void(0)" module-load="loadwrite">
+                <a href="javascript:void(0)" module-load="" class="js-mobile-modal" data-mobile-modal="create">
                     <i class="fas fa-plus"></i>
                     <span>Tạo mới</span>
                 </a>
@@ -194,18 +221,183 @@
                     <span>Xu hướng</span>
                 </a>
             </li>
-            <li><a data-bs-toggle="collapse" data-bs-target="#id_alert" aria-controls="id_alert" aria-expanded="false"
-                    href="javascript:void(0)"><i class="fas fa-bell"></i>
-                    <span class="number">4</span>
+            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i class="fas fa-bell"></i>
+                    <span class="number"><?= $mobileNotifCount ?></span>
                     <span class="falert">Thông báo</span>
                 </a></li>
             <li>
-                <a module-load="signin" href="javascript:void(0)"><i class="fas fa-user-alt"></i>
+                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i class="fas fa-user-alt"></i>
                     <span>Tôi</span>
                 </a>
             </li>
         </ul>
     </div>
+
+    <!-- Mobile Modal -->
+    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 1055;">
+        <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle"></i></button>
+                </div>
+                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Mobile alerts list */
+        .m-alerts { list-style: none; margin: 0; padding: 0; }
+        .m-alerts li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
+        .m-alerts li:last-child { border-bottom: 0; }
+        .m-alerts .ic { width: 28px; height: 28px; border-radius: 50%; background: #f5f7ff; color: #2b5cff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex: 0 0 28px; }
+        .m-alerts .txt { flex: 1; min-width: 0; }
+        .m-alerts .txt a { font-weight: 600; color: #111; display: block; text-decoration: none; }
+        .m-alerts .meta { color: #6c757d; font-size: 12px; margin-top: 2px; }
+        .m-section-title { font-weight: 700; font-size: 16px; margin: 0 0 8px; }
+    </style>
+
+    <script>
+        (function(){
+            // Dữ liệu sự kiện từ PHP
+            const headerEvents = <?php echo json_encode($headerEvents ?? [] , JSON_UNESCAPED_UNICODE); ?>;
+
+            function renderAlerts(events){
+                if (!Array.isArray(events) || events.length === 0) {
+                    return '<div class="text-muted">Chưa có thông báo nào.</div>';
+                }
+                const items = events.map(ev => {
+                    const title = (ev.title || '').toString();
+                    const id = ev.id;
+                    const when = ev.event_date ? new Date(ev.event_date.replace(' ', 'T')) : null;
+                    const dateStr = when ? when.toLocaleString('vi-VN', { hour12: false }) : '';
+                    const href = `${window.BASE_URL || ''}?url=event&id=${id}`;
+                    return `<li>
+                        <span class="ic"><i class="fas fa-bell"></i></span>
+                        <div class="txt">
+                            <a href="${href}">${title}</a>
+                            <div class="meta">${dateStr}</div>
+                        </div>
+                    </li>`;
+                }).join('');
+                return `<h5 class="m-section-title">Thông báo</h5><ul class="m-alerts">${items}</ul>`;
+            }
+
+            let mobileModalInstance = null;
+
+            function openMobileModal(type){
+                const body = document.getElementById('mobileModalBody');
+                const title = document.getElementById('mobileModalLabel');
+                if (!body || !title) return;
+                if (type === 'alerts') {
+                    title.textContent = 'Thông báo';
+                    body.innerHTML = renderAlerts(headerEvents);
+                } else if (type === 'create') {
+                    title.textContent = 'Tạo mới';
+                    body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
+                } else if (type === 'profile') {
+                    title.textContent = 'Tôi';
+                    body.innerHTML = '<div>Vui lòng đăng nhập để xem thông tin cá nhân.</div>';
+                } else {
+                    title.textContent = 'Menu';
+                    body.innerHTML = '';
+                }
+                const modalEl = document.getElementById('mobileModal');
+                if (modalEl) {
+                    // Dọn backdrop cũ nếu còn
+                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+                    document.body.classList.remove('modal-open');
+                    document.body.style.removeProperty('padding-right');
+
+                    // Tạo hoặc lấy lại instance để tránh chồng nhiều lớp backdrop
+                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: true, focus: true });
+                    mobileModalInstance.show();
+                }
+            }
+
+            document.addEventListener('click', function(e){
+                const a = e.target.closest('.js-mobile-modal');
+                if (!a) return;
+                const type = a.getAttribute('data-mobile-modal');
+                if (!type) return;
+                e.preventDefault();
+                openMobileModal(type);
+            });
+        })();
+    </script>
+
+    <!-- Hidden template: profile menu -->
+    <div id="mobile-profile-template" class="d-none">
+        <ul class="list-group list-group-flush">
+            <?php if (isset($_SESSION['user'])): ?>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin') {
+                                                                            echo 'profile_user';
+                                                                        } else {
+                                                                            echo 'profile_business';
+                                                                        } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-plus"></i> Viết bài</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            <?php else: ?>
+                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <script>
+        (function() {
+            var modalEl = document.getElementById('mobileModal');
+            var modalBody = document.getElementById('mobileModalBody');
+            var modalTitle = document.getElementById('mobileModalLabel');
+            var bsModal = null;
+            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                bsModal = new bootstrap.Modal(modalEl);
+            }
+
+            function openMobileModal(title, html) {
+                if (!modalEl) return;
+                if (modalTitle) modalTitle.textContent = title || 'Menu';
+                if (modalBody) modalBody.innerHTML = html || '';
+                if (bsModal) bsModal.show();
+                else modalEl.style.display = 'block';
+                // Khóa scroll nền khi mở modal thủ công (fallback)
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileModal() {
+                if (!modalEl) return;
+                if (bsModal) bsModal.hide();
+                else modalEl.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
+            modalEl && modalEl.addEventListener('click', function(e) {
+                if (e.target === modalEl) closeMobileModal();
+            });
+
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                a.addEventListener('click', function(e) {
+                    var type = this.getAttribute('data-mobile-modal');
+                    if (!type) return;
+                    if (type === 'alerts') {
+                        var alerts = document.getElementById('id_alert');
+                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                        openMobileModal('Thông báo', html);
+                    } else if (type === 'profile') {
+                        var tpl = document.getElementById('mobile-profile-template');
+                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                        openMobileModal('Tài khoản', html);
+                    } else if (type === 'create') {
+                        // Tái sử dụng quick write nếu có
+                        openMobileModal('Tạo mới', '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>');
+                    }
+                });
+            });
+        })();
+    </script>
     <a module-load="boxIndex"></a>
 
 
@@ -229,9 +421,9 @@
                 }
             }
         </style>
-       ...
+        ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
-        <?php if (!empty($profile)): ?>   <!-- ✅ fix: thay if ($profile) -->
+        <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
 
         <?php else: ?>
@@ -252,7 +444,7 @@
                 <i class="bi bi-chat-left-text-fill mb-chat"></i>
             </div>
         <?php endif; ?>
-...
+        ...
 
         <input type="hidden" id="hdd_id" value="24166" />
 

@@ -50,6 +50,16 @@ function doSearch() {
             </div>
 
             <div class="header-right">
+                <?php
+                if (!isset($headerEvents)) {
+                    require_once 'model/event/Events.php';
+                    if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
+                    global $pdo;
+                    $eventModelHeader = new EventModel($pdo);
+                    $headerEvents = $eventModelHeader->all(10);
+                }
+                $notifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
+                ?>
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
@@ -75,7 +85,7 @@ function doSearch() {
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">0</span>
+                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number"><?= $notifCount ?></span>
                         </span>
                     </li>
                     <li class="top-pro ">
@@ -110,20 +120,24 @@ function doSearch() {
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] =='admin'  ) {
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] == 'admin') {
                                                                                             echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
                                     <li>
-                                    <!-- module-load="logout" cai nay trong the a dang xuat     -->
-                                    <a class="dropdown-item"  href="<?= BASE_URL ?>/logout"><i
-                                    
-                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                        <a class="dropdown-item" href="<?= BASE_URL ?>/change_password" data-bs-toggle="modal" data-bs-target="#changePassModal">
+                                            <i class="fas fa-unlock"></i> Đổi mật khẩu
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <!-- module-load="logout" cai nay trong the a dang xuat     -->
+                                        <a class="dropdown-item" href="<?= BASE_URL ?>/logout"><i
+
+                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                                    </li>
                                 </ul>
                             </span>
                         <?php else: ?>
@@ -148,7 +162,25 @@ function doSearch() {
 
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-
+                    
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <?php if (!empty($headerEvents)): ?>
+                            <ul class="list-unstyled" style="margin:10px 0;">
+                                <?php foreach ($headerEvents as $ev): ?>
+                                    <li style="margin-bottom:8px;">
+                                        <a title="<?= htmlspecialchars($ev['title']) ?>" href="<?= BASE_URL ?>?url=event&id=<?= $ev['id'] ?>">
+                                            <?= htmlspecialchars($ev['title']) ?>
+                                        </a>
+                                        <small class="text-muted" style="margin-left:6px;">
+                                            <?= isset($ev['event_date']) ? date('d/m/Y H:i', strtotime($ev['event_date'])) : '' ?>
+                                        </small>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <div class="p-3 text-muted">Chưa có sự kiện nào.</div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
             <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
@@ -329,6 +361,49 @@ function doSearch() {
         </div>
     </div>
 </div>
+
+<!-- Modal Đổi mật khẩu -->
+<div class="modal fade" id="changePassModal" tabindex="-1" aria-labelledby="changePassLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePassLabel">Đổi mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Thông báo từ controller -->
+                <?php if (!empty($changePasswordMessage)): ?>
+                    <div class="alert alert-<?= $messageType ?>">
+                        <?= $changePasswordMessage ?>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="<?= BASE_URL ?>/change_password" id="changePassForm">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword" name="old_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" name="new_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_new_password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Xử lý ẩn hiện modal -->
 <script>
     $(function() {
@@ -340,14 +415,23 @@ function doSearch() {
         var registerElement = document.getElementById('register_modal');
         var registerModal = registerElement ? new bootstrap.Modal(registerElement) : null;
 
+        // Lấy mobile modal nếu có để ẩn khi bật form đăng nhập/đăng ký
+        var mobileElement = document.getElementById('mobileModal');
+        var mobileModal = null;
+        if (mobileElement && window.bootstrap && window.bootstrap.Modal) {
+            mobileModal = bootstrap.Modal.getInstance(mobileElement) || new bootstrap.Modal(mobileElement);
+        }
+
         // Hàm mở modal đăng nhập
         window.showLoginModal = function() {
+            if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
         window.showRegisterModal = function() {
+            if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };

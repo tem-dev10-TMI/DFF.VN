@@ -23,10 +23,7 @@
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
-            <li class="item" data-ref="k">
-                <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
-            </li>
+            
 
         </ul>
         <div class="line"></div>

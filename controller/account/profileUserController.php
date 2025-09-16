@@ -40,87 +40,56 @@ class profileUserController
             exit;
         }
     }
-    
-    public static function viewprofileUser() // cái này để xem người ta nó tự tách phân biết nào là user và nào là doanh nhân
+
+    public static function viewprofileUser()
     {
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-            header("Location: index.php");
+            header("Location: " . BASE_URL);
             exit;
         }
 
-        require_once 'model/user/userModel.php';
-
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $user_id = intval($_GET['id']);
-
-        // Lấy thông tin user
         $user = UserModel::getUserById($user_id);
-
-
-
-
-        
-
-
-
-
 
         if (!$user) {
             echo "Không tìm thấy người dùng!";
             exit;
         }
-        if($user_id == "66")
-        {
-            
-            require_once  'model/rss/RssModel.php';
 
         $articles = [];
 
-         // user RSS
-            // RSS Báo Chính Phủ
-            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15);
+        // RSS riêng theo user id
+        if ($user_id == 66 || $user_id == 67) {
+            require_once __DIR__ . '/../../model/rss/RssModel.php';
 
-            // RSS Thanh Niên
-            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15);
-
-            // Gộp RSS
-            $articles = array_merge($rssArticles1, $rssArticles2);
-
-            // Ép author_id = 66 và avatar theo nguồn
-            foreach ($articles as &$art) {
-                $art['author_id'] = 66;
-                // Avatar theo feed URL
-                if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
-                    $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
-                } else {
-                    $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
-                }
+            $feedUrls = [];
+            if ($user_id == 66) {
+                // RSS cho user 66 → baochinhphu.vn
+                $feedUrls = ["https://baochinhphu.vn/kinh-te.rss"];
+            } elseif ($user_id == 67) {
+                // RSS cho user 67 → thanhnien.vn
+                $feedUrls = ["https://thanhnien.vn/rss/kinh-te.rss"];
             }
-            unset($art);
 
-            // Sắp xếp giảm dần theo created_at
-            usort($articles, function($a, $b){
+            $articles = RssModel::getMultipleFeeds($feedUrls, 50, 15);
+
+            // Sắp xếp giảm dần theo ngày tạo
+            usort($articles, function ($a, $b) {
                 return strtotime($b['created_at']) - strtotime($a['created_at']);
             });
-
-        
-            // user bình thường lấy DB
-           
-
-        // Load view profile
-        
-
-        }else{
-            $articles = UserModel::getArticlesByAuthorId($user_id);
-            }
-        // Lấy bài viết của user để truyền sang view
-        
-
-        // Render view theo role
+        } else {
+            // User bình thường → lấy bài viết từ DB
+            require_once __DIR__ . '/../../model/article/articlesmodel.php';
+            $articles = ArticlesModel::getArticlesByAuthorId($user_id);
+        }
+        $feedUrls = [
+            "https://baochinhphu.vn/kinh-te.rss",
+            "https://thanhnien.vn/rss/kinh-te.rss"
+        ];
         ob_start();
         if (!empty($user['role']) && $user['role'] === 'businessmen') {
-            require_once 'model/user/businessmenModel.php';
+            require_once __DIR__ . '/../../model/user/businessmenModel.php';
             $businessman = businessmenModel::getBusinessByUserId($user_id);
             $careers = !empty($businessman['businessman_id'])
                 ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
@@ -129,13 +98,13 @@ class profileUserController
                 ? businessmenModel::getBusinessStats($businessman['user_id'])
                 : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
 
-            require_once 'view/page/viewProfilebusiness.php';
+            require_once __DIR__ . '/../../view/page/viewProfilebusiness.php';
         } else {
-            require_once 'view/page/viewProfileuser.php';
+            require_once __DIR__ . '/../../view/page/viewProfileuser.php';
         }
         $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
-        require_once 'view/layout/main.php';
+        $profile = false;
+        require_once __DIR__ . '/../../view/layout/main.php';
     }
 
     // ========== Quản lý Bài viết ==========
@@ -370,10 +339,10 @@ class profileUserController
 
             // Chuyển hướng dựa trên kết quả
             if ($successUser && $successProfile) {
-                header('Location: ' . BASE_URL . '/profileUser?msg=profile_updated');
+                header('Location: ' . BASE_URL . '/profile_user?msg=profile_updated');
                 exit;
             } else {
-                header('Location: ' . BASE_URL . '/profileUser?msg=profile_failed');
+                header('Location: ' . BASE_URL . '/profile_user?msg=profile_failed');
                 exit;
             }
         }
@@ -383,7 +352,37 @@ class profileUserController
         $user = $userModel->getUserById($userId);
         require_once "view/page/profileUser.php";
     }
+    // ========== Đăng kí làm doanh nhân ==========
+    public static function registerBusiness()
+    {
+        require_once 'model/user/profileUserModel.php';
+        // 1. Xác thực và Phân quyền
+        if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
+            header("Location: " . BASE_URL . "/login");
+            exit;
+        }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $user_id     = $_SESSION['user']['id'];
+            $birth_year  = $_POST['birth_year'] ?? null;
+            $nationality = $_POST['nationality'] ?? null;
+            $education   = $_POST['education'] ?? null;
+            $position    = $_POST['position'] ?? null;
 
+            $registerBusinessModel = new profileUserModel();
+            $result = $registerBusinessModel->createBusinessmen($user_id, $birth_year, $nationality, $education, $position);
+
+            if ($result) {
+                // Cập nhật session role
+                $_SESSION['user']['role'] = 'businessmen';
+
+                header('Location: ' . BASE_URL . '/profile_user?msg=user_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profile_user?msg=user_failed');
+                exit;
+            }
+        }
+    }
     // ========== Đổi mật khẩu ==========
     // Trong Controller của bạn
     public function changePassword()
@@ -421,11 +420,11 @@ class profileUserController
                 $success = $userModel->updatePassword($userId, $new_password_hash);
 
                 if ($success) {
-                    $changePasswordMessage = "Đổi mật khẩu thành công!";
-                    $messageType = 'success';
+                    header('Location: ' . BASE_URL . '/profile_user?msg=password_changed');
+                    exit;
                 } else {
-                    $changePasswordMessage = "Đã xảy ra lỗi khi đổi mật khẩu.";
-                    $messageType = 'danger';
+                    header('Location: ' . BASE_URL . '/profile_user?msg=password_changed_failed');
+                    exit;
                 }
             }
         }

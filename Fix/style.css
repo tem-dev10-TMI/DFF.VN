@@ -1,0 +1,133 @@
+/* --- Cài đặt chung --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #ffffff;
+    height: 100vh;
+    overflow: hidden; /* Ngăn cuộn trang */
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+/* --- Lớp Gradient động --- */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg, 
+        #4f00bc, 
+        #2d004d, 
+        #002d61, 
+        #005082, 
+        #0d47a1
+    );
+    background-size: 400% 400%;
+    animation: gradientAnimation 15s ease infinite;
+    z-index: -2;
+}
+
+/* --- Hiệu ứng animation cho gradient --- */
+@keyframes gradientAnimation {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+
+/* --- Lớp phủ mờ (tùy chọn, để chữ dễ đọc hơn) --- */
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.2);
+    z-index: -1;
+}
+
+/* --- Nội dung chính --- */
+.content {
+    max-width: 800px;
+    padding: 20px;
+}
+
+.content h1 {
+    font-size: 4rem; /* 64px */
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.content p {
+    font-size: 1.25rem; /* 20px */
+    font-weight: 300;
+    line-height: 1.6;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+}
+
+/* --- Đồng hồ đếm ngược --- */
+#countdown {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    min-width: 100px;
+}
+
+.time-unit span {
+    font-size: 3rem; /* 48px */
+    font-weight: 700;
+}
+
+.time-unit label {
+    font-size: 0.9rem; /* 14px */
+    font-weight: 300;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* --- Responsive cho thiết bị nhỏ --- */
+@media (max-width: 768px) {
+    .content h1 {
+        font-size: 2.5rem;
+    }
+    .content p {
+        font-size: 1rem;
+    }
+    #countdown {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .time-unit {
+        min-width: 80px;
+    }
+    .time-unit span {
+        font-size: 2rem;
+    }
+}
