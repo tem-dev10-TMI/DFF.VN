@@ -11,6 +11,7 @@ require_once __DIR__ . '/middleware.php';
 spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/admin/' . $class . '.php',
+        __DIR__ . '/model/' . $class . '.php',              // thêm model thường
         __DIR__ . '/controller/admin/' . $class . '.php',
     ];
     foreach ($paths as $p) {
@@ -36,18 +37,18 @@ switch ($route) {
         } else {
             $ctrl->loginForm();
         }
-        break;
+        exit;
 
     case 'logout':
         $ctrl = new AuthController($pdo);
         $ctrl->logout();
-        break;
+        exit;
 
     case 'dashboard':
         require_login();
         require_role('admin');
         include __DIR__ . '/view/admin/views/dashboard.php';
-        break;
+        exit;
 
     case 'users':
         require_login();
@@ -60,7 +61,8 @@ switch ($route) {
         require_role('admin');
         $ctrl = new ArticleController($pdo);
         break;
-         case 'topics':
+
+    case 'topics':
         require_login();
         require_role('admin');
         $ctrl = new TopicController($pdo);
@@ -84,37 +86,40 @@ switch ($route) {
         $ctrl = new CommentController($pdo);
         break;
 
-    case 'events':
+    case 'article': // riêng cho bài viết (review, form, list)
+        $ctrl = new ArticleController($pdo);
+        if ($action === 'list') {
+            $ctrl->list();
+        } elseif ($action === 'form') {
+            $ctrl->form();
+        } elseif ($action === 'reviewList') {
+            $ctrl->reviewList();
+        } elseif ($action === 'reviewAction') {
+            $ctrl->reviewAction();
+        }
+        exit;
+
+    case 'events':  
         require_login();
         require_role('admin');
         $ctrl = new EventController($pdo);
         break;
-    // có thể thêm topics, tags, media...
+
     default:
         require_login();
         require_role('admin');
         include __DIR__ . '/view/admin/views/dashboard.php';
-        break;
-
-        case 'article':
-            $controller = new ArticleController($pdo);
-        
-            if ($action === 'list') {
-                $controller->list();
-            } elseif ($action === 'form') {
-                $controller->form();
-            } elseif ($action === 'reviewList') {
-                $controller->reviewList();
-            } elseif ($action === 'reviewAction') {
-                $controller->reviewAction();
-            }
-            break;
-           
+        exit;
 }
 
-// Nếu controller có action thì gọi
+// Nếu có controller & action -> gọi
 if (!empty($ctrl)) {
     if (method_exists($ctrl, $action)) {
         $id !== null ? $ctrl->{$action}($id) : $ctrl->{$action}();
+    } else {
+        // fallback: gọi admin() nếu action không tồn tại
+        if (method_exists($ctrl, 'admin')) {
+            $ctrl->admin();
+        }
     }
 }
