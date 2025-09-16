@@ -1,4 +1,9 @@
 <?php
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../model/CommentGlobalModel.php';
+
+$comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
+
 // require_once __DIR__ . '/../../config/db.php';
 // require_once __DIR__ . '/../../model/article/articlesmodel.php';
 // require_once __DIR__ . '/../../model/commentmodel.php';
@@ -8,6 +13,7 @@
 // $articles = ArticlesModel::getAllArticles();      
 // $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
+<link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css?v=1.3">
 
 <main class="main-content">
 
@@ -244,31 +250,237 @@
                 </ul>
             </div>
         </div>
+
+        
         <div class="block-k cover-chat">
+            
+       <?php
+$comments = [];
+try {
+    require_once __DIR__ . '/../../config/db.php';
+    require_once __DIR__ . '/../../model/CommentGlobalModel.php';
+    // lấy 20 comment mới nhất
+    $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
+} catch (Throwable $e) {
+    $comments = [];
+}
+
+// fallback chữ cái đầu khi không có avatar (không dùng mb_*)
+function initial_simple($name) {
+    $name = trim((string)$name);
+    return $name !== '' ? strtoupper(substr($name, 0, 1)) : 'U';
+}
+?>
+
             <h5>
                 <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
             </h5>
             <div class="comment-cover">
                 <div class="fr-content">
-                    <ul class="list_comment col-md-12">
-                    </ul>
-                    <div class="cm-more">Xem thêm</div>
+                    <style>
+.list_comment {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.chat-item {
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid #e5e5e5;
+}
+.chat-avatar {
+    margin-right: 10px;
+}
+.chat-avatar img,
+.chat-avatar .avatar-fallback {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #007bff;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+}
+.chat-body {
+    flex: 1;
+}
+.chat-meta {
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #555;
+}
+.chat-name {
+    font-weight: bold;
+    margin-right: 6px;
+}
+.chat-time {
+    color: #999;
+    font-size: 12px;
+}
+.chat-content {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+.chat-actions {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    color: #555;
+}
+.chat-actions button {
+    border: none;
+    background: #f0f0f0;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    cursor: pointer;
+    margin: 0 3px;
+}
+.chat-actions .vote-count {
+    margin: 0 5px;
+}
+.chat-actions .chat-reply {
+    margin-left: 10px;
+    color: #007bff;
+    text-decoration: none;
+    cursor: pointer;
+}
+.chat-actions .chat-reply:hover {
+    text-decoration: underline;
+}
+</style>
+
+<ul class="list_comment col-md-12">
+    <?php foreach ($comments as $c): ?>
+        <li class="chat-item">
+            <div class="chat-avatar">
+                <?php if (!empty($c['avatar_url'])): ?>
+                    <img src="<?= htmlspecialchars($c['avatar_url']) ?>" alt="<?= htmlspecialchars($c['username']) ?>">
+                <?php else: ?>
+                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
+                <?php endif; ?>
+            </div>
+            <div class="chat-body">
+                <div class="chat-meta">
+                    <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
+                    <span class="chat-time"><?= date('H:i d/m/Y', strtotime($c['created_at'])) ?></span>
                 </div>
-                <div class="h-comment">
-                    <a href="javascript:void(0)" class="img-own">
-                        <img src="vendor/dffvn/content/img/user.svg">
-                    </a>
-                    <textarea class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
-                    <i class="fas fa-paper-plane" module-load="csend"></i>
+                <div class="chat-content">
+                    <?= nl2br(htmlspecialchars($c['content'])) ?>
+                </div>
+                <div class="chat-actions">
+                    <button>⬆</button>
+                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                    <button>⬇</button>
+                    <a href="javascript:void(0)" class="chat-reply">Trả lời</a>
                 </div>
             </div>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+                    <div class="cm-more">Xem thêm</div>
+                </div>
+               <div class="h-comment">
+    <a href="javascript:void(0)" class="img-own">
+        <img src="vendor/dffvn/content/img/user.svg">
+    </a>
+    <textarea id="comment-content" class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
+    <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
+</div>
+
+<script>
+let lastId = 0;
+
+// Hàm render 1 comment -> trả về element thay vì innerHTML
+function createCommentElement(c) {
+    const li = document.createElement("li");
+    li.classList.add("chat-item");
+    li.dataset.id = c.id;
+
+    li.innerHTML = `
+        <div class="chat-avatar">
+            ${c.avatar_url 
+                ? `<img src="${c.avatar_url}" alt="">`
+                : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
         </div>
+        <div class="chat-body">
+            <div class="chat-meta">
+                <span class="chat-name">${c.username}</span>
+                <span class="chat-time">${c.time_ago}</span>
+            </div>
+            <div class="chat-content">${c.content}</div>
+            <div class="chat-actions">👍 ${c.upvotes} <a href="#">Trả lời</a></div>
+        </div>`;
+    return li;
+}
+
+// Hàm load comment mới
+function loadNewComments() {
+    fetch("comment_list.php?last_id=" + lastId)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success && data.comments.length > 0) {
+                const ul = document.querySelector(".list_comment");
+                data.comments.forEach(c => {
+                    if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
+                        const li = createCommentElement(c);
+                        ul.prepend(li); // thêm vào đầu danh sách
+                        if (c.id > lastId) lastId = c.id;
+                    }
+                });
+            }
+        })
+        .catch(err => console.error("Error load:", err));
+}
+
+// Gửi bình luận
+document.getElementById("send-comment").addEventListener("click", function() {
+    const textarea = document.getElementById("comment-content");
+    const content = textarea.value.trim();
+    if (!content) return;
+
+    fetch("comment_add.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: "content=" + encodeURIComponent(content)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const ul = document.querySelector(".list_comment");
+            const li = createCommentElement(data.comment);
+            ul.prepend(li); // chỉ thêm 1 comment mới
+            if (data.comment.id > lastId) lastId = data.comment.id;
+            textarea.value = "";
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(err => console.error("Error send:", err));
+});
+
+// Lần đầu load
+document.addEventListener("DOMContentLoaded", () => {
+    loadNewComments();
+    setInterval(loadNewComments, 1000); // 1s lấy mới
+});
+
+</script>
+
+
+
+
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/vientmi/?locale=vi_VN" data-tabs="timeline"
+            <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline"
                 data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
                 data-hide-cover="false" data-show-facepile="true">
-                <blockquote cite="https://www.facebook.com/vientmi/?locale=vi_VN" class="fb-xfbml-parse-ignore"><a
-                        href="../www.facebook.com/vientmi.html">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
+                <blockquote cite="https://www.facebook.com/vientmi" class="fb-xfbml-parse-ignore"><a
+                        href="https://www.facebook.com/vientmi">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
                 </blockquote>
             </div>
         </div>
@@ -803,6 +1015,48 @@
                 });
             });
         </script>
+
+<script>
+function loadComments() {
+    fetch("comment_list.php")
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const ul = document.querySelector(".list_comment");
+                ul.innerHTML = ""; // clear cũ
+
+                data.comments.forEach(c => {
+                    const li = document.createElement("li");
+                    li.className = "chat-item";
+                    li.innerHTML = `
+                        <div class="chat-avatar">
+                            ${c.avatar_url 
+                                ? `<img src="${c.avatar_url}" alt="">`
+                                : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
+                        </div>
+                        <div class="chat-body">
+                            <div class="chat-meta">
+                                <span class="chat-name">${c.username}</span>
+                                <span class="chat-time">${c.created_at}</span>
+                            </div>
+                            <div class="chat-content">${c.content}</div>
+                            <div class="chat-actions">👍 ${c.upvotes} <a href="#">Trả lời</a></div>
+                        </div>
+                    `;
+                    ul.appendChild(li);
+                });
+            }
+        });
+}
+
+// load lần đầu
+loadComments();
+
+// lặp lại mỗi 1s
+setInterval(loadComments, 1000);
+</script>
+
+
     </div>
 
 </main>
