@@ -6905,6 +6905,38 @@ ul.timeline .left-arrow:after {
   object-fit: contain;
   display: inline-block;
 }
+/* Sidebar mobile */
+.sidebar-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: #fff;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
+  overflow-y: auto;
+  z-index: 1000;
+  display: none; /* ẩn mặc định */
+}
+
+.sidebar-mobile ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Sidebar chỉ hiện trên mobile */
+@media (max-width: 768px) {
+  .sidebar-mobile {
+    display: block;
+  }
+}
+
+@media (min-width: 769px) {
+  .sidebar-mobile {
+    display: none;
+  }
+}
 
 
 
