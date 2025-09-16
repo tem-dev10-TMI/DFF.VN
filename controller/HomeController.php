@@ -11,6 +11,7 @@ class homeController
         {
         // 1. Lấy dữ liệu từ Database
         $dbArticles = ArticlesModel::getAllArticles();
+        
         $comments = CommentsModel::getComments();
         $topBusinessmen = businessmenModel::getAllBusinessmen(10);
         $marketData = MarketDataModel::getCachedMarketData();
@@ -24,7 +25,7 @@ class homeController
         // RSS Báo Chính phủ
         $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
         $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
-
+        $rssArticles3 = RssModel::getFeedItems($feedUrl1, 6, 15);
         // RSS Doanhnhan.vn - Tài chính
         $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
         $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
