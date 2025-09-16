@@ -1,0 +1,266 @@
+# 11_exchanges_cex_dex_otc — CEX, DEX, OTC/P2P
+
+===============================================================================
+1) Tổng quan ngắn
+- **CEX (Centralized Exchange):** sàn do một tổ chức điều hành, giữ custody tài sản người dùng, cung cấp order book, khớp lệnh, fiat on/off-ramps, margin, futures. Ví dụ lớn: Binance, Coinbase, Kraken, OKX, Bybit, KuCoin.
+- **DEX (Decentralized Exchange):** sàn hoạt động trực tiếp trên blockchain, không giữ custody người dùng (non-custodial). Thường dùng mô hình AMM (Automated Market Maker) như Uniswap, PancakeSwap, Curve; cũng có DEX order-book on-chain hoặc hybrid.
+- **OTC / P2P:** giao dịch ngoài sổ lệnh sàn, dùng cho khối lượng lớn (OTC desk) hoặc P2P giữa cá nhân (chuyển khoản ngân hàng, QR). Ở VN phổ biến qua OTC, P2P, Telegram/Zalo groups.
+
+===============================================================================
+2) Vai trò & khi nào dùng cái nào
+- **CEX:** tốt cho thanh khoản cao, on/off ramp fiat, giao dịch spot/futures, tự động hoá (API). Phù hợp cho merchant cần convert tiền nhanh hoặc settle fiat.
+- **DEX:** tốt cho token mới, permissionless listing, non-custodial swaps, composability DeFi. Phù hợp cho users muốn custody riêng và các sản phẩm DeFi.
+- **OTC desk:** dùng để giao dịch khối lượng lớn mà không gây trượt giá; phù hợp treasury & settlement merchant cho lệnh lớn.
+- **P2P/Telegram/Zalo:** phổ biến ở thị trường chợ đen/OTC tại VN — rẻ & nhanh nhưng rủi ro lừa đảo cao.
+
+===============================================================================
+3) CEX — chi tiết hoạt động & tính năng
+A. **Kiến trúc & custody**
+- Người dùng tạo tài khoản trên sàn; private keys do sàn giữ (custodial).  
+- Sàn duy trì hot wallets (giao dịch nhanh) và cold wallets (lưu trữ lâu dài).  
+- Quản lý withdrawal: thường có cơ chế approval / withdrawal whitelist / cold wallet batching.
+
+B. **Sản phẩm phổ biến**
+- Spot order book (limit, market).
+- Margin trading, isolated/cross margin.
+- Futures (perpetuals, quarterly) với funding rates.
+- Options.
+- Staking, savings, lending, earn products.
+- Fiat on/off-ramp: chuyển khoản ngân hàng, thẻ, third-party PSP.
+
+C. **Order types & cơ chế khớp lệnh**
+- Limit order, Market order, Stop-limit, Stop-market, IOC/FOK.
+- Matching engine: price-time priority.
+- Liquidity provider / taker fees (maker/taker fee schedule).
+
+D. **Fees & spreads**
+- Trading fees (% per trade), withdrawal fees (flat/variable), deposit fees (fiat), spread on fiat conversion.
+- Tiered fees dựa trên volume / native token staking (ví dụ BNB discounts).
+
+E. **Liquidity & market depth**
+- Order book depth, spread, 24h volume. Khối lượng lớn giúp giảm slippage.
+
+F. **APIs & Webhooks**
+- REST + WebSocket APIs: market data, order placement, order status, account balances.
+- Webhook-like solutions: user must poll or use exchange push (WebSocket) for fills; some cung cấp "account webhook" via third-party middleware.
+- Rate limits, API keys, IP whitelist.
+
+G. **Security controls**
+- KYC/AML, 2FA, device management, withdrawal whitelisting, cold storage, multi-sig for hot/cold operations (internal).
+- Insurance: một số sàn có bảo hiểm (limited); không đảm bảo toàn bộ user funds (FTX example).
+
+H. **Reconciliation & settlement (merchant tích hợp)**
+- Khi tích hợp CEX cho auto-convert: use exchange account (custodial) or subaccounts; reconcile deposits (txid -> exchange deposit -> exchange trade -> withdrawal fiat). Lưu price_used, fees, timestamps.
+
+I. **Rủi ro CEX (đã xảy ra thực tế)**
+- Sập sàn (bankrun / insolvency): Mt.Gox, FTX.
+- Hack/compromise: hot wallet drain.
+- Market manipulation, wash trading, insider listing.
+- Withdrawal freezes due to regulatory requests.
+
+===============================================================================
+4) DEX — chi tiết cơ chế & rủi ro riêng
+A. **AMM (Automated Market Maker)** — mô hình phổ biến
+- Pool dạng x-y (Uniswap V2) hoặc weighted (Balancer) hay stable-optimized (Curve).
+- Liquidity providers (LPs) deposit token pair, nhận LP tokens.
+- Giá được xác định theo invariant (x * y = k) hoặc các biến thể.
+- **Ưu:** permissionless, non-custodial, composable.  
+- **Nhược:** impermanent loss (IL), slippage cho lệnh lớn, front-running/MEV.
+
+B. **Order-book on-chain / hybrid DEX**
+- Một số DEX cung cấp order book off-chain + settlement on-chain (0x, Loopring).
+
+C. **AMM risks & concepts**
+- **Impermanent Loss:** tổn thất tạm thời khi token price diverges; LP cần hiểu chấp nhận IL vs trading fees.
+- **Slippage:** large swaps trượt giá; cần kiểm tra price impact & expectedOutput.
+- **Front-running & MEV (Miner/Max Extractable Value):** bots reorder/insert transactions to extract value; mitigations: private mempool, sequencers, frontrun-resistant designs (e.g., batch auctions, CWAMM).
+- **Rug pull / malicious pool:** deployer drain liquidity or token with transfer restrictions; always audit token contract.
+
+D. **Liquidity & depth**
+- Liquidity measured bằng USD value in pool (TVL) & price impact per $X trade.
+
+E. **DEX integrations for merchant**
+- Use on-chain receipts (txid) verification; support multiple chains; ability to generate token swap instructions in UI; but DEX not suitable for fiat settlements.
+
+F. **Smart contract & audit considerations**
+- Verify contract source on explorer; check audits from Certik/Quantstamp/PeckShield; check for renounced ownership, timelock, upgradeability.
+
+===============================================================================
+5) OTC & P2P — mechanics, risks, best practice
+A. **OTC Desk**
+- **Use case:** large blocks (>$100k or $1M+) to avoid slippage.
+- **Process:** client requests quote → OTC desk quotes size/price → client sends funds to custodied account (bank/wire/crypto) → desk executes on internal inventory or via multiple liquidity sources → settlement.
+- **KYC & Legal:** strict KYC/AML, source of funds checks.
+- **Counterparty risk:** choose reputable desks (institutional), check references, custody, insurance.
+
+B. **P2P peer-to-peer**
+- **Use case:** small-medium volumes retail. Platforms (Huobi P2P, Binance P2P) act as escrow.
+- **Mechanics:** buyer/seller list price → buyer pays seller via bank transfer/p2p method → seller releases crypto from escrow.
+- **Risks:** fake payment proof, bank chargebacks, identity spoofing. Use platform escrow, in-person verification, transaction ID.
+
+C. **Telegram/Zalo / informal groups (VN context)**
+- **Mechanics:** giao dịch OTC trực tiếp, thường thỏa thuận giá qua chat, chuyển khoản ngân hàng, gửi ảnh/biên lai, người bán gửi crypto sau khi xác nhận nhận tiền.
+- **Rủi ro cao:** impersonation, fake payment screenshots, blocked accounts, disputes without recourse, higher AML risk.
+- **Best practice:** avoid high volumes via informal channels; if dùng, require full KYC, use small test transfer, use reputable local OTC, request on-chain txid, keep conversation logs.
+
+===============================================================================
+6) Due diligence & red flags (CEX/DEX/OTC)
+A. **CEX due diligence checklist**
+- Licenses & regulatory status in home jurisdictions.
+- Proof of reserves / audit reports (partial reassurance).
+- Insurance coverage details & scope.
+- History of outages, past incidents, governance disclosures.
+- KYC/AML program & sanctions screening.
+- API reliability, SLAs, latency, support responsiveness.
+- Fee schedule & hidden spreads.
+
+B. **DEX due diligence checklist**
+- Contract code verified on explorer.
+- Third-party audits & audit reports.
+- Time-locked ownership / admin keys & multisig.
+- TVL & active liquidity depth.
+- Social signals & dev activity (GitHub, updates).
+- Existence of timelock, multisig for upgrades; no backdoors.
+
+C. **OTC/P2P due diligence**
+- For OTC desk: corporate info, client references, KYC process, settlement terms, netting procedures, custody arrangement.
+- For P2P: use platform escrow, check bank account name matches seller, avoid out-of-platform communications.
+
+D. **Red flags**
+- Unverified proof of reserves, opaque corporate structure, frequent unexplained outages, deposit/withdrawal freezes, deposit/withdrawal address changes announced privately, suspicious wallet addresses receiving large funds, token listed with enormous price spikes + low liquidity, seller requests off-platform payment or rush pressure.
+
+===============================================================================
+7) Compliance, KYC/AML & sanctions
+- **CEX & OTC**: bắt buộc KYC/AML, transaction monitoring, SAR filing, sanctions screening (OFAC, UN, EU lists).  
+- **DEX**: permissionless nature gây khó cho KYC; tuy nhiên projects/protocols có thể implement front-end KYC/whitelists (e.g., token sale).  
+- **Merchant**: nếu dùng CEX/OTC để settle, đảm bảo đối tác tuân thủ AML, có hợp đồng, recordkeeping. Với P2P/TG/Zalo, tăng kiểm tra KYC cho orders lớn.
+
+===============================================================================
+8) Tích hợp kỹ thuật (tổng quan cho devs & product)
+A. **CEX integration**
+- Create exchange account & API keys (trade-only / withdraw-enabled restrictions).
+- Use subaccounts to separate merchant funds / customer funds.
+- Implement:
+  - Market data (WebSocket) for prices & orderbook depth.
+  - Order placement & execution (REST/WS).
+  - Balance polling & webhook reconciliation (polling + ledger exports).
+- Security: IP whitelist for keys, dedicated API keys with restricted permissions, rotating keys, monitoring of API usage.
+
+B. **DEX integration**
+- Use on-chain watch: generate payment request (token address, amount, to_address), monitor mempool & confirmations.
+- For swaps: integrate router contract calls (approve → swapExactTokensForTokens) or generate UI deep-link for user wallet (WalletConnect).
+- For price estimates: query on-chain price or use aggregator APIs (1inch, Paraswap) to compute slippage & gas.
+
+C. **OTC integration**
+- Use secure CRM for quotes, signed confirmations (email/DocuSign), reconciliation of bank deposits and crypto settlements.
+- Use custody & settlement SLA in contract.
+
+D. **Reconciliation**
+- Always store: invoice_id, order_id, provider, txid(s), confirmations, amount_fiat, amount_crypto, price_used, fees.
+- Reconcile ledger vs exchange statement vs on-chain receipts nightly.
+
+E. **Monitoring & alerts**
+- Monitor exchange balances, deposit/withdraw failure rates, API error rates, order fills latency, exchange maintenance announcements.
+
+===============================================================================
+9) Operational playbooks & best practices (merchant-centric)
+- **Do not keep large balances on a single CEX.** Use cold storage and only hot wallet amounts required for operations.
+- **Use OTC for large trades** to avoid slippage; use multiple OTC desks for diversification.
+- **Whitelist withdrawal addresses** for exchange accounts; require multi-approvals for large withdrawals.
+- **Use subaccounts or segregated accounts** on exchanges for customer funds vs company funds if possible.
+- **Set withdrawal limits & cooling-off period** for new withdrawal addresses.
+- **Insurance & contract clauses**: confirm insurance scope, include indemnity & SLA in vendor contracts.
+- **Rate-limiting & retry logic** for exchange API; backoff strategies.
+
+===============================================================================
+10) Incident examples & lessons (tóm tắt)
+- **Mt. Gox (2014):** centralized custodial risk → importance of cold storage & proof of reserves.
+- **Coincheck (2018):** hot wallet vulnerability & missing security control → need for multi-sig & audits.
+- **FTX (2022):** commingling funds, lack of corporate controls, insolvency → importance of audits, transparent governance.
+- **Bridge hacks (Ronin, Wormhole):** cross-chain risk → bridge dependence is a material risk.
+
+Lesson: custody model matters; counterparty risk real — vet & diversify.
+
+===============================================================================
+11) KPIs & alerts đề nghị (monitoring)
+- Exchange deposit success rate (%) per day.
+- Withdrawal processing time median & 95th percentile.
+- API error rate & latency.
+- Hot wallet balance > threshold alert.
+- Orderbook spread & depth for accepted pairs (min liquidity).
+- Number of expired invoices due to price movement.
+- Rate of disputed/mismatched deposits (P2P fraud attempts).
+
+===============================================================================
+12) Due diligence checklist (copy/paste)
+- [ ] Exchange/commercial partner legal entity & registration verified.
+- [ ] Public incident history & resolution documented.
+- [ ] Proof of reserves / audit reports available and recent.
+- [ ] Insurance coverage details obtained & reviewed.
+- [ ] API reliability tested (latency, rate limits).
+- [ ] Withdrawal whitelist & 2FA/withdrawal approvals configured.
+- [ ] KYC/AML process and sanctions screening confirmed.
+- [ ] For DEX: contract verified + audit reports + multisig/timelock status checked.
+- [ ] For OTC: signed contract, settlement terms, escrow/custody details.
+- [ ] For P2P groups: avoid large trades; if unavoidable, require KYC, test small tx first, keep logs.
+
+===============================================================================
+13) Canned chatbot responses (copy-ready)
+- Q: “Sàn CEX là gì và khác DEX thế nào?”  
+  A: “CEX (sàn tập trung) do một công ty vận hành, giữ private keys thay bạn và cung cấp fiat on/off ramps. DEX (sàn phi tập trung) chạy trên blockchain, không giữ private keys của bạn — phù hợp khi bạn muốn tự custody. Mỗi loại có ưu/nhược riêng; bạn cần chọn theo nhu cầu: thanh khoản (CEX) vs custody & permissionless (DEX).”
+
+- Q: “Tôi có nên dùng OTC desk để bán 200k USD crypto không?”  
+  A: “Với khối lượng lớn, OTC thường tốt hơn vì giảm slippage. Chọn OTC desk có KYC rõ ràng, hợp đồng và settlement bằng escrow; yêu cầu reference & kiểm tra quy trình custody.”
+
+- Q: “Giao dịch qua Telegram/Zalo có rủi ro gì?”  
+  A: “Rất nhiều: giả mạo, không có escrow, chargeback/blocked account, khó truy cứu. Nếu phải dùng, yêu cầu KYC, test small transfer và giữ mọi ghi chép.”
+
+===============================================================================
+14) SQL & Python ví dụ nhỏ (monitor orderbook depth & wallet balance)
+
+SQL (giả sử đã lưu orderbook snapshots table):
+```sql
+-- orderbook_snapshots(snapshot_time, pair, bid_depth_usd, ask_depth_usd)
+SELECT pair, AVG(bid_depth_usd) as avg_bid, AVG(ask_depth_usd) as avg_ask
+FROM orderbook_snapshots
+WHERE snapshot_time >= NOW() - INTERVAL '1 day'
+GROUP BY pair
+ORDER BY avg_bid DESC;
+Python (check hot wallet balance & alert):
+
+python
+Sao chép mã
+import requests, smtplib
+
+def get_hot_wallet_balance(api_url):
+    r = requests.get(api_url) # e.g., your internal balancer endpoint
+    return r.json()
+
+balance = get_hot_wallet_balance("https://internal.example.com/hot_balance")
+threshold_usd = 50000
+if balance['total_usd'] > threshold_usd:
+    # send alert
+    print("ALERT: hot wallet balance above threshold:", balance['total_usd'])
+===============================================================================
+15) Tài liệu tham khảo & resources (để kiểm chứng / học thêm)
+
+Exchange docs: API docs (Binance API, Coinbase API, Kraken API).
+
+DEX docs: Uniswap docs, Curve docs, PancakeSwap docs.
+
+Compliance: FATF guidance for VASPs, OFAC sanctions lists.
+
+Incident postmortems (public blog posts from exchanges after hacks).
+
+===============================================================================
+16) Kết luận & hành động khuyến nghị (ngắn gọn)
+
+Merchant/ops: dùng CEX reputable + OTC cho lệnh lớn + cold custody cho quỹ. Hạn chế giao dịch lớn qua P2P informal channels.
+
+Engineering: implement robust API handling, reconciliation, withdrawal whitelists, monitoring.
+
+Compliance: vet partners, confirm KYC/AML, sanctions screening.
+
+Business: keep playbook for exchange incidents, diversify counterparties, ensure legal review for cross-border settlement.
+
+================================================================================

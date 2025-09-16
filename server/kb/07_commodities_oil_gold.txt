@@ -1,0 +1,257 @@
+# 07_commodities_oil_gold — Dầu & Vàng (Global + Vietnam) — KB chi tiết cho Chatbot / Ops
+
+-------------------------------------------------------------------------------
+PHẦN A — TỔNG QUAN NGẮN
+
+- Dầu: hàng hóa năng lượng tiêu biểu, giá tham chiếu (benchmarks) dùng để định giá hầu hết dầu thô và sản phẩm lọc (xăng, diesel, jet fuel). Thị trường dầu gồm spot, futures, swaps; biến động do cung-cầu, OPEC+, kho dự trữ, địa chính trị, và hoạt động tinh luyện/refinery margins. (Xem phần chi tiết bên dưới). :contentReference[oaicite:0]{index=0}
+
+- Vàng: tài sản trú ẩn & hàng hóa quý, giá tham chiếu toàn cầu (LBMA gold price, COMEX futures) — dùng làm hedge, là chỉ báo rủi ro vĩ mô và cấu thành tài sản dự trữ. Trong nước, vàng miếng (SJC) và các loại miếng/nhẫn là sản phẩm thương mại phổ biến. :contentReference[oaicite:1]{index=1}
+
+-------------------------------------------------------------------------------
+PHẦN B — DẦU MỎ (GLOBAL)
+
+1) Benchmarks chính (tóm tắt)
+- **Brent** (North Sea): benchmark chính cho dầu toàn cầu (đặc biệt châu Âu & châu Á) — “Brent” thường là chỉ số tham chiếu cho nhiều hợp đồng.  
+- **WTI (West Texas Intermediate)**: benchmark tiêu biểu cho thị trường Mỹ, giao nhận tại Cushing (Oklahoma).  
+- **Dubai / Oman**: benchmarks cho dầu vùng Trung Đông / châu Á (áp dụng nhiều cho thị trường châu Á).  
+Các benchmark khác: Tapis (Singapore), OPEC Basket, Urals (Nga). :contentReference[oaicite:2]{index=2}
+
+2) Cách tính & đơn vị
+- Giá dầu thường tính **$/barrel** (1 barrel = 159 lít ~ 42 US gallons).  
+- Sản phẩm lọc (xăng/diesel) tính theo **$/tonne** hoặc **VND/lít** tại thị trường nội địa sau khi cộng thuế/phí.  
+
+3) Công cụ giao dịch & hedging
+- Futures (NYMEX/ICE), swaps, options, OTC forwards; basis trading (Brent–WTI spread).
+- Refinery margin / crack spread: chênh lệch giữa giá sản phẩm lọc và giá dầu thô — chỉ số quan trọng cho hoạt động lọc dầu.
+
+4) Drivers chính ảnh hưởng giá dầu
+- **Cung**: OPEC+ production policy, output disruptions (giàn dầu, hạ tầng), nguồn cung mới (shale, khai thác biển sâu).
+- **Cầu**: tăng trưởng kinh tế, vận tải, mùa du lịch, hiệu suất nhiên liệu.
+- **Refining & logistics**: refinery outages, maintenance seasons, shipping bottlenecks.
+- **Inventories**: EIA weekly stock changes (US), API reports, IEA/OPEC monthly reports.
+- **Tài chính / vĩ mô**: USD strength, lãi suất, positioning của quỹ, thị trường phái sinh.
+- **Địa chính trị**: xung đột vùng SNG/ Trung Đông, lệnh trừng phạt, đứt gãy chuỗi cung ứng.
+
+5) Term structure: contango vs backwardation
+- **Contango**: giá tương lai > giá spot → khuyến khích lưu kho (carry trade).
+- **Backwardation**: giá tương lai < spot → cho thấy nhu cầu ngắn hạn/thiếu hụt.
+
+6) Chỉ số/nguồn dữ liệu nên theo dõi hàng ngày/tuần
+- ICE/NYMEX futures quotes (Brent/WTI), Platts/Argus prices.
+- EIA weekly petroleum status report (US stocks).
+- Baker Hughes rig count (xu hướng sản xuất shale).
+- OPEC Monthly Oil Market Report, IEA Oil Market Report.
+- Freight (VLCC/TC rates) & bunker fuel prices (ảnh hưởng chi phí logistics).
+(Chú ý: nhiều nguồn cần API/key; dùng trusted providers hoặc paid feeds nếu cần độ tin cậy cao.)
+
+-------------------------------------------------------------------------------
+PHẦN C — DẦU MỎ (VIỆT NAM) — THỰC TRẠNG & CHÍNH SÁCH
+
+1) Sản xuất & lọc
+- Việt Nam có sản xuất dầu thô (một số mỏ biển) nhưng vẫn **nhập khẩu nhiều dầu thô** để chạy nhà máy lọc.  
+- Các nhà máy lọc lớn: **Dung Quất Refinery** (BSR) — capacity ~130–140 kbbl/d (≈140,000 b/d) (first refinery), và **Nghi Sơn Refinery** — capacity ~200,000 b/d (khoảng 10 triệu tấn/năm). Những nhà máy này chủ yếu xử lý dầu nhập khẩu và một phần crude nội địa. :contentReference[oaicite:3]{index=3}
+
+2) Nguồn cung & import diversification
+- Do sản lượng dầu nội địa giảm, Dung Quất / Nghi Sơn phải nhập nhiều loại crude khác nhau (Azeri Light, Murban, Kuwait blends...) để tối ưu hóa chi phí và hoạt động chuyển đổi. Ghi nhận về việc Dung Quất đa dạng hóa nguồn (ví dụ mua Murban, tin tức gần đây). :contentReference[oaicite:4]{index=4}
+
+3) Cơ chế điều hành giá xăng dầu (Việt Nam)
+- Giá bán lẻ xăng dầu được theo dõi và điều hành theo khung pháp lý, Bộ Công Thương công bố **giá cơ sở**, có sử dụng **Quỹ bình ổn giá xăng dầu** để bù/hoãn điều chỉnh. Có các văn bản hướng dẫn cơ chế quản lý quỹ và điều hành giá (thông báo, Thông tư, Nghị định). Khi giá cơ sở được công bố, thương nhân đầu mối/ phân phối điều chỉnh giá bán theo quy định. :contentReference[oaicite:5]{index=5}
+
+4) Thuế & phụ phí liên quan (gợi ý cần biết)
+- Giá xăng bán lẻ = giá nhập khẩu/giá cơ sở + thuế TTĐB (nếu có) + VAT + quỹ bình ổn + phí môi trường + lợi nhuận thương nhân (theo quy định). (Cần tham chiếu Thông tư/ Nghị định để biết mức cụ thể — thường thay đổi theo chính sách).
+
+5) Tác động cụ thể tới logistics & e-commerce
+- Biến động giá dầu → ảnh hưởng trực tiếp đến chi phí vận chuyển (shipper), vận hành kho bãi (điện, chạy máy phát), và phí shipping. Merchant nên có policy điều chỉnh surcharge (fuel surcharge) theo ngưỡng (ví dụ: khi giá xăng tăng > X% trong 30 ngày).
+- Gợi ý operational: theo dõi monthly average fuel price; đặt trigger tự động để bật/tắt fuel surcharge; cập nhật chính sách giao hàng rõ ràng cho khách.
+
+-------------------------------------------------------------------------------
+PHẦN D — VÀNG (GLOBAL)
+
+1) Benchmarks & sàn chính
+- **LBMA Gold Price** (London) — tham chiếu spot & OTC cho vàng miếng/liquidity lớn. :contentReference[oaicite:6]{index=6}  
+- **COMEX (NYMEX) Gold futures** (GC) — hợp đồng tương lai chuẩn, dùng để hedging/spec.  
+- **Shanghai Gold Exchange (SGE)** — quan trọng cho thị trường Trung Quốc/Châu Á.  
+- Vàng giao ngay (spot) được báo bằng **$/troy ounce** (1 troy ounce = 31.1034768 grams). :contentReference[oaicite:7]{index=7}
+
+2) Vai trò của vàng
+- Safe-haven, hedge chống lạm phát, tài sản dự trữ quốc gia (central bank reserves), cơ sở sản phẩm trang sức, công nghiệp.
+
+3) Drivers chính của giá vàng
+- Lãi suất thực (real rates) — giảm lãi suất thực thường hỗ trợ giá vàng.  
+- USD strength (giá vàng thường nghịch biến so với USD).  
+- Cầu vật chất (jewelry, central bank buying) và ETF flows (vốn vào/ra các ETF như GLD).  
+- Nhu cầu trang sức ở Châu Á (Ấn Độ, Trung Quốc) theo mùa lễ/tết.  
+- Supply shock/hacking/tình trạng nguồn cung (rất hiếm so với dầu).
+
+-------------------------------------------------------------------------------
+PHẦN E — VÀNG (VIỆT NAM) — ĐẶC THÙ NỘI ĐỊA
+
+1) Thương hiệu & sản phẩm
+- **SJC (Saigon Jewelry Company)** là một trong các thương hiệu vàng miếng chuẩn phổ biến tại VN (vàng miếng SJC, giá niêm yết theo VND). Trong nước còn có các thương hiệu khác: DOJI, PNJ, Bảo Tín Minh Châu… :contentReference[oaicite:8]{index=8}
+
+2) Đơn vị & trọng lượng thường dùng ở VN
+- Thông dụng: **1 lượng (1 "lượng" / tael)** Việt Nam tương đương **≈ 37.5 grams** (luôn xác minh theo quy định và theo loại sản phẩm). Vàng giao quốc tế lại dùng troy ounce (31.1034768 g). Khi quy đổi giữa VND ↔ USD ↔ ounce cần lưu ý conversion unit. :contentReference[oaicite:9]{index=9}
+
+3) Giá trong nước & chênh lệch
+- Giá vàng trong nước (SJC) thường có **premium** so với giá quốc tế do chi phí sản xuất, quản lý, VAT, và biên độ thương mại; đồng thời biến động theo tỷ giá VND/USD. Merchant bán vàng (tiệm trang sức) cần quản lý spread & inventory hedging.
+
+4) Lưu trữ & an toàn
+- Vàng miếng/nhẫn cần kho bạc an toàn; doanh nghiệp bán vàng nên cân nhắc multi-sig, kho ký gửi, bảo hiểm kho, và quy trình kiểm chứng (assay, hallmark).
+
+-------------------------------------------------------------------------------
+PHẦN F — CHỈ SỐ & DỮ LIỆU NÊN LƯU TRỮ (KB / RAG)
+
+1) Hằng ngày:
+- Brent / WTI spot & front-month futures, Dubai/Oman quotes.
+- Vàng spot (LBMA AM/PM), COMEX front-month price.
+- Hoa hồng/refinery margins (crack spread) hàng ngày/tuần.
+- Giá xăng/diesel nội địa (thông báo Bộ Công Thương), quỹ bình ổn, thuế áp dụng.
+- Giá vàng SJC (bid/ask) trong nước, tỷ giá USD/VND.
+
+2) Hằng tuần:
+- EIA Weekly petroleum status (US crude & product stocks).
+- ETF flows (weekly) cho vàng (net inflows/outflows).
+- Baker Hughes rig count (xu hướng sản xuất).
+
+3) Hằng tháng / quý:
+- OPEC Monthly report, IEA monthly, tiền gửi dự trữ vàng (central bank), TVL/flows (nếu áp dụng cho commodity-linked exposures).
+
+-------------------------------------------------------------------------------
+PHẦN G — ẢNH HƯỞNG TỚI THƯƠNG MẠI ĐIỆN TỬ (E-COMMERCE)
+
+1) Dầu → Logistics & Giá Bán
+- Tác động trực tiếp: chi phí giao hàng tăng → cần điều chỉnh shipping fee / fuel surcharge.  
+- Tác động gián tiếp: lạm phát chi phí vận chuyển → chi phí vận hành tăng → có thể ảnh hưởng giá bán & lợi nhuận.  
+- Hành động gợi ý: tự động cập nhật surcharge khi giá xăng tăng > X% so với baseline 30-day; công bố rõ ràng với khách.
+
+2) Vàng → Thanh toán & Sản phẩm
+- Với merchant bán trang sức: giá nhập & tồn kho bị ảnh hưởng bởi biến động giá vàng quốc tế & tỉ giá. Cần chính sách hedging (khi nhập khẩu nhiều) và ghi price_used, timestamp trên hóa đơn.  
+- Vàng ít ảnh hưởng tới payment gateway trừ trường hợp merchant chấp nhận thanh toán bằng vàng (hiếm) — nhưng có tác động lớn tới accounting & tax.
+
+-------------------------------------------------------------------------------
+PHẦN H — RỦI RO, HEDGING & QUY TRÌNH (PRACTICAL)
+
+1) Hedge examples
+- **Fuel cost hedging**: airlines/logistics dùng futures/swaps hoặc mua fuel options để khóa giá; merchant logistics aggregator có thể dùng đoạn hợp đồng supply/contract indexing.  
+- **Gold exposure hedging**: jewelry retailers có thể hedging bằng short futures hoặc options (COMEX) hoặc forward purchase contracts để khóa giá mua.  
+- **Treasury policy**: đặt limit (%) tài sản giữ bằng vàng/crypto; auto-convert thresholds.
+
+2) Policies & SOP gợi ý
+- Gán thresholds: nếu Brent or retail gasoline price tăng > 8% trong 30d → bật fuel surcharge.  
+- Settlement: for high-value gold transactions, require KYC & escrow; for fuel-sensitive shipping contracts, renegotiation clause if price vượt ngưỡng.  
+- For refunds: track price_used & timestamp để tính toán phần bù/ổn định.
+
+-------------------------------------------------------------------------------
+PHẦN I — MẪU DỮ LIỆU / DB / JSON / SQL / PYTHON (ví dụ để lưu snapshot giá hàng ngày)
+
+1) JSON snapshot mẫu (daily commodity price)
+{
+  "date":"2025-09-16",
+  "brent_usd_per_bbl":86.12,
+  "wti_usd_per_bbl":83.45,
+  "dubai_usd_per_bbl":84.10,
+  "lbma_gold_usd_per_oz":1920.50,
+  "sjc_gold_vnd_per_tael":134320000,
+  "usd_vnd":23500,
+  "viet_gas_retail_vnd_per_liter":24000,
+  "sources":["ICE","NYMEX","LBMA","SJC","MoIT"],
+  "timestamp":"2025-09-16T08:00:00+07:00"
+}
+
+2) SQL mẫu — bảng prices_daily
+CREATE TABLE commodity_prices_daily (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  date DATE,
+  commodity VARCHAR(50), -- 'brent','wti','lbma_gold','sjc_gold','vn_gas'
+  price NUMERIC(18,6),
+  unit VARCHAR(20),
+  source VARCHAR(100),
+  fetched_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+3) SQL để lấy biến động 30 ngày:
+SELECT p1.commodity, p1.price AS price_now, p30.price AS price_30d_ago,
+       ((p1.price - p30.price) / p30.price) * 100 AS pct_change_30d
+FROM (SELECT commodity, price FROM commodity_prices_daily WHERE date = CURRENT_DATE) p1
+JOIN (SELECT commodity, price FROM commodity_prices_daily WHERE date = CURRENT_DATE - INTERVAL '30 days') p30
+  ON p1.commodity = p30.commodity;
+
+4) Python pseudo-code lấy LBMA / ICE / SJC (gợi ý)
+# Pseudo (require proper API endpoints & keys)
+import requests
+def fetch_brent():
+    # call ICE or data vendor
+    pass
+def fetch_sjc():
+    r = requests.get('https://sjc.com.vn/bieu-do-gia-vang')
+    # parse HTML to extract today's price or use official API if available
+    pass
+
+-------------------------------------------------------------------------------
+PHẦN J — CẢNH BÁO & ALERTS (PRACTICAL TRIGGERS)
+
+Một số trigger ưu tiên hiển thị/alert:
+- Brent/WTI biến động > ±8% trong 7 ngày → review pricing policy.
+- Giá bán lẻ xăng VN tăng > X% (configure) → bật fuel surcharge auto.
+- SJC gold change > ±5% trong 3 ngày → inventory reprice & notify procurement.
+- Vàng LBMA tăng đột biến + ETF inflows > threshold → check margin requirements if hedged.
+- Refinery outage (Dung Quat / Nghi Son) → anticipate product tightness & local price pressure. :contentReference[oaicite:10]{index=10}
+
+-------------------------------------------------------------------------------
+PHẦN K — CANNED RESPONSES (CHO CHATBOT)
+
+1) Người hỏi: "Brent là gì?"
+→ "Brent là benchmark dầu thô Bắc Hải, được sử dụng rộng rãi làm tham chiếu cho giá dầu toàn cầu, bên cạnh WTI (Mỹ) và Dubai/Oman (Trung Đông)."
+
+2) Người hỏi: "Giá dầu ảnh hưởng tới cửa hàng mình thế nào?"
+→ "Giá dầu tăng làm tăng chi phí vận chuyển & logistics, ảnh hưởng phí giao hàng; merchant thường dùng 'fuel surcharge' mà hệ thống có thể bật tự động khi giá vượt ngưỡng."
+
+3) Người hỏi: "1 lượng vàng SJC nặng bao nhiêu gam?"
+→ "1 lượng (tael / lượng) vàng truyền thống ở VN tương đương khoảng 37.5 grams; vàng quốc tế thường dùng troy ounce (1 ozt = 31.1034768 g). Lưu ý: luôn kiểm tra cách đơn vị báo tại nguồn bán (SJC...). " :contentReference[oaicite:11]{index=11}
+
+4) Người hỏi: "Tôi nên làm gì khi gas ETH tăng mạnh?"
+→ "Nếu ETH gas tăng vượt ngưỡng cấu hình, hệ thống có thể tạm ẩn lựa chọn ERC20 và khuyến nghị khách dùng USDT-TRC20 hoặc Layer-2. Bạn có muốn mình kiểm tra gas median 24h ngay bây giờ?"
+
+-------------------------------------------------------------------------------
+PHẦN L — NHIỀU GỢI Ý THỰC TIỄN & TÀI NGUYÊN (REFERENCES / DATA PROVIDERS)
+- Dầu: ICE (Brent), NYMEX (WTI), Platts, Argus, EIA (US weekly), IEA, OPEC reports. :contentReference[oaicite:12]{index=12}
+- VN-specific: Bộ Công Thương (thông báo giá cơ sở xăng dầu), Quỹ bình ổn giá, Circular về quản lý quỹ bình ổn. :contentReference[oaicite:13]{index=13}
+- Refineries VN: Dung Quất (BSR), Nghi Sơn — capacity & news. :contentReference[oaicite:14]{index=14}
+- Vàng: LBMA (spot), COMEX (futures), SJC (giá VN). :contentReference[oaicite:15]{index=15}
+- Đơn vị & chuyển đổi: troy ounce → gram, tael (≈37.5 g). :contentReference[oaicite:16]{index=16}
+
+-------------------------------------------------------------------------------
+PHẦN M — PLAYBOOK NGẮN KHI CÓ SỰ KIỆN (QUICK ACTIONS)
+
+A. Giá xăng VN nhảy > 10% trong 48h:
+- Pause auto-settlement to crypto for large orders? (tùy policy)
+- Bật fuel surcharge; notify CS & logistics; review shipping SLA.
+
+B. Vàng LBMA tăng > 8% trong 7 ngày:
+- Jewelry merchant: delay large purchases if speculative; contact suppliers to renegotiate terms; consider short hedge.
+
+C. Dung Quất / Nghi Sơn outage báo cáo:
+- Anticipate product tightness → alert procurement; review local retail fuel prices.
+
+-------------------------------------------------------------------------------
+PHẦN N — KẾT (TÓM TẮT)
+File này là nguồn tham chiếu toàn diện để:
+- Tích hợp vào KB chatbot (FAQs, canned replies, automation triggers).
+- Dùng cho ops/treasury/marketing/finance để lập policy fuel surcharge, hedging, inventory reprice.
+- Lưu trữ snapshot giá hàng ngày để audit & reconciliation.
+
+-------------------------------------------------------------------------------
+SOURCES (chọn lọc, đọc để tham chiếu chi tiết)
+- Benchmarks dầu & giải thích: Investopedia — \"Understanding benchmark oils (Brent/WTI/Dubai)\". :contentReference[oaicite:17]{index=17}  
+- Dung Quất Refinery (capacity / info). :contentReference[oaicite:18]{index=18}  
+- Nghi Sơn Refinery (capacity / overview). :contentReference[oaicite:19]{index=19}  
+- Bộ Công Thương (thông tin điều hành giá xăng dầu VN / thông báo). :contentReference[oaicite:20]{index=20}  
+- SJC (giá vàng & sản phẩm vàng miếng VN). :contentReference[oaicite:21]{index=21}  
+- Tael / Liang mass (truyền thống — 37.5 g tham chiếu). :contentReference[oaicite:22]{index=22}
+
+-------------------------------------------------------------------------------
+VERSION: v1.0 — 07_commodities_oil_gold (comprehensive KB)
+If you want:
+- xuất file `07_commodities_oil_gold.txt` sẵn để tải về, hoặc
+- chuyển phần nào đó thành JSON/YAML để loader KB tự động, hoặc
+- thêm code thực tế (ví dụ Python script kết nối EIA / LBMA / SJC) — mình sẽ viết tiếp.
