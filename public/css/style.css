@@ -6967,6 +6967,17 @@ ul.timeline .left-arrow:after {
   margin-top: 12px;
   padding: 8px 14px;
 }
+/* Ẩn toggle mặc định */
+#toggleMenu {
+  display: none;
+}
+
+/* Hiện toggle khi màn hình nhỏ hơn 768px */
+@media (max-width: 768px) {
+  #toggleMenu {
+    display: block;
+  }
+}
 
 
 
