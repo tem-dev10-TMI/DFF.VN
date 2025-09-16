@@ -3,30 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar Mobile Demo</title>
-
-  <!-- Font Awesome cho icon -->
+  <title>Sidebar Mobile</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-    }
-
-    /* Sidebar */
+    /* --- Sidebar Mobile --- */
     .sidebar-mobile {
-      width: 250px;
-      background: #fff;
+      width: 240px;
+      background: #f8f9fa;
       border-right: 1px solid #ddd;
       height: 100vh;
+      overflow-y: auto;
       position: fixed;
       top: 0;
       left: 0;
-      overflow-y: auto;
-      transition: transform 0.3s ease;
-      z-index: 1000;
+      transition: all 0.3s ease;
     }
 
     .sidebar-mobile ul {
@@ -38,156 +28,147 @@
     .sidebar-mobile ul li a {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 16px;
+      gap: 6px;
+      padding: 10px 14px;
       text-decoration: none;
       color: #333;
-      font-size: 15px;
+      font-size: 14px;
     }
 
-    .sidebar-mobile ul li a:hover {
-      background: #f0f0f0;
+    /* Active */
+    .sidebar-mobile ul li.active a,
+    .sidebar-mobile ul li.active i,
+    .sidebar-mobile ul li.active svg {
+      color: red;
+      font-weight: 600;
     }
-
-    .sidebar-mobile ul li.active a {
-      background: #ffecec;
-      color: #c00;
-      font-weight: bold;
-    }
-
-    /* Icon */
-    .icon {
-      width: 20px;
-      height: 20px;
+    .sidebar-mobile ul li.active i,
+    .sidebar-mobile ul li.active svg {
+      border: 2px solid red;
+      border-radius: 6px;
+      padding: 2px;
       display: inline-block;
-      text-align: center;
-      vertical-align: middle;
-      flex-shrink: 0;
     }
 
-    .icon img.topic-thumb {
-      width: 20px;
-      height: 20px;
-      object-fit: contain;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .icon .fallback {
-      display: none;
+    /* Icon mặc định */
+    .sidebar-mobile ul li i,
+    .sidebar-mobile ul li svg {
+      border: none;
+      padding: 0;
+      width: 18px;
+      height: 18px;
       font-size: 18px;
-      line-height: 20px;
-      vertical-align: middle;
       color: inherit;
     }
 
-    /* Tiêu đề section */
-    .section-title {
+    .sidebar-mobile ul li img.topic-thumb {
+      width: 18px;
+      height: 18px;
+      object-fit: contain;
+    }
+
+    /* Section Title */
+    .sidebar-mobile ul li.section-title {
       font-size: 12px;
       font-weight: bold;
       color: #777;
       margin-top: 10px;
-      padding: 6px 16px;
-      text-transform: uppercase;
+      padding: 8px 14px;
     }
 
-    /* Responsive */
+    /* Responsive: thu nhỏ sidebar */
     @media (max-width: 768px) {
       .sidebar-mobile {
-        transform: translateX(-100%);
+        width: 60px;
       }
-      .sidebar-mobile.open {
-        transform: translateX(0);
-      }
-      .menu-toggle {
-        display: block;
+      .sidebar-mobile ul li a span {
+        display: none;
       }
     }
 
-    /* Nút toggle */
-    .menu-toggle {
-      display: none;
+    /* Responsive: dạng off-canvas */
+    @media (max-width: 480px) {
+      .sidebar-mobile {
+        left: -240px;
+      }
+      .sidebar-mobile.active {
+        left: 0;
+      }
+    }
+
+    /* Toggle button */
+    #toggleMenu {
       position: fixed;
       top: 10px;
       left: 10px;
-      background: #c00;
-      color: #fff;
-      border: none;
-      padding: 10px 14px;
-      border-radius: 6px;
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 6px 10px;
+      font-size: 18px;
       cursor: pointer;
       z-index: 1001;
-    }
-
-    .content {
-      margin-left: 250px;
-      padding: 20px;
-    }
-
-    @media (max-width: 768px) {
-      .content {
-        margin-left: 0;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Nút toggle mobile -->
-  <button class="menu-toggle" onclick="toggleSidebar()">
-    <i class="fas fa-bars"></i> Menu
-  </button>
+<!-- Toggle button -->
+<button id="toggleMenu" aria-label="Mở menu">☰</button>
 
-  <!-- Sidebar -->
-  <nav class="sidebar-mobile" id="sidebar">
-    <ul>
-      <li class="active"><a href="/"><span class="icon"><i class="fas fa-home"></i></span> <span>Trang chủ</span></a></li>
-      <li><a href="/latest"><span class="icon"><i class="far fa-clock"></i></span> <span>Mới nhất</span></a></li>
-      <li><a href="/trends"><span class="icon"><i class="fas fa-fire"></i></span> <span>Xu hướng</span></a></li>
-      <li><a href="/comments"><span class="icon"><i class="far fa-comment-dots"></i></span> <span>Bình luận</span></a></li>
+<!-- START: Sidebar -->
+<nav class="sidebar-mobile" aria-label="Thanh điều hướng">
+  <ul class="menu">
+    <li><a href="/"><i class="fas fa-home"></i> <span>Trang chủ</span></a></li>
+    <li><a href="/latest"><i class="far fa-clock"></i> <span>Mới nhất</span></a></li>
+    <li><a href="/trends"><i class="fas fa-fire"></i> <span>Xu hướng</span></a></li>
+    <li><a href="/comments"><i class="far fa-comment-dots"></i> <span>Bình luận</span></a></li>
 
-      <li class="section-title">Chủ đề</li>
-      <li><a href="/topic/vi-mo"><span class="icon"><img class="topic-thumb" src="public/img/topic-vimo.svg" alt="Vĩ mô" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><i class="fas fa-chart-line fallback"></i></span> <span>Vĩ mô</span></a></li>
-      <li><a href="/topic/thi-truong"><span class="icon"><img class="topic-thumb" src="public/img/topic-thitruong.svg" alt="Thị trường" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"><i class="fas fa-chart-bar fallback"></i></span> <span>Thị trường</span></a></li>
-      <li><a href="/topic/crypto"><span class="icon"><i class="fab fa-bitcoin"></i></span> <span>Crypto</span></a></li>
-      <li><a href="/topic/360"><span class="icon"><i class="fas fa-industry"></i></span> <span>360° Doanh nghiệp</span></a></li>
-      <li><a href="/topic/tai-chinh"><span class="icon"><i class="fas fa-wallet"></i></span> <span>Tài chính</span></a></li>
-      <li><a href="/topic/nha-dat"><span class="icon"><i class="fas fa-building"></i></span> <span>Nhà đất</span></a></li>
-      <li><a href="/topic/quoc-te"><span class="icon"><i class="fas fa-globe"></i></span> <span>Quốc tế</span></a></li>
-      <li><a href="/topic/thao-luan"><span class="icon"><i class="fas fa-comments"></i></span> <span>Thảo luận</span></a></li>
+    <li class="section-title">CHỦ ĐỀ</li>
+    <li><a href="/topic/vi-mo"><img class="topic-thumb" src="public/img/topic-vimo.svg" alt=""> <span>Vĩ mô</span></a></li>
+    <li><a href="/topic/thi-truong"><img class="topic-thumb" src="public/img/topic-thitruong.svg" alt=""> <span>Thị trường</span></a></li>
+    <li><a href="/topic/crypto"><i class="fab fa-bitcoin"></i> <span>Crypto</span></a></li>
+    <li><a href="/topic/360"><i class="fas fa-industry"></i> <span>360° Doanh nghiệp</span></a></li>
+    <li><a href="/topic/tai-chinh"><i class="fas fa-wallet"></i> <span>Tài chính</span></a></li>
+    <li><a href="/topic/nha-dat"><i class="fas fa-building"></i> <span>Nhà đất</span></a></li>
+    <li><a href="/topic/quoc-te"><i class="fas fa-globe"></i> <span>Quốc tế</span></a></li>
+    <li><a href="/topic/thao-luan"><i class="fas fa-comments"></i> <span>Thảo luận</span></a></li>
 
-      <li class="section-title">Về</li>
-      <li><a href="/about"><span class="icon"><i class="fas fa-users"></i></span> <span>Về chúng tôi</span></a></li>
-      <li><a href="/policy-content"><span class="icon"><i class="fas fa-file-contract"></i></span> <span>Chính sách nội dung</span></a></li>
-      <li><a href="/privacy"><span class="icon"><i class="fas fa-shield-alt"></i></span> <span>Chính sách riêng tư</span></a></li>
-      <li><a href="/ads"><span class="icon"><i class="fas fa-ad"></i></span> <span>Quảng cáo</span></a></li>
-    </ul>
-  </nav>
+    <li class="section-title">VỀ</li>
+    <li><a href="/about"><i class="fas fa-users"></i> <span>Về chúng tôi</span></a></li>
+    <li><a href="/policy-content"><i class="fas fa-file-contract"></i> <span>Chính sách nội dung</span></a></li>
+    <li><a href="/privacy"><i class="fas fa-shield-alt"></i> <span>Chính sách riêng tư</span></a></li>
+    <li><a href="/ads"><i class="fas fa-ad"></i> <span>Quảng cáo</span></a></li>
+  </ul>
+</nav>
+<!-- END: Sidebar -->
 
-  <!-- Nội dung -->
-  <div class="content">
-    <h1>Demo Sidebar Mobile</h1>
-    <p>Bấm <b>Menu</b> trên màn hình nhỏ để mở sidebar.</p>
-  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const sidebar = document.querySelector(".sidebar-mobile");
+    const toggleBtn = document.getElementById("toggleMenu");
+    const allLis = document.querySelectorAll(".sidebar-mobile ul li");
+    const currentPath = window.location.pathname;
 
-  <script>
-    function toggleSidebar() {
-      document.getElementById("sidebar").classList.toggle("open");
-    }
-
-    // Active item khi click
-    document.addEventListener("DOMContentLoaded", function() {
-      const lis = document.querySelectorAll(".sidebar-mobile ul li");
-      lis.forEach(li => {
-        const a = li.querySelector("a");
-        if (a) {
-          a.addEventListener("click", function() {
-            lis.forEach(el => el.classList.remove("active"));
-            li.classList.add("active");
-          });
-        }
-      });
+    // Toggle sidebar cho mobile nhỏ
+    toggleBtn.addEventListener("click", () => {
+      sidebar.classList.toggle("active");
     });
-  </script>
+
+    // Auto active theo URL
+    allLis.forEach(li => {
+      const a = li.querySelector("a");
+      if (a) {
+        if (currentPath.startsWith(a.getAttribute("href"))) {
+          li.classList.add("active");
+        }
+        a.addEventListener("click", function() {
+          allLis.forEach(item => item.classList.remove("active"));
+          li.classList.add("active");
+        });
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
