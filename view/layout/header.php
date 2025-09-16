@@ -30,6 +30,228 @@
             <div class="header-right">
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
+                    <!-- BẮT ĐẦU PHẦN BÌNH LUẬN -->
+<div class="comment-box">
+  <!-- Header -->
+  <div class="comment-header"><i class="fas fa-comments"></i> Hi! DFF</div>
+
+  <!-- Danh sách bình luận -->
+  <div class="comment-list" id="commentList">
+    <div class="comment">
+      <div class="avatar">C</div>
+      <div class="comment-content">
+        <div>
+          <span class="comment-name">Việt Chung</span>
+          <span class="comment-time">1 giờ trước</span>
+        </div>
+        <div class="comment-text">
+          Nếu nâng hạng thì cứ bank, chứng, thép mà múc thôi @@
+        </div>
+        <div class="comment-actions">
+          <div class="vote">
+            <button><i class="fa-regular fa-circle-up"></i></button>
+            <span>0</span>
+            <button><i class="fa-regular fa-circle-down"></i></button>
+          </div>
+          <span class="reply">Trả lời</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="comment">
+      <div class="avatar" style="background:#1565c0;">H</div>
+      <div class="comment-content">
+        <div>
+          <span class="comment-name">Phạm Hải</span>
+          <span class="comment-time">1 giờ trước</span>
+        </div>
+        <div class="comment-text">
+          BTC, UBCK đang có chuyến công tác tại Anh, trong chương trình làm việc có gặp FTSE Russell. Hy vọng có tin vui...
+        </div>
+        <div class="comment-actions">
+          <div class="vote">
+            <button><i class="fa-regular fa-circle-up"></i></button>
+            <span>0</span>
+            <button><i class="fa-regular fa-circle-down"></i></button>
+          </div>
+          <span class="reply">Trả lời</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer nhập bình luận -->
+  <div class="comment-footer">
+    <input type="text" id="commentInput" placeholder="Viết bình luận...">
+    <button id="sendBtn"><i class="fa-solid fa-paper-plane"></i></button>
+  </div>
+</div>
+<!-- KẾT THÚC PHẦN BÌNH LUẬN -->
+
+<!-- STYLE -->
+<style>
+.comment-box {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  font-family: Arial, sans-serif;
+}
+
+.comment-header {
+  background: #0d47a1;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px 14px;
+  font-size: 16px;
+}
+
+.comment-list {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  padding: 10px 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #0d47a1;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 10px;
+  font-size: 14px;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-name {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.comment-time {
+  font-size: 12px;
+  color: #666;
+  margin-left: 6px;
+}
+
+.comment-text {
+  margin: 4px 0;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.comment-actions {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  color: #0d47a1;
+  gap: 15px;
+  margin-top: 4px;
+}
+
+.vote {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #333;
+}
+
+.vote button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #555;
+}
+
+.vote span {
+  font-size: 13px;
+  color: #000;
+}
+
+.reply {
+  cursor: pointer;
+}
+
+.comment-footer {
+  display: flex;
+  align-items: center;
+  border-top: 1px solid #ddd;
+  padding: 8px;
+  background: #f9f9f9;
+}
+
+.comment-footer input {
+  flex: 1;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+.comment-footer button {
+  background: #0d47a1;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  margin-left: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+}
+</style>
+
+<!-- SCRIPT -->
+<script>
+const sendBtn = document.getElementById("sendBtn");
+const commentInput = document.getElementById("commentInput");
+const commentList = document.getElementById("commentList");
+
+sendBtn.addEventListener("click", () => {
+  const text = commentInput.value.trim();
+  if (text !== "") {
+    const comment = document.createElement("div");
+    comment.classList.add("comment");
+    comment.innerHTML = `
+      <div class="avatar">U</div>
+      <div class="comment-content">
+        <div>
+          <span class="comment-name">Bạn</span>
+          <span class="comment-time">vừa xong</span>
+        </div>
+        <div class="comment-text">${text}</div>
+        <div class="comment-actions">
+          <div class="vote">
+            <button><i class="fa-regular fa-circle-up"></i></button>
+            <span>0</span>
+            <button><i class="fa-regular fa-circle-down"></i></button>
+          </div>
+          <span class="reply">Trả lời</span>
+        </div>
+      </div>
+    `;
+    commentList.prepend(comment);
+    commentInput.value = "";
+    commentList.scrollTop = 0;
+  }
+});
+</script>
+
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
                                 title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
                             <ul class="dropdown-menu hide">
