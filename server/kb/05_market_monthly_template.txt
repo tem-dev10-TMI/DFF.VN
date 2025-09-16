@@ -1,8 +1,4 @@
 # 05_market_monthly_template — Gợi ý Phân tích Thị trường Crypto Hàng Tháng (KB cho Chatbot & Báo cáo)
-
-Mục tiêu:
-Tổng kết xu hướng 30 ngày, nhận diện các chất xúc tác chính (catalysts), phân tích dòng tiền & hành vi nhà đầu tư, và đưa ra nhận định / checklist có tính ứng dụng cho đội e-commerce (phí, stablecoin, rủi ro thanh toán). File này là template chi tiết — bạn chỉ việc copy & paste vào `05_market_monthly_template.txt`.
-
 ===============================================================================
 A. KẾT QUẢ MONG MUỐN (Output)
 - Một đoạn tóm tắt 2–3 câu về xu hướng 30 ngày (direction + volatility).

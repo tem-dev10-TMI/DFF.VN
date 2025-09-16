@@ -1,6 +1,5 @@
 # 02_wallet_security — Bảo mật ví Crypto cho cửa hàng & khách hàng (Chi tiết cho KB chatbot)
-
-Mục tiêu: Cung cấp tài liệu tri thức chi tiết để chatbot và đội ngũ vận hành tham chiếu khi trả lời/triển khai chính sách bảo mật ví và xử lý gian lận trong thanh toán crypto.
+chi tiết để chatbot và đội ngũ vận hành tham chiếu khi trả lời/triển khai chính sách bảo mật ví và xử lý gian lận trong thanh toán crypto.
 
 ========================================================================
 0. Ghi chú chung

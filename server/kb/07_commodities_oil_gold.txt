@@ -1,8 +1,5 @@
 # 07_commodities_oil_gold — Dầu & Vàng (Global + Vietnam) — KB chi tiết cho Chatbot / Ops
 
-Mục tiêu:
-Cung cấp kiến thức toàn diện để chatbot và đội ops/finance hiểu, phân tích và hành động khi làm việc với biến động dầu mỏ và vàng — cả thị trường quốc tế lẫn bối cảnh Việt Nam. Bao gồm: định nghĩa, benchmarks, drivers, dữ liệu cần theo dõi, ảnh hưởng tới e-commerce, mẫu dữ liệu/SQL/JSON/Python, cảnh báo & playbook.
-
 -------------------------------------------------------------------------------
 PHẦN A — TỔNG QUAN NGẮN
 

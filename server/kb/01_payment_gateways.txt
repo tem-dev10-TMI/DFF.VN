@@ -1,12 +1,5 @@
 # 01_payment_gateways — Cổng thanh toán Crypto (Chi tiết cho KB chatbot)
 
-Mục tiêu:
-Tài liệu tri thức chi tiết để chatbot, dev, ops và bộ phận support tham chiếu khi triển khai, vận hành và tư vấn mọi câu hỏi liên quan tới **cổng thanh toán tiền mã hóa** cho thương mại điện tử.
-
-Phiên bản: v1.2
-Ngày: 2025-09-16
-Người soạn: [TEAM / KB GENERATOR]
-
 ====================================================================
 1. PHẠM VI & MỤC ĐÍCH
 - Phạm vi: thanh toán on-chain (BTC, ETH, ERC20, TRC20...), stablecoin (USDT, USDC...), cổng custodial (Coinbase Commerce, BitPay...), self-hosted (BTCPay), webhook, refund, xác nhận on-chain, accounting, security, UX.

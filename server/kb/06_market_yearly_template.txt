@@ -1,7 +1,4 @@
 # 06_market_yearly_template — Gợi ý Phân tích Thị trường Crypto Hàng Năm (KB cho Chatbot & Báo cáo)
-Phiên bản: v1.0
-Mục đích: Tổng kết chu kỳ 12 tháng (YTD / Last 12 months), nhận diện các mốc sự kiện lớn, phân tích dòng tiền & hạ tầng, rút ra bài học và khuyến nghị quy trình vận hành cho bộ phận e-commerce/ops. File này là template chi tiết — copy nguyên văn vào `06_market_yearly_template.txt`.
-
 ================================================================================
 A. KẾT QUẢ MONG MUỐN (Output)
 - Một đoạn tóm tắt 3–5 câu (bull / bear / sideways + driver chính).

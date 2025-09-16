@@ -1,7 +1,4 @@
 # 04_market_daily_template — Daily Market Analysis Template (Crypto & E-commerce)
-
-Mục tiêu: Cung cấp khuôn mẫu, hướng dẫn kỹ thuật và nội dung để tạo báo cáo tóm tắt biến động thị trường crypto trong 24h, dễ đọc cho team/khách hàng và có thể dùng làm output của chatbot. Bao gồm: chỉ số chính, cách tính, template văn bản, rules cảnh báo, code & JSON/SQL ví dụ để tự động hóa.
-
 =====================================================================================
 1) Kết quả mong muốn (output)
 - Một câu tóm tắt ngắn (1–2 câu) về xu hướng 24h.

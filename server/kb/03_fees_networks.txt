@@ -1,7 +1,5 @@
 # 03_fees_networks — Phí giao dịch & Mạng lưới (Chi tiết cho KB chatbot)
 
-Mục tiêu: Cung cấp tài liệu tri thức chi tiết để chatbot, dev & đội vận hành tham chiếu khi triển khai/giải thích phí giao dịch, lựa chọn chain cho stablecoin, tính phí mạng, và xử lý các tình huống liên quan tới phí trên thương mại điện tử.
-
 ========================================================================
 0. Ghi chú tổng quan
 - Phí mạng (network fee) là chi phí trả cho miner/validator để xử lý giao dịch trên blockchain. Mỗi chain có cơ chế tính khác nhau (satoshis/vByte cho BTC, gas/gwei cho Ethereum, gas/tGas cho Tron...).
