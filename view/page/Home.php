@@ -252,160 +252,55 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </div>
 
         
+            <div class="content-right">
         <div class="block-k cover-chat">
-            
-       <?php
-$comments = [];
-try {
-    require_once __DIR__ . '/../../config/db.php';
-    require_once __DIR__ . '/../../model/CommentGlobalModel.php';
-    // lấy 20 comment mới nhất
-    $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
-} catch (Throwable $e) {
-    $comments = [];
-}
-
-// fallback chữ cái đầu khi không có avatar (không dùng mb_*)
-function initial_simple($name) {
-    $name = trim((string)$name);
-    return $name !== '' ? strtoupper(substr($name, 0, 1)) : 'U';
-}
-?>
-
-            <h5>
-                <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
-            </h5>
-            <div class="comment-cover">
-                <div class="fr-content">
-                    <style>
-.list_comment {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-.chat-item {
-    display: flex;
-    padding: 12px;
-    border-bottom: 1px solid #e5e5e5;
-}
-.chat-avatar {
-    margin-right: 10px;
-}
-.chat-avatar img,
-.chat-avatar .avatar-fallback {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    background: #007bff;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 16px;
-}
-.chat-body {
-    flex: 1;
-}
-.chat-meta {
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #555;
-}
-.chat-name {
-    font-weight: bold;
-    margin-right: 6px;
-}
-.chat-time {
-    color: #999;
-    font-size: 12px;
-}
-.chat-content {
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-.chat-actions {
-    display: flex;
-    align-items: center;
-    font-size: 13px;
-    color: #555;
-}
-.chat-actions button {
-    border: none;
-    background: #f0f0f0;
-    border-radius: 50%;
-    width: 28px;
-    height: 28px;
-    cursor: pointer;
-    margin: 0 3px;
-}
-.chat-actions .vote-count {
-    margin: 0 5px;
-}
-.chat-actions .chat-reply {
-    margin-left: 10px;
-    color: #007bff;
-    text-decoration: none;
-    cursor: pointer;
-}
-.chat-actions .chat-reply:hover {
-    text-decoration: underline;
-}
-</style>
-
-<ul class="list_comment col-md-12">
-    <?php foreach ($comments as $c): ?>
-        <li class="chat-item">
-            <div class="chat-avatar">
-                <?php if (!empty($c['avatar_url'])): ?>
-                    <img src="<?= htmlspecialchars($c['avatar_url']) ?>" alt="<?= htmlspecialchars($c['username']) ?>">
-                <?php else: ?>
-                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
-                <?php endif; ?>
+            <h5><i class="fas fa-comments"></i> Hi! DFF</h5>
+            <ul class="list_comment">
+                <?php foreach ($comments as $c): ?>
+                    <li class="chat-item" data-id="<?= $c['id'] ?>">
+                        <div class="chat-avatar">
+                            <?php if ($c['avatar_url']): ?>
+                                <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
+                            <?php else: ?>
+                                <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="chat-body">
+                            <div class="chat-meta">
+                                <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
+                                <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+                            </div>
+                            <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+                            <div class="chat-actions">
+                                <button>⬆</button>
+                                <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                                <button>⬇</button>
+                                <a href="#" class="chat-reply">Trả lời</a>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <div class="h-comment">
+                <textarea id="comment-content" placeholder="Viết bình luận"></textarea>
+                <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
             </div>
-            <div class="chat-body">
-                <div class="chat-meta">
-                    <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
-                    <span class="chat-time"><?= date('H:i d/m/Y', strtotime($c['created_at'])) ?></span>
-                </div>
-                <div class="chat-content">
-                    <?= nl2br(htmlspecialchars($c['content'])) ?>
-                </div>
-                <div class="chat-actions">
-                    <button>⬆</button>
-                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
-                    <button>⬇</button>
-                    <a href="javascript:void(0)" class="chat-reply">Trả lời</a>
-                </div>
-            </div>
-        </li>
-    <?php endforeach; ?>
-</ul>
-
-                    <div class="cm-more">Xem thêm</div>
-                </div>
-               <div class="h-comment">
-    <a href="javascript:void(0)" class="img-own">
-        <img src="vendor/dffvn/content/img/user.svg">
-    </a>
-    <textarea id="comment-content" class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
-    <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
-</div>
+        </div>
+    </div>
+     
 
 <script>
-let lastId = 0;
+let lastId = <?= !empty($comments) ? max(array_column($comments, 'id')) : 0 ?>;
 
-// Hàm render 1 comment -> trả về element thay vì innerHTML
+// Render comment
 function createCommentElement(c) {
     const li = document.createElement("li");
-    li.classList.add("chat-item");
+    li.className = "chat-item";
     li.dataset.id = c.id;
-
     li.innerHTML = `
         <div class="chat-avatar">
             ${c.avatar_url 
-                ? `<img src="${c.avatar_url}" alt="">`
+                ? `<img src="${c.avatar_url}">`
                 : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
         </div>
         <div class="chat-body">
@@ -414,39 +309,18 @@ function createCommentElement(c) {
                 <span class="chat-time">${c.time_ago}</span>
             </div>
             <div class="chat-content">${c.content}</div>
-            <div class="chat-actions">👍 ${c.upvotes} <a href="#">Trả lời</a></div>
         </div>`;
     return li;
 }
-
-// Hàm load comment mới
-function loadNewComments() {
-    fetch("comment_list.php?last_id=" + lastId)
-        .then(res => res.json())
-        .then(data => {
-            if (data.success && data.comments.length > 0) {
-                const ul = document.querySelector(".list_comment");
-                data.comments.forEach(c => {
-                    if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
-                        const li = createCommentElement(c);
-                        ul.prepend(li); // thêm vào đầu danh sách
-                        if (c.id > lastId) lastId = c.id;
-                    }
-                });
-            }
-        })
-        .catch(err => console.error("Error load:", err));
-}
-
-// Gửi bình luận
-document.getElementById("send-comment").addEventListener("click", function() {
+// Gửi comment
+document.getElementById("send-comment").addEventListener("click", () => {
     const textarea = document.getElementById("comment-content");
     const content = textarea.value.trim();
     if (!content) return;
 
     fetch("comment_add.php", {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: "content=" + encodeURIComponent(content)
     })
     .then(res => res.json())
@@ -454,26 +328,58 @@ document.getElementById("send-comment").addEventListener("click", function() {
         if (data.success) {
             const ul = document.querySelector(".list_comment");
             const li = createCommentElement(data.comment);
-            ul.prepend(li); // chỉ thêm 1 comment mới
+
+            // ✅ thêm xuống cuối
+            ul.append(li);
+
+            // ✅ auto scroll xuống cuối
+            ul.scrollTop = ul.scrollHeight;
+
             if (data.comment.id > lastId) lastId = data.comment.id;
-            textarea.value = "";
         } else {
             alert(data.error);
         }
     })
-    .catch(err => console.error("Error send:", err));
+    .finally(() => textarea.value = "");
 });
 
-// Lần đầu load
-document.addEventListener("DOMContentLoaded", () => {
-    loadNewComments();
-    setInterval(loadNewComments, 1000); // 1s lấy mới
+// nhấn enter 
+const textarea = document.getElementById("comment-content");
+
+textarea.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault(); // chặn xuống dòng
+        document.getElementById("send-comment").click(); // gọi nút gửi
+    }
 });
 
+// Load comment mới
+function loadNewComments() {
+    fetch("comment_list.php?last_id=" + lastId)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const ul = document.querySelector(".list_comment");
+                data.comments.forEach(c => {
+                    if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
+                        const li = createCommentElement(c);
+
+                        // ✅ cũng append xuống cuối
+                        ul.append(li);
+
+                        // ✅ scroll xuống cuối khi có comment mới
+                        ul.scrollTop = ul.scrollHeight;
+
+                        if (c.id > lastId) lastId = c.id;
+                    }
+                });
+            }
+        });
+}
+
+// Auto refresh
+setInterval(loadNewComments, 2000);
 </script>
-
-
-
 
         <div class="adv block-k">
             <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline"
@@ -1016,45 +922,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         </script>
 
-<script>
-function loadComments() {
-    fetch("comment_list.php")
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const ul = document.querySelector(".list_comment");
-                ul.innerHTML = ""; // clear cũ
 
-                data.comments.forEach(c => {
-                    const li = document.createElement("li");
-                    li.className = "chat-item";
-                    li.innerHTML = `
-                        <div class="chat-avatar">
-                            ${c.avatar_url 
-                                ? `<img src="${c.avatar_url}" alt="">`
-                                : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
-                        </div>
-                        <div class="chat-body">
-                            <div class="chat-meta">
-                                <span class="chat-name">${c.username}</span>
-                                <span class="chat-time">${c.created_at}</span>
-                            </div>
-                            <div class="chat-content">${c.content}</div>
-                            <div class="chat-actions">👍 ${c.upvotes} <a href="#">Trả lời</a></div>
-                        </div>
-                    `;
-                    ul.appendChild(li);
-                });
-            }
-        });
-}
-
-// load lần đầu
-loadComments();
-
-// lặp lại mỗi 1s
-setInterval(loadComments, 1000);
-</script>
 
 
     </div>
