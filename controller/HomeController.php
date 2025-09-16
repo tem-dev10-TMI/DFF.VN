@@ -18,31 +18,41 @@ class homeController
         // 2. Lấy RSS
         require_once __DIR__ . '/../model/rss/RssModel.php';
 
-        // RSS Báo Chính phủ
-        $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15); // limit 50, cache 15 phút
+        $rssArticles = [];
 
-        // RSS Doanhnhan.vn - Tài chính
-        $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
-        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
+        // Danh sách feed
+        $feedUrls = [
+                'https://baochinhphu.vn/kinh-te.rss',
+                'https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss'
+        ];
 
-        // 3. Gộp tất cả bài viết: RSS + DB
-        $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
+        foreach ($feedUrls as $url) {
+                $items = RssModel::getFeedItems($url, 50, 15);
+                if (!empty($items)) {
+                $rssArticles = array_merge($rssArticles, $items);
+                }
+        }
+
+        // 3. Gộp DB + RSS
+        $articles = array_merge($rssArticles, $dbArticles);
 
         // 4. Sắp xếp theo created_at giảm dần
         usort($articles, function ($a, $b) {
-                return strtotime($b['created_at']) - strtotime($a['created_at']);
+                $timeA = isset($a['created_at']) ? strtotime($a['created_at']) : 0;
+                $timeB = isset($b['created_at']) ? strtotime($b['created_at']) : 0;
+                return $timeB - $timeA;
         });
 
-        // 5. Load view Home
+        // 5. Truyền dữ liệu cho view Home
         ob_start();
         require_once 'view/page/Home.php';
         $content = ob_get_clean();
 
         // 6. Load layout chính
-        $profile = false; // giữ nguyên
+        $profile = false;
         require_once 'view/layout/main.php';
         }
+
 
 
         public static function profile_business() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
