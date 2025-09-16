@@ -554,6 +554,13 @@
 
           <div class="row mb-3">
             <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="text" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
               <label class="form-label">Ảnh đại diện</label>
               <input type="file" class="form-control" name="avatar_file">
               <?php if (!empty($user['avatar_url'])): ?>

@@ -15,11 +15,10 @@ class homeController
         $topBusinessmen = businessmenModel::getAllBusinessmen(10);
         $marketData = MarketDataModel::getCachedMarketData();
 
+
         // 2. Lấy RSS
         require_once __DIR__ . '/../model/rss/RssModel.php';
-
-        $rssArticles = [];
-
+        
         // Danh sách feed
         $feedUrls = [
                 'https://baochinhphu.vn/kinh-te.rss',
@@ -85,7 +84,23 @@ class homeController
         }
         public static function trends() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
         {
-                //Load model
+                // Load model
+                require_once 'model/TopicModel.php';
+                require_once 'model/article/articlesmodel.php';
+
+                $topicModel = new TopicModel();
+
+                // Lấy tất cả chủ đề và map bài viết theo từng chủ đề
+                $topics = $topicModel->getAll();
+                $articlesByTopic = [];
+                if (!empty($topics)) {
+                        foreach ($topics as $tp) {
+                                $tid = (int)($tp['id'] ?? 0);
+                                if ($tid > 0) {
+                                        $articlesByTopic[$tid] = ArticlesModel::getArticlesByTopicId($tid, 10);
+                                }
+                        }
+                }
 
                 //Load view
                 ob_start();

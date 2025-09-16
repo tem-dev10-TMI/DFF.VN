@@ -35,37 +35,36 @@
       </span>
     </div>
 
-    <!-- Danh sách xu hướng -->
+    <!-- Danh sách xu hướng: tạo box đồng nhất cho MỌI chủ đề -->
     <div class="list-trend">
-      <!-- Box 1 -->
-      <div class="box-trends">
-        <h5>
-          <a href="#">#360° Doanh nghiệp</a>
-          <span class="c-note"><i class="fas fa-chart-line"></i> Top tìm kiếm nhiều nhất</span>
-        </h5>
-        <ul>
-          <li><a href="#">HDBS tính tăng vốn điều lệ</a> <span class="date"><i class="far fa-calendar-alt"></i> 1 giờ trước</span> <span class="name"><i class="far fa-user"></i> Hoàng Giang</span></li>
-          <li><a href="#">Chứng khoán DSC bị phạt hơn 700 triệu đồng</a> <span class="date"><i class="far fa-calendar-alt"></i> 4 giờ trước</span> <span class="name"><i class="far fa-user"></i> Đức Anh</span></li>
-          <li><a href="#">SSI sắp chi 2.000 tỷ đồng chia cổ tức</a> <span class="date"><i class="far fa-calendar-alt"></i> 5 giờ trước</span> <span class="name"><i class="far fa-user"></i> Tâm Đan</span></li>
-          <li><a href="#">PV Power muốn tăng vốn lên 30.600 tỷ đồng</a> <span class="date"><i class="far fa-calendar-alt"></i> 20 giờ trước</span> <span class="name"><i class="far fa-user"></i> Ngọc Lan</span></li>
-        </ul>
-        <a class="more" href="#">Xem thêm</a>
-      </div>
-
-      <!-- Box 2 -->
-      <div class="box-trends">
-        <h5>
-          <a href="#">#Vĩ mô</a>
-          <span class="c-note"><i class="fas fa-chart-line"></i> Top chia sẻ nhiều nhất</span>
-        </h5>
-        <ul>
-          <li><a href="#">Công an khuyến cáo người dân cảnh giác sau sự cố lộ dữ liệu CIC</a> <span class="date"><i class="far fa-calendar-alt"></i> 2 giờ trước</span> <span class="name"><i class="far fa-user"></i> Kiến thức Kinh tế</span></li>
-          <li><a href="#">Ninh Bình: Cụ bà 77 tuổi với hóa đơn tiền điện 12 triệu</a> <span class="date"><i class="far fa-calendar-alt"></i> 5 giờ trước</span> <span class="name"><i class="far fa-user"></i> Phùng Thanh Khoa</span></li>
-          <li><a href="#">Thủ tướng: Giao quân đội làm cầu Phong Châu tiết kiệm 300 tỷ</a> <span class="date"><i class="far fa-calendar-alt"></i> 20 giờ trước</span> <span class="name"><i class="far fa-user"></i> Phương Nhi</span></li>
-          <li><a href="#">Giải phóng mặt bằng 3.160 ha cho dự án đường sắt</a> <span class="date"><i class="far fa-calendar-alt"></i> 21 giờ trước</span> <span class="name"><i class="far fa-user"></i> Phúc Nguyên</span></li>
-        </ul>
-        <a class="more" href="#">Xem thêm</a>
-      </div>
+      <?php if (!empty($topics)): ?>
+        <?php foreach ($topics as $tp): ?>
+          <?php $tid = (int)($tp['id'] ?? 0); $tname = $tp['name'] ?? ''; ?>
+          <div class="box-trends">
+            <h5>
+              <a href="#">#<?= htmlspecialchars($tname) ?></a>
+              <span class="c-note"><i class="fas fa-chart-line"></i> Top nội dung mới</span>
+            </h5>
+            <ul>
+              <?php $list = $articlesByTopic[$tid] ?? []; ?>
+              <?php if (!empty($list)): ?>
+                <?php foreach ($list as $a): ?>
+                  <li>
+                    <a href="details_Blog?id=<?= $a['id'] ?>"><?= htmlspecialchars($a['title']) ?></a>
+                    <span class="date"><i class="far fa-calendar-alt"></i> <?= htmlspecialchars(date('d/m/Y H:i', strtotime($a['created_at'] ?? $a['published_at'] ?? 'now'))) ?></span>
+                    <span class="name"><i class="far fa-user"></i> <?= htmlspecialchars($a['author_name'] ?? '') ?></span>
+                  </li>
+                <?php endforeach; ?>
+              <?php else: ?>
+                <li>Chưa có dữ liệu.</li>
+              <?php endif; ?>
+            </ul>
+            <a class="more" href="#">Xem thêm</a>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <div class="box-trends"><ul><li>Chưa có chủ đề.</li></ul></div>
+      <?php endif; ?>
     </div>
   </div>
 

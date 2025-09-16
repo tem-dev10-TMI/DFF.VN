@@ -1,0 +1,12 @@
+Gợi ý phân tích thị trường theo năm (Yearly)
+
+Mục tiêu: nhìn lại chu kỳ 12 tháng, các mốc sự kiện lớn, xu hướng dài hạn.
+
+Khung trình bày:
+1) Tóm tắt chu kỳ: bull/bear/sideways, driver chính (macro, pháp lý, công nghệ)
+2) Mốc sự kiện: halving, ETF, hack lớn, thay đổi pháp lý, nâng cấp quan trọng
+3) Dòng tiền & hạ tầng: TVL DeFi, adoption stablecoin, phí mạng trung vị
+4) Ảnh hưởng tới e-commerce: công cụ thanh toán, rủi ro pháp lý, bảo mật
+5) Bài học rút ra & khuyến nghị quy trình (không phải khuyến nghị đầu tư)
+6) Danh sách nguồn dữ liệu kiểm chứng thời gian thực
+

@@ -7,7 +7,7 @@ class NewsController
     {
         // Lấy danh sách bài viết
         $articles = NewsModel::getAllArticles();
-       
+       $articles = NewsModel::getLatestArticles($limit = 6);
 
         // Load view
         ob_start();
