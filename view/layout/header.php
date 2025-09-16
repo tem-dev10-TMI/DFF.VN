@@ -86,7 +86,7 @@
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
                                                 class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                                    <li><a class="dropdown-item" module-load="logout" href="<?= BASE_URL ?>/logout"><i
+                                    <li><a class="dropdown-item" module-load="logout" href="?url=logout"><i
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
                                 </ul>
                             </span>
