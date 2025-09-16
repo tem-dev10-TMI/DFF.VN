@@ -3,104 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sidebar Mobile</title>
+  <title>Sidebar Responsive</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
   <style>
-  /* Sidebar */
-  .sidebar {
-    width: 250px;
-    background: #1e1e1e;
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    transition: all 0.3s ease;
-    overflow-y: auto;
-    z-index: 1000;
-  }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+    }
 
-  /* Logo */
-  .sidebar .logo {
-    text-align: center;
-    padding: 15px;
-    border-bottom: 1px solid #333;
-  }
-  .sidebar .logo img {
-    max-width: 120px;
-    height: auto;
-  }
-
-  /* Menu */
-  .sidebar ul {
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
-  }
-  .sidebar ul li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 18px;
-    text-decoration: none;
-    color: #ddd;
-    font-size: 15px;
-    transition: background 0.2s, color 0.2s;
-  }
-  .sidebar ul li a:hover {
-    background: #333;
-    color: #fff;
-  }
-  .sidebar ul li i {
-    width: 20px;
-    text-align: center;
-    font-size: 16px;
-  }
-
-  /* Section title */
-  .sidebar ul li.section-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #999;
-    padding: 8px 18px;
-    margin-top: 10px;
-  }
-
-  /* Toggle button */
-  #toggleMenu {
-    display: none; /* ẩn mặc định */
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    background: #1e1e1e;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    font-size: 18px;
-    cursor: pointer;
-    z-index: 1100;
-    border-radius: 4px;
-  }
-
-  /* Responsive: Mobile */
-  @media (max-width: 768px) {
+    /* Sidebar */
     .sidebar {
-      left: -250px;
-    }
-    .sidebar.active {
+      width: 250px;
+      background: #1e1e1e;
+      height: 100vh;
+      position: fixed;
+      top: 0;
       left: 0;
+      transition: all 0.3s ease;
+      overflow-y: auto;
+      z-index: 1000;
     }
-    #toggleMenu {
-      display: block; /* hiện toggle trên mobile */
-    }
-  }
-</style>
 
-  
+    /* Logo */
+    .sidebar .logo {
+      text-align: center;
+      padding: 15px;
+      border-bottom: 1px solid #333;
+    }
+    .sidebar .logo img {
+      max-width: 120px;
+      height: auto;
+    }
+
+    /* Menu */
+    .sidebar ul {
+      list-style: none;
+      padding: 10px 0;
+    }
+    .sidebar ul li a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      text-decoration: none;
+      color: #ddd;
+      font-size: 15px;
+      transition: background 0.2s, color 0.2s;
+    }
+    .sidebar ul li a:hover {
+      background: #333;
+      color: #fff;
+    }
+    .sidebar ul li i {
+      width: 20px;
+      text-align: center;
+    }
+
+    .sidebar ul li.section-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      color: #999;
+      padding: 8px 18px;
+      margin-top: 10px;
+    }
+
+    /* Toggle button */
+    #toggleMenu {
+      display: none; /* ẩn desktop */
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      background: #1e1e1e;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      font-size: 18px;
+      cursor: pointer;
+      z-index: 1101;
+      border-radius: 4px;
+    }
+
+    /* Nội dung chính */
+    .main {
+      margin-left: 250px; /* chừa chỗ cho sidebar desktop */
+      padding: 20px;
+      transition: margin-left 0.3s ease;
+    }
+
+    /* Responsive cho mobile */
+    @media (max-width: 768px) {
+      .sidebar {
+        left: -250px; /* ẩn đi */
+      }
+      .sidebar.active {
+        left: 0;
+      }
+      #toggleMenu {
+        display: block;
+      }
+      .main {
+        margin-left: 0; /* không tràn khi sidebar ẩn */
+      }
+    }
+
+    /* Overlay khi mở sidebar trên mobile */
+    .overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+    }
+    .overlay.active {
+      display: block;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Toggle button -->
+<!-- Nút toggle -->
 <button id="toggleMenu"><i class="fas fa-bars"></i></button>
 
 <!-- Sidebar -->
@@ -125,14 +156,30 @@
   </ul>
 </nav>
 
+<!-- Overlay -->
+<div class="overlay"></div>
+
+<!-- Nội dung chính -->
+<main class="main">
+  <h1>Trang chính</h1>
+  <p>Nội dung website ở đây...</p>
+</main>
 
 <script>
   const toggleBtn = document.getElementById("toggleMenu");
   const sidebar = document.querySelector(".sidebar");
+  const overlay = document.querySelector(".overlay");
 
   toggleBtn.addEventListener("click", () => {
     sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
+
+  overlay.addEventListener("click", () => {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
   });
 </script>
+
 </body>
 </html>
