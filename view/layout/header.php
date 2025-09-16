@@ -26,6 +26,16 @@
             </div>
 
             <div class="header-right">
+                <?php
+                if (!isset($headerEvents)) {
+                    require_once 'model/event/Events.php';
+                    if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
+                    global $pdo;
+                    $eventModelHeader = new EventModel($pdo);
+                    $headerEvents = $eventModelHeader->all(10);
+                }
+                $notifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
+                ?>
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
@@ -51,7 +61,7 @@
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number">0</span>
+                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number"><?= $notifCount ?></span>
                         </span>
                     </li>
                     <li class="top-pro ">
@@ -128,7 +138,25 @@
 
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-
+                    
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        <?php if (!empty($headerEvents)): ?>
+                            <ul class="list-unstyled" style="margin:10px 0;">
+                                <?php foreach ($headerEvents as $ev): ?>
+                                    <li style="margin-bottom:8px;">
+                                        <a title="<?= htmlspecialchars($ev['title']) ?>" href="<?= BASE_URL ?>?url=event&id=<?= $ev['id'] ?>">
+                                            <?= htmlspecialchars($ev['title']) ?>
+                                        </a>
+                                        <small class="text-muted" style="margin-left:6px;">
+                                            <?= isset($ev['event_date']) ? date('d/m/Y H:i', strtotime($ev['event_date'])) : '' ?>
+                                        </small>
+                                    </li>
+                                <?php endforeach; ?>
+                            </ul>
+                        <?php else: ?>
+                            <div class="p-3 text-muted">Chưa có sự kiện nào.</div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
             <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
