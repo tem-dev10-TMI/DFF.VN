@@ -70,6 +70,7 @@
                     <div class="owl-stage-outer owl-height" style="height: 256px;">
                         <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
+                                <?php //var_dump($topBusinessmen);?>
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                                         <div class="item">
@@ -82,7 +83,7 @@
                                                 <li class="name">
 
                                                     <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                    <a href="/DFF.VN/view_profile_business?id=<?= $biz['id'] ?>">
+                                                    <a href="/DFF.VN/view_profile_business?id=<?= $biz['user_id'] ?>">
                                                         <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
                                                     </a>
                                                 </li>
