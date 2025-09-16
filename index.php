@@ -140,6 +140,14 @@ switch ($url) {
         $controller->viewprofileUser();
         break;
 
+    case 'event':
+    require_once 'controller/EventDetailController.php';
+    $controller = new EventDetailController($pdo);
+    $id = $_GET['id'] ?? null;
+    $controller->details($id);
+    break;
+
+
 
     // ========== API ROUTES ==========
     case 'api/addPost':

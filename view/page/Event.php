@@ -1,51 +1,46 @@
-<main class="main-content">
+<div class="content-left">
+    <div class="block-k">
+        <div class="detail">
+            <!-- Tiêu đề sự kiện -->
+            <h1><?= htmlspecialchars($event['title'] ?? 'Sự kiện'); ?></h1>
 
-        <div class="content-left">
+            <!-- Thời gian còn lại -->
+            <div class="d-time">
+                <?php if (!empty($event['event_date'])): ?>
+                    <?php
+                    $today = new DateTime();
+                    $eventDate = new DateTime($event['event_date']);
+                    $diff = $today->diff($eventDate);
+                    $days = $diff->days;
 
-            <div class="block-k">
-                <div class="detail">
-                    <h1> D11: Ngày GDKHQ trả cổ tức năm 2021 bằng cổ phiếu (100:12)</h1>
-                    <div class="d-time">
-                        <span>13 ngày</span> 
-                        
-                    </div>
-                    <div class="line"></div>
-
-                    <article>
-
-                          
-
-<p>- Ngày giao dịch không hưởng quyền: 05/9/2025</p> 
-<p>- Ngày đăng ký cuối cùng: 08/09/2025</p>
-<div class="ads_middle">
- <div id="adsWeb_AdsArticleMiddle" class="banner fyi" data-position="Web_AdsArticleMiddle" style="display: none;"> 
-  <script>
-window.addEventListener('load', function(){ if(typeof Web_AdsArticleMiddle != 'undefined'){window.CMS_BANNER.pushAds(Web_AdsArticleMiddle, 'adsWeb_AdsArticleMiddle');}else{document.getElementById('adsWeb_AdsArticleMiddle').style.display = "none";} });
-   </script> 
- </div>
-</div> 
-<p>- Lý do mục đích: Trả cổ tức năm 2021 bằng cổ phiếu</p> 
-<p>- Tỷ lệ thực hiện: 12% (Cổ đông sở hữu 100 cổ phiếu được nhận 12 cổ phiếu mới).</p>
-
-                     
-                    </article>
-                    <input type="hidden" id="hdd_id" value="13975">
-
-                    <div data-id="13975" data-type="1" class="box-n-sc">
-
-                       
-                    </div>
-
-                   
-                   
-                </div>
-                
+                    if ($eventDate >= $today) {
+                        echo "<span>Còn $days ngày</span>";
+                    } else {
+                        echo "<span>Đã diễn ra $days ngày trước</span>";
+                    }
+                    ?>
+                <?php endif; ?>
             </div>
-                    
 
-            <div class="detail-more cover-page">
+            <div class="line"></div>
 
-            </div>
+            <!-- Nội dung sự kiện -->
+            <article>
+                <?php if (!empty($event['event_date'])): ?>
+                    <p>- Ngày giao dịch không hưởng quyền: <?= date('d/m/Y', strtotime($event['event_date'])); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($event['description'])): ?>
+                    <p>- Lý do mục đích: <?= nl2br(htmlspecialchars($event['description'])); ?></p>
+                <?php endif; ?>
+
+                <?php if (!empty($event['stock_ticker'])): ?>
+                    <p>- Mã chứng khoán: <?= htmlspecialchars($event['stock_ticker']); ?></p>
+                <?php endif; ?>
+            </article>
+
+            <!-- Hidden ID -->
+            <input type="hidden" id="hdd_id" value="<?= htmlspecialchars($event['id'] ?? ''); ?>">
         </div>
-
-    </main>
+    </div>
+</div>

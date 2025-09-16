@@ -332,12 +332,12 @@
                 <?php foreach ($events as $index => $event): ?>
                     <li class="card-list-item" key="<?php echo $index; ?>">
                         <a 
-                            title="<?php echo htmlspecialchars($event['title']); ?>"
-                            href="javascript:void(0)"
-                            onclick="showEventModal('<?php echo htmlspecialchars(addslashes($event['title'])); ?>', '<?php echo htmlspecialchars(addslashes($event['description'] ?? '')); ?>')"
-                        >
-                            <?php echo htmlspecialchars($event['title']); ?>
-                        </a>
+    title="<?= htmlspecialchars($event['title']); ?>"
+    href="<?= BASE_URL ?>?url=event&id=<?= $event['id'] ?>"
+>
+    <?= htmlspecialchars($event['title']); ?>
+</a>
+
                     </li>
                 <?php endforeach; ?>
             <?php else: ?>
