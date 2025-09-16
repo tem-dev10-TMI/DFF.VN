@@ -316,14 +316,23 @@
         var registerElement = document.getElementById('register_modal');
         var registerModal = registerElement ? new bootstrap.Modal(registerElement) : null;
 
+        // Lấy mobile modal nếu có để ẩn khi bật form đăng nhập/đăng ký
+        var mobileElement = document.getElementById('mobileModal');
+        var mobileModal = null;
+        if (mobileElement && window.bootstrap && window.bootstrap.Modal) {
+            mobileModal = bootstrap.Modal.getInstance(mobileElement) || new bootstrap.Modal(mobileElement);
+        }
+
         // Hàm mở modal đăng nhập
         window.showLoginModal = function() {
+            if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
         window.showRegisterModal = function() {
+            if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };

@@ -183,7 +183,7 @@
                 </a>
             </li>
             <li class="fitem1">
-                <a href="javascript:void(0)" module-load="loadwrite">
+                <a href="javascript:void(0)" module-load="" class="js-mobile-modal" data-mobile-modal="create">
                     <i class="fas fa-plus"></i>
                     <span>Tạo mới</span>
                 </a>
@@ -194,18 +194,96 @@
                     <span>Xu hướng</span>
                 </a>
             </li>
-            <li><a data-bs-toggle="collapse" data-bs-target="#id_alert" aria-controls="id_alert" aria-expanded="false"
-                    href="javascript:void(0)"><i class="fas fa-bell"></i>
+            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i class="fas fa-bell"></i>
                     <span class="number">4</span>
                     <span class="falert">Thông báo</span>
                 </a></li>
             <li>
-                <a module-load="signin" href="javascript:void(0)"><i class="fas fa-user-alt"></i>
+                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i class="fas fa-user-alt"></i>
                     <span>Tôi</span>
                 </a>
             </li>
         </ul>
     </div>
+
+    <!-- Mobile Modal -->
+    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 1055;">
+        <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle"></i></button>
+                </div>
+                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden template: profile menu -->
+    <div id="mobile-profile-template" class="d-none">
+        <ul class="list-group list-group-flush">
+            <?php if (isset($_SESSION['user'])): ?>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] =='admin'  ) { echo 'profile_user'; } else { echo 'profile_business'; } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-plus"></i> Viết bài</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+            <?php else: ?>
+                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+            <?php endif; ?>
+        </ul>
+    </div>
+
+    <script>
+        (function(){
+            var modalEl = document.getElementById('mobileModal');
+            var modalBody = document.getElementById('mobileModalBody');
+            var modalTitle = document.getElementById('mobileModalLabel');
+            var bsModal = null;
+            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                bsModal = new bootstrap.Modal(modalEl);
+            }
+
+            function openMobileModal(title, html){
+                if (!modalEl) return;
+                if (modalTitle) modalTitle.textContent = title || 'Menu';
+                if (modalBody) modalBody.innerHTML = html || '';
+                if (bsModal) bsModal.show(); else modalEl.style.display = 'block';
+                // Khóa scroll nền khi mở modal thủ công (fallback)
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileModal(){
+                if (!modalEl) return;
+                if (bsModal) bsModal.hide(); else modalEl.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
+            modalEl && modalEl.addEventListener('click', function(e){
+                if (e.target === modalEl) closeMobileModal();
+            });
+
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a){
+                a.addEventListener('click', function(e){
+                    var type = this.getAttribute('data-mobile-modal');
+                    if (!type) return;
+                    if (type === 'alerts') {
+                        var alerts = document.getElementById('id_alert');
+                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                        openMobileModal('Thông báo', html);
+                    } else if (type === 'profile') {
+                        var tpl = document.getElementById('mobile-profile-template');
+                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                        openMobileModal('Tài khoản', html);
+                    } else if (type === 'create') {
+                        // Tái sử dụng quick write nếu có
+                        openMobileModal('Tạo mới', '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>');
+                    }
+                });
+            });
+        })();
+    </script>
     <a module-load="boxIndex"></a>
 
 
