@@ -2,6 +2,31 @@
 RewriteEngine On
 RewriteBase /DFF.VN/
 
+
+
+
+# ------------------------------------
+# Toggle bảo trì NGAY TRONG .htaccess
+# Mặc định tắt. Muốn bật, bỏ dấu # ở dòng SetEnvIf bên dưới:
+ SetEnvIf Request_URI "^" MAINTENANCE=on
+# (Có thể whitelist IP admin để vẫn truy cập site khi bảo trì)
+# SetEnvIfExpr "%{REMOTE_ADDR} == '127.0.0.1'" MAINT_WHITELIST=1
+
+# ------------------------------------
+# 0. Maintenance mode → redirect all to /Fix/
+#    Bật bằng cách: tạo file Fix/maintenance.on HOẶC set env MAINTENANCE=on
+#    Tắt: xóa file trên hoặc unset env
+# ------------------------------------
+# Bỏ qua nếu đã vào thư mục Fix hoặc file tĩnh
+RewriteCond %{ENV:MAINTENANCE} =on [OR]
+RewriteCond %{DOCUMENT_ROOT}/DFF.VN/Fix/maintenance.on -f
+# Nếu đang whitelist thì bỏ qua redirect (cho IP admin)
+RewriteCond %{ENV:MAINT_WHITELIST} !1
+RewriteCond %{REQUEST_URI} !^/DFF\.VN/Fix/ [NC]
+RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|txt|mp4|webp)$ [NC]
+RewriteRule ^.*$ Fix/ [R=302,L]
+
+
 # ------------------------------------
 # 1. Bỏ qua file tĩnh (không redirect qua index.php hoặc admin.php)
 # ------------------------------------
