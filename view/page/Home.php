@@ -370,64 +370,32 @@
 
 
         <div class="block-k bg-box-a">
-            <div class="view-right-a h-lsk">
-                <div class="title">
-                    <h3><a href="event.html">Lịch sự kiện</a> </h3>
-                </div>
-
-                <ol class="content-ol">
-
-                    <li class="card-list-item" key="0">
-                        <a title="D11: Ngày GDKHQ trả cổ tức năm 2021 bằng cổ phiếu (100:12)"
-                            href="d11-ngay-gdkhq-tra-co-tuc-nam-2021-bang-co-phieu-10012-e13975.html">D11:
-                            Ngày GDKHQ trả cổ tức năm 2021 bằng cổ phiếu (100:12)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="MSB: Ngày GDKHQ trả cổ tức năm 2024 bằng cổ phiếu (100:20)"
-                            href="msb-ngay-gdkhq-tra-co-tuc-nam-2024-bang-co-phieu-10020-e13976.html">MSB:
-                            Ngày GDKHQ trả cổ tức năm 2024 bằng cổ phiếu (100:20)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="VLW: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (14,33%)"
-                            href="vlw-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-1433-e13977.html">VLW: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (14,33%)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="HT1: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (1%)"
-                            href="ht1-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-1-e13978.html">HT1: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (1%)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="SVT: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (15%)"
-                            href="svt-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-15-e13979.html">SVT: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (15%)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="PJS: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (8,5%)"
-                            href="pjs-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-85-e13980.html">PJS: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (8,5%)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="NWT: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (7%)"
-                            href="nwt-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-7-e13981.html">NWT: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (7%)</a>
-                    </li>
-
-                    <li class="card-list-item" key="0">
-                        <a title="VGI: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (7,5%) "
-                            href="vgi-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-75-e13982.html">VGI: Ngày
-                            GDKHQ trả cổ tức năm 2024 bằng tiền (7,5%) </a>
-                    </li>
-
-                </ol>
-            </div>
+    <div class="view-right-a h-lsk">
+        <div class="title">
+            <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
         </div>
+
+        <ol class="content-ol">
+            <?php if (!empty($events)): ?>
+                <?php foreach ($events as $index => $event): ?>
+                    <li class="card-list-item" key="<?php echo $index; ?>">
+                        <a 
+                            title="<?php echo htmlspecialchars($event['title']); ?>"
+                            href="javascript:void(0)"
+                            onclick="showEventModal('<?php echo htmlspecialchars(addslashes($event['title'])); ?>', '<?php echo htmlspecialchars(addslashes($event['description'] ?? '')); ?>')"
+                        >
+                            <?php echo htmlspecialchars($event['title']); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <li class="card-list-item">
+                    <span>Chưa có sự kiện nào</span>
+                </li>
+            <?php endif; ?>
+        </ol>
+    </div>
+</div>
 
 
 
