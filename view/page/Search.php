@@ -8,225 +8,1079 @@
 // $articles = ArticlesModel::getAllArticles();      
 // $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
+<style type="text/css">
+    .cdx-notify--error {
+        background: #fffbfb !important
+    }
 
+    .cdx-notify--error::before {
+        background: #fb5d5d !important
+    }
+
+    .cdx-notify__input {
+        max-width: 130px;
+        padding: 5px 10px;
+        background: #f7f7f7;
+        border: 0;
+        border-radius: 3px;
+        font-size: 13px;
+        color: #656b7c;
+        outline: 0
+    }
+
+    .cdx-notify__input:-ms-input-placeholder {
+        color: #656b7c
+    }
+
+    .cdx-notify__input::placeholder {
+        color: #656b7c
+    }
+
+    .cdx-notify__input:focus:-ms-input-placeholder {
+        color: rgba(101, 107, 124, .3)
+    }
+
+    .cdx-notify__input:focus::placeholder {
+        color: rgba(101, 107, 124, .3)
+    }
+
+    .cdx-notify__button {
+        border: none;
+        border-radius: 3px;
+        font-size: 13px;
+        padding: 5px 10px;
+        cursor: pointer
+    }
+
+    .cdx-notify__button:last-child {
+        margin-left: 10px
+    }
+
+    .cdx-notify__button--cancel {
+        background: #f2f5f7;
+        box-shadow: 0 2px 1px 0 rgba(16, 19, 29, 0);
+        color: #656b7c
+    }
+
+    .cdx-notify__button--cancel:hover {
+        background: #eee
+    }
+
+    .cdx-notify__button--confirm {
+        background: #34c992;
+        box-shadow: 0 1px 1px 0 rgba(18, 49, 35, .05);
+        color: #fff
+    }
+
+    .cdx-notify__button--confirm:hover {
+        background: #33b082
+    }
+
+    .cdx-notify__btns-wrapper {
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-flow: row nowrap;
+        flex-flow: row nowrap;
+        margin-top: 5px
+    }
+
+    .cdx-notify__cross {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        width: 10px;
+        height: 10px;
+        padding: 5px;
+        opacity: .54;
+        cursor: pointer
+    }
+
+    .cdx-notify__cross::after,
+    .cdx-notify__cross::before {
+        content: '';
+        position: absolute;
+        left: 9px;
+        top: 5px;
+        height: 12px;
+        width: 2px;
+        background: #575d67
+    }
+
+    .cdx-notify__cross::before {
+        transform: rotate(-45deg)
+    }
+
+    .cdx-notify__cross::after {
+        transform: rotate(45deg)
+    }
+
+    .cdx-notify__cross:hover {
+        opacity: 1
+    }
+
+    .cdx-notifies {
+        position: fixed;
+        z-index: 2;
+        bottom: 20px;
+        left: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
+    }
+
+    .cdx-notify {
+        position: relative;
+        width: 220px;
+        margin-top: 15px;
+        padding: 13px 16px;
+        background: #fff;
+        box-shadow: 0 11px 17px 0 rgba(23, 32, 61, .13);
+        border-radius: 5px;
+        font-size: 14px;
+        line-height: 1.4em;
+        word-wrap: break-word
+    }
+
+    .cdx-notify::before {
+        content: '';
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: calc(100% - 6px);
+        margin: 3px;
+        border-radius: 5px;
+        background: 0 0
+    }
+
+    @keyframes bounceIn {
+        0% {
+            opacity: 0;
+            transform: scale(.3)
+        }
+
+        50% {
+            opacity: 1;
+            transform: scale(1.05)
+        }
+
+        70% {
+            transform: scale(.9)
+        }
+
+        100% {
+            transform: scale(1)
+        }
+    }
+
+    .cdx-notify--bounce-in {
+        animation-name: bounceIn;
+        animation-duration: .6s;
+        animation-iteration-count: 1
+    }
+
+    .cdx-notify--success {
+        background: #fafffe !important
+    }
+
+    .cdx-notify--success::before {
+        background: #41ffb1 !important
+    }
+</style>
 <main class="main-content">
 
 
     <!-- 4 cục bài viết nổi bật start -->
-    <div class="owl-slider home-slider">
-        <div id="home_slider" class="owl-carousel">
-            <?php if (!empty($articles)): ?>
-                <?php foreach ($articles as $article): ?>
-                    <div class="item">
-                        <div class="" style="display: none">
-                            <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="details_Blog?id=<?= $article['id'] ?>">
-                                <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
-                            </a>
+
+    <div class="content-left">
+        <h2>Kết quả tìm kiếm "<i>da</i>"</h2>
+        <ul class="nav nav-pills" id="pills-search-tab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold active position-relative" id="pills-news-tab" data-type="5" data-bs-toggle="pill" data-bs-target="#pills-news" type="button" role="tab" aria-controls="pills-news" aria-selected="true"><i class="fas fa-file-alt"></i> Bài viết</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold position-relative" id="pills-tag-tab" data-type="25" data-bs-toggle="pill" data-bs-target="#pills-tag" type="button" role="tab" aria-controls="pills-tag" aria-selected="false"><i class="fas fa-hashtag"></i> Tags</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link fw-semibold position-relative" id="pills-user-tab" data-type="26" data-bs-toggle="pill" data-bs-target="#pills-user" type="button" role="tab" aria-controls="pills-user" aria-selected="false"><i class="fas fa-user"></i> Người dùng</button>
+            </li>
+        </ul>
+
+        <div class="cover-page active" id="pills-news">
+
+            <style>
+                /* Tabs */
+                #pills-search-tab .nav-link {
+                    border-radius: 20px;
+                    padding: 8px 14px;
+                    background: #f5f5f7;
+                    color: #333;
+                    transition: all .2s ease;
+                    margin-right: 6px;
+                }
+                /* Khoảng cách quanh nhóm tab */
+                #pills-search-tab { margin: 10px 0 18px; }
+                #pills-search-tab .nav-link:hover { background: #ececf1; }
+                #pills-search-tab .nav-link.active {
+                    background: linear-gradient(135deg, #3b82f6, #06b6d4);
+                    color: #fff;
+                    box-shadow: 0 6px 18px rgba(59,130,246,.35);
+                }
+
+                /* Result sections */
+                .cover-page { display: none; margin-top: 14px; }
+                .cover-page.active { display: block; }
+
+                /* Cards */
+                .sea-news, .sea-tag, .sea-user {
+                    background: #fff;
+                    border: 1px solid #eee;
+                    border-radius: 10px;
+                    padding: 12px;
+                    margin-bottom: 16px;
+                    transition: transform .15s ease, box-shadow .15s ease;
+                }
+                .sea-news:hover, .sea-tag:hover, .sea-user:hover {
+                    transform: translateY(-2px);
+                    box-shadow: 0 10px 20px rgba(0,0,0,.06);
+                }
+                .sea-news .s-img {
+                    width: 120px;
+                    height: 80px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                    margin-right: 12px;
+                }
+                .sea-news { display: flex; gap: 12px; align-items: flex-start; }
+                .sea-news .item h3 { font-size: 16px; margin: 0 0 6px; }
+                .sea-news .item span { color: #555; font-size: 13px; }
+                .sea-tag h3, .sea-user .name a { font-size: 15px; margin: 0; }
+            </style>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/8/etp-crypto638905290142718508.jpg" title="Hơn 3 tỷ USD chảy vào các sản phẩm ETP Crypto" alt="Hơn 3 tỷ USD chảy vào các sản phẩm ETP Crypto" border="0">
+                <div class="item">
+                    <h3><a href="/hon-3-ty-usd-chay-vao-cac-san-pham-etp-crypto-p20250916122954631.html"> Hơn 3 tỷ USD chảy vào các sản phẩm ETP Crypto</a></h3>
+                    <span>Sau nhiều tuần bị xả hàng, thị trường sản phẩm đầu tư...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerVũ 638597441654494224.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=386538343262386" title="Vũ Đức">Vũ Đức</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 49 phút trước</span>
                         </div>
-                        <div class="cover-hover" style="">
-                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                title="<?= htmlspecialchars($article['title']) ?>"
-                                alt="<?= htmlspecialchars($article['title']) ?>"
-                                border="0" />
-                        </div>
-                        <div class="text" style="">
-                            <h4>
-                                <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="article_detail.php?id=<?= $article['id'] ?>">
-                                    <?= htmlspecialchars($article['title']) ?>
-                                </a>
-                            </h4>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <p>Không có bài viết nào trong cơ sở dữ liệu.</p>
-            <?php endif; ?>
-        </div>
-    </div>
-    <!-- 4 cục bài viết nổi bật end -->
-
-    <!-- bài viết chính block start -->
-    <div class="content-left cover-page">
-        <div class="block-k box-write">
-            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg"> </a>
-            <div class="input-group box-search">
-                <div class="post-input"><a href="javascript:void(0)" module-load="loadwrite"><span>Viết bài,
-                            chia sẻ, đặt câu hỏi…</span></a></div>
-            </div>
-            <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
-                src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
-        </div>
-        <!-- ////////////////////// -->
-        <div class="block-k box-company-label">
-
-            <h5>
-                <span><a href="#">Top doanh nhân</a> </span>
-                <span class="c-note"><i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất </span>
-            </h5>
-            <div class="owl-slider">
-                <div class="owl-carousel box-company owl-loaded owl-drag">
-                    <div class="owl-stage-outer owl-height" style="height: 256px;">
-                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
-                            <?php if (!empty($topBusinessmen)): ?>
-                                <?php //var_dump($topBusinessmen);?>
-                                <?php foreach ($topBusinessmen as $biz): ?>
-                                    <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-                                        <div class="item">
-                                            <ul>
-                                                <li>
-                                                    <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                                                        src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
-                                                </li>
-                                                <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
-                                                <li class="name">
-
-                                                    <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                    <a href="/DFF.VN/view_profile?id=<?= $biz['user_id'] ?>">
-                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                                                    </a>
-                                                </li>
-                                                <li class="f-folw">
-                                                    <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
-                                                        <val>Theo dõi</val>
-                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p>Chưa có doanh nhân nào.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-                    <div class="owl-nav">
-                        <button type="button" role="presentation" class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button>
-                        <button type="button" role="presentation" class="owl-next"><i class="fa fa-chevron-right"></i></button>
-                    </div>
-                    <div class="owl-dots disabled"></div>
-                </div>
-            </div>
-        </div>
-
-
-
-
-
-
-
-        <!-- ///////////////////////////// -->
-
-
-        <!-- blog -->
-        <?php
-
-        //LẤY TRONG CSDL
-        // Function to calculate time ago
-        function timeAgo($datetime)
-        {
-            $time = time() - strtotime($datetime);
-            if ($time < 60) return 'vừa xong';
-            if ($time < 3600) return floor($time / 60) . ' phút trước';
-            if ($time < 86400) return floor($time / 3600) . ' giờ trước';
-            if ($time < 2592000) return floor($time / 86400) . ' ngày trước';
-            return date('d/m/Y', strtotime($datetime));
-        }
-        ?>
-
-        <?php if (!empty($articles)): ?>
-            <!-- Bọc danh sách bài viết -->
-            <div id="articles-list">
-                <?php foreach ($articles as $i => $article): ?>
-                    <!-- Ẩn bài từ số 10 trở đi -->
-                    <div class="block-k article-item" style="<?= $i < 10 ? 'display:none;' : '' ?>">
-                        <div class="view-carde f-frame">
-                            <div class="provider">
-                                <?php
-                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                ?>
-                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
-                                <div class="p-covers">
-                                    <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
-                                            <?= htmlspecialchars($article['author_name']) ?>
-                                        </a>
-                                    </span>
-                                    <span class="date"><?= timeAgo($article['created_at']) ?></span>
-                                </div>
-                            </div>
-
-                            <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
-                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
-                                <?= htmlspecialchars($article['title']) ?>
-                                </a>
-                            </div>
-
-                            <div class="sapo">
-                                <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
-                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
-                                Xem thêm
-                                </a>
-                            </div>
-
-                            <?php if (!empty($article['main_image_url'])): ?>
-                                <img class="h-img"
-                                    src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                    alt="<?= htmlspecialchars($article['title']) ?>">
-                            <?php endif; ?>
-
-                            <!-- Giữ nguyên phần like, comment, share -->
-                            <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
-                                    <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
-                                        <span><?= $article['comment_count'] ?? 0 ?></span>
-                                    </a>
-                                </div>
-                                <div class="button-ar">
-                                    <div class="dropdown home-item">
-                                        <span data-bs-toggle="dropdown">Chia sẻ</span>
-                                        <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item copylink"
-                                                data-url="details_blog?id=<?= $article['id'] ?>"
-                                                href="javascript:void(0)">Copy link</a></li>
-                                            <li><a class="dropdown-item sharefb"
-                                                data-url="details_blog?id=<?= $article['id'] ?>"
-                                                href="javascript:void(0)">Share FB</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Loading hiển thị khi đang load thêm -->
-            <div id="loading" style="text-align:center; display:none; margin:20px;">
-                <em>Đang tải thêm...</em>
-            </div>
-        <?php else: ?>
-            <div class="block-k ">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết nào trong cơ sở dữ liệu.</p>
                     </div>
                 </div>
             </div>
-        <?php endif; ?>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/klb638936212707413950.jpg" title="KienlongBank nộp hồ sơ niêm yết HOSE" alt="KienlongBank nộp hồ sơ niêm yết HOSE" border="0">
+                <div class="item">
+                    <h3><a href="/kienlongbank-nop-ho-so-niem-yet-hose-p20250916120750803.html"> KienlongBank nộp hồ sơ niêm yết HOSE</a></h3>
+                    <span>Sở Giao dịch Chứng khoán TP.HCM vừa thông báo nhận hồ sơ...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638590812857749581.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=363030616136663" title="Thanh Huyền">Thanh Huyền</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 2 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/bear638936131731163826.jpg" title="Nâng hạng cận kề, khối ngoại vẫn thoái vốn" alt="Nâng hạng cận kề, khối ngoại vẫn thoái vốn" border="0">
+                <div class="item">
+                    <h3><a href="/nang-hang-can-ke-khoi-ngoai-van-thoai-von-p20250916095253170.html"> Nâng hạng cận kề, khối ngoại vẫn thoái vốn</a></h3>
+                    <span>Thị trường chứng khoán Việt Nam đang bước vào một giai đoạn...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638593112024418671.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=376165333732303" title="Hoàng Tùng">Hoàng Tùng</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 4 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/big-tech638936109496166616.png" title="Quyền lực số trong tay Big Tech Mỹ" alt="Quyền lực số trong tay Big Tech Mỹ" border="0">
+                <div class="item">
+                    <h3><a href="/quyen-luc-so-trong-tay-big-tech-my-p20250916091549678.html"> Quyền lực số trong tay Big Tech Mỹ</a></h3>
+                    <span>Trong hai thập kỷ qua, sự trỗi dậy của các “<a href="/big-tech-t4470-7.html">Big...</a></span><a href="/big-tech-t4470-7.html">
+                    </a>
+                    <div class="provider"><a href="/big-tech-t4470-7.html">
+                            <img class="logo" alt="" src="/Upload/img_static/bannerLê 638597439913871161.png">
+                        </a>
+                        <div class="p-covers"><a href="/big-tech-t4470-7.html">
+                                <span class="name" title="">
+                                </span></a><a href="/profile.html?q=316138653134306" title="Lê Minh">Lê Minh</a>
+                            <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            <span class="date"> 5 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/mou1638936102603353564.jpg" title="VNX và FTSE ký MOU hợp tác chiến lược phát triển thị trường vốn" alt="VNX và FTSE ký MOU hợp tác chiến lược phát triển thị trường vốn" border="0">
+                <div class="item">
+                    <h3><a href="/vnx-va-ftse-ky-mou-ve-hop-tac-chien-luoc-phat-trien-thi-truong-von-p20250916090420366.html"> VNX và FTSE ký MOU hợp tác chiến lược phát triển thị trường vốn</a></h3>
+                    <span>Trong khuôn khổ chuyến công tác tại Vương quốc Anh, Bộ trưởng
+                        Bộ...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerhuy638694414546437215.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=306239643766363" title="Việt Anh">Việt Anh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 5 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/sp-500638936044903822457.jpg" title="S&amp;P 500 lần đầu vượt mốc 6.600 điểm" alt="S&amp;P 500 lần đầu vượt mốc 6.600 điểm" border="0">
+                <div class="item">
+                    <h3><a href="/sp-500-lan-dau-vuot-moc-6600-diem-p20250916072810413.html"> S&amp;P 500 lần đầu vượt mốc 6.600 điểm</a></h3>
+                    <span>Thị trường chứng khoán Mỹ tăng điểm sau khi Tổng thống Mỹ
+                        Donald...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638590796760419265.png">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=383337373338633" title="Thanh Tùng">Thanh Tùng</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 7 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/tiktok638935702176735397.jpg" title="Mỹ - Trung đạt thỏa thuận về TikTok" alt="Mỹ - Trung đạt thỏa thuận về TikTok" border="0">
+                <div class="item">
+                    <h3><a href="/my-trung-dat-thoa-thuan-ve-tiktok-p20250915215657767.html"> Mỹ - Trung đạt thỏa thuận về TikTok</a></h3>
+                    <span>Bộ trưởng Tài chính Mỹ Scott Bessent cho biết Washington và
+                        Bắc Kinh...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerĐồn638853258010318432.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=353532306163643" title="Thành Công">Thành Công</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 16 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/hyper638935558074382678.jpg" title="Hyperliquid: Sàn DeFi chỉ 11 người vận hành, &quot;vượt mặt&quot; Robinhood với 420 tỷ USD giao dịch chỉ trong một tháng" alt="Hyperliquid: Sàn DeFi chỉ 11 người vận hành, &quot;vượt mặt&quot; Robinhood với 420 tỷ USD giao dịch chỉ trong một tháng" border="0">
+                <div class="item">
+                    <h3><a href="/hyperliquid-san-defi-chi-11-nguoi-van-hanh-nhung-can-moc-420-ty-usd-khoi-luong-giao-dich-p20250915175647469.html"> Hyperliquid: Sàn DeFi chỉ 11 người vận hành, "vượt mặt" Robinhood với 420 tỷ USD giao dịch chỉ trong một tháng</a></h3>
+                    <span>Chỉ sau một năm tự dựng blockchain riêng, Hyperliquid đã trở thành...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerHải638599227368930161.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=633363653362663" title="Gia Khánh">Gia Khánh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 20 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/bacgiang1681987676241166085317638935502756569403.jpg" title="Cấp xã sẽ được quyết định dự án đầu tư công lên tới 4.600 tỷ đồng?" alt="Cấp xã sẽ được quyết định dự án đầu tư công lên tới 4.600 tỷ đồng?" border="0">
+                <div class="item">
+                    <h3><a href="/cap-xa-duoc-quyet-dinh-du-an-dau-tu-cong-duoi-4600-ty-dong-p20250915162436172.html"> Cấp xã sẽ được quyết định dự án đầu tư công lên tới 4.600 tỷ đồng?</a></h3>
+                    <span>Khi thực hiện mô hình chính quyền địa phương hai
+                        cấp, chính quyền...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannertha638833402139850702.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=626337363265313" title="Phúc Nguyên">Phúc Nguyên</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 21 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/kienlongbank638935494046258187.jpg" title="KienlongBank sắp chia cổ tức tỷ lệ 60% bằng cổ phiếu, tăng vốn lên 5.800 tỷ đồng" alt="KienlongBank sắp chia cổ tức tỷ lệ 60% bằng cổ phiếu, tăng vốn lên 5.800 tỷ đồng" border="0">
+                <div class="item">
+                    <h3><a href="/kienlongbank-sap-chia-co-tuc-ty-le-60-bang-co-phieu-tang-von-len-5800-ty-dong-p20250915161004703.html"> KienlongBank sắp chia cổ tức tỷ lệ 60% bằng cổ phiếu, tăng vốn lên 5.800 tỷ đồng</a></h3>
+                    <span>Ngân hàng TMCP Kiên Long (<a href="/kienlongbank-t4706-7.html">KienlongBank</a>; UPCOM: <a href="/klb-t5887-7.html">KLB</a>) thông báo...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerLê 638597439913871161.png">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=316138653134306" title="Lê Minh">Lê Minh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 22 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/2731740648867379916384005638935460215005866.jpg" title="Hà Nội đề xuất mức lãi suất 4,8% cho vay nhà ở xã hội" alt="Hà Nội đề xuất mức lãi suất 4,8% cho vay nhà ở xã hội" border="0">
+                <div class="item">
+                    <h3><a href="/ha-noi-de-xuat-muc-lai-suat-48-cho-vay-nha-o-xa-hoi-p20250915151341595.html"> Hà Nội đề xuất mức lãi suất 4,8% cho vay nhà ở xã hội</a></h3>
+                    <span>UBND TP Hà Nội đang lấy ý kiến cho dự thảo Nghị...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannertha638826590730829530.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=303736363164346" title="Thanh Giang">Thanh Giang</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 23 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/hoa-phat638935468696569084.png" title="Thương hiệu Hòa Phát được định giá 744 triệu USD, giá trị tăng gấp 12,6 lần" alt="Thương hiệu Hòa Phát được định giá 744 triệu USD, giá trị tăng gấp 12,6 lần" border="0">
+                <div class="item">
+                    <h3><a href="/thuong-hieu-hoa-phat-duoc-dinh-gia-744-trieu-usd-gia-tri-tang-gap-126-lan-p20250915152749969.html"> Thương hiệu Hòa Phát được định giá 744 triệu USD, giá trị tăng gấp 12,6 lần</a></h3>
+                    <span>Với giá trị thương hiệu 744 triệu USD, CTCP Tập đoàn Hòa...</span>
+                    <div class="provider">
+                        <span class="cus-avatar">M</span>
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=613137643066386" title="Hiền Minh">Hiền Minh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 23 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/5638935307869695145.jpg" title="Các nhà kinh tế dự báo Fed sẽ cắt giảm lãi suất vào tuần tới, và ít nhất sẽ còn một đợt cắt giảm nữa trong năm 2025" alt="Các nhà kinh tế dự báo Fed sẽ cắt giảm lãi suất vào tuần tới, và ít nhất sẽ còn một đợt cắt giảm nữa trong năm 2025" border="0">
+                <div class="item">
+                    <h3><a href="/cac-nha-kinh-te-du-bao-fed-se-cat-giam-lai-suat-vao-tuan-toi-va-it-nhat-se-con-mot-dot-cat-giam-nua-trong-nam-2025-p2025091510594716.html"> Các nhà kinh tế dự báo Fed sẽ cắt giảm lãi suất vào tuần tới, và ít nhất sẽ còn một đợt cắt giảm nữa trong năm 2025</a></h3>
+                    <span>Theo khảo sát của Bloomberg News, Cục Dự trữ Liên bang Mỹ...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerhie638935302447504301.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=643438373330616" title=""></a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 23 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/stabelcoin-eth638935452588922681.jpg" title="Tổng cung stablecoin trên Ethereum đạt kỷ lục 166 tỷ USD" alt="Tổng cung stablecoin trên Ethereum đạt kỷ lục 166 tỷ USD" border="0">
+                <div class="item">
+                    <h3><a href="/tong-cung-stablecoin-tren-ethereum-dat-ky-luc-166-ty-usd-p20250915150058922.html"> Tổng cung stablecoin trên Ethereum đạt kỷ lục 166 tỷ USD</a></h3>
+                    <span>Tổng cung stablecoin trên Ethereum đạt đỉnh 166 tỷ USD, tăng 11,4%...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerNgu638600186063443162.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=663639623864303" title="Quân Anh">Quân Anh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> 23 giờ trước</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn/web/image/2025/9/scam638935438352505865.jpg" title="“Vạch trần” thủ đoạn đa cấp của dự án tiền ảo KTR, cuỗm gần 490 tỷ đồng từ nhà đầu tư" alt="“Vạch trần” thủ đoạn đa cấp của dự án tiền ảo KTR, cuỗm gần 490 tỷ đồng từ nhà đầu tư" border="0">
+                <div class="item">
+                    <h3><a href="/vach-tran-thu-doan-da-cap-cua-du-an-tien-ao-ktr-cuom-gan-490-ty-dong-tu-nha-dau-tu-p2025091511351195.html"> “Vạch trần” thủ đoạn đa cấp của dự án tiền ảo KTR, cuỗm gần 490 tỷ đồng từ nhà đầu tư</a></h3>
+                    <span></span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannertun638591365822804170.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=333938626230663" title="Quốc Đạt">Quốc Đạt</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 14:37 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/trung-quoc638935347178286040.jpg" title="Kinh tế Trung Quốc tiếp tục chậm lại" alt="Kinh tế Trung Quốc tiếp tục chậm lại" border="0">
+                <div class="item">
+                    <h3><a href="/kinh-te-trung-quoc-tiep-tuc-cham-lai-p20250915120517891.html"> Kinh tế Trung Quốc tiếp tục chậm lại</a></h3>
+                    <span>Các chỉ số kinh tế chủ chốt của Trung Quốc trong tháng...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638694418578304725.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=643364353631323" title="Đức Anh">Đức Anh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 12:07 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/vpbanks638935297333598480.jpg" title="VPBankS tính làm blockchain, xây sàn tiền số, đặt mục tiêu lãi 10.000 tỷ đồng vào năm 2028" alt="VPBankS tính làm blockchain, xây sàn tiền số, đặt mục tiêu lãi 10.000 tỷ đồng vào năm 2028" border="0">
+                <div class="item">
+                    <h3><a href="/vpbanks-tinh-lam-blockchain-xay-san-tien-so-dat-muc-tieu-lai-10000-ty-dong-vao-nam-2028-p20250915104213422.html"> VPBankS tính làm blockchain, xây sàn tiền số, đặt mục tiêu lãi 10.000 tỷ đồng vào năm 2028</a></h3>
+                    <span>Đó là những mục tiêu chiến lược trong kế hoạch phát triển...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638590791245265212.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=663539303334396" title="Hoàng Giang">Hoàng Giang</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 10:42 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/159638935267987663455.png" title="Crypto 15/9: BTC, ETH chững nhịp, chờ tin Fed hạ lãi suất trong 2 ngày tới" alt="Crypto 15/9: BTC, ETH chững nhịp, chờ tin Fed hạ lãi suất trong 2 ngày tới" border="0">
+                <div class="item">
+                    <h3><a href="/crypto-159-btc-eth-chung-nhip-cho-tin-fed-ha-lai-suat-trong-2-ngay-toi-p202509150953190.html"> Crypto 15/9: BTC, ETH chững nhịp, chờ tin Fed hạ lãi suất trong 2 ngày tới</a></h3>
+                    <span>Mở đầu tuần mới, "đầu tàu" Bitcoin neo lại ở vùng giá...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerHải638599227368930161.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=633363653362663" title="Gia Khánh">Gia Khánh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 10:40 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/tien638935176402996580.jpg" title="NHNN hút ròng 2.200 tỷ đồng, lãi suất qua đêm xuống sát 4%" alt="NHNN hút ròng 2.200 tỷ đồng, lãi suất qua đêm xuống sát 4%" border="0">
+                <div class="item">
+                    <h3><a href="/nhnn-hut-rong-2200-ty-dong-lai-suat-qua-dem-xuong-sat-4-p20250915072040344.html"> NHNN hút ròng 2.200 tỷ đồng, lãi suất qua đêm xuống sát 4%</a></h3>
+                    <span>Trong tuần giao dịch từ ngày 8 đến 12/9, Ngân hàng Nhà...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638694415302526051.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=666234633765646" title="Tâm Đan">Tâm Đan</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 7:21 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/dau-tu-cong638934899442000571.jpg" title="Kho bạc Nhà nước đốc thúc giải ngân 1 triệu tỷ đồng vốn đầu tư công năm nay" alt="Kho bạc Nhà nước đốc thúc giải ngân 1 triệu tỷ đồng vốn đầu tư công năm nay" border="0">
+                <div class="item">
+                    <h3><a href="/kho-bac-nha-nuoc-doc-thuc-giai-ngan-1-trieu-ty-dong-von-dau-tu-cong-nam-nay-p20250914233904246.html"> Kho bạc Nhà nước đốc thúc giải ngân 1 triệu tỷ đồng vốn đầu tư công năm nay</a></h3>
+                    <span>Kho bạc Nhà nước vừa phát đi công điện chỉ đạo toàn...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerhuy638694414546437215.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=306239643766363" title="Việt Anh">Việt Anh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Thứ Hai, 15/9/2025, 6:40 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/vang638934713305127141.png" title="Giá vàng tăng thì sợ đu đỉnh, giá giảm lại chờ bắt đáy, người phụ nữ thừa nhận: &quot;Vì suy nghĩ đó mà đến nay chưa có một chỉ vàng nào&quot;" alt="Giá vàng tăng thì sợ đu đỉnh, giá giảm lại chờ bắt đáy, người phụ nữ thừa nhận: &quot;Vì suy nghĩ đó mà đến nay chưa có một chỉ vàng nào&quot;" border="0">
+                <div class="item">
+                    <h3><a href="/gia-vang-tang-thi-so-du-dinh-gia-giam-lai-cho-bat-day-nguoi-phu-nu-thua-nhan-vi-suy-nghi-do-ma-den-nay-chua-co-mot-chi-vang-nao-p20250914182850840.html"> Giá vàng tăng thì sợ đu đỉnh, giá giảm lại chờ bắt đáy, người phụ nữ thừa nhận: "Vì suy nghĩ đó mà đến nay chưa có một chỉ vàng nào"</a></h3>
+                    <span></span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerdao638584780897508685.png">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=383733343263393" title="Phùng Thanh Khoa">Phùng Thanh Khoa</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Chủ nhật, 14/9/2025, 18:29 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/mua-ban-vang638934708355606402.jpg" title="Chính phủ yêu cầu đánh thuế thu nhập từ mua bán vàng để hạn chế đầu cơ" alt="Chính phủ yêu cầu đánh thuế thu nhập từ mua bán vàng để hạn chế đầu cơ" border="0">
+                <div class="item">
+                    <h3><a href="/chinh-phu-yeu-cau-danh-thue-thu-nhap-tu-mua-ban-vang-de-han-che-dau-co-p20250914182035668.html"> Chính phủ yêu cầu đánh thuế thu nhập từ mua bán vàng để hạn chế đầu cơ</a></h3>
+                    <span>Chính phủ yêu cầu đưa thu nhập từ hoạt động mua bán...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerfii638694416456585661.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=643538663661393" title="Ngọc Lan">Ngọc Lan</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Chủ nhật, 14/9/2025, 18:21 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/coinbase111638934685446686125.jpg" title="Coinbase mất thế độc tôn khi loạt đối thủ mới xuất hiện" alt="Coinbase mất thế độc tôn khi loạt đối thủ mới xuất hiện" border="0">
+                <div class="item">
+                    <h3><a href="/coinbase-mat-the-doc-ton-khi-loat-doi-thu-moi-xuat-hien-p20250914173713121.html"> Coinbase mất thế độc tôn khi loạt đối thủ mới xuất hiện</a></h3>
+                    <span>Sự ủng hộ của Nhà Trắng với tài sản số đã giúp...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerLê 638597439913871161.png">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=316138653134306" title="Lê Minh">Lê Minh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Chủ nhật, 14/9/2025, 17:50 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news ">
+                <img class="s-img" src="https://media.dff.vn//web/image/2025/9/tether638934645199811681.jpg" title="Tether tung stablecoin “Made in USA”, tái thiết vị thế trên đất Mỹ" alt="Tether tung stablecoin “Made in USA”, tái thiết vị thế trên đất Mỹ" border="0">
+                <div class="item">
+                    <h3><a href="/tether-tung-stablecoin-made-in-usa-tai-thiet-vi-the-tren-dat-my-p2025091416352028.html"> Tether tung stablecoin “Made in USA”, tái thiết vị thế trên đất Mỹ</a></h3>
+                    <span><a href="https://dff.vn/tether-t4822-7.html">Tether</a> công bố kế hoạch ra mắt đồng stablecoin mới, mang...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerHải638599227368930161.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=633363653362663" title="Gia Khánh">Gia Khánh</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Chủ nhật, 14/9/2025, 16:53 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-news  cover-page-i" data-id="638934632310000000">
+                <img class="s-img" src="https://media.dff.vn/web/image/2025/8/nhat-thue638901872980855825.png" title="Nhật Bản hạ thuế tài sản số từ 55% xuống 20%" alt="Nhật Bản hạ thuế tài sản số từ 55% xuống 20%" border="0">
+                <div class="item">
+                    <h3><a href="/nhat-ban-ha-thue-tai-san-so-tu-55-xuong-20-p20250914160915231.html"> Nhật Bản hạ thuế tài sản số từ 55% xuống 20%</a></h3>
+                    <span><a href="https://dff.vn/nhat-ban-t2318-7.html">Nhật Bản</a> đang chuẩn bị cho một bước ngoặt lớn trong...</span>
+                    <div class="provider">
+                        <img class="logo" alt="" src="/Upload/img_static/bannerVũ 638597441654494224.jpg">
+                        <div class="p-covers">
+                            <span class="name" title="">
+                                <a href="/profile.html?q=386538343262386" title="Vũ Đức">Vũ Đức</a>
+                                <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
+                            </span><span class="date"> Chủ nhật, 14/9/2025, 16:13 (GMT+7)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
 
 
 
+        </div>
+        <div class="cover-page" id="pills-tag">
 
+            <div class="sea-tag ">
+                <h3><a href="/nha-dau-tu-f0-t6622-7.html"> #Nhà đầu tư F0</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/dau-tu-dong-ngan-t6596-7.html"> #Đầu tư Đông Ngàn</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/nguyen-van-dat-t6581-7.html"> #Nguyễn Văn Đạt</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/khung-gia-dat-t6561-7.html"> #Khung giá đất</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/khu-du-lich-bien-ho-chu-dang-ya-t6560-7.html"> #Khu du lịch Biển Hồ – Chư Đăng Ya</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/luat-dau-tu-t6553-7.html"> #Luật Đầu tư</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/cao-toc-ca-mau-dat-mui-t6547-7.html"> #Cao tốc Cà Mau - Đất Mũi</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/landmark-da-nang-t6542-7.html"> #Landmark Đà Nẵng</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/da-nang-downtown-t6524-7.html"> #Da Nang Downtown</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/cau-vuot-song-day-t6522-7.html"> #Cầu vượt sông Đáy</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/metro-da-nang-hoi-an-chu-lai-t6517-7.html"> #Metro Đà Nẵng - Hội An - Chu Lai</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/hyundai-rotem-t6484-7.html"> #Hyundai Rotem</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/dang-minh-truong-t6470-7.html"> #Đặng Minh Trường</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/gia-dat-t6468-7.html"> #Giá đất</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/dinh-gia-dat-t6467-7.html"> #Định giá đất</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/dang-dinh-tuan-t6463-7.html"> #Đặng Đình Tuấn</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/hyundai-t6462-7.html"> #Hyundai</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/khu-dan-cu-cao-cap-can-gio-t6432-7.html"> #Khu dân cư cao cấp Cần Giờ</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/kho-du-tru-dau-chien-luoc-t6418-7.html"> #Kho Dự trữ Dầu chiến lược</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/gda-t6410-7.html"> #GDA</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/dau-tu-xay-dung-bac-binh-t6403-7.html"> #Đầu tư Xây dựng Bắc Bình</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/yukihito-honda-t6396-7.html"> #Yukihito Honda</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/khu-do-thi-moi-dai-hoc-ii-tieu-khu-1111-t6393-7.html"> #Khu đô thị mới đại học II - Tiểu khu 111.1</a></h3>
+
+            </div>
+            <div class="sea-tag ">
+                <h3><a href="/benh-vien-da-khoa-quoc-te-hue-t6391-7.html"> #Bệnh viện Đa khoa Quốc tế Huế</a></h3>
+
+            </div>
+            <div class="sea-tag  cover-page-i" data-id="6370">
+                <h3><a href="/khu-nha-o-xa-hoi-phuong-dai-phuc-t6370-7.html"> #Khu nhà ở xã hội phường Đại Phúc</a></h3>
+
+            </div>
+
+
+
+
+
+        </div>
+        <div class="cover-page" id="pills-user">
+
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">t</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=306530356438646" title="Kiến thức Đầu tư">Kiến thức Đầu tư</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">T</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=666333313333343" title="Tuấn Đầu Tư">Tuấn Đầu Tư</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">N</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=393134333661616" title="Trương Đắc Nguyên">Trương Đắc Nguyên</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">T</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=613837616535393" title="Đàm Văn Trọng">Đàm Văn Trọng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">T</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=303932353139326" title="Đào Mạnh Trung">Đào Mạnh Trung</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">Đ</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=336234323466613" title="Công Ty CP Đầu Tư Hưng Đạo">Công Ty CP Đầu Tư Hưng Đạo</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="/Upload/img_static/bannerbao638760937344418109.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=336131306265373" title="Hải Đăng">Hải Đăng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="/Upload/img_static/bannerfii638694415302526051.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=666234633765646" title="Tâm Đan">Tâm Đan</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="https://img.dff.vn/Image/2024/12/06/bitcoin-rot-tham-thi-truong-tien-ao-mat-hon-100-ty-usd-trong-1-ngay1584069660-072638157.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=343235613838656" title="Hải Đăng">Hải Đăng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">V</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=316461303961643" title="Đào Quang Vinh">Đào Quang Vinh</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="https://img.dff.vn/Image/2024/11/22/2024-11-2211-21-31-114239663.png">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=313634613738343" title="Đắc Chính">Đắc Chính</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="/Upload/img_static/bannerlin638678001932699318.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=396363373237363" title="Linh Đào">Linh Đào</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">t</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=343966616539653" title="Đào văn tiên">Đào văn tiên</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">Đ</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=643136333330616" title="Nhật Đăng">Nhật Đăng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="https://img.dff.vn/Image/2024/11/07/deo-ma-pi-leng-1-172732607.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=353732363938636" title="Hải Đăng">Hải Đăng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="https://img.dff.vn/Image/2024/11/07/chu-dau-tu-la-gi-5-min-172209591.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=376665363533646" title="Minh Đăng">Minh Đăng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">t</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=626666613864396" title="đạt trần">đạt trần</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">T</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=356565323163306" title="Đặng Duy Thành">Đặng Duy Thành</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">H</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=356332653139646" title="Đào Việt Hùng">Đào Việt Hùng</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">D</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=613038386663353" title="Danny1402">Danny1402</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">l</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=356262656562366" title="Đào ngọc lâm">Đào ngọc lâm</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <span class="cus-avatar">Đ</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=383665336637363" title="Nguyễn Đăng Đức">Nguyễn Đăng Đức</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="/Upload/img_static/bannerDươ638594432062110594.png">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=343363323362313" title="Đạt Dương">Đạt Dương</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user ">
+                <div class="provider">
+                    <img class="logo" alt="" src="/Upload/img_static/bannernam638594204624896014.jpg">
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=636337386463656" title="Đặng Nam Quốc">Đặng Nam Quốc</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="sea-user  cover-page-i" data-id="60149">
+                <div class="provider">
+                    <span class="cus-avatar">M</span>
+                    <div class="p-covers">
+                        <span class="name" title="">
+                            <a href="/profile.html?q=303630303930313" title="Đặng Việt Minh">Đặng Việt Minh</a>
+
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+        <script>
+            (function() {
+                var tabs = document.querySelectorAll('#pills-search-tab .nav-link');
+                function showPane(target) {
+                    document.querySelectorAll('.cover-page').forEach(function(p){ p.classList.remove('active'); });
+                    var el = document.querySelector(target);
+                    if (el) el.classList.add('active');
+                }
+                tabs.forEach(function(btn){
+                    btn.addEventListener('click', function(e){
+                        e.preventDefault();
+                        tabs.forEach(function(b){ b.classList.remove('active'); });
+                        this.classList.add('active');
+                        var target = this.getAttribute('data-bs-target');
+                        showPane(target);
+                    });
+                });
+
+                // Init based on active tab at load
+                var active = document.querySelector('#pills-search-tab .nav-link.active');
+                showPane(active ? active.getAttribute('data-bs-target') : '#pills-news');
+            })();
+        </script>
     </div>
 
     <!-- bài viết chính block end -->
@@ -277,118 +1131,117 @@
 
 
         <?php
-// Giả sử $topArticles chứa 6 bài viết HOT đã lấy từ database
-// $topArticles = ArticlesModel::getTopArticles(6);
-?>
+        // Giả sử $topArticles chứa 6 bài viết HOT đã lấy từ database
+        // $topArticles = ArticlesModel::getTopArticles(6);
+        ?>
 
-<?php if (!empty($rssArticles3)): ?>
-<div class="block-k bg-box-a">
-    <div class="tieu-diem">
-        <h2>
-            <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
-        </h2>
-        <ul>
-            <?php foreach ($rssArticles3 as $article): ?>
-            <li class="new-style">
-                <a title="<?= htmlspecialchars($article['title']) ?>"
-                   href="<?= !empty($article['is_rss']) 
-                            ? htmlspecialchars($article['link']) 
-                            : 'details_blog?id=' . urlencode($article['id']) ?>">
-                    <?= htmlspecialchars($article['title']) ?>
-                </a>
+        <?php if (!empty($rssArticles3)): ?>
+            <div class="block-k bg-box-a">
+                <div class="tieu-diem">
+                    <h2>
+                        <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+                    </h2>
+                    <ul>
+                        <?php foreach ($rssArticles3 as $article): ?>
+                            <li class="new-style">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="<?= !empty($article['is_rss'])
+                                                ? htmlspecialchars($article['link'])
+                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
 
-                <?php if (!empty($article['main_image_url'])): ?>
-                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                     title="<?= htmlspecialchars($article['title']) ?>"
-                     alt="<?= htmlspecialchars($article['title']) ?>"
-                     border="0" />
-                <?php endif; ?>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
-<?php else: ?>
-<div class="block-k">
-    <div class="view-carde f-frame">
-        <div class="text-center p-4">
-            <p>Chưa có bài viết nổi bật nào.</p>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+                                <?php if (!empty($article['main_image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                        title="<?= htmlspecialchars($article['title']) ?>"
+                                        alt="<?= htmlspecialchars($article['title']) ?>"
+                                        border="0" />
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="block-k">
+                <div class="view-carde f-frame">
+                    <div class="text-center p-4">
+                        <p>Chưa có bài viết nổi bật nào.</p>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
 
 
 
         <div class="block-k bg-box-a">
-    <div class="view-right-a h-lsk">
-        <div class="title">
-            <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
+            <div class="view-right-a h-lsk">
+                <div class="title">
+                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
+                </div>
+
+                <ol class="content-ol">
+                    <?php if (!empty($events)): ?>
+                        <?php foreach ($events as $index => $event): ?>
+                            <li class="card-list-item" key="<?php echo $index; ?>">
+                                <a
+                                    title="<?php echo htmlspecialchars($event['title']); ?>"
+                                    href="javascript:void(0)"
+                                    onclick="showEventModal('<?php echo htmlspecialchars(addslashes($event['title'])); ?>', '<?php echo htmlspecialchars(addslashes($event['description'] ?? '')); ?>')">
+                                    <?php echo htmlspecialchars($event['title']); ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="card-list-item">
+                            <span>Chưa có sự kiện nào</span>
+                        </li>
+                    <?php endif; ?>
+                </ol>
+            </div>
         </div>
 
-        <ol class="content-ol">
-            <?php if (!empty($events)): ?>
-                <?php foreach ($events as $index => $event): ?>
-                    <li class="card-list-item" key="<?php echo $index; ?>">
-                        <a 
-    title="<?= htmlspecialchars($event['title']); ?>"
-    href="<?= BASE_URL ?>?url=event&id=<?= $event['id'] ?>"
->
-    <?= htmlspecialchars($event['title']); ?>
-</a>
-
-                    </li>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <li class="card-list-item">
-                    <span>Chưa có sự kiện nào</span>
-                </li>
-            <?php endif; ?>
-        </ol>
-    </div>
-</div>
 
 
 
 
+        <?php if (!empty($rssArticles4)): ?>
+            <div class="block-k bg-box-a">
+                <div class="tieu-diem t-analysis">
+                    <h2>
+                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                    </h2>
+                    <ul>
+                        <?php foreach ($rssArticles4 as $article): ?>
+                            <li class="new-style">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="<?= !empty($article['is_rss'])
+                                                ? htmlspecialchars($article['link'])
+                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
 
-      <?php if (!empty($rssArticles4)): ?>
-<div class="block-k bg-box-a">
-    <div class="tieu-diem t-analysis">
-        <h2>
-            <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
-        </h2>
-        <ul>
-            <?php foreach ($rssArticles4 as $article): ?>
-            <li class="new-style">
-                <a title="<?= htmlspecialchars($article['title']) ?>"
-                   href="<?= !empty($article['is_rss']) 
-                            ? htmlspecialchars($article['link']) 
-                            : 'details_blog?id=' . urlencode($article['id']) ?>">
-                    <?= htmlspecialchars($article['title']) ?>
-                </a>
-
-                <?php if (!empty($article['main_image_url'])): ?>
-                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                     title="<?= htmlspecialchars($article['title']) ?>"
-                     alt="<?= htmlspecialchars($article['title']) ?>"
-                     border="0" />
-                <?php endif; ?>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
-<?php else: ?>
-<div class="block-k">
-    <div class="view-carde f-frame">
-        <div class="text-center p-4">
-            <p>Chưa có bài viết phân tích nào.</p>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+                                <?php if (!empty($article['main_image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                        title="<?= htmlspecialchars($article['title']) ?>"
+                                        alt="<?= htmlspecialchars($article['title']) ?>"
+                                        border="0" />
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php else: ?>
+            <div class="block-k">
+                <div class="view-carde f-frame">
+                    <div class="text-center p-4">
+                        <p>Chưa có bài viết phân tích nào.</p>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
 
 
@@ -404,7 +1257,7 @@
         </div>
 
         <!-- <div class="modal show" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="6134" aria-modal="true" style="display: block;"> -->
-            <!-- <div class="modal-dialog modal-lg" style="width:700px">
+        <!-- <div class="modal-dialog modal-lg" style="width:700px">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Tạo bài viết</span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
@@ -517,7 +1370,7 @@
                                                                                 </div>
                                                                                 <div class="ce-popover-item" data-item-name="imageWithText">
                                                                                     <div class="ce-popover-item__icon ce-popover-item__icon--tool"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                                                                                            <!-- <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
+        <!-- <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
                                                                                         </svg></div>
                                                                                     <div class="ce-popover-item__title">Image with Text</div>
                                                                                 </div>

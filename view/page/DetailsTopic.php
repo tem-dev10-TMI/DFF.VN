@@ -42,7 +42,7 @@
                             alt="<?= htmlspecialchars($article['author_name']) ?>">
                         <div class="p-covers">
                             <span class="name">
-                                <a href="/profile.html?q=<?= $article['author_id'] ?>">
+                                <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
                                     <?= htmlspecialchars($article['author_name']) ?>
                                 </a>
                             </span>
@@ -52,7 +52,8 @@
                     </div>
 
                     <div class="title">
-                        <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html">
+                    <a href="details_blog?id=<?= $article['id'] ?>">
+
                             <?= htmlspecialchars($article['title']) ?>
                         </a>
                     </div>

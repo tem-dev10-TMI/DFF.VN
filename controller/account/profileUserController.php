@@ -41,18 +41,15 @@ class profileUserController
         }
     }
     
-    public static function viewprofileUser() // cái này để xem người ta nó tự tách phân biết nào là user và nào là doanh nhân
+    public static function viewprofileUser()
     {
         if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-            header("Location: index.php");
+            header("Location: " . BASE_URL);
             exit;
         }
 
-        require_once 'model/user/userModel.php';
-
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $user_id = intval($_GET['id']);
-
-        // Lấy thông tin user
         $user = UserModel::getUserById($user_id);
 
         if (!$user) {
@@ -60,13 +57,39 @@ class profileUserController
             exit;
         }
 
-        // Lấy bài viết của user để truyền sang view
-        $articles = UserModel::getArticlesByAuthorId($user_id);
+        $articles = [];
 
-        // Render view theo role
+        // RSS riêng theo user id
+        if ($user_id == 66 || $user_id == 67) {
+            require_once __DIR__ . '/../../model/rss/RssModel.php';
+
+            $feedUrls = [];
+            if ($user_id == 66) {
+                // RSS cho user 66 → baochinhphu.vn
+                $feedUrls = ["https://baochinhphu.vn/kinh-te.rss"];
+            } elseif ($user_id == 67) {
+                // RSS cho user 67 → thanhnien.vn
+                $feedUrls = ["https://thanhnien.vn/rss/kinh-te.rss"];
+            }
+
+            $articles = RssModel::getMultipleFeeds($feedUrls, 50, 15);
+
+            // Sắp xếp giảm dần theo ngày tạo
+            usort($articles, function($a, $b){
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+        } else {
+            // User bình thường → lấy bài viết từ DB
+            require_once __DIR__ . '/../../model/article/articlesmodel.php';
+            $articles = ArticlesModel::getArticlesByAuthorId($user_id);
+        }
+        $feedUrls = [
+            "https://baochinhphu.vn/kinh-te.rss",
+            "https://thanhnien.vn/rss/kinh-te.rss"
+        ];
         ob_start();
         if (!empty($user['role']) && $user['role'] === 'businessmen') {
-            require_once 'model/user/businessmenModel.php';
+            require_once __DIR__ . '/../../model/user/businessmenModel.php';
             $businessman = businessmenModel::getBusinessByUserId($user_id);
             $careers = !empty($businessman['businessman_id'])
                 ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
@@ -75,13 +98,13 @@ class profileUserController
                 ? businessmenModel::getBusinessStats($businessman['user_id'])
                 : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
 
-            require_once 'view/page/viewProfilebusiness.php';
+            require_once __DIR__ . '/../../view/page/viewProfilebusiness.php';
         } else {
-            require_once 'view/page/viewProfileuser.php';
+            require_once __DIR__ . '/../../view/page/viewProfileuser.php';
         }
         $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
-        require_once 'view/layout/main.php';
+        $profile = false;
+        require_once __DIR__ . '/../../view/layout/main.php';
     }
 
     // ========== Quản lý Bài viết ==========

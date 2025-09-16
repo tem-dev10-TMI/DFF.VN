@@ -1,10 +1,6 @@
 <?php
 session_start();
-
-// Facebook app info
-$appId = '813811857990201';
-$redirectUri = 'http://localhost/DFF.VN/public/facebook-callback.php';
-$scope = 'public_profile,email';
+require_once __DIR__ . '/../config/config.php';
 
 // Tạo state để bảo mật CSRF
 $state = bin2hex(random_bytes(8));
@@ -12,10 +8,10 @@ $_SESSION['fb_state'] = $state;
 
 // Tạo URL login
 $loginUrl = "https://www.facebook.com/v16.0/dialog/oauth?" . http_build_query([
-    'client_id' => $appId,
-    'redirect_uri' => $redirectUri,
+    'client_id' => FACEBOOK_APP_ID,
+    'redirect_uri' => FACEBOOK_REDIRECT_URI,
     'state' => $state,
-    'scope' => $scope,
+    'scope' => FACEBOOK_SCOPE,
     'response_type' => 'code'
 ]);
 
