@@ -3,6 +3,7 @@ require_once 'model/article/articlesmodel.php';
 require_once 'model/commentmodel.php';
 require_once 'model/user/businessmenModel.php';
 require_once 'model/MarketDataModel.php';
+require_once 'model/event/Events.php';
 
 
 class homeController
@@ -12,8 +13,12 @@ class homeController
         // 1. Lấy dữ liệu từ Database
         $dbArticles = ArticlesModel::getAllArticles();
         $comments = CommentsModel::getComments();
-        $topBusinessmen = businessmenModel::getAllBusinessmen(10);
+        $topBusinessmen = businessmenModel::getAllBusinessmen();
         $marketData = MarketDataModel::getCachedMarketData();
+        
+        // Lấy dữ liệu sự kiện
+        $eventsModel = new Events();
+        $events = $eventsModel->getAll();
 
 
         // 2. Lấy RSS
