@@ -1,6 +1,6 @@
 <?php
 require_once 'model/TopicModel.php';
-
+require_once 'model/article/articlesmodel.php';
 class topicController
 {
     // Hiển thị danh sách tất cả chủ đề (ví dụ trang chính hoặc sidebar)
@@ -8,7 +8,7 @@ class topicController
     {
         $topicModel = new TopicModel();
         $topics = $topicModel->getAll(); // lấy tất cả chủ đề
-
+        $articles = ArticlesModel::getLatestArticles($limit = 6);
         // Load view
         ob_start();
         require_once 'view/layout/sidebarLeft.php'; // file view hiển thị danh sách chủ đề

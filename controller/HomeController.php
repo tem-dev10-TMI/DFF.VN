@@ -3,104 +3,138 @@ require_once 'model/article/articlesmodel.php';
 require_once 'model/commentmodel.php';
 require_once 'model/user/businessmenModel.php';
 require_once 'model/MarketDataModel.php';
-require_once 'model/TopicModel.php';
+require_once 'model/event/Events.php';
+
+class Events {
+    protected $pdo;
+
+    public function __construct() {
+        // Lấy PDO toàn cục nếu không truyền tham số
+        global $pdo;
+        $this->pdo = $pdo;
+    }
+
+    public function getAll($limit = 10) {
+        $stmt = $this->pdo->prepare("SELECT * FROM events ORDER BY event_date DESC LIMIT ?");
+        $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 
 class homeController
 {
-        public static function index()
-        {
-                //Load model
-                //require_once '/../../config/db.php';
+    public static function index()
+    {
+        // 1. Lấy dữ liệu từ Database
+        $dbArticles = ArticlesModel::getAllArticles();
 
-                // Fetch data from database
-                $articles = ArticlesModel::getAllArticles();
-                $comments = CommentsModel::getComments();
-                $topBusinessmen = businessmenModel::getAllBusinessmen(10);
+        $comments = CommentsModel::getComments();
+        $topBusinessmen = businessmenModel::getAllBusinessmen();
+        $marketData = MarketDataModel::getCachedMarketData();
 
-                $marketData = MarketDataModel::getCachedMarketData();
-                // Lấy chủ đề cho sidebar
-                $topicModel = new TopicModel();
-                $allTopics = $topicModel->getAll(); // tất cả chủ đề
-                $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
-                $moreTopics = array_slice($allTopics, 5);   // còn lại
-                //Load view
-                ob_start();
+        // Lấy dữ liệu sự kiện
+        $eventsModel = new Events();
+        $events = $eventsModel->getAll();
 
-                require_once 'view/page/Home.php';
+        // 2. Lấy RSS
+        require_once __DIR__ . '/../model/rss/RssModel.php';
 
-                $content = ob_get_clean();
+        // RSS Báo Chính phủ
+        $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15);
 
-                //Load layout
-                $profile = false; // đừng ai xóa
-                require_once 'view/layout/main.php';
+        // RSS Thanh Niên
+        $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
+        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15);
+
+        // Gộp RSS + DB articles
+        $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
+
+        // Thiết lập avatar riêng theo nguồn RSS
+        foreach ($articles as &$art) {
+            if (!empty($art['is_rss'])) {
+                if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
+                    $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                } else {
+                    $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                }
+                $art['author_id'] = 66; // id mặc định cho RSS
+            }
         }
-        public static function profile_business() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
-        {
-                //Load model
+        unset($art);
 
-                //Load view
-                ob_start();
-                $profile_category = 'businessmen';
-                require_once 'view/layout/Profile.php';
-                $content = ob_get_clean();
+        // 3. Sắp xếp theo created_at giảm dần
+        usort($articles, function ($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
 
-                //Load layout
-                $profile = true; // đừng ai xóa
-                require_once 'view/layout/main.php';
-        }
-        public static function profile_user() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
-        {
-                //Load model
+        // 4. Load view Home
+        ob_start();
+        require_once 'view/page/Home.php';
+        $content = ob_get_clean();
 
-                //Load view
-                ob_start();
-                $profile_category='user';
-                require_once 'view/layout/Profile.php';
-                $content = ob_get_clean();
+        // 5. Load layout chính
+        $profile = false;
+        require_once 'view/layout/main.php';
+    }
 
-                //Load layout
-                $profile = true; // đừng ai xóa
-                require_once 'view/layout/main.php';
-        }
-        public static function trends() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
-        {
-                //Load model
 
-                //Load view
-                ob_start();
-                require_once 'view/page/Trends.php';
-                $content = ob_get_clean();
+    public static function profile_business()
+    {
+        ob_start();
+        $profile_category = 'businessmen';
+        require_once 'view/layout/Profile.php';
+        $content = ob_get_clean();
 
-                //Load layout
-                $profile = false; // đừng ai xóa
-                require_once 'view/layout/main.php';
-        }
-        public static function about() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
-        {
-                //Load model
+        $profile = true;
+        require_once 'view/layout/main.php';
+    }
 
-                //Load view
-                ob_start();
-                require_once 'view/page/About.php';
-                $content = ob_get_clean();
+    public static function profile_user()
+    {
+        ob_start();
+        $profile_category = 'user';
+        require_once 'view/layout/Profile.php';
+        $content = ob_get_clean();
 
-                //Load layout
-                $profile = true; // đừng ai xóa
-                require_once 'view/layout/main.php';
-        }
+        $profile = true;
+        require_once 'view/layout/main.php';
+    }
 
-        public static function details_blog() // test giao diện, ai code backend fix lại đưa sang nơi phù hợp trong controller
-        {
-                //Load model
-// chưa có dữ liệu ní ơi. mấy ní load dữ liệu lên
-                //Load view
-                ob_start();
-                require_once 'view/page/detail_block.php';
-                $content = ob_get_clean();
+    public static function trends()
+    {
+        require_once 'model/TopicModel.php';
+        require_once 'model/article/articlesmodel.php';
 
-                //Load layout
-                $profile = false; // đừng ai xóa
-                require_once 'view/layout/main.php';
+        $topicModel = new TopicModel();
+        $topics = $topicModel->getAll();
+
+        $articlesByTopic = [];
+        if (!empty($topics)) {
+            foreach ($topics as $tp) {
+                $tid = (int)($tp['id'] ?? 0);
+                if ($tid > 0) {
+                    $articlesByTopic[$tid] = ArticlesModel::getArticlesByTopicId($tid, 10);
+                }
+            }
         }
 
+        ob_start();
+        require_once 'view/page/Trends.php';
+        $content = ob_get_clean();
+
+        $profile = false;
+        require_once 'view/layout/main.php';
+    }
+
+    public static function about()
+    {
+        ob_start();
+        require_once 'view/page/About.php';
+        $content = ob_get_clean();
+
+        $profile = true;
+        require_once 'view/layout/main.php';
+    }
 }

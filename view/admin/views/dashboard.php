@@ -30,6 +30,21 @@
       </div>
     </div>
   </div>
+
+  <!-- Sự kiện -->
+  <div class="col-md-3">
+    <div class="card shadow-sm border-0 h-100">
+      <div class="card-body text-center">
+        <div class="mb-2 text-info">
+          <i class="bi bi-calendar-event-fill" style="font-size:2.5rem;"></i>
+        </div>
+        <h5 class="card-title">Sự kiện</h5>
+        <?php $countEvents = $pdo->query("SELECT COUNT(*) FROM events")->fetchColumn(); ?>
+        <p class="display-6 fw-bold"><?= intval($countEvents) ?></p>
+        <a href="<?= BASE_URL ?>/admin.php?route=events" class="btn btn-outline-info btn-sm">Quản lý</a>
+      </div>
+    </div>
+  </div>
 </div>
 
 <?php include __DIR__ . '/layout/footer.php'; ?>

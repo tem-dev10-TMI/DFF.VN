@@ -1,0 +1,326 @@
+# 03_fees_networks — Phí giao dịch & Mạng lưới (Chi tiết cho KB chatbot)
+
+========================================================================
+0. Ghi chú tổng quan
+- Phí mạng (network fee) là chi phí trả cho miner/validator để xử lý giao dịch trên blockchain. Mỗi chain có cơ chế tính khác nhau (satoshis/vByte cho BTC, gas/gwei cho Ethereum, gas/tGas cho Tron...).
+- Với stablecoin (USDT, USDC...), token có thể tồn tại trên nhiều chain — phí và thời gian khác nhau tùy chain.
+- File này hướng dẫn chi tiết: định nghĩa, cách tính, ví dụ tính phí, chiến lược giảm phí, UX hiển thị phí, thiết kế API/DB, xử lý under/overpayment, monitoring & alerts, testing, và mẫu trả lời chatbot.
+
+========================================================================
+1. Định nghĩa & khái niệm cơ bản
+- Mempool (BTC): nơi tx chờ miner. Fee được đặt theo sat/vByte (satoshi trên mỗi byte).
+- vByte / weight: kích thước giao dịch ảnh hưởng phí BTC.
+- Gas (Ethereum & EVM chains): gasUsed * gasPrice (gasPrice in gwei). Gas limit, base fee, priority fee (tip) (EIP-1559: baseFee + maxPriorityFeePerGas).
+- Gas price biến thiên theo congestion.
+- Stablecoin trên nhiều chain: USDT-TRC20 (TRON) thường phí thấp, USDT-ERC20 (Ethereum) cao hơn khi mạng ETH congested; BSC, Polygon rẻ hơn ETH.
+- Confirmation: số block cần để tin cậy tx (finality).
+
+========================================================================
+2. Các chain phổ biến & đặc điểm phí (tổng quan)
+- Bitcoin (BTC)
+  + Fee model: sat/vByte * tx_size(vBytes).
+  + Thời gian: block ~10 phút.
+  + Phù hợp: thanh toán giá trị lớn, nhưng phí có thể cao khi mạng full.
+- Ethereum (ETH) / ERC20 tokens
+  + Fee model: gasUsed * gasPrice (gwei). EIP-1559 gồm baseFee + maxPriorityFeePerGas.
+  + Thời gian: block ~12–15s.
+  + ERC20 transfer gasUsed ~ 40k–100k (tùy token contract).
+- Tron (TRC20)
+  + Fee: thường thấp (có thể 0 với hợp đồng energy/freezing), block nhanh.
+- BSC / Polygon / Avalanche
+  + Fee thấp hơn ETH mainnet; tương thích EVM.
+- Lightning (BTC second layer)
+  + Fee micro, nhanh — thích hợp micropayments nhưng cần tích hợp Lightning node/payment processor.
+- Lưu ý: mức phí thay đổi theo điều kiện mạng — cần fetch fee estimates realtime.
+
+========================================================================
+3. Cách tính phí — công thức & ví dụ chi tiết
+
+3.1 Bitcoin (BTC)
+- Công thức:
+  Fee (satoshi) = fee_rate (sat/vByte) * tx_size (vByte)
+  Fee (BTC) = Fee (satoshi) / 1e8
+- Ví dụ:
+  + fee_rate = 50 sat/vByte, tx_size = 250 vByte → Fee = 50 * 250 = 12,500 sat = 0.000125 BTC.
+  + Nếu 1 BTC = 50,000 USD → Fee ≈ 6.25 USD.
+
+3.2 Ethereum (ETH) — EIP-1559
+- Công thức:
+  Fee (Gwei) = gasUsed * (baseFee + priorityFee)
+  Fee (ETH) = Fee (Gwei) / 1e9
+- Ví dụ:
+  + ERC20 transfer gasUsed ≈ 65000, baseFee = 20 gwei, priorityFee = 2 gwei:
+    Fee = 65,000 * (20 + 2) = 1,430,000 gwei = 1.43 ETH *? Wait convert:
+    1,430,000 gwei = 0.00143 ETH (since 1 gwei = 1e-9 ETH; 1,430,000 * 1e-9 = 0.00143 ETH).
+  + Nếu 1 ETH = 3,000 USD → Fee ≈ 4.29 USD.
+- Ghi chú: baseFee thay đổi theo block; priorityFee là tip cho validator.
+
+3.3 Tron (TRC20)
+- Thường phí thấp (<0.1 USD) hoặc zero nếu account có năng lượng/freezing. Transfer stablecoin TRC20 gas small.
+
+3.4 Stablecoin trên nhiều chain
+- USDT-TRC20: phí thấp, chuyển nhanh (thích hợp).
+- USDT-ERC20: phí cao hơn do gas ETH.
+- USDC-ERC20: tương tự ERC20.
+- BSC/Polygon: phí rẻ.
+
+========================================================================
+4. Chiến lược tính phí & UX hiển thị (Recommendation & Best Practices)
+- Niêm yết rõ chain chấp nhận: hiển thị từng option (USDT-TRC20, USDT-ERC20, USDC-ERC20...), với thông tin phí ước tính và thời gian.
+- Tự động tính phí mạng realtime:
+  + Gọi fee oracle: mempool API (Blockstream, Mempool.space) cho BTC; Gas station / eth_gasPrice / Etherscan / Alchemy cho ETH; TronGrid cho TRON.
+  + Cache estimates ngắn hạn (5–30s) để giảm request và tránh biến đổi liên tục.
+- Hiển thị breakdown: amount_fiat, amount_crypto, estimated_network_fee, total_amount_crypto.
+- Quyết định ai chịu phí:
+  + Option A: Merchant absorb fee (tiện cho khách, merchant chịu).
+  + Option B: Khách trả fee (thường hiển thị rõ).
+  + Option C: Bao gồm fee vào amount_crypto hiển thị.
+- Expiry & price lock:
+  + Đặt expiry ngắn (5–20 phút) do biến động gas/price.
+  + Khi tạo invoice, lock amount_fiat → compute amount_crypto với rate + fee at that timestamp; store both.
+- Rounding & precision:
+  + Hiển thị amount_crypto với đủ precision (ETH 18 decimals, BTC 8 decimals).
+  + Khi gửi to wallet, round appropriately; ensure DB stores high precision decimals.
+
+========================================================================
+5. Tính toán amount_crypto hiển thị cho invoice (algorithm)
+- Steps:
+  1. Merchant has order.amount_fiat (e.g., 100 USD).
+  2. Get current exchange rate fiat→crypto (e.g., USD/USDT = 1.00; USD/BTC).
+  3. Estimate network_fee in crypto (fee_crypto_est).
+  4. If policy: customer pays fee → amount_crypto = (amount_fiat / price_crypto) + fee_crypto_est.
+     If merchant pays fee → amount_crypto = (amount_fiat / price_crypto); merchant will later pay fee from settlement.
+  5. Store: amount_fiat, price_used, amount_crypto_net (without fee), fee_crypto_est, total_amount_crypto.
+- Example:
+  + Order: 100 USD, pay in USDT-TRC20 (1 USDT = 1 USD), fee_est = 0.1 USDT → total = 100 + 0.1 = 100.1 USDT.
+  + For BTC: price BTC=50,000 USD, fee_est=0.00012 BTC → amount_crypto_net=0.002 BTC, total=0.00212 BTC.
+
+========================================================================
+6. Caching rates & fee oracles (practical)
+- Exchange rates:
+  + Use trusted exchange APIs (CoinGecko, CoinMarketCap, provider settlement rate) or internal pricing engine.
+  + Cache for short period: e.g., 10–30s for volatile markets. Consider HTLC or price tolerance threshold.
+- Fee estimates:
+  + BTC: fetch fee_rate for priority/normal/low (sat/vByte).
+  + ETH: fetch baseFee, suggest priorityFee (low/medium/high).
+  + TRON/BSC: static low fee or fetch recommended.
+- Fallback: when oracle unavailable, return error / disable crypto checkout or use conservative defaults to avoid undercharging.
+
+========================================================================
+7. Database schema (fields liên quan phí)
+- Mẫu mở rộng bảng crypto_payments (từ file 01):
+  - amount_fiat DECIMAL(16,2)
+  - fiat_currency VARCHAR(10)
+  - price_crypto DECIMAL(30,12) -- rate used: 1 crypto = X fiat
+  - amount_crypto_net DECIMAL(30,18) -- amount corresponding to amount_fiat
+  - fee_crypto_est DECIMAL(30,18) -- estimated network fee in crypto
+  - total_amount_crypto DECIMAL(30,18) -- amount_crypto_net + fee_crypto_est (if customer pays fee)
+  - who_pays_fee ENUM('customer','merchant')
+  - fee_currency VARCHAR(10) -- which coin the fee is paid in (usually same as coin or native coin)
+  - fee_paid_actual DECIMAL(30,18) NULL -- actual fee seen on chain after tx
+  - price_timestamp DATETIME -- when price was fetched
+  - fee_est_timestamp DATETIME -- when fee estimate fetched
+
+========================================================================
+8. Xử lý underpayment / overpayment & tolerance
+- Underpayment (khách gửi ít hơn required):
+  + Options:
+    - Mark as `underpaid` and prompt customer to send remaining amount.
+    - Automatically create a new invoice for remaining amount (requires user action).
+    - If underpaid < small tolerance (e.g., < 0.5% or < fixed small amount), merchant may choose to accept.
+  + Always verify `to address` and `tx` on-chain.
+- Overpayment:
+  + If overpayment small (policy threshold), merchant may:
+    - Hold as store credit,
+    - Refund the excess (requires extra fee),
+    - Contact customer to confirm preferred action.
+  + For refunds, follow refund policy: same chain, consider fee deduction.
+- Tolerance policy suggestion:
+  + Use percentage or absolute threshold, e.g., accept under/over <= 0.5% or <= 1 USD (configurable by merchant).
+- Implementation:
+  + When webhook arrives, compare `amount_crypto_received` with `total_amount_crypto_expected`.
+  + If exact match → proceed.
+  + If mismatch → set status accordingly and notify support/customer.
+
+========================================================================
+9. Webhook handling liên quan phí (best practices)
+- Webhook payload should include:
+  + invoice_id, tx_id, amount_received (crypto), confirmations, fee_paid_onchain (network fee observed), received_at, raw_payload.
+- On receipt:
+  1. Store raw payload to webhook_logs.
+  2. Validate signature.
+  3. Idempotency: check if tx_id already processed.
+  4. Verify on-chain: confirm tx details (destination address, amount, fee).
+  5. Update fee_paid_actual in DB with observed on-chain fee (if available/necessary).
+  6. Handle confirmations: only move to `completed` when confirmations >= policy threshold.
+- Example payload fields to parse:
+  + tx.fee (fee paid in native coin)
+  + tx.gasUsed, tx.gasPrice (for EVM)
+  + gasLimit, effectiveGasPrice (EIP-1559)
+- Edge: some providers will report fee in native chain currency (e.g., gas fee in ETH), which may differ from token currency (USDT on ETH chain). Ensure conversion if needed.
+
+========================================================================
+10. Monitoring & alerts for fees
+- Metrics to monitor:
+  + average network_fee per chain over time,
+  + spike in fee (e.g., +200% within 10 minutes),
+  + number of expired invoices due to high fees,
+  + mismatch between estimated_fee and observed_fee (mean absolute error).
+- Alerts:
+  + If fee estimate feed fails,
+  + If fees exceed configured threshold (e.g., ETH fee > $20) → consider pausing ERC20 payments or show warning to customers,
+  + If many underpayments due to fee mismatch.
+- Dashboard:
+  + show fee trends (USD), expected vs actual, invoice expiries correlated with fee spikes.
+
+========================================================================
+11. Strategies giảm phí & UX cho khách hàng
+- Cho phép chọn chain: display recommended chain (cheaper) with explanation.
+- Auto-suggest cheaper chain (e.g., “USDT-TRC20 — phí 0.1 USDT — đề xuất”).
+- Batch withdrawals on-chain to save fees (merchant-side): consolidate hot-wallet outgoing withdrawals at scheduled intervals.
+- Use Layer-2 / Sidechains (Lightning, Optimism, Arbitrum) nếu phù hợp:
+  + Lightning cho BTC micropayments,
+  + L2 cho ETH token low-fee transfers.
+- Provide gas-saving instructions khách hàng:
+  + For ETH, suggest send at off-peak hours (but cannot force).
+- Absorb small fee volatility: if fee spike small, merchant may choose to absorb to avoid friction.
+
+========================================================================
+12. Testing & QA (test cases)
+- Test fee estimation accuracy:
+  + Simulate mempool congestion: see if estimation updates.
+- Test invoice flow with different fee payer settings:
+  + customer pays fee vs merchant pays fee.
+- Check underpayment/overpayment flows:
+  + send tx with slightly less and more than expected.
+- Webhook reliability:
+  + Simulate out-of-order webhook, duplicate webhook (idempotency).
+- Failover:
+  + Simulate fee oracle downtime → ensure fallback logic engages and user-facing message is clear.
+- Integration tests:
+  + Validate conversions (price used stored), fee recorded on DB, final settlement matches records.
+
+========================================================================
+13. Security considerations liên quan phí
+- Avoid exposing internal fee estimation algorithm client-side (may be manipulated).
+- Sign invoice payloads (HMAC) including price and fee used, so frontend display can be validated by backend.
+- Rate-limit invoice creation to prevent DoS/mempool spam attempts.
+- Validate that addresses shown on frontend match server-signed payload.
+
+========================================================================
+14. Code mẫu: logic tính fee & total (pseudo / JS-like)
+```js
+// Pseudo: compute total amount crypto for invoice
+function computeInvoiceAmount(amountFiat, fiatToCryptoRate, feeEstCrypto, whoPaysFee='customer') {
+  // amountFiat: e.g., 100 USD
+  // fiatToCryptoRate: 1 crypto = X USD (e.g., 1 BTC = 50000 USD, so rate = 50000)
+  // feeEstCrypto: estimated network fee in crypto (e.g., 0.00012 BTC)
+  const amountCryptoNet = amountFiat / fiatToCryptoRate;
+  let totalCrypto = amountCryptoNet;
+  if (whoPaysFee === 'customer') totalCrypto += feeEstCrypto;
+  return {
+    amount_fiat: amountFiat,
+    price_used: fiatToCryptoRate,
+    amount_crypto_net: amountCryptoNet,
+    fee_est_crypto: feeEstCrypto,
+    total_amount_crypto: totalCrypto
+  };
+}
+========================================================================
+15. Canned responses chatbot (liên quan phí & network)
+
+“Phí mạng cho BTC là bao nhiêu?”
+→ “Phí BTC thay đổi theo trạng thái mempool và kích thước giao dịch (sat/vByte). Hệ thống sẽ ước tính phí khi bạn tạo invoice — bạn muốn mình tạo invoice thử để hiển thị phí hiện tại không?”
+
+“USDT-TRC20 có rẻ không?”
+→ “Thông thường USDT trên TRON (TRC20) có phí rất thấp so với USDT trên Ethereum (ERC20). Shop khuyến nghị dùng TRC20 nếu bạn muốn phí thấp.”
+
+“Ai chịu phí mạng?”
+→ “Tùy theo thiết lập shop: khách có thể trả phí hoặc shop chịu. Trước khi thanh toán, hệ thống sẽ hiển thị rõ ai chịu phí.”
+
+“Tại sao invoice hết hạn?”
+→ “Invoice có expiry để khóa mức giá và hạn chế rủi ro do biến động. Bạn có thể tạo lại invoice mới — mình hướng dẫn nhé.”
+
+“Tôi đã gửi đúng amount nhưng phí on-chain cao hơn estimate, shop có chấp nhận?”
+→ “Shop thường chấp nhận khi phí on-chain cao hơn estimate. Nếu fee quá lớn và ảnh hưởng xác nhận, shop sẽ thông báo. Bạn cho mình invoice_id để mình kiểm tra tình trạng tx nhé.”
+
+========================================================================
+16. Policy/Recommendations (tùy merchant)
+
+Default confirmations:
+
+BTC: 1 confirmation cho <$500, 3 confirmations for $500–$5000, 6 confirmations for >$5000.
+
+ETH/ERC20: 5–12 confirmations tùy giá trị.
+
+TRON/BSC: 1–3 confirmations.
+
+Fee thresholds (alert & action):
+
+If estimated fee in USD > X (configurable, e.g., 20 USD for ERC20) → show prominent warning or temporarily disable chain option.
+
+Expiry & price lock:
+
+Default expiry 10–20 minutes; shorten for volatile markets.
+
+========================================================================
+17. Examples thực tế (số + flow)
+
+Example A — USDT-TRC20:
+
+Order 50 USD → USDT rate 1 → fee_est ≈ 0.05 USDT → total 50.05 USDT.
+
+Example B — ERC20:
+
+Order 100 USD, ETH price 3,000 USD, amount_crypto_net = 100/3000 = 0.033333 ETH (for ETH payment) or correspond token amount.
+
+ERC20 transfer gasUsed ~65,000, baseFee+tip ~30 gwei → Fee = 65,000 * 30 gwei = 1,950,000 gwei = 0.00195 ETH → fee USD ~ 5.85 USD.
+
+If customer pays fee, total in token = amount + fee (converted if fee in ETH but token is USDT — need to convert to token equivalent or ask customer to pay fee in native coin).
+
+========================================================================
+18. Lời khuyên kỹ thuật thực tế & trade-offs
+
+Nếu muốn UX mượt: khuyến nghị ưu tiên stablecoin trên low-fee chain (TRC20, BSC) để giảm friction.
+
+Nếu merchant muốn nhận fiat settlement tự động: custodial provider có thể handle conversion nhưng sẽ có spread & fees.
+
+Nếu merchant tự custody: cần tính chi phí vận hành (node, monitoring, hot/cold management) vào model kinh doanh.
+
+========================================================================
+19. Kiểm tra nhanh (Quick checklist trước go-live)
+
+ Fee oracle & exchange rate provider hoạt động và có fallback.
+
+ Compute & store price_used và fee_est tại thời điểm tạo invoice.
+
+ UI hiển thị breakdown fee rõ ràng.
+
+ Webhook handler cập nhật fee_paid_actual và confirmations.
+
+ Policy under/overpayment & refund liên quan fee đã được định nghĩa.
+
+ Alerts cho spike fee & invoice expiries.
+
+========================================================================
+20. Tài liệu tham khảo & công cụ hữu ích (gợi ý)
+
+Fee estimation APIs: mempool.space, Blockcypher, Etherscan gas oracle, EthGasStation, Alchemy, Infura.
+
+Exchange rates: CoinGecko, CoinMarketCap, provider settlement rates.
+
+Monitoring & watchers: Blocknative, Alchemy Notify, Web3Provider webhooks.
+
+Wallet libraries: bitcoinjs-lib, ethers.js, web3.js, tronweb.
+
+========================================================================
+Kết luận:
+File này nhằm mục đích làm nguồn tri thức toàn diện cho chatbot và đội dev/ops khi xử lý vấn đề phí mạng và chọn mạng cho stablecoin. Bạn có thể tùy chỉnh:
+
+Các ngưỡng USD (X USD threshold) cho confirmations & fee alerts,
+
+Quy định ai chịu phí,
+
+Danh sách chain/token whitelist.
+
+Phiên bản: v1.0 — tạo cho mục đích KB chatbot & SOP kỹ thuật.
