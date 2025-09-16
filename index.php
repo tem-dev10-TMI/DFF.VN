@@ -66,10 +66,10 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->changePassword();
         break;
-    case 'profileUser':
+    case 'profile_user':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
-        $controller->profileUser();
+        $controller->index();
         break;
     case 'edit_profile':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -123,11 +123,15 @@ switch ($url) {
         $id = $_GET['id'] ?? null;
         $controller->details_blog($id);
         break;
+    case 'search':
+        require_once 'controller/SearchController.php';
+        $controller = new SearchController();
+        $controller->index();
+        break;
+
     case 'news':
         require_once 'controller/NewsController.php';
         $controller = new NewsController();
-
-
         $controller->index();
         break;
 
@@ -143,17 +147,20 @@ switch ($url) {
         $controller = new CryptonController();
         $controller->index();
         break;
-    case 'view_profile_user':
+    case 'view_profile':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->viewprofileUser();
         break;
-    case 'view_profile_business':
-        require_once 'controller/account/profileUserController.php';
-        $controller = new profileUserController();
-        $controller->viewprofileBusiness();
 
-        break;
+    case 'event':
+    require_once 'controller/EventDetailController.php';
+    $controller = new EventDetailController($pdo);
+    $id = $_GET['id'] ?? null;
+    $controller->details($id);
+    break;
+
+
 
     // ========== API ROUTES ==========
     case 'api/addPost':

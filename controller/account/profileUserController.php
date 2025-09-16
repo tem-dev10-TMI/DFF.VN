@@ -2,7 +2,7 @@
 class profileUserController
 {
     // Trang hồ sơ người dùng
-    public static function profileUser()
+    public static function index()
     {
         if (!isset($_SESSION['user'])) {
             header("Location: " . BASE_URL . "/login");
@@ -40,18 +40,99 @@ class profileUserController
             exit;
         }
     }
-    public static function viewprofileBusiness()
+    
+    public static function viewprofileUser() // cái này để xem người ta nó tự tách phân biết nào là user và nào là doanh nhân
     {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+            header("Location: index.php");
+            exit;
+        }
+
+        require_once 'model/user/userModel.php';
+
+        $user_id = intval($_GET['id']);
+
+        // Lấy thông tin user
+        $user = UserModel::getUserById($user_id);
+
+
+
+
+        
+
+
+
+
+
+        if (!$user) {
+            echo "Không tìm thấy người dùng!";
+            exit;
+        }
+        if($user_id == "66")
+        {
+            
+            require_once  'model/rss/RssModel.php';
+
+        $articles = [];
+
+         // user RSS
+            // RSS Báo Chính Phủ
+            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15);
+
+            // RSS Thanh Niên
+            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15);
+
+            // Gộp RSS
+            $articles = array_merge($rssArticles1, $rssArticles2);
+
+            // Ép author_id = 66 và avatar theo nguồn
+            foreach ($articles as &$art) {
+                $art['author_id'] = 66;
+                // Avatar theo feed URL
+                if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
+                    $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                } else {
+                    $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                }
+            }
+            unset($art);
+
+            // Sắp xếp giảm dần theo created_at
+            usort($articles, function($a, $b){
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+
+        
+            // user bình thường lấy DB
+           
+
+        // Load view profile
+        
+
+        }else{
+            $articles = UserModel::getArticlesByAuthorId($user_id);
+            }
+        // Lấy bài viết của user để truyền sang view
+        
+
+        // Render view theo role
         ob_start();
-        require_once 'view/page/viewProfilebusiness.php';
-        $content = ob_get_clean();
-        $profile = false; // đừng ai xóa
-        require_once 'view/layout/main.php';
-    }
-    public static function viewprofileUser()
-    {
-        ob_start();
-        require_once 'view/page/viewProfileuser.php';
+        if (!empty($user['role']) && $user['role'] === 'businessmen') {
+            require_once 'model/user/businessmenModel.php';
+            $businessman = businessmenModel::getBusinessByUserId($user_id);
+            $careers = !empty($businessman['businessman_id'])
+                ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
+                : [];
+            $stats = !empty($businessman['user_id'])
+                ? businessmenModel::getBusinessStats($businessman['user_id'])
+                : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
+
+            require_once 'view/page/viewProfilebusiness.php';
+        } else {
+            require_once 'view/page/viewProfileuser.php';
+        }
         $content = ob_get_clean();
         $profile = false; // đừng ai xóa
         require_once 'view/layout/main.php';

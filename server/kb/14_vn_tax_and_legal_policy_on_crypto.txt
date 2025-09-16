@@ -1,0 +1,153 @@
+# 14_vn_tax_and_legal_policy_on_crypto — Chính sách thuế & pháp lý tại Việt Nam
+
+--- 
+TÓM TẮT NGẮN
+- Vị thế lịch sử: Ngân hàng Nhà nước (SBV) tuyên bố tiền mã hoá **không phải là phương tiện thanh toán hợp pháp** và cấm “phát hành, cung cấp, sử dụng” crypto làm phương tiện thanh toán (thông báo 2017). :contentReference[oaicite:0]{index=0}  
+- Bước tiến pháp lý mới (2025): Quốc hội đã thông qua **Luật Ngành Công nghiệp Công nghệ Số / Law on Digital Technology Industry** — lần đầu công nhận “tài sản số / digital assets” trong khung luật, giao Chính phủ & Bộ Tài chính soạn các quy định chi tiết (có hiệu lực/áp dụng theo lộ trình do luật quy định). Đây là bước chuyển từ “grey zone” sang khuôn khổ quản lý. :contentReference[oaicite:1]{index=1}  
+- Quá trình hoàn thiện: Chính phủ/MOF đang soạn/đề xuất khung chi tiết (pilot, nghị định, hướng dẫn thuế) — hiện còn nhiều nội dung là **dự thảo** và đang được thảo luận. :contentReference[oaicite:2]{index=2}
+
+---
+
+1) HIỆN TRẠNG PHÁP LÝ (CORE FACTS)
+- **Thanh toán bằng crypto:** bị cấm (SBV). Các tổ chức tín dụng, PSP, ngân hàng không được xử lý giao dịch crypto như phương tiện thanh toán. Mọi hoạt động dẫn tới “thay thế VND” có thể bị xử lý hành chính hoặc hình sự tùy mức độ. :contentReference[oaicite:3]{index=3}  
+- **Công nhận tài sản số:** Luật mới (2025) đã đưa “digital assets” vào phạm vi quản lý, xác lập quyền sở hữu/khung pháp lý cơ bản; các quy định chi tiết (đăng ký, cấp phép, AML, bảo vệ nhà đầu tư, thuế) sẽ do Chính phủ/Bộ ban hành. Do đó: trạng thái pháp lý đang chuyển đổi — cẩn trọng. :contentReference[oaicite:4]{index=4}  
+- **Thuế & hướng dẫn:** Bộ Tài chính đang soạn hướng dẫn/đề xuất (bao gồm thử nghiệm/đề án pilot); một số đề xuất (dự thảo) nêu phương án thu thuế giao dịch (ví dụ: thuế giao dịch 0.1% từng được nêu trong các bản thảo/trích dẫn truyền thông) hoặc áp thuế thu nhập/capital gains; nhưng chưa có văn bản thuế chính thức, nên chưa thể khẳng định mức thuế cuối cùng. Bạn phải coi mọi con số hiện tại là **dự thảo** cho đến khi MOF/GDT ban hành hướng dẫn chính thức. :contentReference[oaicite:5]{index=5}
+
+---
+
+2) CƠ QUAN QUẢN LÝ CHỦ CHỐT & PHẠM VI TRÁCH NHIỆM
+- **Ngân hàng Nhà nước (NHNN / SBV):** chịu trách nhiệm chính về ổn định tiền tệ, thanh toán — đã và sẽ tiếp tục quản lý khung “phương tiện thanh toán” (đã cấm thanh toán bằng crypto). :contentReference[oaicite:6]{index=6}  
+- **Bộ Tài chính (MOF) / Tổng cục Thuế:** soạn chính sách thuế, hướng dẫn kế toán, VAT, PIT liên quan giao dịch tài sản số; triển khai pilot/tạm quyền cho thị trường (theo quyết định/thông báo của Chính phủ). :contentReference[oaicite:7]{index=7}  
+- **Bộ Thông tin & Truyền thông (MIC/MOIT) / Bộ Công Thương:** quản lý hạ tầng, thương mại điện tử, an ninh mạng liên quan nền tảng cung cấp dịch vụ.  
+- **Bộ Công an / Thanh tra, Cơ quan quản lí khác:** xử lý tội phạm, rửa tiền, gian lận, trừng phạt hành vi phạm pháp.  
+- **Lưu ý:** Luật mới giao Chính phủ trao quyền chi tiết hoá, nên doanh nghiệp cần theo dõi văn bản hướng dẫn của từng bộ trong thời gian tới. :contentReference[oaicite:8]{index=8}
+
+---
+
+3) NHỮNG HỆ QUẢ PHÁP LÝ & HÌNH PHẠT (TỔNG QUAN)
+- **Dùng crypto làm phương tiện thanh toán:** có thể bị xử lý hành chính; trong trường hợp nghiêm trọng có khả năng truy cứu trách nhiệm hình sự (SBV từng nêu quan ngại và cảnh báo). Doanh nghiệp cố ý chấp nhận crypto làm “tiền” có rủi ro pháp lý. :contentReference[oaicite:9]{index=9}  
+- **Hoạt động cung cấp dịch vụ liên quan crypto (VASPs, exchanges, wallets):** sẽ cần tuân thủ khung cấp phép/giám sát nếu Chính phủ ban hành quy định thực thi Luật mới (dự kiến: đăng ký, cấp phép, yêu cầu AML/KYC và các điều kiện an ninh). :contentReference[oaicite:10]{index=10}  
+- **Thuế:** việc đánh thuế giao dịch crypto đang nằm trong lộ trình (MOF); có thể áp dụng các dạng thuế:
+  - **Thuế thu nhập cá nhân (PIT)** trên thu nhập từ chuyển nhượng/kinh doanh crypto (nếu quy định là thu nhập chịu thuế).  
+  - **Thuế thu nhập doanh nghiệp (CIT)** với hoạt động KD trên sàn/profit từ dịch vụ.  
+  - **VAT** trên dịch vụ môi giới / nền tảng / phí giao dịch (nếu là dịch vụ chịu VAT).  
+  - **Thuế giao dịch theo giao dịch (transaction tax)**: một số bản thảo đề xuất dạng thuế tính trên giao dịch (ví dụ 0.1%/giao dịch) — nhưng là **đề xuất** chưa được pháp lệnh chính thức. :contentReference[oaicite:11]{index=11}
+
+---
+
+4) HƯỚNG DẪN KẾ TOÁN & BẰNG CHỨNG (What to record)
+Để sẵn sàng cho kiểm toán/khai thuế, lưu giữ tối thiểu:
+- Invoice / order_id + fiat_amount + crypto_amount + `price_used` + `rate_timestamp` + expiry.  
+- `txid` (on-chain), block explorer link, số confirmations khi thanh toán.  
+- Địa chỉ ví người nhận (merchant) và địa chỉ ví người gửi (khách) — nếu có KYC thì gắn customer_id.  
+- Biên lai ngân hàng (nếu có convert sang VND), báo cáo exchange (trade fills khi swap sang fiat), phí giao dịch, spread.  
+- Bản ghi KYC khách hàng (nếu áp dụng), hợp đồng, T&C, chứng từ thanh toán và log webhook.  
+- Thời điểm hạch toán: tùy hướng dẫn thuế sau này — thông thường dùng **giá quy đổi sang VND/USD tại thời điểm nhận** (rate timestamped).  
+
+MẪU JSON GHI GIAO DỊCH (copy-ready)
+{
+  "invoice_id":"INV-20250916-001",
+  "order_id":"ORD-20250916-123",
+  "fiat_amount_vnd":1500000,
+  "fiat_currency":"VND",
+  "crypto":"USDT-TRC20",
+  "crypto_amount":50.0,
+  "price_used_usd_per_crypto":1.00,
+  "rate_timestamp":"2025-09-16T08:00:00+07:00",
+  "txid":"0xabc...def",
+  "confirmations":20,
+  "converted_to_vnd":1500000,
+  "exchange_used":"Binance",
+  "kyc_customer_id":"KYC-12345"
+}
+
+SQL mẫu — lưu transactions (schema tối thiểu)
+CREATE TABLE crypto_txn (
+  id BIGINT PRIMARY KEY AUTO_INCREMENT,
+  invoice_id VARCHAR(64),
+  order_id VARCHAR(64),
+  txid VARCHAR(128),
+  chain VARCHAR(32),
+  crypto_amount DECIMAL(36,18),
+  fiat_amount_vnd DECIMAL(18,2),
+  rate_timestamp TIMESTAMP,
+  confirmations INT,
+  recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+---
+
+5) KINH TẾ & KẾ TOÁN (ví dụ minh họa) — *illustrative only*
+- Nếu doanh nghiệp đổi crypto sang VND trên sàn: báo cáo lợi nhuận = Giá bán (VND) − Giá vốn (VND) → phần lợi nhuận có thể chịu CIT/PIT tuỳ bản chất nghiệp vụ.  
+- Nếu chính sách thuế cho PIT áp dụng theo “mỗi giao dịch (value)” (một số dự thảo nêu 0.1%) → doanh nghiệp/nhà đầu tư cần chuẩn bị để ghi nhận/khấu trừ theo quy định chính thức (nếu có). **Chú ý:** các con số thuế hiện phổ biến trên báo chí là dự thảo/đề xuất, không phải văn bản áp dụng. :contentReference[oaicite:12]{index=12}
+
+---
+
+6) QUY TRÌNH TUÂN THỦ CHO DOANH NGHIỆP (Checklist hành động tức thời)
+1. **Không quảng cáo** “chấp nhận crypto làm phương thức thanh toán” nếu hoạt động tại VN — rủi ro pháp lý (SBV). :contentReference[oaicite:13]{index=13}  
+2. **Chuẩn bị KYC/AML**: xây chương trình AML theo FATF — thu thập KYC, monitor giao dịch, lưu logs. (Luật mới sẽ yêu cầu VASP tuân thủ). :contentReference[oaicite:14]{index=14}  
+3. **Lưu trữ dữ liệu & bằng chứng** theo chuẩn kiểm toán (txid, price timestamp, bank statements).  
+4. **Tư vấn thuế**: liên hệ kiểm toán/luật sư để xây policy kế toán & khai thuế tạm thời.  
+5. **Chọn phương án thanh toán an toàn**: nếu cần nhận giá tính bằng crypto cho UX, hãy **chỉ hiển thị giá crypto** (informational) và bắt buộc **settle qua fiat** bằng PSP/nền tảng có quy trình convert & chứng từ rõ ràng (nhưng lưu ý: nhiều PSP/NH không hỗ trợ thanh toán crypto trực tiếp tại VN).  
+6. **Theo dõi văn bản hướng dẫn** từ MOF, GDT, NHNN, Bộ Công Thương — có alert để cập nhật khi nghị định/thông tư ban hành. :contentReference[oaicite:15]{index=15}
+
+---
+
+7) VẤN ĐỀ ĐẶC THÙ: KHAI THUẾ VỚI GIAO DỊCH CÁ NHÂN (TRADER) & MINERS
+- **Trader/Investor cá nhân:** nếu MOF/GDT xác định thu thu nhập từ chuyển nhượng là “thu nhập chịu thuế”, cá nhân phải lưu bằng chứng (buy txid, sell txid, giá quy đổi) để tính lãi/lỗ. Hiện tại quy định chưa rõ — giữ hồ sơ chi tiết. :contentReference[oaicite:16]{index=16}  
+- **Mining:** nếu khai thác và bán coin, doanh thu có thể coi là doanh thu/thu nhập chịu thuế; năng lượng/điện sử dụng có thể bị điều chỉnh theo quy định môi trường/điện lực — cần kiểm tra địa phương. (Trạng thái pháp lý hoạt động mining còn tuỳ quy định địa phương và môi trường).  
+
+---
+
+8) VỀ VÀNG & DẦU (liên quan chính sách thanh toán/tài sản)
+- **Vàng:** Chính phủ đã có thay đổi quản lý (Decree 232/2025) mở hơn trong quản lý vàng (ví dụ: yêu cầu thanh toán qua tài khoản ngân hàng đối với giao dịch vàng trên mức quy định, thay đổi cơ chế sản xuất/import vàng). Doanh nghiệp giao dịch vàng cần kiểm tra chi tiết Decree để tuân thủ (licensing, báo cáo). :contentReference[oaicite:17]{index=17}  
+- **Dầu:** quản lý giá, quỹ bình ổn xăng dầu do Bộ Công Thương/NHNN quản lý; biến động giá dầu ảnh hưởng đến chi phí logistics & VAT/cost accounting — tách bạch nhưng cần lưu ý trong tính giá bán và các khoản bù trừ. (Thông tin tham khảo: MOIT và báo cáo thị trường năng lượng).
+
+---
+
+9) RỦI RO THỰC TIỄN & VỀ TUÂN THỦ (ngắn)
+- **Rủi ro thanh toán trái phép:** xử phạt hành chính / hình sự nếu cố tình dùng crypto như tiền tệ. :contentReference[oaicite:18]{index=18}  
+- **Rủi ro thuế:** nếu không lưu bằng chứng giao dịch, khi MOF/GDT ban hành hướng dẫn, doanh nghiệp có thể bị truy thu/ phạt.  
+- **Rủi ro AML / KYC:** thiếu chương trình AML dẫn đến phạt hành chính, thậm chí đóng cửa dịch vụ.
+
+---
+
+10) KHUYẾN NGHỊ CHI TIẾT (Actionable)
+- **Immediate (0–30 ngày):**
+  - Tạm dừng/kiểm soát mọi chức năng “chấp nhận crypto làm thanh toán” trên website/checkout.  
+  - Audit hiện trạng (ledger, hot wallets, partners) — inventory tất cả exposure crypto.  
+  - Gặp counsel thuế & pháp lý VN để chuẩn hoá sổ sách.  
+- **Near term (1–3 tháng):**
+  - Triển khai KYC/AML cơ bản; lưu đầy đủ evidence cho từng giao dịch.  
+  - Thiết lập policy auto-convert crypto→fiat (nếu hợp tác với OTC/CEX) kèm lưu chứng từ trade.  
+  - Thiết lập monitoring & alerts cho any incoming crypto flows.  
+- **Ongoing:**
+  - Theo dõi & subscribe alert cho văn bản MOF/NHNN/Bộ liên quan; revise SOP khi nghị định/thông tư mới ban hành.  
+  - Đào tạo nhân viên (compliance, accounting, ops) — tabletop exercises cho tình huống regulator inquiry.
+
+---
+
+11) MẪU VĂN BẢN / CLAUSES (copy-paste)
+A. Từ chối thanh toán bằng crypto — thông báo site:
+Lưu ý: Theo quy định hiện hành tại Việt Nam, tiền mã hoá (cryptocurrency) không được coi là phương tiện thanh toán hợp pháp. Chúng tôi không chấp nhận thanh toán bằng tiền mã hoá. Mọi giao dịch, quyết toán phát sinh bằng tiền mã hoá sẽ được xử lý theo chính sách nội bộ và theo hướng dẫn pháp luật.
+
+css
+Sao chép mã
+
+B. Clause (cho hợp đồng với PSP/OTC desk):
+Đối tác khẳng định tuân thủ pháp luật Việt Nam về KYC/AML và chịu trách nhiệm cung cấp chứng từ, báo cáo cho Bên A nếu được yêu cầu bởi cơ quan chức năng. Bên A có quyền yêu cầu bằng chứng nguồn tiền (source of funds) trước khi hoàn thành settlement.
+
+yaml
+Sao chép mã
+
+---
+
+12) NƠI NGHE TIN & TÀI NGUYÊN THEO DÕI (hay cập nhật)
+- Trang chính thức NHNN, Bộ Tài chính, Tổng cục Thuế, Văn phòng Chính phủ (lịch đăng nghị định/thông tư). :contentReference[oaicite:19]{index=19}  
+- Law firms / legal analysis (Duane Morris, Tilleke & Gibbins), chuyên trang kinh tế & trade press, Lexology, VietnamLawMagazine. :contentReference[oaicite:20]{index=20}
+
+---
+
+13) TÓM TẮT & LỜI KHUYÊN CUỐI
+- Hiện tại: **không dùng crypto để thanh toán**; micro-legal risk vẫn cao nếu cố tình chấp nhận. :contentReference[oaicite:21]{index=21}  
+- Luật mới (2025) mở ra cơ hội pháp lý cho “tài sản số” — nhưng **quy định chi tiết, đặc biệt về thuế & cấp phép, vẫn đang soạn thảo**; doanh nghiệp phải chủ động chuẩn bị hồ sơ, hệ thống ghi chép và chương trình AML/KYC để sẵn sàng tuân thủ khi luật có hiệu lực. :contentReference[oaicite:22]{index=22}

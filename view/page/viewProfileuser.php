@@ -1,6 +1,4 @@
-<?php
-require_once 'controller/account/viewUserController.php';
-?>
+
 <main class="main-content">
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
@@ -35,44 +33,45 @@ require_once 'controller/account/viewUserController.php';
 
             <?php if (!empty($articles)): ?>
                 <?php foreach ($articles as $article): ?>
-                    <div class="block-k">
+                    <div class="block-k article-item">
                         <div class="view-carde f-frame">
                             <div class="provider">
-                                <img class="logo" src="<?= !empty($article['avatar_url'])
-                                    ? htmlspecialchars($article['avatar_url'])
-                                    : 'https://i.pravatar.cc/100' ?>"
-                                    alt="<?= htmlspecialchars($article['author_name']) ?>">
+                                <img class="logo" src="<?= $article['avatar_url'] ?>" alt="">
                                 <div class="p-covers">
                                     <span class="name">
-                                        <a href="/profile.html?q=<?= $article['author_id'] ?>">
+                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
-                                    <!-- Bỏ timeAgo, thay bằng hiển thị ngày giờ -->
                                     <span class="date"><?= date("d/m/Y H:i", strtotime($article['created_at'])) ?></span>
                                 </div>
                             </div>
 
                             <div class="title">
-                                <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html">
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                Xem thêm
+                                </a>
                             </div>
 
                             <?php if (!empty($article['main_image_url'])): ?>
-                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                    alt="<?= htmlspecialchars($article['title']) ?>">
+                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                <p>Chưa có bài viết nào từ người dùng này.</p>
+                <p>Chưa có bài viết nào.</p>
             <?php endif; ?>
+
         </div>
         <!-- bài viết chính block end -->
     </div>

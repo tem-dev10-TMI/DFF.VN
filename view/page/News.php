@@ -180,11 +180,11 @@
             </div>
         </div>
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline"
+            <div class="fb-page" data-href="https://www.facebook.com/vientmi/?locale=vi_VN" data-tabs="timeline"
                 data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
                 data-hide-cover="false" data-show-facepile="true">
-                <blockquote cite="https://www.facebook.com/dffvn.official" class="fb-xfbml-parse-ignore"><a
-                        href="../www.facebook.com/dffvn.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
+                <blockquote cite="https://www.facebook.com/vientmi/?locale=vi_VN" class="fb-xfbml-parse-ignore"><a
+                        href="../www.facebook.com/vientmi.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
                 </blockquote>
             </div>
         </div>
