@@ -135,7 +135,7 @@
     }
     global $pdo;
     $eventModelHeader = new EventModel($pdo);
-    $headerEvents = $eventModelHeader->all(10);
+    $headerEvents = $eventModelHeader->all(5);
 
     ?>
 
@@ -197,7 +197,7 @@
         if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
         global $pdo;
         $eventModelMobile = new EventModel($pdo);
-        $headerEvents = $eventModelMobile->all(10);
+        $headerEvents = $eventModelMobile->all(5);
     }
     $mobileNotifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
     ?>
