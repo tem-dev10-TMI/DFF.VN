@@ -66,10 +66,10 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->changePassword();
         break;
-    case 'profileUser':
+    case 'profile_user':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
-        $controller->profileUser();
+        $controller->index();
         break;
     case 'edit_profile':
         require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
@@ -130,17 +130,12 @@ switch ($url) {
         $controller = new CryptonController();
         $controller->index();
         break;
-    case 'view_profile_user':
+    case 'view_profile':
         require_once 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->viewprofileUser();
         break;
-    case 'view_profile_business':
-        require_once 'controller/account/profileUserController.php';
-        $controller = new profileUserController();
-        $controller->viewprofileBusiness();
-
-        break;
+    
 
     // ========== API ROUTES ==========
     case 'api/addPost':
