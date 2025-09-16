@@ -1,12 +1,262 @@
-Gợi ý phân tích thị trường theo năm (Yearly)
+# 06_market_yearly_template — Gợi ý Phân tích Thị trường Crypto Hàng Năm (KB cho Chatbot & Báo cáo)
+Phiên bản: v1.0
+Mục đích: Tổng kết chu kỳ 12 tháng (YTD / Last 12 months), nhận diện các mốc sự kiện lớn, phân tích dòng tiền & hạ tầng, rút ra bài học và khuyến nghị quy trình vận hành cho bộ phận e-commerce/ops. File này là template chi tiết — copy nguyên văn vào `06_market_yearly_template.txt`.
 
-Mục tiêu: nhìn lại chu kỳ 12 tháng, các mốc sự kiện lớn, xu hướng dài hạn.
+================================================================================
+A. KẾT QUẢ MONG MUỐN (Output)
+- Một đoạn tóm tắt 3–5 câu (bull / bear / sideways + driver chính).
+- Danh sách mốc sự kiện quan trọng trong 12 tháng (date, event, impact).
+- Chỉ số chính: total market cap (yesterday & 12mo ago), Δ12m%, CAGR, max drawdown, TVL DeFi change, stablecoin supply change, avg monthly ETH gas.
+- Phân tích dòng tiền & hạ tầng: net CEX flows (12m), DEX liquidity changes, staking inflows, hash rate trends, node infra adoption.
+- Tác động tới e-commerce: payment gateways reliability, average fees, settlement risk, legal & tax exposure.
+- Bài học rút ra & khuyến nghị quy trình (treasury, custody, KYC, accounting).
+- Checklist & KPIs cho năm tới.
+- Sources, confidence, timestamp.
+- Disclaimer (không phải tư vấn đầu tư).
 
-Khung trình bày:
-1) Tóm tắt chu kỳ: bull/bear/sideways, driver chính (macro, pháp lý, công nghệ)
-2) Mốc sự kiện: halving, ETF, hack lớn, thay đổi pháp lý, nâng cấp quan trọng
-3) Dòng tiền & hạ tầng: TVL DeFi, adoption stablecoin, phí mạng trung vị
-4) Ảnh hưởng tới e-commerce: công cụ thanh toán, rủi ro pháp lý, bảo mật
-5) Bài học rút ra & khuyến nghị quy trình (không phải khuyến nghị đầu tư)
-6) Danh sách nguồn dữ liệu kiểm chứng thời gian thực
+================================================================================
+B. KHUNG TRÌNH BÀY (Section-by-section)
+1) Tóm tắt chu kỳ (3–5 câu)
+2) Snapshot số liệu (table với giá trị hiện tại & 12 tháng trước)
+3) Mốc sự kiện (chronological list, ảnh hưởng ngắn/dài hạn)
+4) Dòng tiền & hạ tầng (CEX/DEX flows, TVL, staking, infra)
+5) Ảnh hưởng tới e-commerce (chi tiết & hành động)
+6) Bài học & khuyến nghị quy trình (operational & compliance)
+7) Triển vọng & checklist cho năm tới (3 kịch bản)
+8) Metrics to track monthly/quarterly (KPI)
+9) Sources & confidence note
+10) Disclaimer
 
+================================================================================
+C. CÁC CHỈ SỐ & CÔNG THỨC QUAN TRỌNG
+- Δ12m% = (Value_now − Value_12mo_ago) / Value_12mo_ago × 100
+- CAGR (Compound Annual Growth Rate) = (Value_now / Value_12mo_ago)^(1/1) − 1  (ở 1 năm là Δ)
+- Max Drawdown (12m) = max over period of (peak − trough) / peak
+- Average monthly ETH gas (USD) = mean(daily_median_gas_usd) over 365 days then averaged by month
+- TVL change 12m% = (TVL_now − TVL_12mo_ago)/TVL_12mo_ago ×100
+- Net CEX flows (12m) = Σ(inflows_to_CEX) − Σ(outflows_from_CEX) in USD
+- Exchange reserve change = reserve_now − reserve_12mo_ago (indicator sell/buy pressure)
+- On-chain adoption metrics: active addresses (30dMA), new addresses, transfers count change 12m%
+
+================================================================================
+D. MỐC SỰ KIỆN (TEMPLATE)
+- YYYY-MM-DD | Event short title | Type (ETF / Halving / Hack / Legal / Upgrade / Listing / Unlock) | Impact (short) | Source
+Ví dụ:
+- 2024-04-15 | BTC Halving | Technical macro | Long-term supply shock potential → bullish thesis | source: btc.org
+
+Gợi ý: liệt kê theo timeline, kèm score impact (1–10) và expected horizon (short/medium/long).
+
+================================================================================
+E. DÒNG TIỀN & HẠ TẦNG (DETAILED)
+1. Net flows:
+   - Tổng net CEX inflows (12m). Positive → selling pressure potential; Negative → accumulation/off-exchange hodling.
+2. DEX vs CEX:
+   - TVL change, DEX trading volume trend, liquidity depth for major pools.
+3. Staking & Yield:
+   - ETH staking inflows, staking APY trends → ảnh hưởng long-term supply.
+4. Infra & Ops:
+   - Node counts, major provider uptimes (Infura/Alchemy), growth of L2 nodes, use of multi-sig & custody services (Gnosis, Fireblocks).
+5. Security incidents:
+   - Số vụ hack lớn, total stolen (USD), response times, insurance payouts.
+
+================================================================================
+F. ẢNH HƯỞNG TỚI E-COMMERCE (CHI TIẾT & HÀNH ĐỘNG)
+1. Công cụ thanh toán:
+   - Đánh giá reliability của payment gateways (downtime incidents annually, avg settlement lag).
+   - Recomm: maintain 2 providers (primary + fallback) with different custody models (custodial + self-hosted).
+2. Phí mạng trung vị (median fees):
+   - Nếu median ETH gas (annual) > threshold → push long-term plan: integrate L2 (Optimism, Arbitrum) hoặc alternative chains for stablecoin.
+3. Ổn định stablecoin:
+   - Nếu stablecoin supply growth slows hoặc peg incidents observed → increase monitoring & consider diversify accepted stablecoins.
+4. Settlement risk & treasury:
+   - Policy: max exposure in crypto (e.g., do not hold > X% of monthly revenue in crypto), auto-convert thresholds, frequency of settlements.
+5. Compliance & tax:
+   - Annual reconciliation process: map invoices ↔ txids ↔ settlements. Build accounting exports with price_used and timestamp.
+6. Security:
+   - Cold storage %, multi-sig threshold, insurance coverage (if any).
+7. UX & customer trust:
+   - Provide historical data / yearly summary to customers explaining payment choices; include fees & settlement expectations.
+
+================================================================================
+G. BÀI HỌC RÚT RA & KHUYẾN NGHỊ QUY TRÌNH (OPERATIONAL)
+1. Treasury management:
+   - Policy: exposure caps, periodic rebalancing, keep reserve fiat for refunds & chargebacks.
+2. Custody:
+   - Multi-sig for cold wallets (M-of-N), hardware wallet offline backups, rotate keys, quarterly audits.
+3. Providers:
+   - Annual provider review: SLAs, fees, compliance posture, insurance, KYC requirements.
+4. Incident preparedness:
+   - Annual disaster drill (rotate keys, restore wallet from seed, simulate provider downtime).
+5. Legal & Tax:
+   - Annual consultation with legal/tax advisor; maintain audit-ready records (invoice_id, txid, price_used, fiat_amount).
+6. Monitoring:
+   - On-chain watchers, exchange-reserve alerts, fee thresholds, peg monitors for stablecoins.
+7. Documentation & SOP:
+   - Maintain runbooks: webhook handling, refund flows, escalation matrix, contact list (providers, exchanges, legal).
+
+================================================================================
+H. TRIỂN VỌNG NĂM TỚI (3 KỊCH BẢN & ACTIONS)
+1) Bear-ish scenario (Regulatory shock / Macro downturn)
+   - Effects: lower liquidity, higher spreads, CEX inflows spike.
+   - Actions: raise confirmations, increase KYC for refunds, reduce hodl exposure, increase fiat settlements.
+
+2) Neutral / Sideways
+   - Effects: steady volumes, occasional volatility.
+   - Actions: monitor fees, maintain multi-chain support, keep hedging policy.
+
+3) Bullish (ETF approvals, macro liquidity)
+   - Effects: transaction volume & fees spike, invoice creation surge.
+   - Actions: scale infra (webhook/DB), batch withdrawals, increase monitoring on UX and fraud attempts.
+
+================================================================================
+I. KPIs & MONITORING (ANNUAL & MONTHLY TRACKING)
+- Annual KPIs:
+  + #incidents (security) per year
+  + avg settlement lag (days)
+  + %revenue kept in crypto
+  + provider uptime %
+  + annual payment fee spend (USD)
+- Monthly KPIs (for year tracking):
+  + invoices_created, invoices_paid, invoices_expired_rate
+  + avg_fee_usd_by_chain, avg_confirm_time
+  + stablecoin_peg_deviation_avg
+  + net_cex_inflows_rolling_30d
+
+================================================================================
+J. VISUALIZATION SUGGESTIONS (YEARLY DASHBOARD)
+- Timeline (12m) of Total Market Cap with event markers (halving, ETF, hack).
+- Area chart: Net CEX flows vs Net outflows to cold wallets (12m).
+- Bar chart: Monthly avg ETH gas (12 bars).
+- Table: Major incidents (date, amount stolen, action).
+- KPI cards: Avg settlement lag, provider downtime hours, total refunds, insurance payout amounts.
+
+================================================================================
+K. SAMPLE JSON OUTPUT (Yearly)
+{
+  "period_start":"2024-09-01",
+  "period_end":"2025-08-31",
+  "summary":"Market +18% YTD; ETF inflows and L2 adoption are key drivers; two major exchange incidents impacted trust temporarily.",
+  "total_market_cap_usd":1450000000000,
+  "marketcap_change_12m_pct":18.0,
+  "cagr_12m_pct":18.0,
+  "max_drawdown_12m_pct":32.5,
+  "tvl_defi_usd":110000000000,
+  "tvl_change_12m_pct":6.5,
+  "net_cex_inflow_12m_usd":-450000000,
+  "avg_eth_gas_usd_12m":6.3,
+  "stablecoin_supply_change_12m_pct":7.8,
+  "major_events":[ {"date":"2025-04-01","title":"BTC Halving","type":"halving","impact_score":9} ],
+  "ecommerce_impact":{"avg_monthly_fee_usd":4.5,"recommendation":"integrate_L2_and_backup_providers"},
+  "kpis":{"incidents":2,"provider_uptime_pct":99.92},
+  "sources":["coingecko","glassnode","defillama","etherscan"],
+  "timestamp":"2025-09-16T08:00:00+07:00",
+  "confidence":"medium"
+}
+
+================================================================================
+L. SQL MẪU — TÍNH Δ12m & MAX DRAWDOWN (giả sử price_history)
+-- price_history(symbol, ts_utc, price_usd)
+WITH now AS (
+  SELECT price_usd AS price_now
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc))
+),
+ago12 AS (
+  SELECT price_usd AS price_12m
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc) - INTERVAL '365 days')
+)
+SELECT 
+  ((n.price_now - a.price_12m) / a.price_12m) * 100 AS pct_change_12m
+FROM now n CROSS JOIN ago12 a;
+
+-- Max drawdown pseudo (depends on DB functions) — compute peaks/troughs series and derive max drawdown.
+
+================================================================================
+M. PYTHON EXAMPLE — AGGREGATE 12M SNAPSHOT (CoinGecko + DefiLlama idea)
+```python
+import requests, datetime
+def fetch_coingecko_markets(vs_currency='usd', per_page=250):
+    url = 'https://api.coingecko.com/api/v3/coins/markets'
+    params = {'vs_currency':vs_currency, 'order':'market_cap_desc', 'per_page':per_page, 'page':1}
+    return requests.get(url, params=params, timeout=10).json()
+
+# fetch historical price 12 months ago via /coins/{id}/history or market_chart?days=365
+# fetch TVL from DefiLlama /api/v1/tvl
+# aggregate, compute changes and output JSON as template above
+Gợi ý: build ETL pipeline storing daily snapshots to compute robust 12m metrics.
+
+================================================================================
+N. SOURCES & REAL-TIME DATA PROVIDERS (CHECKLIST)
+
+Market data: CoinGecko, CoinMarketCap, Binance API, Kraken
+
+On-chain & flows: Glassnode, CoinMetrics, Santiment, Nansen (paid)
+
+TVL: DefiLlama
+
+Explorers: Etherscan, BscScan, Tronscan
+
+News: CoinDesk, CoinTelegraph, TheBlock, official exchange blogs
+
+Alerts / security feeds: Whale Alert, Certik, PeckShield
+
+Infrastructure: Infura, Alchemy, QuickNode (RPC providers)
+Nota bene: some providers are paid — consider paid access for higher confidence metrics.
+
+================================================================================
+O. CANNED RESPONSES CHO CHATBOT (YEARLY)
+
+“Tóm tắt 1 năm qua”: “Trong 12 tháng qua, thị trường {up/down/sideways} ({Δ12m}%). Các driver chính: {drivers}. Ảnh hưởng đến e-commerce: {short_action}.”
+
+“Những mốc quan trọng trong năm?” → liệt kê events đã lưu.
+
+“Chúng ta có nên thay đổi policy holding?” → “Đề xuất: review treasury policy, reduce crypto exposure if market volatility risk appetite low. Mình có thể gửi checklist audit.”
+
+================================================================================
+P. LESSONS LEARNED (MẪU & GỢI Ý)
+
+Diversify providers (custodial & non-custodial) reduces single-point failures.
+
+Automate settlements to fiat to limit market exposure for revenue.
+
+Keep audit trails: invoice_id ↔ txid ↔ settlement_txid ↔ accounting entry.
+
+Invest in monitoring: exchange reserve watches, peg monitors, fee anomaly detection.
+
+Regularly exercise recovery (seed restore) & rotate keys.
+
+================================================================================
+Q. CHECKLIST TRƯỚC PUBLISH (ANNUAL REPORT)
+
+ All snapshots & metrics validated vs 2 sources.
+
+ Major events cross-checked with news & on-chain evidence.
+
+ E-commerce impact section has concrete thresholds & actions.
+
+ Legal/tax sign-off for accounting statements (if publishing externally).
+
+ Timestamp & sources appended.
+
+ Disclaimer present.
+
+================================================================================
+R. DISCLAIMER
+
+Báo cáo mang tính tham khảo và tổng hợp dữ liệu; không thay thế tư vấn đầu tư hoặc pháp lý.
+
+Độ chính xác phụ thuộc vào nguồn dữ liệu và thời điểm cập nhật.
+
+Merchant nên tham vấn chuyên gia pháp lý & thuế tại địa phương cho quyết định tuân thủ.
+
+================================================================================
+S. NEXT STEPS / AUTOMATION SUGGESTION
+
+Lưu daily snapshots vào DB (prices, marketcap, TVL, stablecoin supply) → cho phép compute 12m robust.
+
+Build ETL + scheduler (cron/airflow) để generate yearly JSON + PDF, gửi cho stakeholders.
+
+Integrate monitoring alerts (fee spike, peg deviation, exchange reserve changes) into Ops on-call.
+
+================================================================================

@@ -1,14 +1,235 @@
-Gợi ý phân tích thị trường theo ngày (Daily)
+# 04_market_daily_template — Daily Market Analysis Template (Crypto & E-commerce)
 
-Mục tiêu: tóm tắt biến động trong 24h, thay đổi vốn hóa, top tăng/giảm, sự kiện ngắn hạn.
+Mục tiêu: Cung cấp khuôn mẫu, hướng dẫn kỹ thuật và nội dung để tạo báo cáo tóm tắt biến động thị trường crypto trong 24h, dễ đọc cho team/khách hàng và có thể dùng làm output của chatbot. Bao gồm: chỉ số chính, cách tính, template văn bản, rules cảnh báo, code & JSON/SQL ví dụ để tự động hóa.
 
-Khung trình bày:
-1) Tóm tắt 1-2 câu về xu hướng 24h (xanh/đỏ, biến động mạnh/yếu)
-2) Vốn hóa & thống kê nhanh: tổng market cap, dominance BTC/ETH (nếu có)
-3) Top mover: 3-5 coin tăng/giảm đáng chú ý, lý do sơ bộ (nếu biết)
-4) Sự kiện/Thông tin: niêm yết sàn, tin pháp lý, nâng cấp mạng, thanh lý lớn
-5) Tác động tới thương mại điện tử: phí mạng, ổn định stablecoin, rủi ro thanh toán
-6) Cảnh báo: rủi ro biến động, tránh FOMO; đây không phải khuyến nghị đầu tư
+=====================================================================================
+1) Kết quả mong muốn (output)
+- Một câu tóm tắt ngắn (1–2 câu) về xu hướng 24h.
+- Bảng số liệu nhanh: total market cap, Δ24h%, BTC/ETH dominance, volume 24h.
+- Danh sách Top movers: top 3–5 coin tăng/giảm lớn nhất (kèm % và lý do).
+- Sự kiện nổi bật (listing, upgrade, pháp lý, thanh lý…).
+- Tác động tới thương mại điện tử (phí, stablecoin, rủi ro thanh toán).
+- Cảnh báo & khuyến nghị hành động (ví dụ: disable ERC20 nếu gas > $15).
+- Confidence / nguồn dữ liệu & timestamp.
 
-Lưu ý: nếu không có dữ liệu mới trong KB, trả lời theo khung hướng dẫn chung và khuyến khích người dùng kiểm tra nguồn số liệu thời gian thực từ API uy tín.
+=====================================================================================
+2) Khung trình bày (bản mẫu ngắn gọn)
+- **Tóm tắt 24h:** (1–2 câu)
+- **Vốn hóa & thống kê nhanh:** total market cap, Δ24h%, BTC dom, ETH dom, volume.
+- **Top movers (gainers/losers):** symbol | Δ24h% | lý do (nếu có).
+- **Sự kiện/Thông tin:** liệt kê (nguồn).
+- **Tác động tới e-commerce:** phí, stablecoin, rủi ro.
+- **Cảnh báo & Khuyến nghị hành động.**
+- **Nguồn & độ tin cậy.**
 
+=====================================================================================
+3) Các chỉ số cần thu thập (và cách tính)
+- Total Market Cap (USD).
+- Δ Market Cap 24h (%) = (MC_now − MC_24h_ago) / MC_24h_ago × 100.
+- BTC Dominance (%) = BTC_mc / total_mc × 100.
+- ETH Dominance (%).
+- 24h Volume (USD).
+- Top movers Δ24h% = (price_now − price_24h_ago) / price_24h_ago × 100.
+- Volatility indicator = stddev_24h / mean_24h.
+- On-chain: whale transfers, inflows, liquidations.
+- Event score = weight(listing/upgrade/liquidation).
+
+=====================================================================================
+4) Nguồn dữ liệu gợi ý
+- APIs: CoinGecko, CoinMarketCap, Binance, Kraken.
+- On-chain analytics: Glassnode, Santiment, DefiLlama.
+- News feeds: CoinDesk, CoinTelegraph, The Block, exchange announcements.
+- Whale alerts/liquidations: Whale Alert, Coinalyze.
+- Explorer checks: Etherscan, BscScan, Tronscan.
+
+=====================================================================================
+5) Ngưỡng đánh giá & rules
+- Biến động mạnh: |Δ24h%| ≥ 8–10% cho top cap, hoặc total_mc ±5%.
+- Coin đáng chú ý: Δ24h% ≥ +15% hoặc ≤ −15% và volume > 3× bình thường.
+- Cảnh báo phí: ETH gas median > $15.
+- Rủi ro stablecoin: peg deviation > 1%.
+- Market stress: funding rates cao, liquidation spikes, BTC dom thay đổi >2%.
+
+=====================================================================================
+6) Mẫu câu tóm tắt (canned sentences)
+- Xu hướng xanh: “Trong 24h qua, thị trường tăng nhẹ {Δ_MARKETCAP}%, BTC dom {BTC_DOM}%.”
+- Xu hướng đỏ: “Trong 24h qua, thị trường giảm mạnh {Δ_MARKETCAP}%, biến động do {event}.”
+- Thiếu dữ liệu realtime: “Không có dữ liệu live, vui lòng tham khảo CoinGecko/CMC.”
+
+=====================================================================================
+7) Mẫu báo cáo văn bản (example output)
+**Daily Market Snapshot — 2025-09-16 (ICT)**
+- Tóm tắt: Market cap giảm 2.7%, BTC dom 45.2% (+0.5pp).
+- Top gainers: ARB +12% (Layer2 upgrade), SOL +8%.
+- Top losers: DOGE -6%, SUI -10%.
+- Sự kiện: SEC hoãn ETF ETH, Binance list token X.
+- E-commerce: ETH gas cao (90 gwei) → recommend TRC20.
+- Cảnh báo: disable ERC20 checkout nếu gas > $15.
+- Disclaimer: Thông tin tham khảo, không phải khuyến nghị đầu tư.
+
+=====================================================================================
+8) JSON output mẫu
+{
+  "date": "2025-09-16T08:00:00+07:00",
+  "summary": "Thị trường giảm nhẹ -2.7% / 24h",
+  "total_market_cap_usd": 1230000000000,
+  "marketcap_change_24h_pct": -2.7,
+  "btc_dominance_pct": 45.2,
+  "eth_dominance_pct": 18.7,
+  "volume_24h_usd": 82000000000,
+  "top_gainers": [
+    {"symbol":"ARB","change_24h_pct":12,"reason":"Layer2 upgrade"}
+  ],
+  "top_losers": [
+    {"symbol":"SUI","change_24h_pct":-10,"reason":"token unlock"}
+  ],
+  "events": [{"type":"listing","asset":"X","source":"Binance","impact_score":8}],
+  "ecommerce_impact": {"eth_gas_usd":18.2,"recommendation":"use_trc20"},
+  "alerts": [{"rule":"eth_gas_threshold","value":15,"status":"triggered"}],
+  "sources": ["coingecko","binance","etherscan","coindesk"]
+}
+
+=====================================================================================
+9) SQL mẫu — tính Δ24h
+```sql
+WITH now AS (
+  SELECT symbol, price_usd AS price_now
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc) FROM price_history)
+),
+ago24 AS (
+  SELECT symbol, price_usd AS price_24h
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc) - INTERVAL '24 hours')
+)
+SELECT n.symbol,
+       ((n.price_now - a.price_24h) / a.price_24h) * 100 AS pct_change_24h
+FROM now n
+JOIN ago24 a ON n.symbol = a.symbol
+ORDER BY pct_change_24h DESC
+LIMIT 10;
+=====================================================================================
+10) Python code mẫu (CoinGecko)
+
+import requests
+def fetch_top_markets():
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {"vs_currency":"usd","order":"market_cap_desc",
+              "per_page":250,"page":1,"price_change_percentage":"24h"}
+    r = requests.get(url, params=params, timeout=10)
+    return r.json()
+
+
+=====================================================================================
+11) Tự động hoá pipeline
+
+Tần suất: 1×/day (08:00 ICT) + on-demand.
+
+Steps: fetch data → compute Δ24h → scrape news → JSON → render (email/Slack/DB).
+
+Alerting: nếu rule match → notify team.
+
+=====================================================================================
+12) Visualization
+
+Sparkline: total market cap 24h.
+
+Donut chart: BTC/ETH/others dominance.
+
+Bar chart: top gainers/losers.
+
+Heatmap: sector performance.
+
+Badge: High volatility / Fee warning.
+
+=====================================================================================
+13) Tác động tới e-commerce — checklist
+
+ETH gas > $15: show notice, ưu tiên TRC20/Layer2.
+
+Stablecoin depeg >1%: disable checkout coin đó.
+
+Market stress: nâng confirmations, thắt chặt KYC refund.
+
+Listing major: cảnh báo pump & dump, không thay đổi policy vội.
+
+=====================================================================================
+14) Cảnh báo & disclaimers
+
+“Không phải khuyến nghị đầu tư.”
+
+“Nguồn: {sources}, cập nhật tại {timestamp}.”
+
+“Luôn kiểm tra on-chain & txid trước khi xác nhận đơn hàng.”
+
+=====================================================================================
+15) QA checks
+
+Market cap consistency check.
+
+Compare multiple providers (Coingecko vs CMC).
+
+Handle missing data → mark N/A.
+
+Timezone consistency.
+
+=====================================================================================
+16) Chatbot integration
+
+Prompt: “Tóm tắt biến động thị trường 24h + top movers + tác động e-commerce.”
+
+Fallback: nếu không có API → khung hướng dẫn chung.
+
+Canned replies: dùng mẫu câu tóm tắt.
+
+=====================================================================================
+17) Kịch bản hành động nhanh (playbook)
+
+ETH gas spike > $25: disable ERC20 checkout.
+
+Stablecoin depeg: freeze invoicing, switch stablecoin khác.
+
+Exchange listing: monitor pump/dump.
+
+=====================================================================================
+18) Gợi ý nâng cao
+
+Sentiment analysis từ Twitter/news.
+
+On-chain metrics (inflows/outflows).
+
+Backtest thresholds.
+
+Localized versions (VN, EU).
+
+=====================================================================================
+19) Mẫu email / Slack
+Subject: [Daily Market Snapshot] {date} — Δ24h {Δ_MARKETCAP}%
+Body:
+
+Summary: {1 câu}
+
+Market cap: ${MC}, BTC dom: {BTC_DOM}%
+
+Top movers: {A +x%}, {B −y%}
+
+E-commerce impact: {recommendation}
+
+Alerts: {list}
+
+Sources: {coingecko, etherscan}
+
+=====================================================================================
+20) Checklist trước publish
+
+Rates updated < X mins.
+
+Top movers valid.
+
+News deduped.
+
+E-commerce impact có hành động cụ thể.
+
+Disclaimer & sources appended.
+
+=====================================================================================

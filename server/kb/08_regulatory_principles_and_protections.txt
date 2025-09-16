@@ -1,0 +1,395 @@
+1) Phạm vi & lưu ý pháp lý
+
+Tài liệu này tổng hợp các nguyên tắc, ví dụ quy định và thực hành tốt nhất cho: nhận thanh toán crypto, quản lý ví/custody, hoàn tiền/refund, phòng chống gian lận, bảo vệ dữ liệu khách hàng, xử lý dầu & vàng trong giao thương (logistics, giá cả, thuế).
+
+Không phải tư vấn pháp lý. Trước khi triển khai bất kỳ policy nào bắt buộc phải: (1) kiểm tra luật địa phương hiện hành; (2) xin ý kiến luật sư chịu trách nhiệm tại quốc gia hoạt động; (3) nhận clearance của bộ phận pháp chế / compliance.
+
+2) Nguyên tắc quốc tế nền tảng (bắt buộc hiểu và áp dụng)
+
+FATF — Guidance for Virtual Assets & VASPs (AML/CFT): yêu cầu VASPs áp dụng Customer Due Diligence (CDD), Transaction Monitoring, travel-rule (thông tin chuyển tiền giữa VASPs), báo cáo giao dịch đáng ngờ (STR). Tổ chức, merchant, và PSP cần xây chương trình AML rủi ro-căn bản. 
+fatf-gafi.org
+
+Sanctions / OFAC: các hoạt động liên quan tài sản số vẫn chịu chế tài trừng phạt (OFAC) — buộc doanh nghiệp có screening theo danh sách, recordkeeping và có khả năng phải xin license/trình báo. Vi phạm có thể dẫn tới phạt hành chính lớn. 
+ofac.treasury.gov
+
+MiCA & EU rules: EU tiến tới khung pháp lý thống nhất cho crypto (MiCA), quy định issuer & CASP (crypto-asset service providers), disclosure, stablecoin (e-money token / asset-referenced token) — điều này ảnh hưởng tới PSP cung cấp e-money token trong EU. 
+esma.europa.eu
+
+PSD2 / Payment law (EU) & PSD3 trends: dịch vụ thanh toán truyền thống có thể chồng chéo trách nhiệm với dịch vụ crypto (ví dụ: e-money tokens có thể rơi vào PSD2 nếu là phương tiện thanh toán). Cần kiểm tra tương quan MiCA–PSD2/PSD3. 
+eba.europa.eu
++1
+
+3) Tóm tắt các khuôn khổ & cơ quan quản lý quan trọng (chọn lọc)
+
+FATF — tiêu chuẩn AML/CFT toàn cầu cho VASP. 
+fatf-gafi.org
+
+OFAC (US Treasury) — hướng dẫn sanctions cho tài sản số; strict liability yếu tố rủi ro. 
+ofac.treasury.gov
+
+SEC (US) — chú ý đến phân loại token là “securities” (Howey test); exchange/market nơi token được giao dịch có thể rơi vào luật chứng khoán. (tham khảo văn bản & ý kiến chuyên gia). 
+SEC
+
+EU — MiCA & EBA/EU opinion on MiCA–PSD2: MiCA quy định issuer & CASP; EBA đã ra văn bản làm rõ giao thoa giữa PSD2 và MiCA. 
+esma.europa.eu
++1
+
+FCA (UK) / MAS (SG) / FSA (JP) — mỗi regulator có yêu cầu riêng cho marketing, custody, AML, licensing. (Ví dụ FCA quy định marketing crypto; MAS rất thận trọng về cấp phép DASP). 
+FCA
++2
+mas.gov.sg
++2
+
+4) Việt Nam — hiện trạng pháp luật & tiến trình (tóm tắt quan trọng)
+
+Tinh thần chung: trong quá khứ, SBV (Ngân hàng Nhà nước) tuyên bố crypto không phải là phương tiện thanh toán hợp pháp; các hoạt động liên quan tới phát hành/cheat payment có thể bị xử phạt. Đồng thời, chính quyền đang hoàn thiện khuôn khổ pháp luật để quản lý & phát triển lĩnh vực digital assets. (Lưu ý: nhiều thay đổi 2024–2025). 
+Duane Morris Blogs
++1
+
+Law on Digital Technology Industry (Vietnam, 14 Jun 2025) — Quốc hội đã thông qua luật lớn về ngành công nghiệp CNTT/kỹ thuật số, trong đó có nội dung về công nhận khái niệm “digital assets”, định hướng quản lý; luật có hiệu lực từ 01/01/2026 (xem văn bản chính thức để biết quy định chi tiết về token, cung cấp dịch vụ). Đòi hỏi doanh nghiệp chuẩn bị cho khung giấy phép/giám sát mới. 
+en.baochinhphu.vn
+
+Thực tiễn thị trường & pilot: Nhà nước đã/đang triển khai pilot chương trình quản lý thị trường digital assets trong khung thời hạn thử nghiệm; SBV vẫn giữ quyền kiểm soát việc chấp nhận như phương tiện thanh toán và các hoạt động liên quan. Lưu ý: các quy định chi tiết (licensing, AML, custody) đang được soạn và sẽ ảnh hưởng trực tiếp hoạt động của CASP/Crypto PSP. 
+CoinGeek
++1
+
+Các luật liên quan khác VN: Luật Bảo vệ Quyền lợi Người tiêu dùng 2024 (e-commerce), Luật dữ liệu cá nhân / Data law (mới), các nghị định điều hành giá xăng dầu, Decree sửa đổi quản lý vàng (Decree 232/2025) — tất cả ảnh hưởng đến quy định cho e-commerce, trade in oil/gold, và bảo vệ dữ liệu. (xem mục tài liệu tham khảo VN phía dưới). 
+Tilleke & Gibbins
++2
+Reuters
++2
+
+5) Yêu cầu pháp lý & compliance cụ thể cho hoạt động liên quan Crypto & Payment Gateway
+5.1. Licences & authorisations (cần kiểm tra theo từng quốc gia)
+
+CASP / VASP license: nhiều nước yêu cầu đăng ký / cấp phép cho dịch vụ lưu ký, giao dịch, đổi, chuyển token, phát hành token. (EU MiCA, Singapore MAS, Japan PSA, v.v.). 
+esma.europa.eu
++1
+
+Payment Service Provider (PSP) / E-Money licences: nếu xử lý fiat + crypto hoặc phát hành e-money token, có thể cần licence theo luật thanh toán (PSD2/PSD3 ở EU hoặc tương đương địa phương). 
+eba.europa.eu
+
+5.2. AML / CFT (bắt buộc áp dụng phương pháp “rủi ro-căn bản”)
+
+CDD / KYC: thu thập thông tin khách hàng theo mức rủi ro (nhận diện, xác minh danh tính, xác minh nguồn tiền với high-risk). FATF đề xuất VASP áp dụng CDD tương tự tổ chức tài chính. 
+fatf-gafi.org
+
+Transaction Monitoring: threshold và rules (e.g., big transfers, structuring patterns, rapid in/out). Lưu log đầy đủ (txid, wallet addresses, IP, metadata).
+
+Travel Rule: forward originator & beneficiary information khi chuyển qua VASP networks (sử dụng giải pháp Notabene/Chainalysis/Thomson-Reuters). 
+fatf-gafi.org
+
+Sanctions Screening: screening theo OFAC/UN/EU lists; recordkeeping & escalation nếu matched. 
+ofac.treasury.gov
+
+Suspicious Activity Reports (SAR/STR): có quy trình nộp báo cáo cho authority theo quy định địa phương.
+
+5.3. Custody & Client Asset Safeguarding
+
+Segregation of assets: tiền/crypto của khách hàng cần được phân biệt với tài sản công ty (trust / segregated account) nếu luật địa phương yêu cầu. MiCA & các luật khác có quy định bảo vệ người dùng. 
+esma.europa.eu
+
+Insurance & Multi-sig: khuyến nghị có bảo hiểm, multi-signature wallets & documented key-management SOP.
+
+Disclosure: minh bạch về rủi ro custody, tự quản lý private key (self-custody) hay custodial (bảo hiểm, SLA).
+
+5.4. Consumer protection & refunds
+
+Minh bạch phí & thời hạn xác nhận giao dịch. Vì giao dịch on-chain có thể cần confirmations → cần nêu rõ thời gian ship/hủy/hoàn tiền.
+
+Refund policy cho crypto: không có chargeback on-chain → quy trình refund phải dựa vào txid & policy (ví dụ refund to same address, xác minh KYC).
+
+Resolve disputes: cung cấp cơ chế khiếu nại, evidence (txid/logs), thông tin liên hệ bộ phận pháp lý. Ở VN: Luật bảo vệ quyền lợi người tiêu dùng & Decree/LOET có quy định về giải quyết tranh chấp e-commerce. 
+THƯ VIỆN PHÁP LUẬT
++1
+
+5.5. Data protection & privacy
+
+GDPR & tương đương: nếu phục vụ công dân EU → tuân thủ GDPR (lawful basis, DSAR, data minimization, DPIA cho high-risk processing).
+
+Vietnam Data Law & rules: VN đã thông qua luật data protection / data law; cần lưu ý cross-border transfer rules, yêu cầu bảo mật & báo cáo sự cố an ninh thông tin. 
+Reuters
+
+5.6. Tax & Accounting
+
+Thuế VAT / Thuế thu nhập / Thu nhập vốn: xử lý accounting cho thanh toán crypto (giá dùng để quy đổi, thời điểm tính thuế). Ở VN, chính sách thuế với crypto vẫn trong quá trình hoàn thiện; doanh nghiệp cần báo cáo và tra cứu hướng dẫn mới nhất từ Tổng cục Thuế. 
+Vietnam Investment Review - VIR
+
+6) Dầu & Vàng — khung quản lý pháp lý (global & Vietnam) — điểm chính cần tuân thủ
+6.1. Dầu (oil) — quản lý & điều hành (VN)
+
+Nhập khẩu & hoạt động kinh doanh xăng dầu: chịu quản lý bởi Bộ Công Thương (MOIT) — có quy định về giá cơ sở, báo cáo tồn kho, quản lý quỹ bình ổn giá xăng dầu (FPSF), licensing cho thương nhân đầu mối. Gần đây MOIT có điều chỉnh giảm bớt quy định hành chính (ví dụ Circular 18 rút bớt quy định cũ). 
+VietNamNet News
++1
+
+Quỹ bình ổn và quản lý giá: có khung pháp lý để trích/chi quỹ bình ổn; nếu thay đổi chính sách doanh nghiệp logistics/merchant cần cập nhật. 
+vietnamnews.vn
+
+6.2. Vàng (gold) — quản lý VN
+
+Quyền nhập khẩu & sản xuất vàng: trước đây Nhà nước kiểm soát chặt (SBV có monopoly sản xuất SJC); trong 2025 có thay đổi lớn (Decree 232/2025 mở cửa cho tham gia tư nhân có điều kiện, và chính sách đang được rà soát để tăng tính cạnh tranh & minh bạch). Nếu bạn bán vàng (jewelry), cần theo dõi licensing, quy định giao dịch tiền mặt, báo cáo phòng chống rửa tiền cho các giao dịch lớn. 
+vietnamnews.vn
++1
+
+Kiểm soát giao dịch vàng lớn: dự thảo & chính sách mới yêu cầu giao dịch lớn phải qua tài khoản ngân hàng → mục tiêu minh bạch & AML. (theo tin tức chuyển đổi chính sách). 
+vietnamnews.vn
++1
+
+6.3. Commodity trading & AML
+
+Gold/durable commodities thường là kênh rủi ro rửa tiền (high value, portable) → nên áp dụng enhanced-CSD/KYC cho giao dịch lớn, báo cáo nguồn vốn, và limit thanh toán tiền mặt. FATF & các authority khuyến nghị tighten controls trong physical commodity flows.
+
+7) Kiểm soát tuân thủ (Compliance Controls) — checklist hoạt động (detailed)
+A. Onboarding & KYC
+
+Thu thập: tên, DOB, địa chỉ, ID quốc gia, proof of address, nationality, proof of business (for corporate), UBO.
+
+Sanctions screen ngay trước onboarding (OFAC, UN, EU lists). 
+ofac.treasury.gov
+
+Risk score: assign (low/medium/high) dựa trên geography, product, amount, source of funds.
+
+B. Transaction monitoring
+
+Thiết lập rules: high-value thresholds, rapid in/out (same day), frequent small deposits (structuring), known mixer addresses, chain analytics score (e.g., risk>0.8).
+
+Alerts triage: analyst review -> escalate -> SAR filing.
+
+C. Travel rule & data sharing
+
+Implement solution to share required originator/beneficiary fields with counterpart VASPs; secure transmission (encryption + access logs). 
+fatf-gafi.org
+
+D. Sanctions & geo-blocking
+
+Block access & transactions from sanctioned jurisdictions; IP/editorial geo-blocking; enhanced KYC for higher risk geos. 
+ofac.treasury.gov
+
+E. AML program governance
+
+Appoint MLRO/Compliance Officer; periodic independent audit; employee training; update policies annually or when laws change.
+
+F. Data protection & privacy
+
+Data minimization; encryption at rest & transit; access control logs; DSAR process; retention schedule (e.g., KYC docs 5–7 years per FATF / local law).
+
+G. Custody operational controls
+
+Key management SOP; multi-sig for cold storage; automated withdrawal approval workflows; cold-to-hot limits & manual signoff.
+
+H. Incident & breach response
+
+IR plan, SOE (statement of events) template, regulator notification timelines (local law), customer disclosure template (do not admit liability; give actionable advice).
+
+I. Commodity-specific controls (oil/gold)
+
+For oil: contract clauses for fuel price pass-through, force majeure, hedging strategy for long-term supply.
+
+For gold: inventory valuation policy, daily reprice procedure, proof-of-origin & assay policy, daily reconciliation.
+
+8) MẪU CHÍNH SÁCH & VĂN BẢN (copy & paste — chỉnh placeholders)
+8.1. Mẫu đoạn AML policy (tóm tắt, to-be-expanded)
+[Company Name] AML/CTF Policy — Summary
+1. Objective: Phòng chống rửa tiền và tài trợ khủng bố.
+2. Phạm vi: Tất cả dịch vụ payment, custody, settlement và tài khoản khách.
+3. MLRO: [Name, contact]
+4. Customer Due Diligence: KYC for tất cả khách hàng; enhanced due diligence for rủi ro cao.
+5. Transaction Monitoring: Rules: tx> [AMOUNT], rapid in/out, sanctions match, mixer risk>0.7.
+6. SAR: MLRO chịu trách nhiệm nộp SAR cho authority trong vòng [X] giờ/n ngày theo quy định địa phương.
+7. Recordkeeping: giữ KYC & giao dịch ít nhất [X] năm (tuân local law).
+8. Training & Audit: staff AML training 6-monthly; annual independent audit.
+
+8.2. Mẫu Privacy Notice (ngắn)
+Chú ý quyền riêng tư (privacy notice)
+- Chúng tôi thu thập: tên, email, ID, địa chỉ, tx metadata phục vụ KYC và giao dịch.
+- Mục đích: tuân thủ pháp luật (KYC/AML), xử lý giao dịch, hỗ trợ khách hàng.
+- Lưu trữ: dữ liệu giữ tối thiểu X năm; bạn có quyền truy cập, hiệu chỉnh dữ liệu (contact: [email]).
+- Cross-border transfer: dữ liệu có thể được lưu ở [country list]. Mọi transfer tuân thủ Data Law & GDPR (nếu áp dụng).
+
+8.3. Mẫu Refund / Dispute Terms (crypto)
+Chính sách hoàn tiền (crypto)
+1. Refund chỉ thực hiện sau khi xác minh TXID, địa chỉ nhận và KYC người nhận.
+2. Refund sẽ gửi về cùng chain & address ban đầu; khách hàng chịu phí mạng.
+3. Trong trường hợp tx không thể hoàn (ví dụ: address không kiểm soát bởi người yêu cầu), công ty có thể từ chối refund và hướng dẫn khách kiện theo thủ tục dân sự.
+4. Thời gian xử lý yêu cầu: tối đa 14 ngày làm việc (sau khi có đủ bằng chứng).
+
+8.4. Clause sanctions & compliance (trong TOS)
+Sanctions & Compliance Clause:
+Customer warrants they are not located in, owned by, or acting on behalf of any person or entity on sanctions lists (OFAC/EU/UN). Company reserves the right to suspend or terminate services and to report transactions to competent authorities where obliged.
+
+9) Quy trình xử lý sự cố (incident playbook — ngắn & cụ thể)
+A. Phát hiện hack / mất keys / lớn withdrawal bất thường
+
+Triage alert → xác nhận bằng logs & chain txid.
+
+Ngay lập tức: suspend withdrawals, snapshot DB, preserve logs (write-protect).
+
+Thông báo MLRO & quản trị (C-level).
+
+If sanctions or criminal involvement suspected → contact legal counsel; consider voluntary disclosure to authority; follow local regulator timelines. (OFAC guidance khuyến nghị engage). 
+ofac.treasury.gov
+
+Thông báo khách hàng (cân nhắc tuân thủ luật yêu cầu disclosure, và lựa chọn lời nói: thông tin hoá, hành động khắc phục, không thừa nhận trách nhiệm).
+
+Remediation, forensic, root-cause, patch, lessons learned, external audit.
+
+B. Stablecoin depeg / issuer solvency event
+
+Ngưng nhận stablecoin liên quan (tạm thời).
+
+Notify finance/legal; compute exposures (on-chain balances, pending invoices).
+
+Communicate to affected merchants (explain refund/settlement options).
+
+If issuer subject to sanctions/regulatory action → freeze & coordinate with authority.
+
+C. Regulator request (inspection / subpoena)
+
+Route request tới MLRO & Legal.
+
+Preserve logs & start privilege review.
+
+Respond within statutory timeline; record all contacts; escalate if queries ambiguous.
+
+10) Lưu trữ chứng cứ & audit trail (must-have)
+
+Lưu KYC file + timestamped photos + hashes (hash of documents)
+
+Lưu toàn bộ webhook events (raw payload) + signature verification results
+
+Lưu toàn bộ chain evidence: txid, block explorer link, confirmation count (snapshot at time)
+
+Immutable write-protect archives weekly (S3 immutable + separate secure vault)
+
+Retention policy: tối thiểu FATF recommends 5 năm — tuân thủ luật địa phương nếu khác.
+
+11) Gợi ý kỹ thuật (screening & monitoring stack)
+
+Sanctions & PEP screening: integrate OFAC, EU, UN lists + local lists (e.g., VN blacklists) — cập nhật hàng ngày. 
+ofac.treasury.gov
+
+Chain analytics: Chainalysis, Elliptic, TRM, CipherTrace để tag risky addresses & mixers.
+
+Travel-rule solution: Notabene / Chainalysis CLTs / in-house signed encrypted transmission. 
+fatf-gafi.org
+
+SIEM & DLP: để giám sát logins, API key anomalies, data exfiltration (vital cho data protection compliance).
+
+PCI-DSS: nếu xử lý thẻ tín dụng, vẫn phải compliant với PCI-DSS.
+
+12) Danh sách checklists ngắn (triage nhanh, copy-ready)
+
+ Có MLRO & contact?
+
+ Có Sanctions screening hàng ngày?
+
+ Travel-rule implementation cho transfers > threshold?
+
+ KYC cho tất cả giao dịch > threshold?
+
+ Lưu trữ webhook raw + signature?
+
+ Policy refund cho crypto có sẵn & công khai?
+
+ Privacy notice & DSAR process?
+
+ Data localization / cross-border transfer assessment?
+
+ Annual audit & penetration test?
+
+ Insurance (custody/hacking) coverage?
+
+ Commodity-specific: supplier contracts có force-majeure & price-pass clauses?
+
+13) Các rủi ro pháp lý phổ biến & lời khuyên mitigations
+
+Rủi ro sanctions → mitigation: proactive sanctions screening, IP geo-blocking, manual review. 
+ofac.treasury.gov
+
+Rủi ro AML → mitigation: tiered KYC, enhanced due diligence for PEPs/OT. 
+fatf-gafi.org
+
+Rủi ro consumer disputes → mitigation: rõ ràng T&Cs, evidence-based refund policies, SLA cho settlement. 
+THƯ VIỆN PHÁP LUẬT
+
+Rủi ro dữ liệu → mitigation: encryption, minimal data retention, DPIA cho processing high-risk, compliance vs Data Law/GDPR. 
+Reuters
+
+Rủi ro pháp lý địa phương (VN) → mitigation: maintain local counsel, keep watching new laws (Law on Digital Technology Industry, Decree về vàng/dầu).
+
+14) Nguồn tham khảo chính (chỉ mục — mở để đọc kỹ)
+
+Tài liệu quốc tế nền tảng
+
+FATF — Updated Guidance for a Risk-Based Approach to Virtual Assets & VASPs (2021). 
+fatf-gafi.org
+
+OFAC — Sanctions Compliance Guidance for the Virtual Currency Industry (2021). 
+ofac.treasury.gov
+
+EU ESMA — Markets in Crypto-Assets (MiCA) overview & EBA opinion on MiCA–PSD2 interplay. 
+esma.europa.eu
++1
+
+SEC / Howey test notes & crypto classification debates (US). 
+SEC
+
+Khu vực & regulator cụ thể
+
+UK: FCA rules (marketing, registration). 
+FCA
+
+Singapore: MAS guidance & licensing for digital token service providers. 
+mas.gov.sg
+
+Japan: FSA updates to Payment Services Act & crypto supervision. 
+fsa.go.jp
+
+Việt Nam (select sources)
+
+Law on Digital Technology Industry — National Assembly (passed Jun 14, 2025) — văn bản & thông báo báo chí. 
+en.baochinhphu.vn
+
+SBV statements & background on crypto not legal tender (historic & guidance). 
+Duane Morris Blogs
+
+Decree 232/2025 (gold trading reforms) and related SBV notices. 
+vietnamnews.vn
++1
+
+MOIT Circular 18 / fuel business regulation updates — quản lý xăng dầu. 
+VietNamNet News
+
+Law on Protection of Consumers’ Rights (2024) + E-transaction & e-commerce law updates: tác động tới refunds & e-commerce dispute resolution. 
+Tilleke & Gibbins
++1
+
+Vietnam Data Protection / Data Law & Reuters summary (Nov 2024). 
+Reuters
+
+15) Kết luận ngắn — hành động đề nghị (tức thời)
+
+Đối với merchant / gateway: xây/hoàn thiện AML program (MLRO, KYC, TM), sanctions screening, travel-rule readiness; cập nhật Privacy Notice & retention policy; chuẩn bị hợp đồng/văn bản T&C cho refunds. 
+fatf-gafi.org
++1
+
+Đối với treasury / finance: thiết lập auto-convert thresholds, report exposures to leadership; có kế hoạch hedging cho vàng lớn & fuel cost pass-through. 
+vietnamnews.vn
++1
+
+Đối với product & engineering: tích hợp chain-analytics, travel-rule provider, SIEM & encryption at-rest/transit; log everything immutable. 
+fatf-gafi.org
+
+Đối với VN operations: theo dõi sát các Nghị định & Decree, làm việc với counsel VN để đảm bảo licensing & pilot compliance (Law on Digital Technology Industry + Decree changes). 
+en.baochinhphu.vn
++1
+
+16) Mong muốn tiếp theo — nếu bạn muốn mình làm tiếp (gõ lựa chọn)
+
+“Xuất file” → mình sẽ tạo file txt sẵn để bạn tải.
+
+“Tạo checklist CSV/JSON” → mình sẽ xuất checklist machine-readable.
+
+“Viết policy doc (full AML/KYC 10–20 trang)” → mình soạn template chi tiết hơn (bản pháp chế-ready).
+
+“Viết code mẫu tích hợp OFAC + Chainalysis API” → mình tạo ví dụ Python/Node.
