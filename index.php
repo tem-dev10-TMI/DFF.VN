@@ -15,7 +15,7 @@ spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/' . $class . '.php',
         __DIR__ . '/controller/' . $class . '.php'
-        
+
     ];
 
     foreach ($paths as $p) if (file_exists($p)) require_once $p;
@@ -118,11 +118,15 @@ switch ($url) {
         $id = $_GET['id'] ?? null;
         $controller->details_blog($id);
         break;
+    case 'search':
+        require_once 'controller/SearchController.php';
+        $controller = new SearchController();
+        $controller->index();
+        break;
+
     case 'news':
         require_once 'controller/NewsController.php';
         $controller = new NewsController();
-
-
         $controller->index();
         break;
     case 'crypton':
@@ -135,7 +139,7 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->viewprofileUser();
         break;
-    
+
 
     // ========== API ROUTES ==========
     case 'api/addPost':
