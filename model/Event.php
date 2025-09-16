@@ -6,7 +6,6 @@ class EventModel {
         $this->pdo = $pdo;
     }
 
-    // Lấy danh sách sự kiện
     public function all($limit = 100) {
         $stmt = $this->pdo->prepare("SELECT * FROM events ORDER BY event_date DESC LIMIT ?");
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
@@ -14,7 +13,6 @@ class EventModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // Lấy chi tiết sự kiện theo ID
     public function find($id) {
         $stmt = $this->pdo->prepare("SELECT * FROM events WHERE id = ?");
         $stmt->execute([$id]);

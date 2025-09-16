@@ -100,6 +100,8 @@
 "url": "https://dff.vn"
 }</script><link href="index.html" rel="canonical" /></head> -->
 
+
+
 <body>
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
@@ -108,6 +110,8 @@
 
 
     <?php
+    
+    
 
     require_once 'model/TopicModel.php';
 
@@ -225,21 +229,18 @@
                 }
             }
         </style>
+       ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
-        <?php if ($profile): ?>
+        <?php if (!empty($profile)): ?>   <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
 
         <?php else: ?>
             <div class="main">
 
-
-
                 <!-- ?php require_once 'view/page/Home.php'; -->
                 <?= $content ?>
 
-
                 <?php require_once 'view/layout/sidebarLeft.php'; ?>
-
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-coin mb-coins" viewBox="0 0 16 16">
@@ -251,6 +252,8 @@
                 <i class="bi bi-chat-left-text-fill mb-chat"></i>
             </div>
         <?php endif; ?>
+...
+
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
