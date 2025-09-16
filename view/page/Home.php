@@ -1,4 +1,9 @@
 <?php
+require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../model/CommentGlobalModel.php';
+
+$comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
+
 // require_once __DIR__ . '/../../config/db.php';
 // require_once __DIR__ . '/../../model/article/articlesmodel.php';
 // require_once __DIR__ . '/../../model/commentmodel.php';
@@ -8,6 +13,7 @@
 // $articles = ArticlesModel::getAllArticles();      
 // $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
+<link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css?v=1.3">
 
 <main class="main-content">
 
@@ -15,12 +21,13 @@
     <!-- 4 cục bài viết nổi bật start -->
     <div class="owl-slider home-slider">
         <div id="home_slider" class="owl-carousel">
-            <?php if (!empty($articles)): ?>
-                <?php foreach ($articles as $article): ?>
+            <?php if (!empty($featuredArticles)): ?>
+                <?php foreach ($featuredArticles as $article): ?>
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="details_Blog?id=<?= $article['id'] ?>">
+                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
@@ -33,7 +40,8 @@
                         <div class="text" style="">
                             <h4>
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="article_detail.php?id=<?= $article['id'] ?>">
+                                   href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                   target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </h4>
@@ -136,82 +144,137 @@
         }
         ?>
 
-        <?php if (!empty($articles)): ?>
+        <?php if (!empty($articlesInitial)): ?>
             <!-- Bọc danh sách bài viết -->
             <div id="articles-list">
-                <?php foreach ($articles as $i => $article): ?>
-                    <!-- Ẩn bài từ số 10 trở đi -->
-                    <div class="block-k article-item" style="<?= $i < 10 ? 'display:none;' : '' ?>">
-                        <div class="view-carde f-frame">
-                            <div class="provider">
-                                <?php
-                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                ?>
-                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
-                                <div class="p-covers">
+                <?php foreach ($articlesInitial as $i => $article): ?>
+                    <div class="block-k article-item">
+                    <div class="view-carde f-frame">
+                        <div class="provider">
+                            <?php
+                            $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                            ?>
+                            <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                            <div class="p-covers">
                                     <span class="name">
                                         <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
                                     <span class="date"><?= timeAgo($article['created_at']) ?></span>
-                                </div>
                             </div>
+                        </div>
 
-                            <div class="title">
+                        <div class="title">
                                 <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
                                 target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                 <?= htmlspecialchars($article['title']) ?>
                                 </a>
-                            </div>
+                        </div>
 
-                            <div class="sapo">
-                                <?= htmlspecialchars($article['summary']) ?>
+                        <div class="sapo">
+                            <?= htmlspecialchars($article['summary']) ?>
                                 <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
                                 class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                 Xem thêm
                                 </a>
-                            </div>
+                        </div>
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                        <?php if (!empty($article['main_image_url'])): ?>
                                 <img class="h-img"
                                     src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
-                            <?php endif; ?>
+                        <?php endif; ?>
 
                             <!-- Giữ nguyên phần like, comment, share -->
-                            <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                        <div class="item-bottom">
+                            <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
                                     <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
-                                </div>
-                                <div class="button-ar">
+                            </div>
+                            <div class="button-ar">
                                     <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
-                                        <span><?= $article['comment_count'] ?? 0 ?></span>
-                                    </a>
-                                </div>
-                                <div class="button-ar">
-                                    <div class="dropdown home-item">
+                                    <span><?= $article['comment_count'] ?? 0 ?></span>
+                                </a>
+                            </div>
+                            <div class="button-ar">
+                                <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
-                                        <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu">
                                             <li><a class="dropdown-item copylink"
                                                 data-url="details_blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
                                                 data-url="details_blog?id=<?= $article['id'] ?>"
                                                 href="javascript:void(0)">Share FB</a></li>
-                                        </ul>
-                                    </div>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
-                <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
             </div>
 
             <!-- Loading hiển thị khi đang load thêm -->
             <div id="loading" style="text-align:center; display:none; margin:20px;">
                 <em>Đang tải thêm...</em>
             </div>
+            <script>
+                (function(){
+                    let offset = 5; // đã render 5 bài đầu
+                    const limit = 5;
+                    let isLoading = false;
+                    const listEl = document.getElementById('articles-list');
+                    const loadingEl = document.getElementById('loading');
+
+                    function renderItem(article){
+                        const div = document.createElement('div');
+                        div.className = 'block-k article-item';
+                        div.innerHTML = `
+                            <div class="view-carde f-frame">
+                                <div class="provider">
+                                    <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+                                    <div class="p-covers">
+                                        <span class="name"><a href="/DFF.VN/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                        <span class="date"></span>
+                                    </div>
+                                </div>
+                                <div class="title">
+                                    <a href="${article.is_rss ? article.link : ('details_blog?id=' + article.id)}" ${article.is_rss ? 'target="_blank"' : ''}>${article.title || ''}</a>
+                                </div>
+                                <div class="sapo">
+                                    ${article.summary || ''}
+                                    <a href="${article.is_rss ? article.link : ('details_blog?id=' + article.id)}" class="d-more" ${article.is_rss ? 'target="_blank"' : ''}>Xem thêm</a>
+                                </div>
+                                ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                            </div>`;
+                        return div;
+                    }
+
+                    function loadMore(){
+                        if (isLoading) return;
+                        isLoading = true;
+                        loadingEl.style.display = 'block';
+                        fetch('api/loadMoreArticles?offset=' + offset + '&limit=' + limit)
+                            .then(r => r.json())
+                            .then(data => {
+                                if (data.success && Array.isArray(data.items)) {
+                                    data.items.forEach(item => listEl.appendChild(renderItem(item)));
+                                    offset = data.nextOffset;
+                                }
+                            })
+                            .finally(() => {
+                                isLoading = false;
+                                loadingEl.style.display = 'none';
+                            });
+                    }
+
+                    window.addEventListener('scroll', function(){
+                        const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
+                        if (nearBottom) loadMore();
+                    });
+                })();
+            </script>
         <?php else: ?>
             <div class="block-k ">
                 <div class="view-carde f-frame">
@@ -244,31 +307,143 @@
                 </ul>
             </div>
         </div>
+
+        
+            <div class="content-right">
         <div class="block-k cover-chat">
-            <h5>
-                <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
-            </h5>
-            <div class="comment-cover">
-                <div class="fr-content">
-                    <ul class="list_comment col-md-12">
+            <h5><i class="fas fa-comments"></i> Hi! DFF</h5>
+            <ul class="list_comment">
+                <?php foreach ($comments as $c): ?>
+                    <li class="chat-item" data-id="<?= $c['id'] ?>">
+                        <div class="chat-avatar">
+                            <?php if ($c['avatar_url']): ?>
+                                <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
+                            <?php else: ?>
+                                <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
+                            <?php endif; ?>
+                        </div>
+                        <div class="chat-body">
+                            <div class="chat-meta">
+                                <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
+                                <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+                            </div>
+                            <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+                            <div class="chat-actions">
+                                <button>⬆</button>
+                                <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                                <button>⬇</button>
+                                <a href="#" class="chat-reply">Trả lời</a>
+                            </div>
+                        </div>
+                    </li>
+                <?php endforeach; ?>
                     </ul>
-                    <div class="cm-more">Xem thêm</div>
-                </div>
                 <div class="h-comment">
-                    <a href="javascript:void(0)" class="img-own">
-                        <img src="vendor/dffvn/content/img/user.svg">
-                    </a>
-                    <textarea class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
-                    <i class="fas fa-paper-plane" module-load="csend"></i>
+                <textarea id="comment-content" placeholder="Viết bình luận"></textarea>
+                <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
                 </div>
             </div>
         </div>
+     
+
+<script>
+let lastId = <?= !empty($comments) ? max(array_column($comments, 'id')) : 0 ?>;
+
+// Render comment
+function createCommentElement(c) {
+    const li = document.createElement("li");
+    li.className = "chat-item";
+    li.dataset.id = c.id;
+    li.innerHTML = `
+        <div class="chat-avatar">
+            ${c.avatar_url 
+                ? `<img src="${c.avatar_url}">`
+                : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
+        </div>
+        <div class="chat-body">
+            <div class="chat-meta">
+                <span class="chat-name">${c.username}</span>
+                <span class="chat-time">${c.time_ago}</span>
+            </div>
+            <div class="chat-content">${c.content}</div>
+        </div>`;
+    return li;
+}
+// Gửi comment
+document.getElementById("send-comment").addEventListener("click", () => {
+    const textarea = document.getElementById("comment-content");
+    const content = textarea.value.trim();
+    if (!content) return;
+
+    fetch("comment_add.php", {
+        method: "POST",
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
+        body: "content=" + encodeURIComponent(content)
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            const ul = document.querySelector(".list_comment");
+            const li = createCommentElement(data.comment);
+
+            // ✅ thêm xuống cuối
+            ul.append(li);
+
+            // ✅ auto scroll xuống cuối
+            ul.scrollTop = ul.scrollHeight;
+
+            if (data.comment.id > lastId) lastId = data.comment.id;
+        } else {
+            alert(data.error);
+        }
+    })
+    .finally(() => textarea.value = "");
+});
+
+// nhấn enter 
+const textarea = document.getElementById("comment-content");
+
+textarea.addEventListener("keydown", function(e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault(); // chặn xuống dòng
+        document.getElementById("send-comment").click(); // gọi nút gửi
+    }
+});
+
+// Load comment mới
+function loadNewComments() {
+    fetch("comment_list.php?last_id=" + lastId)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                const ul = document.querySelector(".list_comment");
+                data.comments.forEach(c => {
+                    if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
+                        const li = createCommentElement(c);
+
+                        // ✅ cũng append xuống cuối
+                        ul.append(li);
+
+                        // ✅ scroll xuống cuối khi có comment mới
+                        ul.scrollTop = ul.scrollHeight;
+
+                        if (c.id > lastId) lastId = c.id;
+                    }
+                });
+            }
+        });
+}
+
+// Auto refresh
+setInterval(loadNewComments, 2000);
+</script>
+
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/vientmi/?locale=vi_VN" data-tabs="timeline"
+            <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline"
                 data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
                 data-hide-cover="false" data-show-facepile="true">
-                <blockquote cite="https://www.facebook.com/vientmi/?locale=vi_VN" class="fb-xfbml-parse-ignore"><a
-                        href="../www.facebook.com/vientmi.html">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
+                <blockquote cite="https://www.facebook.com/vientmi" class="fb-xfbml-parse-ignore"><a
+                        href="https://www.facebook.com/vientmi">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
                 </blockquote>
             </div>
         </div>
@@ -282,14 +457,14 @@
 ?>
 
 <?php if (!empty($rssArticles3)): ?>
-<div class="block-k bg-box-a">
-    <div class="tieu-diem">
-        <h2>
-            <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
-        </h2>
-        <ul>
+        <div class="block-k bg-box-a">
+            <div class="tieu-diem">
+                <h2>
+                    <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+                </h2>
+                <ul>
             <?php foreach ($rssArticles3 as $article): ?>
-            <li class="new-style">
+                    <li class="new-style">
                 <a title="<?= htmlspecialchars($article['title']) ?>"
                    href="<?= !empty($article['is_rss']) 
                             ? htmlspecialchars($article['link']) 
@@ -301,13 +476,13 @@
                 <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                      title="<?= htmlspecialchars($article['title']) ?>"
                      alt="<?= htmlspecialchars($article['title']) ?>"
-                     border="0" />
+                            border="0" />
                 <?php endif; ?>
-            </li>
+                    </li>
             <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
+                </ul>
+            </div>
+        </div>
 <?php else: ?>
 <div class="block-k">
     <div class="view-carde f-frame">
@@ -322,12 +497,12 @@
 
 
         <div class="block-k bg-box-a">
-    <div class="view-right-a h-lsk">
-        <div class="title">
+            <div class="view-right-a h-lsk">
+                <div class="title">
             <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
-        </div>
+                </div>
 
-        <ol class="content-ol">
+                <ol class="content-ol">
             <?php if (!empty($events)): ?>
                 <?php foreach ($events as $index => $event): ?>
                     <li class="card-list-item" key="<?php echo $index; ?>">
@@ -343,25 +518,25 @@
             <?php else: ?>
                 <li class="card-list-item">
                     <span>Chưa có sự kiện nào</span>
-                </li>
+                    </li>
             <?php endif; ?>
-        </ol>
-    </div>
-</div>
+                </ol>
+            </div>
+        </div>
 
 
 
 
 
       <?php if (!empty($rssArticles4)): ?>
-<div class="block-k bg-box-a">
-    <div class="tieu-diem t-analysis">
-        <h2>
-            <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
-        </h2>
-        <ul>
+        <div class="block-k bg-box-a">
+            <div class="tieu-diem t-analysis">
+                <h2>
+                    <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                </h2>
+                <ul>
             <?php foreach ($rssArticles4 as $article): ?>
-            <li class="new-style">
+                    <li class="new-style">
                 <a title="<?= htmlspecialchars($article['title']) ?>"
                    href="<?= !empty($article['is_rss']) 
                             ? htmlspecialchars($article['link']) 
@@ -373,13 +548,13 @@
                 <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                      title="<?= htmlspecialchars($article['title']) ?>"
                      alt="<?= htmlspecialchars($article['title']) ?>"
-                     border="0" />
+                            border="0" />
                 <?php endif; ?>
-            </li>
+                    </li>
             <?php endforeach; ?>
-        </ul>
-    </div>
-</div>
+                </ul>
+            </div>
+        </div>
 <?php else: ?>
 <div class="block-k">
     <div class="view-carde f-frame">
@@ -803,6 +978,10 @@
                 });
             });
         </script>
+
+
+
+
     </div>
 
 </main>
