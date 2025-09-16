@@ -17,11 +17,30 @@
         color: #ef1105ff ;
         font-weight: bold;
     }
-    @media (max-width: 768px) {
-    .left-sidebar .block-k ul.nav-second-level li.active a {
+    .left-sidebar .block-k ul.nav-second-level li.item a,
+.left-sidebar .block-k ul.nav-second-level.top-item li a,
+.left-sidebar .block-k ul.nav-second-level.about-c li a,
+.left-sidebar .block-k ul.nav-second-level.h-info li a {
+    color: #000;
+    text-decoration: none;
+}
+
+.left-sidebar .block-k ul.nav-second-level li.item.active a,
+.left-sidebar .block-k ul.nav-second-level.top-item li.active a,
+.left-sidebar .block-k ul.nav-second-level.about-c li.active a,
+.left-sidebar .block-k ul.nav-second-level.h-info li.active a {
+    color: #ef1105ff !important;
+    font-weight: bold !important;
+}   
+@media (max-width: 768px) {
+    .left-sidebar .block-k ul.nav-second-level li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.top-item li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.about-c li.active > a,
+    .left-sidebar .block-k ul.nav-second-level.h-info li.active > a {
         color: #ef1105ff !important;
-        font-weight: bold !important;}
+        font-weight: bold !important;
     }
+}
     </style>
 
 
