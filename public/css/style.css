@@ -6972,19 +6972,15 @@ ul.timeline .left-arrow:after {
   display: none;
 }
 
-/* Hiện toggle khi màn hình nhỏ hơn 768px */
-@media (max-width: 768px) {
-  #toggleMenu {
-    display: block;
-  }
-}
-/* Mặc định (chưa active) */
+/* Mặc định */
 .left-sidebar .block-k ul.nav-second-level li,
 .left-sidebar .block-k ul.nav-second-level li a,
 .left-sidebar .block-k ul.nav-second-level li svg,
 .left-sidebar .block-k ul.nav-second-level li i {
     color: #000 !important;
     fill: #000 !important;
+    stroke: #000 !important;
+    text-decoration: none !important;
 }
 
 /* Khi active */
@@ -6994,6 +6990,7 @@ ul.timeline .left-arrow:after {
 .left-sidebar .block-k ul.nav-second-level li.active i {
     color: #ef1105ff !important;
     fill: #ef1105ff !important;
+    stroke: #ef1105ff !important;
     font-weight: bold !important;
 }
 
