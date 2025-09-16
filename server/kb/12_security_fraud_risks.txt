@@ -1,0 +1,376 @@
+Rủi ro bảo mật & gian lận
+
+1) Các loại rủi ro & scam chính (tóm tắt)
+
+Hack smart contract (vulnerabilities → drain funds).
+
+Bridge hack (cầu nối cross-chain bị tấn công: Ronin/Wormhole/Poly đã xảy ra).
+
+CEX hack / insolvency (hot wallet drained / commingling).
+
+Phishing / social engineering (email, Telegram, giả mạo admin, fake KYC).
+
+Pump & dump (nhóm tốp bơm giá token thanh khoản thấp rồi bán tháo).
+
+Ransomware / darknet payments (tội phạm yêu cầu thanh toán bằng crypto).
+
+AI/ML-enabled scams (deepfake video/audio giả CEO, tự độngized phishing).
+
+Honeypot / token rug / transfer-blocked token (token không thể bán).
+
+Money-muling & structuring (nhận nhiều khoản nhỏ từ nhiều địa chỉ).
+
+2) Ví dụ nổi bật (lịch sử & bài học)
+
+Bridge hacks (Ronin, Wormhole, Poly): tấn công vào cầu nối hoặc quản lý khóa → hacker mint/transfer hoặc rút huge amount. Bài học: bridge = high systemic risk; giảm exposure trên cầu; monitor outflows.
+
+FTX / CEX insolvency: quản trị kém, thiếu segregated custody → khách hàng mất tiền. Bài học: counterparty risk cực kỳ quan trọng; yêu cầu audits, proof of reserves.
+
+Phishing / Telegram scams: rất phổ biến, thường nhắm vào người dùng & nhân viên support qua social engineering. Bài học: training + processes để verify yêu cầu.
+
+3) Cách nhận diện / Indicators of Compromise (IoC) — kỹ thuật & hành vi
+On-chain / transactional indicators
+
+Đột ngột rút lớn từ hot wallet (ví dụ > X% hot balance) ra nhiều địa chỉ lạ.
+
+Số lượng destination addresses tăng bất thường trong ngắn hạn.
+
+Giao dịch đến/qua bridge contract với khối lượng bất thường.
+
+Nhiều giao dịch ra vào trong vòng vài phút (bot activity).
+
+Địa chỉ nhận là known bad actor (theo chain-analytics providers).
+
+Off-chain / operational indicators
+
+User report: “email giả”, “link lạ đã click”.
+
+Đăng nhập từ IP/location bất thường cho account admin / dev.
+
+API key usage spike / keys used từ IP mới.
+
+File changes / config changes không có ticket tương ứng.
+
+System alerts: SIEM báo data exfiltration, DLP phát hiện upload tài liệu nhạy cảm.
+
+Phishing / social signals
+
+URLs lookalike (typo domain), shortener links, attachments .zip/.exe, OAuth consent screens suspicious.
+
+Deepfake audio/video yêu cầu chuyển tiền gấp, urgent.
+
+4) Phòng ngừa & best practices (prevention)
+Governance & personnel
+
+Least privilege: phân quyền chặt chẽ cho tài khoản & API keys.
+
+Segregation of duties: không người nào vừa tạo invoice vừa approve withdrawal.
+
+2FA & hardware tokens: bắt buộc 2FA + YubiKey cho admin, không dùng SMS-only.
+
+Vetting & background check cho team ops/security.
+
+Security training & phishing simulations định kỳ (quarterly).
+
+Wallet & key management
+
+Cold storage / multisig cho funds lớn (Gnosis Safe, M-of-N).
+
+Hot wallet limit: chỉ giữ lượng tối thiểu cho thanh khoản.
+
+Key rotation & access logs hàng tháng/quý.
+
+Air-gapped signing cho giao dịch quorum lớn.
+
+HSM / custodial provider nếu doanh nghiệp không muốn self-custody.
+
+Smart contract & bridge risk mitigation
+
+Audits bởi nhiều firm độc lập; bug bounty.
+
+Time-locked upgrades & multisig admin keys.
+
+Minimize privileged functions (renounce admin / timelock).
+
+Limit per-tx / per-day withdrawal caps & circuit breakers.
+
+Avoid centralizing critical logic ở cầu (design with federated validators).
+
+Network & app security
+
+WAF, rate limiting, IP whitelisting, CSP, secure cookie policies.
+
+DMARC/SPF/DKIM cho email để giảm phishing.
+
+Secrets management (Vault), no seed/keys in cloud plaintext.
+
+CI/CD security checks (SCA, SAST, dependency scanning).
+
+Compliance
+
+Sanctions screening (OFAC/EU/UN) before onboarding & for onchain counterparties.
+
+AML monitoring for deposits/withdrawals and travel-rule readiness.
+
+5) Phát hiện (detection) — rules, queries, thresholds (copy-ready)
+Heuristics & rules (gợi ý)
+
+Hot wallet outflow > 10% hot balance trong 1 giờ → P0 alert.
+
+> 50% of withdrawals to new addresses (never-seen-before) in 24h → Investigate.
+
+Rapid internal account activity: admin logins outside working hours + API key rotation → Investigate.
+
+Stablecoin peg deviation > 1% → alert finance & disable acceptance if needed.
+
+Token listing with 100× price spike + volume low (< $10k) → pump & dump suspicion.
+
+SQL mẫu — tìm withdrawals bất thường
+-- withdrawal_logs(txid, wallet_from, wallet_to, amount_usd, created_at)
+SELECT date(created_at) as d,
+       COUNT(*) as n_withdrawals,
+       SUM(amount_usd) as total_usd,
+       SUM(CASE WHEN wallet_to_not_seen_before THEN 1 ELSE 0 END) as new_to_count
+FROM withdrawal_logs
+WHERE created_at >= now() - interval '1 day'
+GROUP BY d
+HAVING SUM(amount_usd) > 100000 OR SUM(CASE WHEN wallet_to_not_seen_before THEN 1 ELSE 0 END) > 10;
+
+Python (mempool / outgoing tx monitor — detection skeleton)
+# pseudo-code: poll outgoing txs; raise alert if thresholds triggered
+from datetime import datetime, timedelta
+def check_outflows(outflows, hot_balance_usd, new_addr_set):
+    total_out = sum(o['usd'] for o in outflows)
+    new_to = [o for o in outflows if o['to'] in new_addr_set]
+    if total_out > 0.1 * hot_balance_usd:
+        alert("P0: large hot wallet outflow", total_out)
+    if len(new_to) > 10:
+        alert("High count of withdrawals to new addresses", len(new_to))
+
+6) Incident response (IR) — playbook ngắn, rõ ràng (copy-ready)
+A. Phát hiện (Triage)
+
+Triage nhanh (15 phút): Xác nhận alert thật/false positive. Ghi nhận scope (addresses, amounts, systems).
+
+Containment (30–60 phút): freeze withdrawals (suspend hot wallet), revoke API keys, disable admin access, put system to read-only if cần.
+
+Preserve evidence: snapshot DB, write-protect logs, capture memory & process dumps (if app breach).
+
+Escalate: gọi CISO / CTO / MLRO / Legal / PR.
+
+B. Investigation (4–24 giờ)
+
+On-chain trace: tag txid, flow to exchanges/known mixers. Use Chainalysis/Elliptic/TRM/Nansen.
+
+Forensic: collect logs (SSH, API, application, SIEM).
+
+Scope: which wallets, which smart contracts, which thresholds.
+
+Check for indicators of internal compromise (credential theft, social engineering).
+
+C. Communication & legal (24–72 giờ)
+
+Internal: notify boards, insurers if có cyber insurance.
+
+Regulator & law enforcement: file reports (local CERT, police cybercrime), AML SARs if suspicious / thresholds met.
+
+Exchanges: request freeze if funds moved to exchange addresses (provide txids).
+
+Public comms: prepare statement (see template below). Coordinate with Legal/PR.
+
+D. Recovery & remediation (days → weeks)
+
+Patch vulnerability (smart contract fix, revoke keys).
+
+Rotate keys, rebuild wallets, enhance controls.
+
+Independent audit & forensic report.
+
+Restitution plan if possible: recovery via exchanges / negotiation (rare), insurance claims.
+
+Postmortem & update SOPs.
+
+7) Mẫu timeline & checklist IR (copy-paste)
+IR Quick Checklist:
+T+0–15m: Confirm alert; assign incident owner; take screenshots; preserve logs.
+T+15–60m: Freeze withdrawals; revoke API keys; set system to read-only / maintenance.
+T+1–24h: On-chain tracing; identify impacted wallets; contact exchanges if funds moved.
+T+24–72h: Notify regulators if required; engage forensic firm; notify insurance; draft public statement.
+T+72h–: Remediation, patching, audits, root cause analysis, lessons learned.
+
+8) Mẫu thông báo nội bộ & public (canned text)
+Internal (to staff)
+Subject: URGENT — Security Incident [IncidentID]
+Time detected: 2025-09-16T08:02+07:00
+Summary: Suspicious outflows from hot wallet address 0xABC… totaling $XXXk. Withdrawals suspended, hot wallet frozen.
+Actions taken: API keys rotated, withdrawals disabled, SIEM logs preserved, incident response team engaged.
+Next steps: forensic analysis started; legal/compliance notified.
+Contact: CISO (ciso@company), Incident lead: [name]
+
+Public (customers)
+We detected suspicious activity affecting a limited portion of our hot wallet. Withdrawals have been temporarily disabled while we investigate. Customer funds in cold storage are unaffected. We are working with law enforcement and a forensic partner. We will provide updates within 24 hours. [Support link]
+
+
+(Do not admit liability, provide facts only, and instruct customers how to check and avoid phishing.)
+
+9) Ransomware & darknet payments — hướng xử lý
+
+Không khuyến khích trả tiền (bởi vì khuyến khích tội phạm và có thể vi phạm sanctions). Luật sư & insurer có vai trò quyết định.
+
+Bước cần làm: disconnect affected systems, preserve images, notify authorities, engage incident response & legal, check sanctions (OFAC) trước nếu đối tượng yêu cầu là sanctioned entity.
+
+Traceability: crypto payments có thể truy vết; phối hợp với exchanges & blockchain analytics để follow funds.
+
+Insurance: báo insurer nhanh; nhiều policy có điều khoản báo cáo trong 72h.
+
+10) Phishing & social engineering — bảo vệ & phát hiện
+Technical controls
+
+DMARC / SPF / DKIM enforcement (reject/ quarantine spoofed emails).
+
+Block known malicious domains at DNS / proxy.
+
+Browser isolation for risky links; email attachments sandboxing.
+
+MFA (phishing-resistant 2FA like security keys).
+
+Org processes
+
+Verification policy: mọi yêu cầu chuyển tiền > X USD phải có voice/video confirmation + 2 approvers.
+
+Phishing simulation & training cadence.
+
+Report mechanism: 1-click “report phishing” to security team.
+
+Detection signals
+
+Unexpected OAuth approvals; new OAuth app connections.
+
+Email headers failing SPF/DKIM.
+
+User clicking shortened URLs frequently.
+
+11) Pump & Dump — phát hiện & phản ứng
+Detection signals
+
+Token with very low liquidity nhưng sudden social buzz (telegram/twitter mentions spike).
+
+Volume spike with large buys from a handful of addresses, price up X% in minutes.
+
+New token with high top-holder concentration + unverified contract.
+
+Merchant response
+
+Do not accept newly minted, low-liquidity tokens for payments.
+
+If token accepted and suspicious activity detected: pause new invoices, set manual review, increase conversion/settlement speed.
+
+Report suspected market manipulation to listing exchanges & regulator (if applicable).
+
+12) AI / deepfake scams — xu hướng & phòng ngừa
+
+Threat: convincing voice/video of CEO/CFO authorizing transfers.
+
+Prevention: require out-of-band verification (predefined code word, phone call to known number, multi-channel approvals).
+
+Detection: mismatched voice fingerprint, odd phrasing, off-hours requests, unusual urgency.
+
+Playbook: verify via independent channels, delay payments 24h for high-value requests, record calls.
+
+13) Smart contract security — checklist pre-deploy
+
+Unit tests cover 100% critical flows.
+
+SAST + static analysis (Mythril, Slither).
+
+Fuzzing (Echidna, Foundry fuzzing).
+
+Multiple independent audits + public audit reports.
+
+Use upgradeability with timelock, or avoid upgradeable proxies if not needed.
+
+Renounce ownership or timelock admin functions where possible.
+
+Bug bounty program & disclosure policy.
+
+Devops: separate deploy keys, sign releases, immutable verified source on explorer.
+
+14) Monitoring stack & tools (gợi ý)
+
+Chain analytics: Chainalysis, Elliptic, TRM (tag bad addresses, sanctions).
+
+On-chain watchers: Alchemy/Infura webhooks, on-node mempool monitor.
+
+SIEM: Splunk/Elastic/Sumo Logic for logs + alerts.
+
+E-mail security: Proofpoint/Microsoft Defender for Office365.
+
+DLP & EDR: CrowdStrike, Carbon Black.
+
+Incident response partners: Mandiant, CrowdStrike IR, Kroll.
+
+15) KPIs & báo cáo (security metrics)
+
+MTTR (mean time to respond) — mục tiêu < 1 hour for P0.
+
+Number of suspicious alerts / day and % false positive.
+
+% hot wallet balance vs total custody.
+
+% vulnerabilities remediated within SLA (e.g., 30 days).
+
+Time to restore services (RTO), time to full forensic report.
+
+16) Quy trình báo cáo (who to contact)
+
+Internal: CISO → CTO → CEO → Legal → PR.
+
+Exchanges: submit freeze requests (txid + time + evidence).
+
+Law enforcement: local cybercrime units, national CERT.
+
+Regulators / MLRO: file SAR if required.
+
+Insurance provider: notify per policy window.
+
+Third-party forensics: engage immediately.
+
+17) Mẫu câu chatbot / canned replies (phòng thủ, không khuyến khích panics)
+
+“Tôi vừa nhận alert rút tiền lạ — tôi phải làm gì?”
+→ “Tạm dừng ngay withdrawals; rotate API keys; preserve logs; gọi team security. Mình có checklist IR step-by-step để gửi cho bạn.”
+
+“Tôi nghi ngờ email CEO là deepfake — xử lý thế nào?”
+→ “Xác minh qua số điện thoại được lưu trong directory; nếu không xác nhận, dừng mọi thao tác theo yêu cầu đó.”
+
+18) Checklist ngắn (copy-paste vào SOP)
+
+ Hot wallet cap set & monitored.
+
+ Multisig + timelock cho cold operations.
+
+ API keys whitelisted by IP & rotated quarterly.
+
+ DMARC/SPF/DKIM enforced.
+
+ Phishing simulation mỗi 3 tháng.
+
+ Bug bounty active & audits completed.
+
+ IR runbook & contact list tested (table-top) ít nhất 2x năm.
+
+ Insurance policy reviewed & claims process tested.
+
+19) Tài nguyên & tools đề xuất (quick list)
+
+Chain analytics: Chainalysis, Elliptic, TRM, Nansen.
+
+Smart contract tools: Slither, Mythril, Echidna, Manticore, Foundry.
+
+SIEM / EDR / DLP: Splunk, Elastic, CrowdStrike.
+
+Email security: DMARC analyzer, Proofpoint.
+
+Phishing simulation: Cofense, KnowBe4.
+
+Forensic partners: Mandiant, Kroll, CrowdStrike IR.

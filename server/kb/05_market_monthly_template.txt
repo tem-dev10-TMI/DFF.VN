@@ -1,12 +1,336 @@
-Gợi ý phân tích thị trường theo tháng (Monthly)
+# 05_market_monthly_template — Gợi ý Phân tích Thị trường Crypto Hàng Tháng (KB cho Chatbot & Báo cáo)
+===============================================================================
+A. KẾT QUẢ MONG MUỐN (Output)
+- Một đoạn tóm tắt 2–3 câu về xu hướng 30 ngày (direction + volatility).
+- Số liệu nhanh: total market cap (USD), Δ30d%, BTC/ETH dominance (chg), 30d avg volume, TVL DeFi, stablecoin supply change.
+- Chủ đề nổi bật (ETF, pháp lý, mainnet upgrade, L2, memecoin trend...).
+- Dòng tiền & hành vi: net inflow/outflow CEX, DEX liquidity changes, whale activity, funding rates, realized vol.
+- Top movers 30d: top gainers & losers (kèm % và lý do nếu biết).
+- Tác động tới e-commerce: phí trung bình tháng, peg stability, trust in payment gateways.
+- Triển vọng tháng tới: 3 kịch bản (thận trọng/ trung tính/ bullish), rủi ro chính, checklist theo dõi.
+- Cảnh báo & hành động recommend (ngưỡng, hành động cụ thể).
+- Sources, timestamp, confidence.
 
-Mục tiêu: tổng kết xu hướng 30 ngày, các chất xúc tác chính, dòng tiền, hành vi nhà đầu tư.
+===============================================================================
+B. KHUNG TRÌNH BÀY (SUGGESTED SECTIONS)
+1) Tóm tắt xu hướng tháng (2–3 câu)
+2) Key metrics (số liệu & % thay đổi)
+3) Chủ đề nổi bật / catalysts
+4) Dòng tiền & hành vi nhà đầu tư
+5) Top movers (gainers & losers)
+6) Tác động tới e-commerce (chi tiết)
+7) Triển vọng tháng tới & kịch bản hành động
+8) Cảnh báo, checklist cần theo dõi
+9) Data sources & confidence note
+10) Disclaimer (không phải tư vấn đầu tư)
 
-Khung trình bày:
-1) Tóm tắt xu hướng tháng: tăng/giảm, biến động (volatility)
-2) Chủ đề nổi bật: ETF, nâng cấp chain, pháp lý, L2, memecoin/stablecoin
-3) Dòng tiền: vốn hóa thay đổi, dominance, thanh khoản DEX/CEX (nếu biết)
-4) Tác động tới e-commerce: phí mạng bình quân, độ ổn định stablecoin, độ tin cậy cổng thanh toán
-5) Triển vọng tháng tới: kịch bản thận trọng, rủi ro chính, checklist cần theo dõi
-6) Lưu ý không phải lời khuyên đầu tư
+===============================================================================
+C. CÁC CHỈ SỐ CẦN THU THẬP & CÔNG THỨC
+(1) Total Market Cap (USD) now, and 30 days ago → Δ30d%:
+    Δ30d% = (MC_now − MC_30d_ago) / MC_30d_ago × 100
 
+(2) BTC_Dominance% = BTC_mc / total_mc × 100
+    ΔBTC_dom_pp = BTC_dom_now − BTC_dom_30d_ago (pp = percentage points)
+
+(3) 30d Average Volume (USD) = SUM(volume_daily_last30) / 30
+
+(4) TVL DeFi change 30d% = (TVL_now − TVL_30d_ago) / TVL_30d_ago × 100
+
+(5) Stablecoin Supply Change 30d% (USDT/USDC) = (Supply_now − Supply_30d_ago) / Supply_30d_ago × 100
+
+(6) Net CEX inflows (30d) = sum(inflows_to_CEX) − sum(outflows_from_CEX) (USD)
+    Pos => net deposit to exchanges (sell pressure potential). Neg => net outflow to cold wallets (holding)
+
+(7) Realized volatility (30d) = standard deviation(log returns daily) * sqrt(30)
+
+(8) Funding rate avg (perpetuals) over 30d — indicator of leverage bias
+
+(9) Top movers 30d% = (price_now − price_30d_ago) / price_30d_ago × 100
+
+Notes: store timestamp for all snapshots; always note provider & currency (USD).
+
+===============================================================================
+D. NGUỒN DỮ LIỆU GỢI Ý
+- Market data & prices: CoinGecko API, CoinMarketCap API, Binance / Kraken public APIs
+- On-chain metrics: Glassnode, CoinMetrics, Santiment, Dune, Nansen (paid)
+- TVL: DefiLlama
+- Exchange flows / inflows: Glassnode, Kaiko, CCXT-derived aggregated
+- News: CoinDesk, CoinTelegraph, The Block, official exchange press release, SEC/Regulator feeds
+- Whale / liquidations: Whale Alert, Coinalyze, ByBt (liquidation feeds)
+- Explorers: Etherscan, BscScan, Tronscan (verify txs)
+
+===============================================================================
+E. NGƯỠNG ĐÁNH GIÁ & HEURISTICS (gợi ý cấu hình)
+- “Bullish month” nếu Δ30d% > +15% và 30d avg volume tăng > 20%
+- “Bearish month” nếu Δ30d% < −10% và CEX net inflow lớn (sell pressure)
+- “Volatile month” nếu 30d realized vol > historical 90-day avg vol × 1.5
+- “Stablecoin stress” if stablecoin peg deviation > 1% or stablecoin supply shrinks > 2% in 30d
+- “Payment risk: high” if average ETH gas (monthly median) > $10 or if stablecoin peg deviates > 0.5% frequently
+
+(Tùy chỉnh theo risk appetite doanh nghiệp.)
+
+===============================================================================
+F. MẪU CÂU TÓM TẮT (CANNED SENTENCES)
+- Xu hướng tích cực:
+  "Trong 30 ngày qua thị trường chung tăng khoảng {Δ30d%} — dòng tiền quay trở lại altcoin, TVL DeFi tăng {TVL_change}%."
+- Xu hướng tiêu cực:
+  "Thị trường giảm {Δ30d%} trong 30 ngày do áp lực bán trên CEX; net inflows to exchanges tăng, funding rates negative."
+- Volatility notice:
+  "Tháng này biến động cao — realized vol 30d ở mức {vol}% (↑ so với historical) — khuyến nghị caution cho merchant."
+- Khi thiếu dữ liệu:
+  "Hiện không có dữ liệu 30 ngày trong KB — cần connect tới API (CoinGecko/Glassnode) để cập nhật chính xác."
+
+===============================================================================
+G. MẪU BÁO CÁO THỰC TIỄN (EXAMPLE)
+Title: Monthly Crypto Snapshot — 2025-08 (30-day)
+
+1) Tóm tắt:
+"Thị trường tăng nhẹ +7.4% trong 30 ngày, BTC dominance giảm −1.2pp; thanh khoản DEX tăng, TVL DeFi +4%."
+
+2) Số liệu nhanh:
+- Total Market Cap: $1.35T (Δ30d: +7.4%)
+- BTC Dominance: 46.3% (Δ30d: −1.2pp)
+- ETH Dominance: 18.9%
+- 30d Avg Volume: $70B
+- TVL DeFi: $120B (+4%)
+- USDT Supply: +2.1%
+
+3) Chủ đề nổi bật:
+- ETF flows (spot BTC ETF net inflow $X)
+- Major L2 adoption — TVL chuyển sang Arbitrum/Optimism
+- Regulatory: draft guidance in Country Y
+
+4) Dòng tiền & hành vi:
+- Net CEX inflow 30d: −$200M (net outflow => hodling bias)
+- Whale transfers: 3 addresses moved > $50M to cold wallets
+- Funding rates neutral to slightly positive
+
+5) Top movers:
+- Gainers: COIN_X +120% (protocol merge), COIN_Y +65% (exchange listing)
+- Losers: COIN_Z −45% (liquidity drain)
+
+6) Tác động tới e-commerce:
+- Monthly avg ETH gas: $5.8 (chấp nhận được) — ERC20 payments OK but monitor spikes.
+- Stablecoins stable — peg deviations < 0.2% — continue accepting USDT-TRC20/USDC.
+- Suggestion: keep auto-convert option enabled for high-value orders.
+
+7) Triển vọng tháng tới:
+- Kịch bản thận trọng: nếu ETF flows reverse hoặc legal shock → plan to increase confirmations & require KYC > threshold.
+- Checklist theo dõi: ETF inflows, scheduled hard forks, ETH gas trend, stablecoin peg.
+
+8) Cảnh báo:
+- Watch for sudden net inflow to CEX > $X in 24–48h — potential sell pressure.
+
+Sources: CoinGecko, Glassnode, DefiLlama, Etherscan (timestamped: 2025-08-31T07:00+07:00)
+Confidence: medium-high (depends on paid on-chain sources)
+
+===============================================================================
+H. JSON OUTPUT MẪU (Machine-readable)
+{
+  "period_start": "2025-08-01",
+  "period_end": "2025-08-31",
+  "summary": "Market up +7.4% in 30 days; TVL up +4%",
+  "total_market_cap_usd": 1350000000000,
+  "marketcap_change_30d_pct": 7.4,
+  "btc_dominance_pct": 46.3,
+  "btc_dominance_change_pp": -1.2,
+  "eth_dominance_pct": 18.9,
+  "avg_volume_30d_usd": 70000000000,
+  "tvl_defi_usd": 120000000000,
+  "tvl_change_30d_pct": 4,
+  "stablecoin_supply_change_30d_pct": 2.1,
+  "net_cex_inflow_30d_usd": -200000000,
+  "top_gainers": [{"symbol":"COIN_X","change_30d_pct":120,"reason":"merge"}],
+  "top_losers": [{"symbol":"COIN_Z","change_30d_pct":-45,"reason":"liquidity"}],
+  "ecommerce_impact": {"avg_eth_gas_usd":5.8,"stablecoin_deviation_pct":0.2,"recommendation":"continue_accept_usdt_trc20"},
+  "alerts": [{"rule":"cex_inflow_spike","value":100000000,"status":"ok"}],
+  "sources":["coingecko","glassnode","defillama"],
+  "timestamp":"2025-08-31T07:00:00+07:00"
+}
+
+===============================================================================
+I. SQL MẪU — TÍNH Δ30d (giả sử có bảng price_history)
+-- price_history(symbol, ts_utc, price_usd)
+WITH now AS (
+  SELECT symbol, price_usd as price_now
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc) FROM price_history)
+),
+ago30 AS (
+  SELECT symbol, price_usd as price_30d
+  FROM price_history
+  WHERE ts_utc = (SELECT MAX(ts_utc) - INTERVAL '30 days')
+)
+SELECT n.symbol,
+       n.price_now,
+       a.price_30d,
+       ((n.price_now - a.price_30d) / a.price_30d) * 100 AS pct_change_30d
+FROM now n
+JOIN ago30 a ON n.symbol = a.symbol
+ORDER BY pct_change_30d DESC
+LIMIT 20;
+
+===============================================================================
+J. PYTHON CODE MẪU — LẤY DỮ LIỆU & TÍNH 30d CHANGE (CoinGecko)
+```python
+import requests, datetime, statistics
+
+def fetch_market_snapshot():
+    # CoinGecko markets endpoint with per-coin 30d change not directly provided;
+    # you can fetch current price and historical price 30d ago via /coins/{id}/market_chart
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {"vs_currency":"usd","order":"market_cap_desc","per_page":250,"page":1,"price_change_percentage":"30d"}
+    r = requests.get(url, params=params, timeout=10)
+    data = r.json()
+    # Each item may contain 'price_change_percentage_30d_in_currency' depending on API
+    return data
+
+# Example compute total market cap (quick)
+def compute_total_marketcap(items):
+    return sum([item.get('market_cap', 0) for item in items])
+
+if __name__ == '__main__':
+    items = fetch_market_snapshot()
+    total_mc = compute_total_marketcap(items)
+    top_gainers = sorted(items, key=lambda x: x.get('price_change_percentage_30d_in_currency') or 0, reverse=True)[:5]
+    print("Total MC:", total_mc, "Top Gainers:", [(i['id'], i.get('price_change_percentage_30d_in_currency')) for i in top_gainers])
+Gợi ý: cache results; handle rate limits & fallbacks.
+
+===============================================================================
+K. VISUALIZATION GỢI Ý (cho báo cáo/trang dashboard)
+
+Line chart: Total Market Cap (30d) + 90d comparison.
+
+Area chart: cumulative net CEX inflows vs outflows (30d).
+
+Bar chart: Top 10 gainers & losers (30d%).
+
+Donut: Dominance distribution (BTC/ETH/Other).
+
+Table: Events calendar (date, event, expected impact).
+
+KPI badges: avg_eth_gas_usd, stablecoin_depeg_pct, tvl_change_pct.
+
+===============================================================================
+L. TÁC ĐỘNG TỚI E-COMMERCE — CHI TIẾT HÀNH ĐỘNG
+
+Phí mạng bình quân:
+
+Tính monthly avg gas: avg_daily_median_gas_usd over 30d.
+
+Nếu avg_eth_gas_usd > threshold (e.g., $10) → recommend: disable ERC20 payments OR show gas warning & suggest TRC20/BSC/L2.
+
+Ổn định stablecoin:
+
+Nếu stablecoin_deviation_avg_30d > 0.5% → temporarily disable that stablecoin for checkout; use alternatives.
+
+Độ tin cậy cổng thanh toán:
+
+Nếu provider_settlement_delay_monthly_mean > SLA_threshold OR provider had downtime incidents > N → rotate to backup provider.
+
+Hành động operational:
+
+Tăng confirmations threshold cho orders > $X during high volatility.
+
+Auto-convert to fiat for settlements > threshold to reduce exposure.
+
+Communicate fees clearly on checkout with monthly context: "Avg ETH fee (30d): $Y — ảnh hưởng đến thời gian & chi phí".
+
+===============================================================================
+M. TRIỂN VỌNG THÁNG TỚI (3 KỊCH BẢN & HÀNH ĐỘNG)
+
+Kịch bản Thận trọng (Prob: if regulatory shock or big net inflow to CEX)
+
+Tính chất: giảm hoặc biến động, thanh khoản suy yếu.
+
+Hành động: tăng confirmations, require manual review for refunds/large orders, hold auto-convert threshold.
+
+Kịch bản Trung tính (Prob: tiếp tục side/trending nhẹ)
+
+Tính chất: small moves, TVL stable.
+
+Hành động: maintain monitoring, keep auto-convert ON, notify ops if fees spike.
+
+Kịch bản Tích cực (Prob: ETF inflows, liquidity returns)
+
+Tính chất: tăng + volume tăng.
+
+Hành động: monitor deposit spikes, ensure scaling infra to handle invoice + webhook volume, marketing to consider promotions (but beware pump-and-dump).
+
+Checklist theo dõi hàng ngày/tuần:
+
+ETH gas median (daily) — if > $10 send alert.
+
+Stablecoin peg deviation (daily).
+
+Net CEX inflows (rolling 3-day & 7-day).
+
+Scheduled protocol upgrades / unlocks / token emissions.
+
+Major exchange announcements & legal/regulator news.
+
+===============================================================================
+N. MONITORING, ALERTING & KPI
+
+Alerts to set:
+
+avg_eth_gas_24h > threshold -> urgent.
+
+stablecoin_depeg_pct_24h > 0.5% -> urgent.
+
+net_cex_inflow_24h > $X -> warn.
+
+invoices_expired_rate_24h > baseline -> warn (indicates fee/price volatility).
+
+KPIs to report monthly:
+
+#invoices_created, #invoices_paid, avg_confirm_time, avg_fee_usd_by_chain, refunds_count, fraud_incidents.
+
+===============================================================================
+O. QA / CHECKLIST TRƯỚC PUBLISH
+
+ All rates updated within last X minutes.
+
+ Δ30d computed reliably (non-zero baselines).
+
+ Events deduped & sources linked.
+
+ E-commerce recommendations concrete and actionable.
+
+ Disclaimer included & timestamped.
+
+ Email/Slack template ready for distribution.
+
+===============================================================================
+P. CANNED RESPONSES CHO CHATBOT (MONTHLY)
+
+“Tóm tắt tháng qua”: “Trong 30 ngày qua, thị trường {up/down/sideways} {Δ30d%}. BTC dom {btc_dom}% (Δ {ΔBTC_dom}pp). Về e-commerce: {short_impact}.”
+
+“Liệu nên tạm dừng nhận USDT?”:
+“Nếu stablecoin peg deviation > 0.5% hoặc provider báo sự cố, tạm dừng. Mình có thể kiểm tra ngay số liệu 30 ngày cho bạn.”
+
+“Có rủi ro gì cho thanh toán tháng tới?”:
+“Các rủi ro chính: phí ETH tăng, stablecoin depeg, net inflows to CEX. Mình khuyến nghị theo dõi các chỉ số này & áp dụng thresholds đã cấu hình.”
+
+===============================================================================
+Q. DISCLAIMER
+
+Tất cả thông tin chỉ mang tính tổng hợp & tham khảo. Không phải lời khuyên đầu tư.
+
+Nguồn dữ liệu cần kiểm tra kỹ khi ra quyết định kinh doanh/đối tác pháp lý.
+
+Merchant nên tham vấn đội pháp lý & kế toán địa phương cho tuân thủ KYC/AML & thuế.
+
+===============================================================================
+R. GHI CHÚ KỸ THUẬT & MỞ RỘNG
+
+Lưu trữ report archive (JSON + PDF) để audit và backtesting.
+
+Có thể mở rộng: sentiment analysis, anomaly detection bằng ML (whale detection, abnormal volume).
+
+Localized report variants (VN): dùng VND, tính conversion fee impact cho địa phương.
+
+===============================================================================
+S. CONTACT / NEXT STEPS
+
+Nếu bạn muốn mình xuất file này thành 05_market_monthly_template.txt trong repo hoặc tạo script Python/Node tự động sinh report monthly (API hooks + scheduler + render HTML/Slack), nói "xuất file" hoặc "viết script" — mình sẽ thực hiện luôn.

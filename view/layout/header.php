@@ -507,7 +507,7 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             <div class="agent">
                 <div class="agent-avatar">🤖</div>
                 <div>
-                    <div class="agent-name">Chatbot DFF</div>
+                    <div class="agent-name">Chatbot TMI</div>
                 </div>
             </div>
             <div class="status" id="status">Sẵn sàng</div>
@@ -570,7 +570,7 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
 
         const meta = document.createElement('div');
         meta.className = 'meta';
-        meta.textContent = (role === 'user' ? 'Bạn' : 'Gemini') + ' • ' + nowIso();
+        meta.textContent = (role === 'user' ? 'Bạn' : 'Chatbot TMI') + ' • ' + nowIso();
 
         const content = document.createElement('div');
         content.className = 'content';
