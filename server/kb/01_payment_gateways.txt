@@ -1,0 +1,20 @@
+Thanh toán crypto cho thương mại điện tử
+
+Khái niệm: Cổng thanh toán crypto cho phép cửa hàng nhận tiền mã hóa (BTC, ETH, USDT...) và tự động tạo hóa đơn, QR, địa chỉ ví, xử lý xác nhận giao dịch on-chain.
+
+Lựa chọn phổ biến:
+- Coinbase Commerce: hỗ trợ nhiều coin, webhook, chuyển đổi sang fiat (tài khoản Coinbase), phí ~1%.
+- BitPay: tập trung BTC/ETH/Stablecoin, tuân thủ KYC/KYB, tài liệu tốt.
+- BTCPay Server: mã nguồn mở, tự lưu ký, phí rẻ, cần vận hành máy chủ.
+
+Tiêu chí chọn:
+- Phí và spread chuyển đổi.
+- Hỗ trợ stablecoin (USDT, USDC) để giảm biến động.
+- Tính năng refund, webhook, xác nhận số block.
+- KYC/KYB, tuân thủ luật địa phương, hạn mức.
+
+Rủi ro & kiểm soát:
+- Biến động giá: ưu tiên stablecoin cho thanh toán.
+- Lỗi địa chỉ ví: dùng QR, checksum; xác nhận giá trị trước khi giao hàng.
+- Lừa đảo hoàn tiền: quy trình xác minh rõ, lưu log giao dịch, đa chữ ký.
+
