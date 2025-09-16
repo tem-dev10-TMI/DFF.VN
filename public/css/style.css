@@ -6937,6 +6937,37 @@ ul.timeline .left-arrow:after {
     display: none;
   }
 }
+/* Sidebar responsive fix */
+.sidebar-mobile ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;                /* tạo khoảng cách giữa icon và chữ */
+  padding: 10px 14px;
+  text-decoration: none;
+  color: #fff;              /* chữ màu trắng cho nền tối */
+  font-size: 15px;
+}
+
+.sidebar-mobile ul li a i,
+.sidebar-mobile ul li a svg,
+.sidebar-mobile ul li a img {
+  width: 20px;              /* ép icon đồng bộ kích thước */
+  height: 20px;
+  flex-shrink: 0;           /* icon không bị co lại */
+}
+
+.sidebar-mobile ul li {
+  border-bottom: 1px solid rgba(255,255,255,0.1); /* chia line cho dễ đọc */
+}
+
+.sidebar-mobile ul li.section-title {
+  font-size: 12px;
+  font-weight: bold;
+  color: #bbb;
+  margin-top: 12px;
+  padding: 8px 14px;
+}
+
 
 
 
