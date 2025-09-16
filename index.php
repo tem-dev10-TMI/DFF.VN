@@ -15,7 +15,7 @@ spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/' . $class . '.php',
         __DIR__ . '/controller/' . $class . '.php'
-        
+
     ];
 
     foreach ($paths as $p) if (file_exists($p)) require_once $p;
@@ -111,6 +111,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->about();
         break;
+    case 'aboutme':
+        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        $controller = new homeController();
+        $controller->about();
+        break;
     case 'details_blog':
         require_once 'controller/ArticlesController.php';
         $controller = new ArticlesController();
@@ -125,6 +130,14 @@ switch ($url) {
 
         $controller->index();
         break;
+
+    case 'comments':
+        require_once 'controller/CommentController.php';
+        $controller = new CommentController();
+        $controller->Comments();
+        break;
+
+
     case 'crypton':
         require_once 'controller/CryptonController.php';
         $controller = new CryptonController();
