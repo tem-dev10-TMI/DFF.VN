@@ -55,13 +55,67 @@ class profileUserController
         // Lấy thông tin user
         $user = UserModel::getUserById($user_id);
 
+
+
+
+        
+
+
+
+
+
         if (!$user) {
             echo "Không tìm thấy người dùng!";
             exit;
         }
+        if($user_id == "66")
+        {
+            
+            require_once  'model/rss/RssModel.php';
 
+        $articles = [];
+
+         // user RSS
+            // RSS Báo Chính Phủ
+            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 50, 15);
+
+            // RSS Thanh Niên
+            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15);
+
+            // Gộp RSS
+            $articles = array_merge($rssArticles1, $rssArticles2);
+
+            // Ép author_id = 66 và avatar theo nguồn
+            foreach ($articles as &$art) {
+                $art['author_id'] = 66;
+                // Avatar theo feed URL
+                if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
+                    $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                } else {
+                    $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                }
+            }
+            unset($art);
+
+            // Sắp xếp giảm dần theo created_at
+            usort($articles, function($a, $b){
+                return strtotime($b['created_at']) - strtotime($a['created_at']);
+            });
+
+        
+            // user bình thường lấy DB
+           
+
+        // Load view profile
+        
+
+        }else{
+            $articles = UserModel::getArticlesByAuthorId($user_id);
+            }
         // Lấy bài viết của user để truyền sang view
-        $articles = UserModel::getArticlesByAuthorId($user_id);
+        
 
         // Render view theo role
         ob_start();
