@@ -6662,3 +6662,141 @@ ul.timeline .left-arrow:after {
     }
 
 }
+
+@media (max-width: 576px) {
+  /* Header / logo */
+  .header, .m-top-info {
+    font-size: 14px; /
+  }
+
+  /* Nếu logo được đặt trong .logo */
+  .logo img, header .logo img {
+    max-height: 48px;    /* tăng logo trên mobile */
+    height: auto;
+    width: auto;
+    display: block;
+  }
+
+  /* Mobile bottom function bar (icon + text) */
+  .func-mobile ul li a {
+    font-size: 13px; /* chữ ở dưới icon to hơn */
+  }
+  .func-mobile ul li a i {
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  /* Sidebar / menu list (mobile drawer) */
+  .sidebar-mobile .menu,
+  .sidebar-mobile ul {
+    padding: 0 12px;
+    margin: 0;
+  }
+
+  .sidebar-mobile .menu li {
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    list-style: none;
+  }
+
+  .sidebar-mobile .menu li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;            /* khoảng cách icon - text */
+    padding: 12px 6px;
+    font-size: 16px;      /* tăng chữ menu trên mobile */
+    color: #222;
+    text-decoration: none;
+  }
+
+  .sidebar-mobile .menu li a i.icon {
+    min-width: 28px;      /* ổn định kích thước icon */
+    text-align: center;
+    font-size: 18px;
+    color: #3b3b3b;
+  }
+
+  /* Chủ đề (section heading) */
+  .sidebar-mobile h3, .sidebar-mobile .section-title {
+    font-size: 13px;
+    margin: 18px 12px 8px;
+    color: #666;
+    letter-spacing: 0.6px;
+  }
+
+  /* Ảnh thumb nếu có bị ẩn hoặc broken — giữ spacer */
+  .sidebar-mobile .topic-thumb {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    background-color: transparent;
+    object-fit: cover;
+  }
+
+  /* Icon badges / notification */
+  .sidebar-mobile .menu li .badge {
+    margin-left: auto;
+    background: #ff3b30;
+    color: #fff;
+    min-width: 22px;
+    height: 22px;
+    line-height: 22px;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 12px;
+    padding: 0 6px;
+  }
+
+  /* Fix overflow và khoảng cách của container */
+  .sidebar-mobile {
+    box-sizing: border-box;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* Desktop: căn icon + text chung (áp dụng cho cả desktop nếu dùng same classes) */
+.sidebar-mobile .menu li a i.icon {
+  font-size: 16px;
+  color: #2b2b2b;
+}
+
+/* Tối ưu cho các icon SVG thay thế (nếu dùng) */
+.sidebar-mobile .menu li a img.topic-thumb {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  display: inline-block;
+}
+/* Icon cho mục Xu hướng */
+.m-trend i {
+  font-size: 20px;      /* kích thước icon */
+  color: #333;          /* màu icon (có thể đổi sang #007bff để xanh) */
+  margin-right: 6px;    /* tạo khoảng cách với chữ */
+}
+@media (max-width: 768px) {
+}
+/* Mobile rất nhỏ (≤ 400px) */
+@media (max-width: 400px) {
+  /* Ngày giờ */
+  .time, .date, .date-time {
+    font-size: 18px !important;
+    font-weight: 600;
+  }
+
+  /* Logo */
+  .logo img,
+  .logo svg {
+    width: 170px !important;
+    height: auto !important;
+  }
+
+  /* Lịch sự kiện */
+  .event-link, .event, a[href*="su-kien"] {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+  }
+}
+
+
+

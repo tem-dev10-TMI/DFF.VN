@@ -5,42 +5,11 @@ class profileUserModel
     public static function getProfileUserByUserId($user_id)
     {
         $db = new connect();
-
-        $sql = "
-        SELECT 
-            u.id AS user_id,
-            u.name,
-            u.username,
-            u.email,
-            u.phone,
-            u.avatar_url,
-            u.cover_photo,
-            u.description AS user_description,
-            u.role,
-            u.is_email_verified,
-            u.created_at AS user_created_at,
-            u.updated_at AS user_updated_at,
-
-            p.id AS profile_id,
-            p.display_name,
-            p.birth_year,
-            p.workplace,
-            p.studied_at,
-            p.live_at,
-            p.link_code,
-            p.created_at AS profile_created_at,
-            p.updated_at AS profile_updated_at
-        FROM users u
-        LEFT JOIN profile_user p ON u.id = p.user_id
-        WHERE u.id = :user_id
-        LIMIT 1
-    ";
-
+        $sql = "SELECT * FROM profile_user WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':user_id' => $user_id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return $stmt->fetch();
     }
-
     // =============== Thêm thông tin user ===============
     public static function addProfileUser($user_id, $display_name, $birth_year, $workplace, $studied_at, $live_at)
     {
@@ -64,27 +33,18 @@ class profileUserModel
     {
         $db = new connect();
         $sql = "UPDATE profile_user 
-    SET 
-        display_name = :display_name, 
-        birth_year   = :birth_year, 
-        workplace    = :workplace, 
-        studied_at   = :studied_at, 
-        live_at      = :live_at
-    WHERE user_id = :user_id";
+                SET display_name = :display_name, birth_year = :birth_year, workplace = :workplace, studied_at = :studied_at, live_at = :live_at 
+                WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
-
-        $success = $stmt->execute([
-            ':user_id'      => $user_id,
+        return $stmt->execute([
+            ':user_id' => $user_id,
             ':display_name' => $display_name,
-            ':birth_year'   => $birth_year,
-            ':workplace'    => $workplace,
-            ':studied_at'   => $studied_at,
-            ':live_at'      => $live_at,
+            ':birth_year' => $birth_year,
+            ':workplace' => $workplace,
+            ':studied_at' => $studied_at,
+            ':live_at' => $live_at
         ]);
-
-        return $success; // chỉ cần trả về true/false
     }
-
     // =============== Xóa thông tin user ===============
     public static function deleteProfileUser($user_id)
     {
@@ -92,47 +52,5 @@ class profileUserModel
         $sql = "DELETE FROM profile_user WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':user_id' => $user_id]);
-    }
-
-    // Thống kê 
-    public static function getUserStats($user_id)
-    {
-        $db = new connect();
-
-        // Số bài viết
-        $sqlArticles = "SELECT COUNT(*) FROM articles WHERE author_id = :user_id";
-        $stmt = $db->db->prepare($sqlArticles);
-        $stmt->execute([':user_id' => $user_id]);
-        $articlesCount = (int)$stmt->fetchColumn();
-
-        // Người theo dõi
-        $sqlFollowers = "SELECT COUNT(*) FROM user_follows WHERE following_id = :user_id";
-        $stmt = $db->db->prepare($sqlFollowers);
-        $stmt->execute([':user_id' => $user_id]);
-        $followersCount = (int)$stmt->fetchColumn();
-
-        // Đang theo dõi
-        $sqlFollowing = "SELECT COUNT(*) FROM user_follows WHERE follower_id = :user_id";
-        $stmt = $db->db->prepare($sqlFollowing);
-        $stmt->execute([':user_id' => $user_id]);
-        $followingCount = (int)$stmt->fetchColumn();
-
-        // Lượt thích
-        $sqlLikes = "
-        SELECT COUNT(*) 
-        FROM article_likes al
-        INNER JOIN articles a ON al.article_id = a.id
-        WHERE a.author_id = :user_id
-    ";
-        $stmt = $db->db->prepare($sqlLikes);
-        $stmt->execute([':user_id' => $user_id]);
-        $likesCount = (int)$stmt->fetchColumn();
-
-        return [
-            'articles' => $articlesCount,
-            'followers' => $followersCount,
-            'following' => $followingCount,
-            'likes' => $likesCount
-        ];
     }
 }
