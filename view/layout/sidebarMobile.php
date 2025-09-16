@@ -6,91 +6,97 @@
   <title>Sidebar Mobile</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
-    /* Sidebar */
+  /* Sidebar */
+  .sidebar {
+    width: 250px;
+    background: #1e1e1e;
+    color: #fff;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: all 0.3s ease;
+    overflow-y: auto;
+    z-index: 1000;
+  }
+
+  /* Logo */
+  .sidebar .logo {
+    text-align: center;
+    padding: 15px;
+    border-bottom: 1px solid #333;
+  }
+  .sidebar .logo img {
+    max-width: 120px;
+    height: auto;
+  }
+
+  /* Menu */
+  .sidebar ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px 0;
+  }
+  .sidebar ul li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 18px;
+    text-decoration: none;
+    color: #ddd;
+    font-size: 15px;
+    transition: background 0.2s, color 0.2s;
+  }
+  .sidebar ul li a:hover {
+    background: #333;
+    color: #fff;
+  }
+  .sidebar ul li i {
+    width: 20px;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  /* Section title */
+  .sidebar ul li.section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #999;
+    padding: 8px 18px;
+    margin-top: 10px;
+  }
+
+  /* Toggle button */
+  #toggleMenu {
+    display: none; /* ẩn mặc định */
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    background: #1e1e1e;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    font-size: 18px;
+    cursor: pointer;
+    z-index: 1100;
+    border-radius: 4px;
+  }
+
+  /* Responsive: Mobile */
+  @media (max-width: 768px) {
     .sidebar {
-      width: 250px;
-      background: #1e1e1e;
-      color: #fff;
-      height: 100vh;
-      position: fixed;
-      top: 0;
+      left: -250px;
+    }
+    .sidebar.active {
       left: 0;
-      transition: all 0.3s ease;
-      overflow-y: auto;
-      z-index: 1000;
     }
-
-    /* Logo */
-    .sidebar .logo {
-      text-align: center;
-      padding: 15px;
-      border-bottom: 1px solid #333;
-    }
-    .sidebar .logo img {
-      max-width: 120px;
-      height: auto;
-    }
-
-    /* Menu */
-    .sidebar ul {
-      list-style: none;
-      margin: 0;
-      padding: 10px 0;
-    }
-    .sidebar ul li a {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      text-decoration: none;
-      color: #ddd;
-      font-size: 15px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .sidebar ul li a:hover {
-      background: #333;
-      color: #fff;
-    }
-    .sidebar ul li i {
-      width: 20px;
-      text-align: center;
-      font-size: 16px;
-    }
-
-    /* Section title */
-    .sidebar ul li.section-title {
-      font-size: 12px;
-      text-transform: uppercase;
-      color: #999;
-      padding: 8px 18px;
-      margin-top: 10px;
-    }
-
-    /* Toggle button */
     #toggleMenu {
-      position: fixed;
-      top: 12px;
-      left: 12px;
-      background: #1e1e1e;
-      color: #fff;
-      border: none;
-      padding: 8px 12px;
-      font-size: 18px;
-      cursor: pointer;
-      z-index: 1100;
-      border-radius: 4px;
+      display: block; /* hiện toggle trên mobile */
     }
+  }
+</style>
 
-    /* Responsive: ẩn sidebar trên mobile */
-    @media (max-width: 768px) {
-      .sidebar {
-        left: -250px;
-      }
-      .sidebar.active {
-        left: 0;
-      }
-    }
-  </style>
+  
 </head>
 <body>
 
@@ -119,93 +125,6 @@
   </ul>
 </nav>
 
-<style>
-  /* Sidebar */
-  .sidebar {
-    width: 250px;
-    background: #1e1e1e;
-    color: #fff;
-    height: 100vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    transition: all 0.3s ease;
-    overflow-y: auto;
-    z-index: 1000;
-  }
-
-  .sidebar .logo {
-    text-align: center;
-    padding: 15px;
-    border-bottom: 1px solid #333;
-  }
-  .sidebar .logo img {
-    max-width: 120px;
-    height: auto;
-  }
-
-  .sidebar ul {
-    list-style: none;
-    margin: 0;
-    padding: 10px 0;
-  }
-  .sidebar ul li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 18px;
-    text-decoration: none;
-    color: #ddd;
-    font-size: 15px;
-    transition: background 0.2s, color 0.2s;
-  }
-  .sidebar ul li a:hover {
-    background: #333;
-    color: #fff;
-  }
-  .sidebar ul li i {
-    width: 20px;
-    text-align: center;
-    font-size: 16px;
-  }
-
-  .sidebar ul li.section-title {
-    font-size: 12px;
-    text-transform: uppercase;
-    color: #999;
-    padding: 8px 18px;
-    margin-top: 10px;
-  }
-
-  /* Toggle button */
-  #toggleMenu {
-    display: none; /* ẩn mặc định */
-    position: fixed;
-    top: 12px;
-    left: 12px;
-    background: #1e1e1e;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    font-size: 18px;
-    cursor: pointer;
-    z-index: 1100;
-    border-radius: 4px;
-  }
-
-  /* Mobile: sidebar off-canvas */
-  @media (max-width: 768px) {
-    .sidebar {
-      left: -250px;
-    }
-    .sidebar.active {
-      left: 0;
-    }
-    #toggleMenu {
-      display: block; /* hiện toggle trên mobile */
-    }
-  }
-</style>
 
 <script>
   const toggleBtn = document.getElementById("toggleMenu");
