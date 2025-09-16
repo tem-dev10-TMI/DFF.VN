@@ -579,6 +579,10 @@
         alert("🔑 Mật khẩu đã được đổi thành công!");
         window.location.href = "<?= BASE_URL ?>/profile_user";
         break;
+      case "password_changed_failed":
+        alert("🔑 Lỗi khi đổi mật khẩu, vui lòng thử lại!");
+        window.location.href = "<?= BASE_URL ?>/profile_user";
+        break;
     }
   </script>
 <?php endif; ?>

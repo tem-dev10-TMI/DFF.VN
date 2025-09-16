@@ -86,20 +86,24 @@
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] =='admin'  ) {
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] == 'admin') {
                                                                                             echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="javascript:void(0)" module-load="changepass"><i
-                                                class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
                                     <li>
-                                    <!-- module-load="logout" cai nay trong the a dang xuat     -->
-                                    <a class="dropdown-item"  href="<?= BASE_URL ?>/logout"><i
-                                    
-                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                                        <a class="dropdown-item" href="<?= BASE_URL ?>/change_password" data-bs-toggle="modal" data-bs-target="#changePassModal">
+                                            <i class="fas fa-unlock"></i> Đổi mật khẩu
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <!-- module-load="logout" cai nay trong the a dang xuat     -->
+                                        <a class="dropdown-item" href="<?= BASE_URL ?>/logout"><i
+
+                                                class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                                    </li>
                                 </ul>
                             </span>
                         <?php else: ?>
@@ -305,6 +309,49 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Đổi mật khẩu -->
+<div class="modal fade" id="changePassModal" tabindex="-1" aria-labelledby="changePassLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changePassLabel">Đổi mật khẩu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Thông báo từ controller -->
+                <?php if (!empty($changePasswordMessage)): ?>
+                    <div class="alert alert-<?= $messageType ?>">
+                        <?= $changePasswordMessage ?>
+                    </div>
+                <?php endif; ?>
+
+                <form method="POST" action="<?= BASE_URL ?>/change_password" id="changePassForm">
+                    <div class="mb-3">
+                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                        <input type="password" class="form-control" id="currentPassword" name="old_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                        <input type="password" class="form-control" id="newPassword" name="new_password" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_new_password" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Xử lý ẩn hiện modal -->
 <script>
     $(function() {

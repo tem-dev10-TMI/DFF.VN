@@ -420,11 +420,11 @@ class profileUserController
                 $success = $userModel->updatePassword($userId, $new_password_hash);
 
                 if ($success) {
-                    $changePasswordMessage = "Đổi mật khẩu thành công!";
-                    $messageType = 'success';
+                    header('Location: ' . BASE_URL . '/profile_user?msg=password_changed');
+                    exit;
                 } else {
-                    $changePasswordMessage = "Đã xảy ra lỗi khi đổi mật khẩu.";
-                    $messageType = 'danger';
+                    header('Location: ' . BASE_URL . '/profile_user?msg=password_changed_failed');
+                    exit;
                 }
             }
         }
