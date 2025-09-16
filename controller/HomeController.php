@@ -47,10 +47,10 @@ class homeController
         // RSS Doanhnhan.vn - Tài chính
         $feedUrl2 = "https://doanhnhan.baophapluat.vn/rss/tai-chinh.rss";
         $rssArticles2 = RssModel::getFeedItems($feedUrl2, 50, 15); // limit 50, cache 15 phút
+        $rssArticles4 = RssModel::getFeedItems($feedUrl1, 6, 15);
 
         // 3. Gộp tất cả bài viết: RSS + DB
         $articles = array_merge($rssArticles1, $rssArticles2, $dbArticles);
-
         // 4. Sắp xếp theo created_at giảm dần
         usort($articles, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);

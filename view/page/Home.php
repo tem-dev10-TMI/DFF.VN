@@ -264,11 +264,11 @@
             </div>
         </div>
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline"
+            <div class="fb-page" data-href="https://www.facebook.com/vientmi/?locale=vi_VN" data-tabs="timeline"
                 data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
                 data-hide-cover="false" data-show-facepile="true">
-                <blockquote cite="https://www.facebook.com/dffvn.official" class="fb-xfbml-parse-ignore"><a
-                        href="../www.facebook.com/dffvn.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
+                <blockquote cite="https://www.facebook.com/vientmi/?locale=vi_VN" class="fb-xfbml-parse-ignore"><a
+                        href="../www.facebook.com/vientmi.html">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
                 </blockquote>
             </div>
         </div>
@@ -353,136 +353,43 @@
 
 
 
-        <div class="block-k bg-box-a">
-            <div class="tieu-diem t-analysis">
-                <h2>
+      <?php if (!empty($rssArticles4)): ?>
+<div class="block-k bg-box-a">
+    <div class="tieu-diem t-analysis">
+        <h2>
+            <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+        </h2>
+        <ul>
+            <?php foreach ($rssArticles4 as $article): ?>
+            <li class="new-style">
+                <a title="<?= htmlspecialchars($article['title']) ?>"
+                   href="<?= !empty($article['is_rss']) 
+                            ? htmlspecialchars($article['link']) 
+                            : 'details_blog?id=' . urlencode($article['id']) ?>">
+                    <?= htmlspecialchars($article['title']) ?>
+                </a>
 
-                    <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
-                </h2>
-                <ul>
-
-                    <li class="new-style">
-                        <a title="Vietcap nâng giá mục tiêu cổ phiếu HPG lên 35.300 đồng/cp, duy trì khuyến nghị MUA"
-                            href="vietcap-nang-gia-muc-tieu-co-phieu-hpg-len-35300-dongcp-duy-tri-khuyen-nghi-mua-p20250824182258588.html">Vietcap
-                            nâng giá mục tiêu cổ phiếu HPG lên 35.300 đồng/cp, duy trì khuyến nghị MUA
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/hoa-phat-1638916570313071160.jpg"
-                            title="Vietcap n&#226;ng gi&#225; mục ti&#234;u cổ phiếu HPG l&#234;n 35.300 đồng/cp, duy tr&#236; khuyến nghị MUA"
-                            alt="Vietcap n&#226;ng gi&#225; mục ti&#234;u cổ phiếu HPG l&#234;n 35.300 đồng/cp, duy tr&#236; khuyến nghị MUA"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="Nếu sàn giao dịch tiền số triển khai blockchain riêng?"
-                            href="neu-san-giao-dich-tien-so-trien-khai-blockchain-rieng-p20250822165039104.html">Nếu
-                            sàn giao dịch tiền số triển khai blockchain riêng?
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/btc638914838374635395.jpg"
-                            title="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
-
-
-
-
-                            Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
-
-
-
-
-
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg"
-                            title="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " alt="
-									 
-									 
-									 
-									 
-									 Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
-								 
-								 
-								 
-								 
-								 " border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="VPS chuẩn bị IPO?" href="vps-chuan-bi-ipo-p20250820180003352.html">VPS
-                            chuẩn bị IPO?
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg"
-                            title="VPS chuẩn bị IPO?" alt="VPS chuẩn bị IPO?" border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="'Gió đông' đã về, ACBS có chịu IPO?"
-                            href="gio-dong-da-co-acbs-co-chiu-ipo-p20250821181224916.html">'Gió đông' đã về,
-                            ACBS có chịu IPO?
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/acbs638913967448542399.jpg"
-                            title="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
-                            border="0" />
-                    </li>
-
-                    <li class="new-style">
-                        <a title="
-									 
-									 Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
-								 
-								 " href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
-
-                            Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt
-                            khe?
-
-
-
-                        </a>
-                        <img src="../media.dff.vn/web/image/2025/8/vn1638913114644334454.jpg" title="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " alt="
-									 
-									 Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
-								 
-								 " border="0" />
-                    </li>
-
-
-
-                </ul>
-            </div>
+                <?php if (!empty($article['main_image_url'])): ?>
+                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                     title="<?= htmlspecialchars($article['title']) ?>"
+                     alt="<?= htmlspecialchars($article['title']) ?>"
+                     border="0" />
+                <?php endif; ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</div>
+<?php else: ?>
+<div class="block-k">
+    <div class="view-carde f-frame">
+        <div class="text-center p-4">
+            <p>Chưa có bài viết phân tích nào.</p>
         </div>
+    </div>
+</div>
+<?php endif; ?>
+
 
 
 
