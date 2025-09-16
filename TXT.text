@@ -1,0 +1,71 @@
+<?php if (!empty($articles)): ?>
+            <!-- Bọc danh sách bài viết -->
+            <div id="articles-list">
+                <?php foreach ($articles as $i => $article): ?>
+                    <!-- Ẩn bài từ số 10 trở đi -->
+                    <div class="block-k article-item" style="<?= $i < 10 ? 'display:none;' : '' ?>">
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <?php
+                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                ?>
+                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                                <div class="p-covers">
+                                    <span class="name">
+                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                            <?= htmlspecialchars($article['author_name']) ?>
+                                        </a>
+                                    </span>
+                                    <span class="date"><?= timeAgo($article['created_at']) ?></span>
+                                </div>
+                            </div>
+
+                            <div class="title">
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <?= htmlspecialchars($article['title']) ?>
+                                </a>
+                            </div>
+
+                            <div class="sapo">
+                                <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
+                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                Xem thêm
+                                </a>
+                            </div>
+
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img class="h-img"
+                                    src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php endif; ?>
+
+                            <!-- Giữ nguyên phần like, comment, share -->
+                            <div class="item-bottom">
+                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                                    <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
+                                </div>
+                                <div class="button-ar">
+                                    <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
+                                        <span><?= $article['comment_count'] ?? 0 ?></span>
+                                    </a>
+                                </div>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
+                                        <span data-bs-toggle="dropdown">Chia sẻ</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item copylink"
+                                                data-url="details_blog?id=<?= $article['id'] ?>"
+                                                href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb"
+                                                data-url="details_blog?id=<?= $article['id'] ?>"
+                                                href="javascript:void(0)">Share FB</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
