@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="css/style.css">
 <style>
     /* Active item chung cho cả desktop + mobile */
     nav ul li.active a,
@@ -16,10 +17,14 @@
 
     /* Reset mặc định icon */
     nav ul li i,
-    nav ul li svg {
+    nav ul li svg,
+    nav ul li img.topic-thumb {
         border: none;
         padding: 0;
         color: inherit;
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
     }
 
     .sidebar-mobile ul li a {
@@ -43,9 +48,14 @@
         margin-top: 10px;
         padding: 6px 12px;
     }
+
+    /* Responsive text */
+    .sidebar-mobile ul li a span {
+        font-size: 14px;
+    }
 </style>
 
-<!-- START: Mobile sidebar menu (thay thế phần menu hiện tại) -->
+<!-- START: Mobile sidebar menu -->
 <nav class="sidebar-mobile">
   <ul class="menu">
     <li><a href="/"><i class="fas fa-home icon"></i> <span>Trang chủ</span></a></li>
@@ -75,9 +85,17 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const allLis = document.querySelectorAll(".sidebar-mobile ul li");
+        const currentPath = window.location.pathname;
+
         allLis.forEach(li => {
             const a = li.querySelector("a");
             if (a) {
+                // Auto active theo URL
+                if (a.getAttribute("href") === currentPath) {
+                    li.classList.add("active");
+                }
+
+                // Khi click
                 a.addEventListener("click", function() {
                     allLis.forEach(item => item.classList.remove("active"));
                     li.classList.add("active");
