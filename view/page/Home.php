@@ -40,8 +40,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <div class="text" style="">
                             <h4>
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
-                                   href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
-                                   target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                    href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                    target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </h4>
@@ -78,7 +78,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="owl-stage-outer owl-height" style="height: 256px;">
                         <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
-                                <?php //var_dump($topBusinessmen);?>
+                                <?php //var_dump($topBusinessmen);
+                                ?>
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                                         <div class="item">
@@ -91,9 +92,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                 <li class="name">
 
                                                     <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                                                    </a>
+                                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                        </a>
                                                 </li>
                                                 <li class="f-folw">
                                                     <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
@@ -149,70 +150,70 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div id="articles-list">
                 <?php foreach ($articlesInitial as $i => $article): ?>
                     <div class="block-k article-item">
-                    <div class="view-carde f-frame">
-                        <div class="provider">
-                            <?php
-                            $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                            ?>
-                            <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
-                            <div class="p-covers">
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <?php
+                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                ?>
+                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                                <div class="p-covers">
                                     <span class="name">
                                         <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
                                     <span class="date"><?= timeAgo($article['created_at']) ?></span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
-                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
-                                <?= htmlspecialchars($article['title']) ?>
+                            <div class="title">
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                    target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
                                 </a>
-                        </div>
+                            </div>
 
-                        <div class="sapo">
-                            <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id='.$article['id'] ?>"
-                                class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
-                                Xem thêm
+                            <div class="sapo">
+                                <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                    class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                    Xem thêm
                                 </a>
-                        </div>
+                            </div>
 
-                        <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])): ?>
                                 <img class="h-img"
                                     src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
-                        <?php endif; ?>
+                            <?php endif; ?>
 
                             <!-- Giữ nguyên phần like, comment, share -->
-                        <div class="item-bottom">
-                            <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
+                            <div class="item-bottom">
+                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
                                     <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
-                            </div>
-                            <div class="button-ar">
+                                </div>
+                                <div class="button-ar">
                                     <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
-                                    <span><?= $article['comment_count'] ?? 0 ?></span>
-                                </a>
-                            </div>
-                            <div class="button-ar">
-                                <div class="dropdown home-item">
+                                        <span><?= $article['comment_count'] ?? 0 ?></span>
+                                    </a>
+                                </div>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
-                                    <ul class="dropdown-menu">
+                                        <ul class="dropdown-menu">
                                             <li><a class="dropdown-item copylink"
-                                                data-url="details_blog?id=<?= $article['id'] ?>"
-                                                href="javascript:void(0)">Copy link</a></li>
+                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                data-url="details_blog?id=<?= $article['id'] ?>"
-                                                href="javascript:void(0)">Share FB</a></li>
-                                    </ul>
+                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    href="javascript:void(0)">Share FB</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
             </div>
 
             <!-- Loading hiển thị khi đang load thêm -->
@@ -220,7 +221,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 <em>Đang tải thêm...</em>
             </div>
             <script>
-                (function(){
+                (function() {
                     let offset = 5; // đã render 5 bài đầu
                     const limit = 5;
                     let isLoading = false;
@@ -241,7 +242,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         return `${day}/${month}/${year}`;
                     }
 
-                    function renderItem(article){
+                    function renderItem(article) {
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
                         const articleLink = article.is_rss ? article.link : `details_blog?id=${article.id}`;
@@ -287,7 +288,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         return div;
                     }
 
-                    function loadMore(){
+                    function loadMore() {
                         if (isLoading) return;
                         isLoading = true;
                         loadingEl.style.display = 'block';
@@ -297,10 +298,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 if (data.success && Array.isArray(data.items)) {
                                     data.items.forEach(item => listEl.appendChild(renderItem(item)));
                                     offset = data.nextOffset;
-                                    
+
                                     // Re-initialize Bootstrap dropdowns for new items
                                     var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'))
-                                    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                                    var dropdownList = dropdownElementList.map(function(dropdownToggleEl) {
                                         return new bootstrap.Dropdown(dropdownToggleEl)
                                     });
                                 }
@@ -311,7 +312,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             });
                     }
 
-                    window.addEventListener('scroll', function(){
+                    window.addEventListener('scroll', function() {
                         const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
                         if (nearBottom) loadMore();
                     });
@@ -350,53 +351,53 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
         </div>
 
-        
-            <div class="content-right">
-        <div class="block-k cover-chat">
-            <h5><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
-            <ul class="list_comment">
-                <?php foreach ($comments as $c): ?>
-                    <li class="chat-item" data-id="<?= $c['id'] ?>">
-                        <div class="chat-avatar">
-                            <?php if ($c['avatar_url']): ?>
-                                <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
-                            <?php else: ?>
-                                <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
-                            <?php endif; ?>
-                        </div>
-                        <div class="chat-body">
-                            <div class="chat-meta">
-                                <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
-                                <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+
+        <div class="content-right">
+            <div class="block-k cover-chat">
+                <h5><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
+                <ul class="list_comment">
+                    <?php foreach ($comments as $c): ?>
+                        <li class="chat-item" data-id="<?= $c['id'] ?>">
+                            <div class="chat-avatar">
+                                <?php if ($c['avatar_url']): ?>
+                                    <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
+                                <?php else: ?>
+                                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
+                                <?php endif; ?>
                             </div>
-                            <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
-                            <div class="chat-actions">
-                                <button>⬆</button>
-                                <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
-                                <button>⬇</button>
-                                <a href="#" class="chat-reply">Trả lời</a>
+                            <div class="chat-body">
+                                <div class="chat-meta">
+                                    <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
+                                    <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+                                </div>
+                                <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+                                <div class="chat-actions">
+                                    <button>⬆</button>
+                                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                                    <button>⬇</button>
+                                    <a href="#" class="chat-reply">Trả lời</a>
+                                </div>
                             </div>
-                        </div>
-                    </li>
-                <?php endforeach; ?>
-                    </ul>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
                 <div class="h-comment">
-                <textarea id="comment-content" placeholder="Viết bình luận"></textarea>
-                <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
+                    <textarea id="comment-content" placeholder="Viết bình luận"></textarea>
+                    <i class="fas fa-paper-plane" id="send-comment" style="cursor:pointer"></i>
                 </div>
             </div>
         </div>
-     
 
-<script>
-let lastId = <?= !empty($comments) ? max(array_column($comments, 'id')) : 0 ?>;
 
-// Render comment
-function createCommentElement(c) {
-    const li = document.createElement("li");
-    li.className = "chat-item";
-    li.dataset.id = c.id;
-    li.innerHTML = `
+        <script>
+            let lastId = <?= !empty($comments) ? max(array_column($comments, 'id')) : 0 ?>;
+
+            // Render comment
+            function createCommentElement(c) {
+                const li = document.createElement("li");
+                li.className = "chat-item";
+                li.dataset.id = c.id;
+                li.innerHTML = `
         <div class="chat-avatar">
             ${c.avatar_url 
                 ? `<img src="${c.avatar_url}">`
@@ -409,76 +410,78 @@ function createCommentElement(c) {
             </div>
             <div class="chat-content">${c.content}</div>
         </div>`;
-    return li;
-}
-// Gửi comment
-document.getElementById("send-comment").addEventListener("click", () => {
-    const textarea = document.getElementById("comment-content");
-    const content = textarea.value.trim();
-    if (!content) return;
-
-    fetch("comment_add.php", {
-        method: "POST",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: "content=" + encodeURIComponent(content)
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            const ul = document.querySelector(".list_comment");
-            const li = createCommentElement(data.comment);
-
-            // ✅ thêm xuống cuối
-            ul.prepend(li);
-
-            // ✅ auto scroll xuống cuối
-            ul.scrollTop = 0;
-
-            if (data.comment.id > lastId) lastId = data.comment.id;
-        } else {
-            alert(data.error);
-        }
-    })
-    .finally(() => textarea.value = "");
-});
-
-// nhấn enter 
-const textarea = document.getElementById("comment-content");
-
-textarea.addEventListener("keydown", function(e) {
-    if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault(); // chặn xuống dòng
-        document.getElementById("send-comment").click(); // gọi nút gửi
-    }
-});
-
-// Load comment mới
-function loadNewComments() {
-    fetch("comment_list.php?last_id=" + lastId)
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                const ul = document.querySelector(".list_comment");
-                data.comments.forEach(c => {
-                    if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
-                        const li = createCommentElement(c);
-
-                        // ✅ cũng append lên đầuđầu
-                        ul.prepend(li);
-
-                        // ✅ scroll xuống  lên đàu khi có comment mới
-                        ul.scrollTop = 0;
-
-                        if (c.id > lastId) lastId = c.id;
-                    }
-                });
+                return li;
             }
-        });
-}
+            // Gửi comment
+            document.getElementById("send-comment").addEventListener("click", () => {
+                const textarea = document.getElementById("comment-content");
+                const content = textarea.value.trim();
+                if (!content) return;
 
-// Auto refresh
-setInterval(loadNewComments, 2000);
-</script>
+                fetch("comment_add.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "content=" + encodeURIComponent(content)
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const ul = document.querySelector(".list_comment");
+                            const li = createCommentElement(data.comment);
+
+                            // ✅ thêm xuống cuối
+                            ul.prepend(li);
+
+                            // ✅ auto scroll xuống cuối
+                            ul.scrollTop = 0;
+
+                            if (data.comment.id > lastId) lastId = data.comment.id;
+                        } else {
+                            alert(data.error);
+                        }
+                    })
+                    .finally(() => textarea.value = "");
+            });
+
+            // nhấn enter 
+            const textarea = document.getElementById("comment-content");
+
+            textarea.addEventListener("keydown", function(e) {
+                if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault(); // chặn xuống dòng
+                    document.getElementById("send-comment").click(); // gọi nút gửi
+                }
+            });
+
+            // Load comment mới
+            function loadNewComments() {
+                fetch("comment_list.php?last_id=" + lastId)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            const ul = document.querySelector(".list_comment");
+                            data.comments.forEach(c => {
+                                if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
+                                    const li = createCommentElement(c);
+
+                                    // ✅ cũng append lên đầuđầu
+                                    ul.prepend(li);
+
+                                    // ✅ scroll xuống  lên đàu khi có comment mới
+                                    ul.scrollTop = 0;
+
+                                    if (c.id > lastId) lastId = c.id;
+                                }
+                            });
+                        }
+                    });
+            }
+
+            // Auto refresh
+            setInterval(loadNewComments, 2000);
+        </script>
 
         <div class="adv block-k">
             <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline"
@@ -494,46 +497,46 @@ setInterval(loadNewComments, 2000);
 
 
         <?php
-// Giả sử $topArticles chứa 6 bài viết HOT đã lấy từ database
-// $topArticles = ArticlesModel::getTopArticles(6);
-?>
+        // Giả sử $topArticles chứa 6 bài viết HOT đã lấy từ database
+        // $topArticles = ArticlesModel::getTopArticles(6);
+        ?>
 
-<?php if (!empty($rssArticles3)): ?>
-        <div class="block-k bg-box-a">
-            <div class="tieu-diem">
-                <h2>
-                    <i class="fab fa-hotjar"></i> TMI <span>HOT</span>
-                </h2>
-                <ul>
-            <?php foreach ($rssArticles3 as $article): ?>
-                    <li class="new-style">
-                <a title="<?= htmlspecialchars($article['title']) ?>"
-                   href="<?= !empty($article['is_rss']) 
-                            ? htmlspecialchars($article['link']) 
-                            : 'details_blog?id=' . urlencode($article['id']) ?>">
-                    <?= htmlspecialchars($article['title']) ?>
-                </a>
+        <?php if (!empty($rssArticles3)): ?>
+            <div class="block-k bg-box-a">
+                <div class="tieu-diem">
+                    <h2>
+                        <i class="fab fa-hotjar"></i> TMI <span>HOT</span>
+                    </h2>
+                    <ul>
+                        <?php foreach ($rssArticles3 as $article): ?>
+                            <li class="new-style">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="<?= !empty($article['is_rss'])
+                                                ? htmlspecialchars($article['link'])
+                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
 
-                <?php if (!empty($article['main_image_url'])): ?>
-                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                     title="<?= htmlspecialchars($article['title']) ?>"
-                     alt="<?= htmlspecialchars($article['title']) ?>"
-                            border="0" />
-                <?php endif; ?>
-                    </li>
-            <?php endforeach; ?>
-                </ul>
+                                <?php if (!empty($article['main_image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                        title="<?= htmlspecialchars($article['title']) ?>"
+                                        alt="<?= htmlspecialchars($article['title']) ?>"
+                                        border="0" />
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
-        </div>
-<?php else: ?>
-<div class="block-k">
-    <div class="view-carde f-frame">
-        <div class="text-center p-4">
-            <p>Chưa có bài viết nổi bật nào.</p>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+        <?php else: ?>
+            <div class="block-k">
+                <div class="view-carde f-frame">
+                    <div class="text-center p-4">
+                        <p>Chưa có bài viết nổi bật nào.</p>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
 
 
@@ -541,27 +544,26 @@ setInterval(loadNewComments, 2000);
         <div class="block-k bg-box-a">
             <div class="view-right-a h-lsk">
                 <div class="title">
-            <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
+                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
                 </div>
 
                 <ol class="content-ol">
-            <?php if (!empty($events)): ?>
-                <?php foreach ($events as $index => $event): ?>
-                    <li class="card-list-item" key="<?php echo $index; ?>">
-                        <a 
-    title="<?= htmlspecialchars($event['title']); ?>"
-    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>"
->
-    <?= htmlspecialchars($event['title']); ?>
-</a>
+                    <?php if (!empty($events)): ?>
+                        <?php foreach ($events as $index => $event): ?>
+                            <li class="card-list-item" key="<?php echo $index; ?>">
+                                <a
+                                    title="<?= htmlspecialchars($event['title']); ?>"
+                                    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>">
+                                    <?= htmlspecialchars($event['title']); ?>
+                                </a>
 
-                    </li>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <li class="card-list-item">
-                    <span>Chưa có sự kiện nào</span>
-                    </li>
-            <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <li class="card-list-item">
+                            <span>Chưa có sự kiện nào</span>
+                        </li>
+                    <?php endif; ?>
                 </ol>
             </div>
         </div>
@@ -570,50 +572,50 @@ setInterval(loadNewComments, 2000);
 
 
 
-      <?php if (!empty($rssArticles4)): ?>
-        <div class="block-k bg-box-a">
-            <div class="tieu-diem t-analysis">
-                <h2>
-                    <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
-                </h2>
-                <ul>
-            <?php foreach ($rssArticles4 as $article): ?>
-                    <li class="new-style">
-                <a title="<?= htmlspecialchars($article['title']) ?>"
-                   href="<?= !empty($article['is_rss']) 
-                            ? htmlspecialchars($article['link']) 
-                            : 'details_blog?id=' . urlencode($article['id']) ?>">
-                    <?= htmlspecialchars($article['title']) ?>
-                </a>
+        <?php if (!empty($rssArticles4)): ?>
+            <div class="block-k bg-box-a">
+                <div class="tieu-diem t-analysis">
+                    <h2>
+                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                    </h2>
+                    <ul>
+                        <?php foreach ($rssArticles4 as $article): ?>
+                            <li class="new-style">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="<?= !empty($article['is_rss'])
+                                                ? htmlspecialchars($article['link'])
+                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
 
-                <?php if (!empty($article['main_image_url'])): ?>
-                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                     title="<?= htmlspecialchars($article['title']) ?>"
-                     alt="<?= htmlspecialchars($article['title']) ?>"
-                            border="0" />
-                <?php endif; ?>
-                    </li>
-            <?php endforeach; ?>
-                </ul>
+                                <?php if (!empty($article['main_image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                        title="<?= htmlspecialchars($article['title']) ?>"
+                                        alt="<?= htmlspecialchars($article['title']) ?>"
+                                        border="0" />
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
             </div>
-        </div>
-<?php else: ?>
-<div class="block-k">
-    <div class="view-carde f-frame">
-        <div class="text-center p-4">
-            <p>Chưa có bài viết phân tích nào.</p>
-        </div>
-    </div>
-</div>
-<?php endif; ?>
+        <?php else: ?>
+            <div class="block-k">
+                <div class="view-carde f-frame">
+                    <div class="text-center p-4">
+                        <p>Chưa có bài viết phân tích nào.</p>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
 
 
 
 
 
-<a target="_blank" href="<?= BASE_URL ?>/crypton">
-    <img src="<?= BASE_URL ?>/public/img/crypto.png" alt="Crypto" style="width:100px; height:auto;">
-</a>
+        <a target="_blank" href="<?= BASE_URL ?>/crypton">
+            <img src="<?= BASE_URL ?>/public/img/crypto.png" alt="Crypto" style="width:100px; height:auto;">
+        </a>
 
 
 
@@ -622,7 +624,7 @@ setInterval(loadNewComments, 2000);
         </div>
 
         <!-- <div class="modal show" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="6134" aria-modal="true" style="display: block;"> -->
-            <!-- <div class="modal-dialog modal-lg" style="width:700px">
+        <!-- <div class="modal-dialog modal-lg" style="width:700px">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Tạo bài viết</span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
@@ -735,7 +737,7 @@ setInterval(loadNewComments, 2000);
                                                                                 </div>
                                                                                 <div class="ce-popover-item" data-item-name="imageWithText">
                                                                                     <div class="ce-popover-item__icon ce-popover-item__icon--tool"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--!Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2025 Fonticons, Inc.-->
-                                                                                            <!-- <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
+        <!-- <path d="M464 448H48c-26.5 0-48-21.5-48-48V112c0-26.5 21.5-48 48-48h416c26.5 0 48 21.5 48 48v288c0 26.5-21.5 48-48 48zM112 120c-30.9 0-56 25.1-56 56s25.1 56 56 56 56-25.1 56-56-25.1-56-56-56zM64 384h384V272l-87.5-87.5c-4.7-4.7-12.3-4.7-17 0L208 320l-55.5-55.5c-4.7-4.7-12.3-4.7-17 0L64 336v48z"></path>
                                                                                         </svg></div>
                                                                                     <div class="ce-popover-item__title">Image with Text</div>
                                                                                 </div>

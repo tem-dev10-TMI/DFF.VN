@@ -141,7 +141,7 @@
 
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
-        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event.html"> Lịch sự kiện </a></span>
+        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event"> Lịch sự kiện </a></span>
     </div>
     <!-- header start -->
 
@@ -212,9 +212,9 @@
                 </a>
             </li>
             <li class="fitem1">
-                <a href="javascript:void(0)" module-load="" class="js-mobile-modal" data-mobile-modal="create">
-                    <i class="fas fa-plus"></i>
-                    <span>Tạo mới</span>
+                <a href="javascript:void(0)" title="Chatbot" onclick="toggleChatbotBox()">
+                    <i class="fas fa-comment"></i>
+                    <span>Chatbot</span>
                 </a>
             </li>
             <li class="fitem2">
@@ -340,6 +340,7 @@
                 const body = document.getElementById('mobileModalBody');
                 const title = document.getElementById('mobileModalLabel');
                 if (!body || !title) return;
+
                 if (type === 'alerts') {
                     title.textContent = 'Thông báo';
                     body.innerHTML = renderAlerts(headerEvents);
@@ -347,20 +348,20 @@
                     title.textContent = 'Tạo mới';
                     body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
                 } else if (type === 'profile') {
-                    title.textContent = 'Tôi';
-                    body.innerHTML = '<div>Vui lòng đăng nhập để xem thông tin cá nhân.</div>';
+                    // Thay vì chỉ hiển thị text, mở modal login
+                    showLoginModal(); // <-- Gọi trực tiếp modal login từ header.php
+                    return; // thoát luôn để không mở modal mobile
                 } else {
                     title.textContent = 'Menu';
                     body.innerHTML = '';
                 }
+
                 const modalEl = document.getElementById('mobileModal');
                 if (modalEl) {
-                    // Dọn backdrop cũ nếu còn
                     document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
                     document.body.classList.remove('modal-open');
                     document.body.style.removeProperty('padding-right');
 
-                    // Tạo hoặc lấy lại instance để tránh chồng nhiều lớp backdrop
                     mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
                         backdrop: true,
                         focus: true
@@ -369,14 +370,6 @@
                 }
             }
 
-            document.addEventListener('click', function(e) {
-                const a = e.target.closest('.js-mobile-modal');
-                if (!a) return;
-                const type = a.getAttribute('data-mobile-modal');
-                if (!type) return;
-                e.preventDefault();
-                openMobileModal(type);
-            });
         })();
     </script>
 
@@ -486,15 +479,16 @@
                 <?= $content ?>
 
                 <?php require_once  __DIR__ . '/../layout/sidebarLeft.php'; ?>
+                <a href="crypton">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-coin mb-coins" viewBox="0 0 16 16">
+                        <path
+                            d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                        <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
+                    </svg>
+                </a>
 
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                    class="bi bi-coin mb-coins" viewBox="0 0 16 16">
-                    <path
-                        d="M5.5 9.511c.076.954.83 1.697 2.182 1.785V12h.6v-.709c1.4-.098 2.218-.846 2.218-1.932 0-.987-.626-1.496-1.745-1.76l-.473-.112V5.57c.6.068.982.396 1.074.85h1.052c-.076-.919-.864-1.638-2.126-1.716V4h-.6v.719c-1.195.117-2.01.836-2.01 1.853 0 .9.606 1.472 1.613 1.707l.397.098v2.034c-.615-.093-1.022-.43-1.114-.9zm2.177-2.166c-.59-.137-.91-.416-.91-.836 0-.47.345-.822.915-.925v1.76h-.005zm.692 1.193c.717.166 1.048.435 1.048.91 0 .542-.412.914-1.135.982V8.518z" />
-                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                    <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
-                </svg>
-                <i class="bi bi-chat-left-text-fill mb-chat"></i>
             </div>
         <?php endif; ?>
         ...
