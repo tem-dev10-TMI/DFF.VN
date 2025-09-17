@@ -79,6 +79,20 @@ class CommentGlobalModel {
         return $stmt->execute([':id' => $id]);
     }
 
+    // Lấy 1 comment theo ID
+    public static function getCommentById($id) {
+        $db = new connect();
+        $sql = "SELECT 
+                    c.id, c.user_id, c.content, c.upvotes, c.created_at, c.parent_id,
+                    u.username, u.avatar_url
+                FROM comment_global c
+                LEFT JOIN users u ON c.user_id = u.id
+                WHERE c.id = :id";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':id' => $id]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public static function getNewComments($last_id, $limit = 20) {
     $db = new connect();
     $sql = "SELECT 
