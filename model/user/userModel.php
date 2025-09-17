@@ -3,6 +3,23 @@ class UserModel
 {
 
     // Đăng ký user mới
+    public static function registerUserNew($name, $username, $email, $password, $phone, $role = 'user')
+    {
+        $db = new connect();
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+        $sql = "INSERT INTO users (name, username, email, password_hash, phone, role) 
+                VALUES (:name, :username, :email, :password_hash, :phone, 'user')";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([
+            ':name' => $name,
+            ':username' => $username,
+            ':email' => $email,
+            ':password_hash' => $hashedPassword,
+            ':phone' => $phone
+        ]);
+    }
+
     public static function registerUser($name, $username, $email, $password, $phone, $role = 'user', $avatar_url = null, $cover_photo = null, $description = null)
     {
         $db = new connect();

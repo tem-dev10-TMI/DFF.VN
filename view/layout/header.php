@@ -29,7 +29,9 @@
                 <?php
                 if (!isset($headerEvents)) {
                     require_once __DIR__ . '/../../model/event/Events.php';
-                    if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
+                    if (!isset($pdo)) {
+                        require_once __DIR__ . '/../../config/db.php';
+                    }
                     global $pdo;
                     $eventModelHeader = new EventModel($pdo);
                     $headerEvents = $eventModelHeader->all(10);
@@ -138,7 +140,7 @@
 
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
-                    
+
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
                         <?php if (!empty($headerEvents)): ?>
                             <ul class="list-unstyled" style="margin:10px 0;">
@@ -276,7 +278,7 @@
                                 Tạo tài khoản để sử dụng đầy đủ tính năng và tham gia cộng đồng thành viên của DFF.VN
                             </div>
                         </div>
-                        <input type="hidden" name="role" value="customer">
+                        <input type="hidden" name="role" value="user">
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
