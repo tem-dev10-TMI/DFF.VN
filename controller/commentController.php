@@ -1,10 +1,12 @@
 <?php
-require_once 'models/CommentsModel.php';
+require_once  __DIR__ . '/../models/CommentsModel.php';
 
-class CommentController {
+class CommentController
+{
 
     // Thêm comment mới
-    public function addComment() {
+    public function addComment()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $article_id = $_POST['article_id'] ?? null;
             $user_id = $_POST['user_id'] ?? null;
@@ -25,19 +27,22 @@ class CommentController {
     }
 
     // Lấy tất cả comment của một bài viết
-    public function getComments($article_id) {
+    public function getComments($article_id)
+    {
         $comments = CommentsModel::getCommentsByArticle($article_id);
         echo json_encode($comments);
     }
 
     // Lấy trả lời của một comment
-    public function getReplies($parent_id) {
+    public function getReplies($parent_id)
+    {
         $replies = CommentsModel::getReplies($parent_id);
         echo json_encode($replies);
     }
 
     // Cập nhật comment
-    public function updateComment() {
+    public function updateComment()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
             $content = $_POST['content'] ?? '';
@@ -56,7 +61,8 @@ class CommentController {
     }
 
     // Xóa comment
-    public function deleteComment() {
+    public function deleteComment()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
 
@@ -74,7 +80,8 @@ class CommentController {
     }
 
     // Tăng upvote
-    public function upvoteComment() {
+    public function upvoteComment()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $id = $_POST['id'] ?? null;
 
