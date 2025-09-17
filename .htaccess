@@ -8,7 +8,7 @@ RewriteBase /DFF.VN/
 # ------------------------------------
 # Toggle bảo trì NGAY TRONG .htaccess
 # Mặc định tắt. Muốn bật, bỏ dấu # ở dòng SetEnvIf bên dưới:
- SetEnvIf Request_URI "^" MAINTENANCE=on
+ #SetEnvIf Request_URI "^" MAINTENANCE=on
 # (Có thể whitelist IP admin để vẫn truy cập site khi bảo trì)
 # SetEnvIfExpr "%{REMOTE_ADDR} == '127.0.0.1'" MAINT_WHITELIST=1
 
