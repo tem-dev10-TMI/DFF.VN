@@ -1,6 +1,5 @@
 <?php
-// server/chat.php — Backend proxy for Google Gemini API with simple RAG over local KB
-// Requirements: PHP 7.4+, curl enabled.
+// server/chat.php — Backend proxy for Google Gemini API with simple RAG + Multiple Prompts
 
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
@@ -23,7 +22,7 @@ if (!$data || !isset($data['message'])) {
 $userMessage = trim((string)$data['message']);
 $history = isset($data['history']) && is_array($data['history']) ? $data['history'] : [];
 
-// Load API key from env-style file
+// Load API key
 $configPath = __DIR__ . '/config.php';
 if (!file_exists($configPath)) {
     http_response_code(500);
@@ -37,6 +36,10 @@ if (!defined('GEMINI_API_KEY') || !GEMINI_API_KEY) {
     echo json_encode(['error' => 'GEMINI_API_KEY not configured']);
     exit;
 }
+
+// Load prompts
+require __DIR__ . '/prompts.php';
+$systemPrompt = selectSystemPrompt($userMessage, $PROMPTS);
 
 $model = defined('GEMINI_MODEL') && GEMINI_MODEL ? GEMINI_MODEL : 'gemini-1.5-pro';
 
@@ -166,6 +169,7 @@ if ($wantDaily || $wantMonthly || $wantYearly) {
         if ($cgMarkets) $rtContext .= "[coingecko_markets]\n" . mb_substr($cgMarkets, 0, 3000, 'UTF-8');
     }
 }
+$parts = [];
 $parts[] = ['text' => $systemPrompt . "\n\nNGỮ CẢNH (KB):\n" . $contextText . ($rtContext ? "\n\nDỮ LIỆU THỜI GIAN GẦN ĐÂY:\n" . $rtContext : '')];
 
 // Add conversation history (truncate for token safety)
@@ -176,7 +180,7 @@ foreach ($trimmedHistory as $turn) {
     $parts[] = ['text' => ($role === 'user' ? 'Người dùng: ' : 'Trợ lý: ') . $turn['content']];
 }
 
-// Add user message last
+// Add user message
 $parts[] = ['text' => 'Người dùng: ' . $userMessage];
 
 function buildPayload($parts)
