@@ -336,47 +336,40 @@
 
             let mobileModalInstance = null;
 
-            function openMobileModal(type) {
-                const body = document.getElementById('mobileModalBody');
-                const title = document.getElementById('mobileModalLabel');
-                if (!body || !title) return;
-                if (type === 'alerts') {
-                    title.textContent = 'Thông báo';
-                    body.innerHTML = renderAlerts(headerEvents);
-                } else if (type === 'create') {
-                    title.textContent = 'Tạo mới';
-                    body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
-                } else if (type === 'profile') {
-                    title.textContent = 'Tôi';
-                    body.innerHTML = '<div>Vui lòng đăng nhập để xem thông tin cá nhân.</div>';
-                } else {
-                    title.textContent = 'Menu';
-                    body.innerHTML = '';
-                }
-                const modalEl = document.getElementById('mobileModal');
-                if (modalEl) {
-                    // Dọn backdrop cũ nếu còn
-                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                    document.body.classList.remove('modal-open');
-                    document.body.style.removeProperty('padding-right');
+           function openMobileModal(type) {
+    const body = document.getElementById('mobileModalBody');
+    const title = document.getElementById('mobileModalLabel');
+    if (!body || !title) return;
 
-                    // Tạo hoặc lấy lại instance để tránh chồng nhiều lớp backdrop
-                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
-                        backdrop: true,
-                        focus: true
-                    });
-                    mobileModalInstance.show();
-                }
-            }
+    if (type === 'alerts') {
+        title.textContent = 'Thông báo';
+        body.innerHTML = renderAlerts(headerEvents);
+    } else if (type === 'create') {
+        title.textContent = 'Tạo mới';
+        body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
+    } else if (type === 'profile') {
+        // Thay vì chỉ hiển thị text, mở modal login
+        showLoginModal(); // <-- Gọi trực tiếp modal login từ header.php
+        return; // thoát luôn để không mở modal mobile
+    } else {
+        title.textContent = 'Menu';
+        body.innerHTML = '';
+    }
 
-            document.addEventListener('click', function(e) {
-                const a = e.target.closest('.js-mobile-modal');
-                if (!a) return;
-                const type = a.getAttribute('data-mobile-modal');
-                if (!type) return;
-                e.preventDefault();
-                openMobileModal(type);
-            });
+    const modalEl = document.getElementById('mobileModal');
+    if (modalEl) {
+        document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+        document.body.classList.remove('modal-open');
+        document.body.style.removeProperty('padding-right');
+
+        mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
+            backdrop: true,
+            focus: true
+        });
+        mobileModalInstance.show();
+    }
+}
+
         })();
     </script>
 
