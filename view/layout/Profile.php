@@ -329,11 +329,12 @@
         </div>
         <!-- Input hidden -->
         <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
-        <input type="file" id="postVideo" class="d-none" accept="video/*">
+        <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
       </div>
 
       <!-- Preview ảnh -->
       <div id="imagePreview" class="mt-2"></div>
+      <div id="videoPreview" class="mt-2"></div>
 
       <!-- Posts -->
       <!-- Danh sách bài viết -->
@@ -806,6 +807,15 @@
         ${post.content.length > 100 ? '<a href="/post-' + post.id + '.html" class="d-more">Xem thêm</a>' : ''}
       </div>
 
+      ${post.video_url ? `
+      <div class="mt-2 mb-2">
+        <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+          <source src="${post.video_url}" type="video/mp4">
+          Trình duyệt của bạn không hỗ trợ thẻ video.
+        </video>
+      </div>
+      ` : ''}
+
       ${post.image ? `<img class="h-img" src="${post.image}" title="${post.title || 'Post image'}" alt="${post.title || 'Post image'}" border="0">` : ''}
 
       <div class="item-bottom">
@@ -919,6 +929,11 @@
       formData.append('main_image_url', imageFile);
     }
 
+    var videoFile = document.getElementById('postVideo').files[0];
+    if (videoFile) {
+      formData.append('post_video', videoFile);
+    }
+
     fetch('api/addPost', {
         method: 'POST',
         body: formData
@@ -963,6 +978,29 @@
       img.style.maxHeight = '200px';
       preview.appendChild(img);
     }
+  }
+
+  // Hiển thị tên video đã chọn
+  function previewVideo(event) {
+    const preview = document.getElementById('videoPreview');
+    preview.innerHTML = ''; // Xóa preview cũ
+
+    const file = event.target.files[0];
+    if (file) {
+      const fileNameDiv = document.createElement('div');
+      fileNameDiv.classList.add('alert', 'alert-info', 'py-2', 'mt-2');
+      fileNameDiv.innerHTML = `
+        <i class="fas fa-video me-2"></i>
+        Đã chọn video: <strong>${file.name}</strong>
+        <button type="button" class="btn-close" onclick="clearVideoPreview()" style="font-size: 0.75rem; float: right;"></button>
+      `;
+      preview.appendChild(fileNameDiv);
+    }
+  }
+
+  function clearVideoPreview() {
+      document.getElementById('postVideo').value = ''; // Xóa file đã chọn
+      document.getElementById('videoPreview').innerHTML = ''; // Xóa hiển thị
   }
 
   // Like/Unlike bài viết

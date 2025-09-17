@@ -15,7 +15,7 @@ class ArticlesModel
                 (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, NOW(), :is_hot, :is_analysis)";
         $stmt = $db->db->prepare($sql);
 
-        return $stmt->execute([
+        $success = $stmt->execute([
             ':title' => $title,
             ':slug' => $slug,
             ':summary' => $summary,
@@ -27,6 +27,11 @@ class ArticlesModel
             ':is_hot' => $is_hot,
             ':is_analysis' => $is_analysis
         ]);
+
+        if ($success) {
+            return $db->db->lastInsertId();
+        }
+        return false;
     }
 
     // Lấy tất cả bài viết (chỉ public)
@@ -210,4 +215,58 @@ class ArticlesModel
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
+    // Helper để kiểm tra slug tồn tại
+    public static function slugExists($slug)
+    {
+        $db = new connect();
+        $sql = "SELECT COUNT(*) FROM articles WHERE slug = :slug";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':slug' => $slug]);
+        return $stmt->fetchColumn() > 0;
+    }
+
+    public static function addArticleFromProfile(array $data)
+    {
+        $db = new connect();
+
+        // Đảm bảo các trường bắt buộc có dữ liệu
+        if (empty($data['title']) || empty($data['content']) || empty($data['author_id'])) {
+            return false;
+        }
+
+        // Tạo slug duy nhất
+        $baseSlug = connect::createSlug($data['title']);
+        $slug = $baseSlug;
+        $counter = 1;
+        while (self::slugExists($slug)) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        $sql = "INSERT INTO articles 
+                (title, slug, summary, content, main_image_url, author_id, topic_id, status, published_at, is_hot, is_analysis) 
+                VALUES 
+                (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, NOW(), :is_hot, :is_analysis)";
+        
+        $stmt = $db->db->prepare($sql);
+
+        $success = $stmt->execute([
+            ':title'          => $data['title'],
+            ':slug'           => $slug,
+            ':summary'        => $data['summary'] ?? '',
+            ':content'        => $data['content'],
+            ':main_image_url' => $data['main_image_url'] ?? null,
+            ':author_id'      => $data['author_id'],
+            ':topic_id'       => $data['topic_id'] ?? null,
+            ':status'         => $data['status'] ?? 'pending',
+            ':is_hot'         => $data['is_hot'] ?? 0,
+            ':is_analysis'    => $data['is_analysis'] ?? 0
+        ]);
+
+        if ($success) {
+            return $db->db->lastInsertId();
+        }
+        return false;
+    }
 }
+
