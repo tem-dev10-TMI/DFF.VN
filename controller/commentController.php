@@ -1,5 +1,5 @@
 <?php
-require_once  __DIR__ . '/../models/CommentsModel.php';
+require_once  __DIR__ . '/../model/commentmodel.php';
 
 class CommentController
 {
