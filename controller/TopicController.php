@@ -36,8 +36,9 @@ class TopicController
     }
     public function details_topic()
     {
+        $topicModel = new TopicModel();
         $id = $_GET['id'] ?? 0;
-        $topic = $this->model->getTopicById($id);
+        $topic = $topicModel->getById($id);
         $articles = articlesmodel::getArticlesByTopicId($id, 10);
         if (!$topic) {
             echo "Chủ đề không tồn tại!";
