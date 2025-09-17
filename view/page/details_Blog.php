@@ -22,7 +22,7 @@ $mainImage = $article['main_image_url'] ?? '';
                 <a href="javascript:void(0)" class="img-news"><img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>"></a>
                 <div class="p-covers">
                     <span class="name" title="">
-                        <a href="/profile.html?q=<?= $authorId ?>" title="<?= $authorName ?>"><?= $authorName ?></a>
+                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $authorId ?>" title="<?= $authorName ?>"><?= $authorName ?></a>
                         <i title="Đã xác thực" class="accu_none fas fa-check-circle"></i>
                     </span><span class="date"><?= htmlspecialchars($createdAt) ?></span>
                 </div>
@@ -120,7 +120,7 @@ $mainImage = $article['main_image_url'] ?? '';
                 <div class="provider">
                     <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                     <div class="p-covers">
-                        <span class="name" title=""><a href="/profile.html?q=<?= $authorId ?>" title="<?= $authorName ?>"><?= $authorName ?></a>
+                        <span class="name" title=""><a href="<?= BASE_URL ?>/view_profile?id=<?= $authorId ?>" title="<?= $authorName ?>"><?= $authorName ?></a>
                         </span><span class="date">Người dùng</span>
                     </div>
                 </div>
@@ -134,7 +134,7 @@ $mainImage = $article['main_image_url'] ?? '';
                 <div class="provider">
                     <span class="cus-avatar">D</span>
                     <div class="p-covers">
-                        <span class="name" title=""><a href="/topic.html" title="Chủ đề">Chủ đề</a>
+                        <span class="name" title=""><a href="#" title="Chủ đề">Chủ đề</a>
                         </span><span class="date">Chủ đề</span>
                     </div>
                 </div>

@@ -18,12 +18,12 @@
             <li class="item" data-ref="d">
                 <i class="bi bi-newspaper idiscuss"></i>
                 <a href="news" title="Trang chủ">Mới nhất</a>
-           </li> 
+            </li>
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
-            
+
 
         </ul>
         <div class="line"></div>
@@ -59,7 +59,7 @@
                                 title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 border="0" />
                             <a title="<?= htmlspecialchars($topic['name']) ?>"
-                                href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                                href="<?= BASE_URL ?>details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
                                 <?= htmlspecialchars($topic['name']) ?>
                             </a>
                             <i class="fas fa-plus icon-right"></i>
@@ -99,7 +99,7 @@
                             </svg> -->
                 <a href="about#thuthap">Chính sách riêng tư</a>
             </li>
-            
+
         </ul>
 
         <div class="line"></div>

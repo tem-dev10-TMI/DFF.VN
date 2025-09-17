@@ -134,9 +134,13 @@ class ArticlesController
     public static function details_blog($id)
     {
         require_once __DIR__ . '/../model/article/articlesmodel.php';
+        require_once __DIR__ . '/../model/user/userModel.php';
 
         // Lấy dữ liệu từ model
         $article = ArticlesModel::getArticleById($id);
+        $authorId = UserModel::getUserById($article['author_id']);
+        $user = UserModel::getUserById($authorId['id']);
+
         if (!$article) {
             require_once __DIR__ . '/../view/errors/404.php';
             return;

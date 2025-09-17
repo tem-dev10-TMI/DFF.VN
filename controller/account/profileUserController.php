@@ -8,9 +8,9 @@ class profileUserController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        require_once __DIR__.'/../../model/user/userModel.php';
-        require_once __DIR__.'/../../model/article/articlesmodel.php';
-        require_once __DIR__.'/../../model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/user/userModel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/user/profileUserModel.php';
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -29,12 +29,12 @@ class profileUserController
             //Load view
             ob_start();
             $profile_category = 'user';
-            require_once __DIR__.'/../../view/layout/Profile.php';
+            require_once __DIR__ . '/../../view/layout/Profile.php';
             $content = ob_get_clean();
             $profile = true;
             //Load layout
             // đừng ai xóa
-            require_once __DIR__.'/../../view/layout/main.php';
+            require_once __DIR__ . '/../../view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
             exit;
