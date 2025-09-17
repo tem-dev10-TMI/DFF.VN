@@ -21,7 +21,7 @@ if ($useConfig1) {
     define('DB_PASS', 'AVNS_brCrqfhHuYX88MkBMqS');
     define('DB_NAME', 'dff_db');
     define('DB_PORT', '27925');
-    $use="local"; // mặc định local
+    $use="true"; // mặc định server
     if ($use == "server") {
         define('BASE_URL', 'https://mxh.org.vn');
         define('SITE_NAME', 'MXH.ORG.VN');
