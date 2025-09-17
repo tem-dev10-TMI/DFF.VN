@@ -113,13 +113,13 @@
 
 
 
-    require_once 'model/TopicModel.php';
+    require_once  __DIR__ . '/../../model/TopicModel.php';
 
     $topicModel = new TopicModel();
     $allTopics = $topicModel->getAll(); // tất cả chủ đề
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
-    require_once 'view/layout/sidebarMobile.php';
+    require_once  __DIR__ . '/../layout/sidebarMobile.php';
 
 
 
@@ -129,7 +129,7 @@
 
 
 
-    require_once 'model/event/Events.php';
+    require_once __DIR__ . '/../../model/event/Events.php';
     if (!isset($pdo)) {
         require_once __DIR__ . '/../../config/db.php';
     }
@@ -145,7 +145,7 @@
     </div>
     <!-- header start -->
 
-    <?php require_once 'view/layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
+    <?php require_once  __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
     ?>
     <!-- cho cái thi trường chạy -->
 
@@ -193,7 +193,7 @@
 
     <?php
     if (!isset($headerEvents)) {
-        require_once 'model/event/Events.php';
+        require_once  __DIR__ . '/../../model/event/Events.php';
         if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
         global $pdo;
         $eventModelMobile = new EventModel($pdo);
@@ -432,7 +432,7 @@
                 <!-- ?php require_once 'view/page/Home.php'; -->
                 <?= $content ?>
 
-                <?php require_once 'view/layout/sidebarLeft.php'; ?>
+                <?php require_once  __DIR__ . '/../layout/sidebarLeft.php'; ?>
 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                     class="bi bi-coin mb-coins" viewBox="0 0 16 16">

@@ -271,10 +271,10 @@
     <!-- Sidebar -->
 
     <?php if ($profile_category == 'user') {
-      require_once 'view/page/Profileuser.php';
+      require_once  __DIR__ . '/../page/Profileuser.php';
     } ?>
     <?php if ($profile_category == 'businessmen') {
-      require_once 'view/page/ProfileBusiness.php';
+      require_once __DIR__ . '/../page/ProfileBusiness.php';
     } ?>
     <!-- Main content -->
     <div class="col-md-9">
