@@ -1,5 +1,5 @@
 <?php
-class BusinessmenController
+class businessmenController
 {
     // Danh sách tất cả doanh nhân
     public static function index()

@@ -8,7 +8,7 @@ class ArticlesController
     {
         $articles = ArticlesModel::getAllArticles();
         // nạp view
-        require __DIR__ . '/../view/articles/index.php';
+        require_once __DIR__ . '/../view/articles/index.php';
     }
 
     // Chi tiết 1 bài viết
@@ -17,16 +17,16 @@ class ArticlesController
         $article = ArticlesModel::getArticleById($id);
         if (!$article) {
             // có thể chuyển hướng hoặc load trang 404
-            require __DIR__ . '/../view/errors/404.php';
+            require_once __DIR__ . '/../view/errors/404.php';
             return;
         }
-        require __DIR__ . '/../view/articles/show.php';
+        require_once __DIR__ . '/../view/articles/show.php';
     }
 
     // Form tạo bài viết
     public static function create()
     {
-        require __DIR__ . '/../view/articles/create.php';
+        require_once __DIR__ . '/../view/articles/create.php';
     }
 
     // Xử lý lưu bài viết
@@ -50,7 +50,7 @@ class ArticlesController
     public static function edit($id)
     {
         $article = ArticlesModel::getArticleById($id);
-        require __DIR__ . '/../view/articles/edit.php';
+        require_once __DIR__ . '/../view/articles/edit.php';
     }
 
     // Xử lý update
@@ -138,17 +138,17 @@ class ArticlesController
         // Lấy dữ liệu từ model
         $article = ArticlesModel::getArticleById($id);
         if (!$article) {
-            require __DIR__ . '/../view/errors/404.php';
+            require_once __DIR__ . '/../view/errors/404.php';
             return;
         }
 
         // Nạp view
         ob_start();
-        require __DIR__ . '/../view/page/details_Blog.php';
+        require_once __DIR__ . '/../view/page/details_Blog.php';
         $content = ob_get_clean();
 
         // Layout chính
         $profile = false;
-        require __DIR__ . '/../view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 }
