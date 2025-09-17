@@ -1,17 +1,18 @@
 <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
+    <!--<link rel="stylesheet" href="/public/css/style.css"> -->
 
 
-    <style>
-
-    </style>
     <div class="block-k left-menu bg-transparent border0 p-l-0">
-        <ul class="nav nav-second-level">
+        <id></id>
+        <ul class="nav nav-second-level">>
             <li class="item active"><svg class="home-icon" rpl="" fill="currentColor" height="20"
                     icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
-                    <!--?lit$03863286$--><!--?lit$03863286$-->
+                    <!--?lit$03863286$-->
+                    <!--?lit$03863286$-->
                     <path
                         d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
-                    </path><!--?-->
+                    </path>
+                    <!--?-->
                 </svg>
                 <a href="home" title="Trang chủ">Trang chủ</a>
             </li>
@@ -19,11 +20,15 @@
                 <i class="bi bi-newspaper idiscuss"></i>
                 <a href="news" title="Trang chủ">Mới nhất</a>
             </li>
+
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
-
+            <li class="item" data-ref="k">
+                <i class="bi bi-chat-left-text idiscuss"></i>
+                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
+            </li>
 
         </ul>
         <div class="line"></div>
@@ -59,7 +64,7 @@
                                 title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 border="0" />
                             <a title="<?= htmlspecialchars($topic['name']) ?>"
-                                href="<?= BASE_URL ?>details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                                href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
                                 <?= htmlspecialchars($topic['name']) ?>
                             </a>
                             <i class="fas fa-plus icon-right"></i>
@@ -84,7 +89,8 @@
                 <i class="bi bi-book"></i>
                 <a href="about#gioithieu">Thỏa thuận cung cấp và sử dụng dịch vụ MXH</a>
             </li>
-            <li><!-- <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline"
+            <li>
+                <!-- <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline"
                                 viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                                 <path
                                     d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z">
@@ -113,5 +119,4 @@
 
         </ul>
     </div>
-
-</section>
+    <script src="/public/js/mau.js"></script>

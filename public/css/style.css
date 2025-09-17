@@ -18,7 +18,7 @@ a {
 
 #chatbot-box .agent {
     display: flex;
-    align-items: center;
+    align-items: center;h
     gap: 10px;
 }
 
@@ -32,12 +32,6 @@ a {
     justify-content: center;
     font-size: 20px;
     color: #fff;
-}
-
-#chatbot-box .agent-info {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
 }
 
 #chatbot-box .agent-name {
@@ -55,21 +49,7 @@ a {
     font-size: 12px;
     color: green;
     font-weight: 500;
-}
-
-#chatbot-box .chat-close {
-    background: transparent;
-    border: none;
-    font-size: 18px;
-    color: #666;
-    cursor: pointer;
-    padding: 4px;
-    margin-left: 8px;
-    transition: color 0.2s;
-}
-
-#chatbot-box .chat-close:hover {
-    color: #000;
+    margin-left: auto;
 }
 
 /* Chat messages */
@@ -1409,11 +1389,53 @@ textarea.form-control {
 
 .home-icon {
     opacity: 0.8;
+    color: red;
+  
 }
+
+.left-sidebar .block-k ul.nav-second-level li.item a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li a {
+    color: #000;
+    fill:  #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+
+ .left-sidebar .block-k ul.nav-second-level li.item.active a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
+    color: #ef1105;
+ 
+    font-weight: bold;
+}
+ 
 
 .trend-icon {
     font-size: 21px;
 }
+/* Mặc định đen */
+.collapse ul li.item a,
+.collapse ul li.item i,
+.collapse ul li.item svg {
+    color: #000;
+    fill: #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+/* Khi được chọn */
+.collapse ul li.item.active a,
+.collapse ul li.item.active i,
+.collapse ul li.item.active svg {
+    color: #ef1105;
+    fill: #ef1105;
+    font-weight: bold;
+}
+
 
 .about-c i {
     font-size: 20px;
@@ -2285,7 +2307,7 @@ a.disabled {
 
 .box-search .post-input a {
     width: 100%;
-    color: #504d4d;
+    color: #512f2f;
 }
 
 .left-menu ul li {
@@ -2297,11 +2319,12 @@ a.disabled {
 .left-menu ul li:hover,
 .left-menu ul li.active {
     background-color: #ebebeb;
+    color: #000;
 }
 
 .left-menu ul li:hover a,
 .left-menu ul li.active a {
-    color: #000;
+    color: #bc0303;
     font-weight: 600;
 }
 
@@ -2321,12 +2344,15 @@ a.disabled {
     padding-left: 8px;
 }
 
-.left-menu .item {
+.left-menu .item ul {
     display: flex;
     width: 100%;
     margin-bottom: 12px;
+   
 }
-
+/**/
+ 
+/**/
 .left-menu a {
     padding-left: 12px;
     padding-top: 2px;
@@ -4854,151 +4880,6 @@ div[data-notify="container"] .close {
     color: #fff;
 }
 
-/* Khung chat */
-.cover-chat {
-    background: #fff;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-}
-
-/* Header */
-.cover-chat h5 {
-    background: #0d47a1;
-    color: #fff;
-    margin: 0;
-    padding: 10px 15px;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-/* Danh sách comment */
-.list_comment {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    max-height: 400px;
-    overflow-y: auto;
-}
-
-/* Item */
-.chat-item {
-    display: flex;
-    gap: 10px;
-    padding: 12px;
-    border-bottom: 1px solid #eee;
-}
-
-.chat-item:last-child {
-    border-bottom: none;
-}
-
-/* Avatar */
-.chat-avatar {
-    flex-shrink: 0;
-}
-
-.chat-avatar img,
-.avatar-fallback {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    background: #1976d2;
-    color: #fff;
-    font-size: 16px;
-}
-
-/* Nội dung */
-.chat-body {
-    flex: 1;
-}
-
-.chat-meta {
-    font-size: 14px;
-    font-weight: bold;
-    color: #333;
-}
-
-.chat-meta .chat-time {
-    font-size: 12px;
-    color: #999;
-    margin-left: 8px;
-    font-weight: normal;
-}
-
-.chat-content {
-    font-size: 14px;
-    margin: 4px 0 8px;
-    color: #444;
-}
-
-/* Vote + reply */
-.chat-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-    color: #555;
-}
-
-.chat-actions button {
-    border: none;
-    background: #f1f1f1;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-}
-
-.chat-actions button:hover {
-    background: #e0e0e0;
-}
-
-.vote-count {
-    font-size: 13px;
-    min-width: 14px;
-    text-align: center;
-}
-
-/* Ô nhập bình luận */
-.h-comment {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px;
-    border-top: 1px solid #ddd;
-}
-
-.h-comment textarea {
-    flex: 1;
-    min-height: 50px;
-    /* tăng chiều cao mặc định */
-    max-height: 120px;
-    /* không để quá cao */
-    resize: none;
-    /* chặn resize bằng tay, cho gọn */
-    padding: 8px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-}
-
-.h-comment i {
-    font-size: 18px;
-    color: #0d47a1;
-    cursor: pointer;
-}
-
 .d-balimage {
     background-color: #f5efef;
     padding: 7px 15px 0 15px;
@@ -7017,6 +6898,10 @@ ul.timeline .left-arrow:after {
         padding: 30px 0 0 50px;
     }
 
-
-
 }
+
+ 
+   
+    
+
+        
