@@ -28,7 +28,7 @@ ini_set('display_errors', 1);
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 
 if (empty($url)) {
-    require_once 'controller/homeController.php';
+    require_once __DIR__ . 'controller/homeController.php';
     $controller = new homeController();
     $controller->index();
     exit;
@@ -48,12 +48,12 @@ switch ($url) {
     //     break;
 
     case 'login':
-        require_once 'controller/auth/loginController.php';
+        require_once __DIR__ . '/controller/auth/loginController.php';
         $controller = new loginController();
         $controller->index();
         break;
     case 'register':
-        require_once 'controller/auth/registerUserController.php';
+        require_once __DIR__ . '/controller/auth/registerUserController.php';
         $controller = new registerUserController();
         $controller->index();
         break;
@@ -62,97 +62,97 @@ switch ($url) {
         header("Location: " . BASE_URL . "");
         break;
     case 'change_password':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->changePassword();
         break;
     case 'profile_user':
-        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
         $controller->index();
         break;
     case 'register_business':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->registerBusiness();
         break;
 
     case 'edit_profile':
-        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
         $controller->editProfile();
         break;
     case 'profile_business':
-        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new BusinessmenController();
         $controller->index();
         break;
     case 'edit_business':
-        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new BusinessmenController();
         $controller->editBusiness();
         break;
     case 'edit_business_career':
-        require_once 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new BusinessmenController();
         $controller->editBusinessCareer();
         break;
     case 'add_article':
-        require_once 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/account/profileUserController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new profileUserController();
         $controller->addArticle();
         break;
     case 'trends':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/HomeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->trends();
         break;
     case 'details_topic':
-        require_once 'controller/admin/TopicController.php';
+        require_once __DIR__ . 'controller/admin/TopicController.php';
         $controller = new TopicController();
         $controller->details_topic();
         break;
     case 'about':
-        require_once 'controller/homeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+        require_once __DIR__ . 'controller/HomeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->about();
         break;
     case 'details_blog':
-        require_once 'controller/ArticlesController.php';
+        require_once __DIR__ . 'controller/ArticlesController.php';
         $controller = new ArticlesController();
 
         $id = $_GET['id'] ?? null;
         $controller->details_blog($id);
         break;
     case 'search':
-        require_once 'controller/SearchController.php';
+        require_once __DIR__ . 'controller/SearchController.php';
         $controller = new SearchController();
         $controller->index();
         break;
 
     case 'news':
-        require_once 'controller/NewsController.php';
+        require_once __DIR__ . 'controller/NewsController.php';
         $controller = new NewsController();
         $controller->index();
         break;
     case 'api/loadMoreArticles':
-        require_once 'controller/HomeController.php';
+        require_once __DIR__ . 'controller/HomeController.php';
         $controller = new homeController();
         $controller->loadMoreArticles();
         exit;
     case 'crypton':
-        require_once 'controller/CryptonController.php';
+        require_once __DIR__ . 'controller/CryptonController.php';
         $controller = new CryptonController();
         $controller->index();
         break;
     case 'view_profile':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->viewprofileUser();
         break;
 
     case 'event':
-        require_once 'controller/EventDetailController.php';
+        require_once __DIR__ . 'controller/EventDetailController.php';
         $controller = new EventDetailController($pdo);
         $id = $_GET['id'] ?? null;
         $controller->details($id);
@@ -162,20 +162,20 @@ switch ($url) {
 
     // ========== API ROUTES ==========
     case 'api/addPost':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->addArticle();
         exit;
     case 'api/loadPost':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->loadArticle();
         exit;
     case 'api/add-post':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         break;
     case 'api/toggle-like':
-        require_once 'controller/account/profileUserController.php';
+        require_once __DIR__ . 'controller/account/profileUserController.php';
         break;
 
     default:

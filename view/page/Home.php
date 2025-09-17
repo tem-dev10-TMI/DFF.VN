@@ -569,10 +569,11 @@ setInterval(loadNewComments, 2000);
 
 
 
-        <div class="adv">
-            <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="../media.dff.vn/static/img/coins.jpg"></a>
-        </div>
+<a target="_blank" href="<?= BASE_URL ?>/crypton">
+    <img src="<?= BASE_URL ?>/public/img/crypto.png" alt="Crypto" style="width:100px; height:auto;">
+</a>
+
+
 
         <div class="block-k bg-box-a">
             <div class="box-follow"></div>
