@@ -459,7 +459,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Load comment mới
             function loadNewComments() {
-                fetch("comment_list.php?last_id=" + lastId)
+                fetch("comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
