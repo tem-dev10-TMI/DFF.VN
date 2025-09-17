@@ -28,7 +28,7 @@ ini_set('display_errors', 1);
 $url = isset($_GET['url']) ? $_GET['url'] : '';
 
 if (empty($url)) {
-    require_once 'controller/homeController.php';
+    require_once __DIR__ . 'controller/homeController.php';
     $controller = new homeController();
     $controller->index();
     exit;
