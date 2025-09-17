@@ -6899,6 +6899,25 @@ ul.timeline .left-arrow:after {
     }
 
 }
+.menu input {
+  display: none; /* ẩn radio */
+}
+
+.menu label {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  color: #333; /* màu mặc định */
+  cursor: pointer;
+}
+
+.menu input:checked + label {
+  color: red; /* chữ đỏ khi chọn */
+}
+
+.menu input:checked + label .icon {
+  fill: red; /* icon đỏ khi chọn */
+}
 
  
    
