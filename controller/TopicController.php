@@ -1,6 +1,6 @@
 <?php
-require_once 'model/TopicModel.php';
-require_once 'model/article/articlesmodel.php';
+require_once __DIR__ . '/../model/TopicModel.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
 class topicController
 {
     // Hiển thị danh sách tất cả chủ đề (ví dụ trang chính hoặc sidebar)
@@ -11,12 +11,12 @@ class topicController
         $articles = ArticlesModel::getLatestArticles($limit = 6);
         // Load view
         ob_start();
-        require_once 'view/layout/sidebarLeft.php'; // file view hiển thị danh sách chủ đề
+        require_once __DIR__ . '/../view/layout/sidebarLeft.php'; // file view hiển thị danh sách chủ đề
         $content = ob_get_clean();
 
         // Load layout
         $profile = false;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 
     // Lấy top N chủ đề (ví dụ sidebar menu)
@@ -27,12 +27,12 @@ class topicController
 
         // Load view sidebar
         ob_start();
-        require 'view/layout/sidebarLeft.php';
+        require __DIR__ . '/../view/layout/sidebarLeft.php';
         $content = ob_get_clean();
 
         // Load layout
         $profile = false;
-        require 'view/layout/main.php';
+        require __DIR__ . '/../view/layout/main.php';
     }
 
     // Chi tiết 1 chủ đề (ví dụ hiển thị bài viết theo topic)
@@ -47,10 +47,10 @@ class topicController
 
         // Load view chi tiết topic
         ob_start();
-        require 'view/page/TopicDetails.php'; // bạn tạo view này để hiển thị bài viết theo topic
+        require __DIR__ . '/../view/page/DetailsTopic.php'; // bạn tạo view này để hiển thị bài viết theo topic
         $content = ob_get_clean();
 
         $profile = false;
-        require 'view/layout/main.php';
+        require __DIR__ . '/../view/layout/main.php';
     }
 }
