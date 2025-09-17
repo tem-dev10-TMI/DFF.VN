@@ -1397,7 +1397,6 @@ textarea.form-control {
         .left-sidebar .block-k ul.nav-second-level.top-item li a,
         .left-sidebar .block-k ul.nav-second-level.about-c li a,
         .left-sidebar .block-k ul.nav-second-level.h-info li a {
-            display: flex;
     color: #000;
     fill:  #000;
     text-decoration: none;
@@ -1422,7 +1421,6 @@ textarea.form-control {
 .collapse ul li.item a,
 .collapse ul li.item i,
 .collapse ul li.item svg {
-    display: flex;
     color: #000;
     fill: #000;
     text-decoration: none;
