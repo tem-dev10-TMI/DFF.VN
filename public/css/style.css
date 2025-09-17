@@ -18,7 +18,7 @@ a {
 
 #chatbot-box .agent {
     display: flex;
-    align-items: center;
+    align-items: center;h
     gap: 10px;
 }
 
@@ -1389,11 +1389,53 @@ textarea.form-control {
 
 .home-icon {
     opacity: 0.8;
+    color: red;
+  
 }
+
+.left-sidebar .block-k ul.nav-second-level li.item a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li a {
+    color: #000;
+    fill:  #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+
+ .left-sidebar .block-k ul.nav-second-level li.item.active a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
+    color: #ef1105;
+ 
+    font-weight: bold;
+}
+ 
 
 .trend-icon {
     font-size: 21px;
 }
+/* Mặc định đen */
+.collapse ul li.item a,
+.collapse ul li.item i,
+.collapse ul li.item svg {
+    color: #000;
+    fill: #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+/* Khi được chọn */
+.collapse ul li.item.active a,
+.collapse ul li.item.active i,
+.collapse ul li.item.active svg {
+    color: #ef1105;
+    fill: #ef1105;
+    font-weight: bold;
+}
+
 
 .about-c i {
     font-size: 20px;
@@ -2265,7 +2307,7 @@ a.disabled {
 
 .box-search .post-input a {
     width: 100%;
-    color: #504d4d;
+    color: #512f2f;
 }
 
 .left-menu ul li {
@@ -2277,11 +2319,12 @@ a.disabled {
 .left-menu ul li:hover,
 .left-menu ul li.active {
     background-color: #ebebeb;
+    color: #000;
 }
 
 .left-menu ul li:hover a,
 .left-menu ul li.active a {
-    color: #000;
+    color: #bc0303;
     font-weight: 600;
 }
 
@@ -2301,12 +2344,15 @@ a.disabled {
     padding-left: 8px;
 }
 
-.left-menu .item {
+.left-menu .item ul {
     display: flex;
     width: 100%;
     margin-bottom: 12px;
+   
 }
-
+/**/
+ 
+/**/
 .left-menu a {
     padding-left: 12px;
     padding-top: 2px;
@@ -6853,6 +6899,9 @@ ul.timeline .left-arrow:after {
     }
 
 }
-#navbarNav5 ul li a:active {
-    color: red;
-}
+
+ 
+   
+    
+
+        
