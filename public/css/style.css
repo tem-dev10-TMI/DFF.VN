@@ -18,7 +18,7 @@ a {
 
 #chatbot-box .agent {
     display: flex;
-    align-items: center;
+    align-items: center;h
     gap: 10px;
 }
 
@@ -1389,11 +1389,53 @@ textarea.form-control {
 
 .home-icon {
     opacity: 0.8;
+    color: red;
+  
 }
+
+.left-sidebar .block-k ul.nav-second-level li.item a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li a {
+    color: #000;
+    fill:  #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+
+ .left-sidebar .block-k ul.nav-second-level li.item.active a,
+        .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
+        .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
+        .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
+    color: #ef1105;
+ 
+    font-weight: bold;
+}
+ 
 
 .trend-icon {
     font-size: 21px;
 }
+/* Mặc định đen */
+.collapse ul li.item a,
+.collapse ul li.item i,
+.collapse ul li.item svg {
+    color: #000;
+    fill: #000;
+    text-decoration: none;
+    transition: color 0.2s, fill 0.2s;
+}
+
+/* Khi được chọn */
+.collapse ul li.item.active a,
+.collapse ul li.item.active i,
+.collapse ul li.item.active svg {
+    color: #ef1105;
+    fill: #ef1105;
+    font-weight: bold;
+}
+
 
 .about-c i {
     font-size: 20px;
@@ -2265,7 +2307,7 @@ a.disabled {
 
 .box-search .post-input a {
     width: 100%;
-    color: #504d4d;
+    color: #512f2f;
 }
 
 .left-menu ul li {
@@ -2277,11 +2319,12 @@ a.disabled {
 .left-menu ul li:hover,
 .left-menu ul li.active {
     background-color: #ebebeb;
+    color: #000;
 }
 
 .left-menu ul li:hover a,
 .left-menu ul li.active a {
-    color: #000;
+    color: #bc0303;
     font-weight: 600;
 }
 
@@ -2301,12 +2344,15 @@ a.disabled {
     padding-left: 8px;
 }
 
-.left-menu .item {
+.left-menu .item ul {
     display: flex;
     width: 100%;
     margin-bottom: 12px;
+   
 }
-
+/**/
+ 
+/**/
 .left-menu a {
     padding-left: 12px;
     padding-top: 2px;
@@ -6854,337 +6900,8 @@ ul.timeline .left-arrow:after {
 
 }
 
-@media (max-width: 576px) {
-  /* Header / logo */
-  .header, .m-top-info {
-    font-size: 14px; /
-  }
+ 
+   
+    
 
-  /* Nếu logo được đặt trong .logo */
-  .logo img, header .logo img {
-    max-height: 48px;    /* tăng logo trên mobile */
-    height: auto;
-    width: auto;
-    display: block;
-  }
-
-  /* Mobile bottom function bar (icon + text) */
-  .func-mobile ul li a {
-    font-size: 13px; /* chữ ở dưới icon to hơn */
-  }
-  .func-mobile ul li a i {
-    font-size: 20px;
-    line-height: 1;
-  }
-
-  /* Sidebar / menu list (mobile drawer) */
-  .sidebar-mobile .menu,
-  .sidebar-mobile ul {
-    padding: 0 12px;
-    margin: 0;
-  }
-
-  .sidebar-mobile .menu li {
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    list-style: none;
-  }
-
-  .sidebar-mobile .menu li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;            /* khoảng cách icon - text */
-    padding: 12px 6px;
-    font-size: 16px;      /* tăng chữ menu trên mobile */
-    color: #222;
-    text-decoration: none;
-  }
-
-  .sidebar-mobile .menu li a i.icon {
-    min-width: 28px;      /* ổn định kích thước icon */
-    text-align: center;
-    font-size: 18px;
-    color: #3b3b3b;
-  }
-
-  /* Chủ đề (section heading) */
-  .sidebar-mobile h3, .sidebar-mobile .section-title {
-    font-size: 13px;
-    margin: 18px 12px 8px;
-    color: #666;
-    letter-spacing: 0.6px;
-  }
-
-  /* Ảnh thumb nếu có bị ẩn hoặc broken — giữ spacer */
-  .sidebar-mobile .topic-thumb {
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    background-color: transparent;
-    object-fit: cover;
-  }
-
-  /* Icon badges / notification */
-  .sidebar-mobile .menu li .badge {
-    margin-left: auto;
-    background: #ff3b30;
-    color: #fff;
-    min-width: 22px;
-    height: 22px;
-    line-height: 22px;
-    font-size: 12px;
-    text-align: center;
-    border-radius: 12px;
-    padding: 0 6px;
-  }
-
-  /* Fix overflow và khoảng cách của container */
-  .sidebar-mobile {
-    box-sizing: border-box;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Desktop: căn icon + text chung (áp dụng cho cả desktop nếu dùng same classes) */
-.sidebar-mobile .menu li a i.icon {
-  font-size: 16px;
-  color: #2b2b2b;
-}
-
-/* Tối ưu cho các icon SVG thay thế (nếu dùng) */
-.sidebar-mobile .menu li a img.topic-thumb {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  display: inline-block;
-}
-/* Icon cho mục Xu hướng */
-.m-trend i {
-  font-size: 20px;      /* kích thước icon */
-  color: #333;          /* màu icon (có thể đổi sang #007bff để xanh) */
-  margin-right: 6px;    /* tạo khoảng cách với chữ */
-}
-@media (max-width: 768px) {
-}
-/* Mobile rất nhỏ (≤ 400px) */
-@media (max-width: 400px) {
-  /* Ngày giờ */
-  .time, .date, .date-time {
-    font-size: 18px !important;
-    font-weight: 600;
-  }
-
-  /* Logo */
-  .logo img,
-  .logo svg {
-    width: 170px !important;
-    height: auto !important;
-  }
-
-  /* Lịch sự kiện */
-  .event-link, .event, a[href*="su-kien"] {
-    font-size: 18px !important;
-    font-weight: 700 !important;
-  }
-}
-/* ========== Mobile tweaks & menu icons ========== */
-/* Chèn phần này vào cuối public/css/style.css */
-
-@media (max-width: 576px) {
-  /* Header / logo */
-  .header, .m-top-info {
-    font-size: 14px; /* ngày giờ dễ đọc */
-  }
-
-  /* Nếu logo được đặt trong .logo */
-  .logo img, header .logo img {
-    max-height: 48px;    /* tăng logo trên mobile */
-    height: auto;
-    width: auto;
-    display: block;
-  }
-
-  /* Mobile bottom function bar (icon + text) */
-  .func-mobile ul li a {
-    font-size: 13px; /* chữ ở dưới icon to hơn */
-  }
-  .func-mobile ul li a i {
-    font-size: 20px;
-    line-height: 1;
-  }
-
-  /* Sidebar / menu list (mobile drawer) */
-  .sidebar-mobile .menu,
-  .sidebar-mobile ul {
-    padding: 0 12px;
-    margin: 0;
-  }
-
-  .sidebar-mobile .menu li {
-    border-bottom: 1px solid rgba(0,0,0,0.06);
-    list-style: none;
-  }
-
-  .sidebar-mobile .menu li a {
-    display: flex;
-    align-items: center;
-    gap: 10px;            /* khoảng cách icon - text */
-    padding: 12px 6px;
-    font-size: 16px;      /* tăng chữ menu trên mobile */
-    color: #222;
-    text-decoration: none;
-  }
-
-  .sidebar-mobile .menu li a i.icon {
-    min-width: 28px;      /* ổn định kích thước icon */
-    text-align: center;
-    font-size: 18px;
-    color: #3b3b3b;
-  }
-
-  /* Chủ đề (section heading) */
-  .sidebar-mobile h3, .sidebar-mobile .section-title {
-    font-size: 13px;
-    margin: 18px 12px 8px;
-    color: #666;
-    letter-spacing: 0.6px;
-  }
-
-  /* Ảnh thumb nếu có bị ẩn hoặc broken — giữ spacer */
-  .sidebar-mobile .topic-thumb {
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    background-color: transparent;
-    object-fit: cover;
-  }
-
-  /* Icon badges / notification */
-  .sidebar-mobile .menu li .badge {
-    margin-left: auto;
-    background: #ff3b30;
-    color: #fff;
-    min-width: 22px;
-    height: 22px;
-    line-height: 22px;
-    font-size: 12px;
-    text-align: center;
-    border-radius: 12px;
-    padding: 0 6px;
-  }
-
-  /* Fix overflow và khoảng cách của container */
-  .sidebar-mobile {
-    box-sizing: border-box;
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-}
-
-/* Desktop: căn icon + text chung (áp dụng cho cả desktop nếu dùng same classes) */
-.sidebar-mobile .menu li a i.icon {
-  font-size: 16px;
-  color: #2b2b2b;
-}
-
-/* Tối ưu cho các icon SVG thay thế (nếu dùng) */
-.sidebar-mobile .menu li a img.topic-thumb {
-  width: 24px;
-  height: 24px;
-  object-fit: contain;
-  display: inline-block;
-}
-/* Sidebar mobile */
-.sidebar-mobile {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 260px;
-  height: 100vh;
-  background: #fff;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.15);
-  overflow-y: auto;
-  z-index: 1000;
-  display: none; /* ẩn mặc định */
-}
-
-.sidebar-mobile ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* Sidebar chỉ hiện trên mobile */
-@media (max-width: 768px) {
-  .sidebar-mobile {
-    display: block;
-  }
-}
-
-@media (min-width: 769px) {
-  .sidebar-mobile {
-    display: none;
-  }
-}
-/* Sidebar responsive fix */
-.sidebar-mobile ul li a {
-  display: flex;
-  align-items: center;
-  gap: 10px;                /* tạo khoảng cách giữa icon và chữ */
-  padding: 10px 14px;
-  text-decoration: none;
-  color: #fff;              /* chữ màu trắng cho nền tối */
-  font-size: 15px;
-}
-
-.sidebar-mobile ul li a i,
-.sidebar-mobile ul li a svg,
-.sidebar-mobile ul li a img {
-  width: 20px;              /* ép icon đồng bộ kích thước */
-  height: 20px;
-  flex-shrink: 0;           /* icon không bị co lại */
-}
-
-.sidebar-mobile ul li {
-  border-bottom: 1px solid rgba(255,255,255,0.1); /* chia line cho dễ đọc */
-}
-
-.sidebar-mobile ul li.section-title {
-  font-size: 12px;
-  font-weight: bold;
-  color: #bbb;
-  margin-top: 12px;
-  padding: 8px 14px;
-}
-/* Ẩn toggle mặc định */
-#toggleMenu {
-  display: none;
-}
-
-/* Mặc định */
-.left-sidebar .block-k ul.nav-second-level li,
-.left-sidebar .block-k ul.nav-second-level li a,
-.left-sidebar .block-k ul.nav-second-level li svg,
-.left-sidebar .block-k ul.nav-second-level li i {
-    color: #000 !important;
-    fill: #000 !important;
-    stroke: #000 !important;
-    text-decoration: none !important;
-}
-
-/* Khi active */
-.left-sidebar .block-k ul.nav-second-level li.active,
-.left-sidebar .block-k ul.nav-second-level li.active a,
-.left-sidebar .block-k ul.nav-second-level li.active svg,
-.left-sidebar .block-k ul.nav-second-level li.active i {
-    color: #ef1105ff !important;
-    fill: #ef1105ff !important;
-    stroke: #ef1105ff !important;
-    font-weight: bold !important;
-}
-
-
-
-
+        

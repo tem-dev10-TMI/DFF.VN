@@ -1,51 +1,10 @@
 <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
-
-
-    <style>
-    .left-sidebar .block-k ul.nav-second-level li.item a,
-    .left-sidebar .block-k ul.nav-second-level.top-item li a,
-    .left-sidebar .block-k ul.nav-second-level.about-c li a,
-    .left-sidebar .block-k ul.nav-second-level.h-info li a {
-        color: #000;
-        text-decoration: none;
-    }
-    .left-sidebar .block-k ul.nav-second-level li.item.active a,
-    .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
-    .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
-    .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
-        
-        color: #ef1105ff ;
-        font-weight: bold;
-    }
-    .left-sidebar .block-k ul.nav-second-level li.item a,
-.left-sidebar .block-k ul.nav-second-level.top-item li a,
-.left-sidebar .block-k ul.nav-second-level.about-c li a,
-.left-sidebar .block-k ul.nav-second-level.h-info li a {
-    color: #000;
-    text-decoration: none;
-}
-
-.left-sidebar .block-k ul.nav-second-level li.item.active a,
-.left-sidebar .block-k ul.nav-second-level.top-item li.active a,
-.left-sidebar .block-k ul.nav-second-level.about-c li.active a,
-.left-sidebar .block-k ul.nav-second-level.h-info li.active a {
-    color: #ef1105ff !important;
-    font-weight: bold !important;
-}   
-@media (max-width: 768px) {
-    .left-sidebar .block-k ul.nav-second-level li.active > a,
-    .left-sidebar .block-k ul.nav-second-level.top-item li.active > a,
-    .left-sidebar .block-k ul.nav-second-level.about-c li.active > a,
-    .left-sidebar .block-k ul.nav-second-level.h-info li.active > a {
-        color: #ef1105ff !important;
-        font-weight: bold !important;
-    }
-}
-    </style>
+    <!--<link rel="stylesheet" href="/public/css/style.css"> -->
 
 
     <div class="block-k left-menu bg-transparent border0 p-l-0">
-        <ul class="nav nav-second-level">
+        <id></id>
+        <ul class="nav nav-second-level">>
             <li class="item active"><svg class="home-icon" rpl="" fill="currentColor" height="20"
                     icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$-->
@@ -59,15 +18,16 @@
             </li>
             <li class="item" data-ref="d">
                 <i class="bi bi-newspaper idiscuss"></i>
-                <a href="tin-moi.html" title="Trang chủ">Mới nhất</a>
+                <a href="news" title="Trang chủ">Mới nhất</a>
             </li>
+
             <li class="item">
                 <i class="bi bi-box-arrow-up-right trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
             <li class="item" data-ref="k">
                 <i class="bi bi-chat-left-text idiscuss"></i>
-                <a href="?url=comments" title="Trang chủ">Bình luận</a>
+                <a href="binh-luan.html" title="Trang chủ">Bình luận</a>
             </li>
 
         </ul>
@@ -78,44 +38,44 @@
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
         <?php if (!empty($topTopics)): ?>
-        <ul class="nav nav-second-level top-item">
-            <?php foreach ($topTopics as $topic): ?>
-            <li>
-                <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
-                    alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
-                <a title="<?= htmlspecialchars($topic['name']) ?>"
-                    href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
-                    <?= htmlspecialchars($topic['name']) ?>
-                </a>
-                <i class="fas fa-plus icon-right"></i>
-            </li>
-            <?php endforeach; ?>
-        </ul>
+            <ul class="nav nav-second-level top-item">
+                <?php foreach ($topTopics as $topic): ?>
+                    <li>
+                        <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
+                            alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
+                        <a title="<?= htmlspecialchars($topic['name']) ?>"
+                            href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                            <?= htmlspecialchars($topic['name']) ?>
+                        </a>
+                        <i class="fas fa-plus icon-right"></i>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         <?php else: ?>
-        <p>Chưa có chủ đề nào</p>
+            <p>Chưa có chủ đề nào</p>
         <?php endif; ?>
 
         <?php if (!empty($moreTopics)): ?>
-        <div id="flush-collapseOne" class="accordion-collapse collapse">
-            <ul class="nav nav-second-level top-item">
-                <?php foreach ($moreTopics as $topic): ?>
-                <li>
-                    <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
-                        title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
-                        border="0" />
-                    <a title="<?= htmlspecialchars($topic['name']) ?>"
-                        href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
-                        <?= htmlspecialchars($topic['name']) ?>
-                    </a>
-                    <i class="fas fa-plus icon-right"></i>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        <div class="to-expend">
-            <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                aria-expanded="false" aria-controls="flush-collapseOne"></i>
-        </div>
+            <div id="flush-collapseOne" class="accordion-collapse collapse">
+                <ul class="nav nav-second-level top-item">
+                    <?php foreach ($moreTopics as $topic): ?>
+                        <li>
+                            <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
+                                title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
+                                border="0" />
+                            <a title="<?= htmlspecialchars($topic['name']) ?>"
+                                href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                                <?= htmlspecialchars($topic['name']) ?>
+                            </a>
+                            <i class="fas fa-plus icon-right"></i>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="to-expend">
+                <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                    aria-expanded="false" aria-controls="flush-collapseOne"></i>
+            </div>
         <?php endif; ?>
 
         <div class="line"></div>
@@ -123,11 +83,11 @@
 
         <ul class="nav nav-second-level about-c">
             <li><i class="bi bi-tv"></i>
-                <a href="?url=about">Về chúng tôi</a>
+                <a href="about#">Về chúng tôi</a>
             </li>
             <li class="mline">
                 <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service">Thỏa thuận cung cấp và sử dụng dịch vụ MXH</a>
+                <a href="about#gioithieu">Thỏa thuận cung cấp và sử dụng dịch vụ MXH</a>
             </li>
             <li>
                 <!-- <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline"
@@ -143,46 +103,20 @@
                                 </path>
                                 <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                             </svg> -->
-                <a href="?url=aboutme">Chính sách riêng tư</a>
+                <a href="about#thuthap">Chính sách riêng tư</a>
             </li>
-            <li><i class="bi bi-badge-ad"></i>
-                <a href="policy.html#advertisement">Quảng cáo </a>
-            </li>
-            <li><i class="bi bi-rss"></i>
-                <a href="rss.html">RSS </a>
-            </li>
+
         </ul>
 
         <div class="line"></div>
         <ul class="nav nav-second-level h-info">
-            <li>Số Giấy phép: 125/GP-BTTTT ngày 11/03/2022</li>
-            <li>Tổ chức thiết lập: CTCP Tài chính số</li>
-            <li>Địa chỉ: Tầng 8, tòa Detech II, 107 Nguyễn Phong Sắc, Cầu Giấy, Hà Nội</li>
-            <li>Chịu trách nhiệm nội dung: Trần Đô Thành</li>
-            <li>Hotline: 0789 339 898 - Email: info@dff.vn</li>
+            <li>TEAM TIM (DEV - K25)</li>
+            <li>Viện Phát triển Đào tạo và Quản lý (TMI)</li>
+            <li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
+            <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
+            <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
 
 
         </ul>
     </div>
-
-</section>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-
-    const allLis = document.querySelectorAll(
-        ".left-sidebar .block-k ul.nav-second-level li"
-    );
-
-    allLis.forEach(li => {
-        const a = li.querySelector("a");
-        if (a) {
-            a.addEventListener("click", function(e) {
-
-                allLis.forEach(item => item.classList.remove("active"));
-
-                li.classList.add("active");
-            });
-        }
-    });
-});
-</script>
+    <script src="/public/js/mau.js"></script>
