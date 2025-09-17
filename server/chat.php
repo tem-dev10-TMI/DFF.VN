@@ -1,4 +1,34 @@
 <?php
+session_start();
+
+// Giới hạn câu hỏi mỗi ngày
+$limit = 10;
+$today = date('Y-m-d');
+
+// Nếu chưa có dữ liệu session thì khởi tạo
+if (!isset($_SESSION['question_count'])) {
+    $_SESSION['question_count'] = 0;
+    $_SESSION['question_date'] = $today;
+}
+
+// Nếu đã sang ngày mới → reset lại
+if ($_SESSION['question_date'] !== $today) {
+    $_SESSION['question_count'] = 0;
+    $_SESSION['question_date'] = $today;
+}
+
+// Nếu vượt quá giới hạn thì chặn luôn
+if ($_SESSION['question_count'] >= $limit) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'reply' => '❌ Bạn đã đạt giới hạn 10 câu hỏi cho hôm nay. Vui lòng quay lại vào ngày mai.',
+        'sources' => []
+    ]);
+    exit;
+}
+
+// Nếu chưa vượt thì tăng đếm
+$_SESSION['question_count']++;
 // server/chat.php — Backend proxy for Google Gemini API with simple RAG + Multiple Prompts
 
 header('Content-Type: application/json; charset=utf-8');
