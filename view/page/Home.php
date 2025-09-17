@@ -387,7 +387,7 @@ document.getElementById("send-comment").addEventListener("click", () => {
             const li = createCommentElement(data.comment);
 
             // ✅ thêm xuống cuối
-            ul.append(li);
+            ul.prepend(li);
 
             // ✅ auto scroll xuống cuối
             ul.scrollTop = 0;
@@ -422,7 +422,7 @@ function loadNewComments() {
                         const li = createCommentElement(c);
 
                         // ✅ cũng append lên đầuđầu
-                        ul.append(li);
+                        ul.prepend(li);
 
                         // ✅ scroll xuống  lên đàu khi có comment mới
                         ul.scrollTop = 0;

@@ -5,10 +5,6 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/config/db.php';
 require_once __DIR__ . '/model/CommentGlobalModel.php';
 
-// 🔥 Debug log ra file để kiểm tra có chạy không
-file_put_contents(__DIR__ . "/comment_debug.log", date("Y-m-d H:i:s") . " - POST: " . json_encode($_POST) . PHP_EOL, FILE_APPEND);
-
-// Kiểm tra login
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'error' => 'Bạn phải đăng nhập.']);
     exit;
@@ -23,12 +19,19 @@ if ($content === '') {
     exit;
 }
 
-// Lưu vào DB
-$parent_id = $_POST['parent_id'] ?? null;
-
-// Nếu không có parent_id thì gán NULL
 if ($parent_id === '' || $parent_id === null) {
     $parent_id = null;
 }
 
+// The database connection is needed to get the last insert ID
+$db = new connect(); 
+
 $ok = CommentGlobalModel::addComment($user_id, $content, $parent_id);
+
+if ($ok) {
+    $lastId = $db->db->lastInsertId();
+    $comment = CommentGlobalModel::getCommentById($lastId);
+    echo json_encode(['success' => true, 'comment' => $comment]);
+} else {
+    echo json_encode(['success' => false, 'error' => 'Lỗi: không thể thêm bình luận.']);
+}
