@@ -4,7 +4,7 @@
 
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <id></id>
-        <ul class="nav nav-second-level">>
+        <ul class="nav-second-level">>
             <li class="item active"><svg class="home-icon" rpl="" fill="currentColor" height="20"
                     icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$-->
