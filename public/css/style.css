@@ -1408,7 +1408,7 @@ textarea.form-control {
         .left-sidebar .block-k ul.nav-second-level.top-item li.active a,
         .left-sidebar .block-k ul.nav-second-level.about-c li.active a,
         .left-sidebar .block-k ul.nav-second-level.h-info li.active a {
-    color: #ef1105;
+    color: #ef1105 !important;
  
     font-weight: bold;
 }
@@ -1431,7 +1431,7 @@ textarea.form-control {
 .collapse ul li.item.active a,
 .collapse ul li.item.active i,
 .collapse ul li.item.active svg {
-    color: #ef1105;
+    color: #ef1105 !important;
     fill: #ef1105;
     font-weight: bold;
 }
@@ -2324,7 +2324,7 @@ a.disabled {
 
 .left-menu ul li:hover a,
 .left-menu ul li.active a {
-    color: #bc0303;
+    color: #bc0303 !important;
     font-weight: 600;
 }
 
