@@ -417,10 +417,33 @@ if (isset($json['candidates'][0]['content']['parts'][0]['text'])) {
     $reply = 'Xin lỗi, tôi không tạo được câu trả lời lúc này. Vui lòng thử lại sau.';
 }
 
+// load metadata nếu có
+$metaPath = __DIR__ . '/../server/kb/metadata.json';
+$kbMeta = [];
+if (file_exists($metaPath)) {
+    $kbMeta = json_decode(file_get_contents($metaPath), true) ?? [];
+}
+
+// chuyển đổi sources thành public labels
+$publicSources = [];
+foreach ($sources as $s) {
+    if (isset($kbMeta[$s])) {
+        $publicSources[] = $kbMeta[$s];
+    } else {
+        // fallback: ẩn số/đuôi, chuyển underscores->space, loại bỏ tiền tố số
+        $base = pathinfo($s, PATHINFO_FILENAME); // remove extension
+        $base = preg_replace('/^\d+[_\s-]*/', '', $base); // remove leading digits like "02_"
+        $base = str_replace('_', ' ', $base);
+        $publicSources[] = ucfirst($base);
+    }
+}
+
+// trả về publicSources (thay vì file names)
 echo json_encode([
     'reply' => $reply,
-    'sources' => $sources,
+    'sources' => $publicSources,
 ]);
+
 
 /* echo json_encode([
     'reply' => $reply,

@@ -1,0 +1,21 @@
+{
+    "01_payment_gateways.txt": "Cổng thanh toán tiền mã hoá",
+    "02_wallet_security.txt": "Bảo mật ví - hướng dẫn ngắn",
+    "03_fees_networks.txt": "Phí giao dịch & mạng lưới",
+    "04_market_daily_template.txt": "Báo cáo thị trường hằng ngày",
+    "05_market_monthly_template.txt": "Báo cáo thị trường hằng tháng",
+    "06_market_yearly_template.txt": "Báo cáo thị trường hằng năm",
+    "07_commodities_oil_gold.txt": "Hàng hoá: dầu & vàng",
+    "08_regulatory_principles_and_protections.txt": "Nguyên tắc và quy định pháp lý",
+    "09_crypto_catalog.txt": "Tổng quan catalogue tiền ảo",
+    "10_macro_impact_crypto.txt": "Tác động vĩ mô đến crypto",
+    "11_exchanges_cex_dex_otc.txt": "Sàn giao dịch: CEX, DEX, OTC",
+    "12_security_fraud_risks.txt": "Rủi ro gian lận bảo mật",
+    "13_blockchain_applications_non_currency.txt": "Ứng dụng blockchain ngoài tiền tệ",
+    "14_vn_tax_and_legal_policy_on_crypto.txt": "Thuế & chính sách pháp lý crypto tại VN",
+    "15_other_related_assets_&_effects.txt": "Tài sản liên quan & ảnh hưởng",
+    "16_tech_foundations.txt": "Nền tảng công nghệ blockchain",
+    "17_investor_psychology_and_behavior.txt": "Tâm lý & hành vi nhà đầu tư",
+    "18_crypto_payments_ecommerce.txt": "Thanh toán crypto trong thương mại điện tử",
+    "19_future_trends.txt": "Xu hướng tương lai"
+}
