@@ -6899,26 +6899,7 @@ ul.timeline .left-arrow:after {
     }
 
 }
-/* Style mặc định cho menu */
-.sidebar a {
-  display: flex;
-  align-items: center;
-  padding: 10px;
-  color: #333;
-  text-decoration: none;
-  transition: 0.3s;
-}
-
-/* Khi được chọn (active) */
-.sidebar a.active {
-  color: red;
-  font-weight: bold;
-  background: #f5f5f5;
-  border-radius: 8px;
-}
-
  
-   
     
 
         
