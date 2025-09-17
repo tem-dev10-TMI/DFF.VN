@@ -227,26 +227,62 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     const listEl = document.getElementById('articles-list');
                     const loadingEl = document.getElementById('loading');
 
+                    function timeAgo(datetime) {
+                        if (!datetime) return '';
+                        const time = (new Date().getTime() / 1000) - (new Date(datetime).getTime() / 1000);
+                        if (time < 60) return 'vừa xong';
+                        if (time < 3600) return Math.floor(time / 60) + ' phút trước';
+                        if (time < 86400) return Math.floor(time / 3600) + ' giờ trước';
+                        if (time < 2592000) return Math.floor(time / 86400) + ' ngày trước';
+                        const date = new Date(datetime);
+                        const day = String(date.getDate()).padStart(2, '0');
+                        const month = String(date.getMonth() + 1).padStart(2, '0');
+                        const year = date.getFullYear();
+                        return `${day}/${month}/${year}`;
+                    }
+
                     function renderItem(article){
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
+                        const articleLink = article.is_rss ? article.link : `details_blog?id=${article.id}`;
+                        const target = article.is_rss ? '_blank' : '_self';
+
                         div.innerHTML = `
                             <div class="view-carde f-frame">
                                 <div class="provider">
                                     <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
                                     <div class="p-covers">
                                         <span class="name"><a href="<?= BASE_URL ?>/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
-                                        <span class="date"></span>
+                                        <span class="date">${timeAgo(article.created_at)}</span>
                                     </div>
                                 </div>
                                 <div class="title">
-                                    <a href="${article.is_rss ? article.link : ('details_blog?id=' + article.id)}" ${article.is_rss ? 'target="_blank"' : ''}>${article.title || ''}</a>
+                                    <a href="${articleLink}" target="${target}">${article.title || ''}</a>
                                 </div>
                                 <div class="sapo">
                                     ${article.summary || ''}
-                                    <a href="${article.is_rss ? article.link : ('details_blog?id=' + article.id)}" class="d-more" ${article.is_rss ? 'target="_blank"' : ''}>Xem thêm</a>
+                                    <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
                                 </div>
                                 ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                                <div class="item-bottom">
+                                    <div class="bt-cover com-like" data-id="${article.id}">
+                                        <span class="value">${article.upvotes || 0}</span>
+                                    </div>
+                                    <div class="button-ar">
+                                        <a href="details_blog?id=${article.id}#anc_comment">
+                                            <span>${article.comment_count || 0}</span>
+                                        </a>
+                                    </div>
+                                    <div class="button-ar">
+                                        <div class="dropdown home-item">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item copylink" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Copy link</a></li>
+                                                <li><a class="dropdown-item sharefb" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Share FB</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>`;
                         return div;
                     }
@@ -261,6 +297,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 if (data.success && Array.isArray(data.items)) {
                                     data.items.forEach(item => listEl.appendChild(renderItem(item)));
                                     offset = data.nextOffset;
+                                    
+                                    // Re-initialize Bootstrap dropdowns for new items
+                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'))
+                                    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+                                        return new bootstrap.Dropdown(dropdownToggleEl)
+                                    });
                                 }
                             })
                             .finally(() => {

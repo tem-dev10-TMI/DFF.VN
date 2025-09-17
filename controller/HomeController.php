@@ -60,10 +60,11 @@ class homeController
             if (!empty($art['is_rss'])) {
                 if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
                     $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                    $art['author_id'] = 67; // id cho RSS Thanh Niên
                 } else {
                     $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                    $art['author_id'] = 66; // id cho RSS Báo Chính phủ
                 }
-                $art['author_id'] = 66; // id mặc định cho RSS
             }
         }
         unset($art);
@@ -86,10 +87,11 @@ class homeController
             if (!empty($art2['is_rss'])) {
                 if (isset($art2['link']) && str_contains($art2['link'], 'thanhnien')) {
                     $art2['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                    $art2['author_id'] = 67; // id cho RSS Thanh Niên
                 } else {
                     $art2['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                    $art2['author_id'] = 66; // id cho RSS Báo Chính phủ
                 }
-                $art2['author_id'] = 66;
             }
         }
         unset($art2);
@@ -144,10 +146,11 @@ class homeController
                 if (!empty($art['is_rss'])) {
                     if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
                         $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
+                        $art['author_id'] = 67; // id cho RSS Thanh Niên
                     } else {
                         $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
+                        $art['author_id'] = 66; // id cho RSS Báo Chính phủ
                     }
-                    $art['author_id'] = 66;
                 }
             }
             unset($art);
