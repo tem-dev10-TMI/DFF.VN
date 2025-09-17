@@ -11,7 +11,8 @@ require_once __DIR__ . '/middleware.php';
 spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/admin/' . $class . '.php',
-        __DIR__ . '/model/' . $class . '.php',              // thêm model thường
+        __DIR__ . '/model/' . $class . '.php',
+        __DIR__ . '/model/event/' . $class . '.php', // thêm dòng này
         __DIR__ . '/controller/admin/' . $class . '.php',
     ];
     foreach ($paths as $p) {
