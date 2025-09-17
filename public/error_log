@@ -1,0 +1,128 @@
+[17-Sep-2025 10:33:45 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:33:45 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:33:47 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:33:47 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:39:20 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:39:20 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:46:48 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:46:48 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:54:31 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:54:31 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:57:07 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:57:07 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:57:07 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:57:07 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:58:17 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 10:58:17 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:11 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:11 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:13 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:13 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:43 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:43 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:47 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:07:47 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:08:02 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:08:02 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:13:16 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:13:16 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:13:17 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:13:17 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:18:00 Asia/Ho_Chi_Minh] PHP Warning:  require(/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41
+[17-Sep-2025 11:18:00 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/vendor/composer/../google/apiclient-services/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php:41
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php(45): {closure}()
+#1 /home/nguonnh1/mxh.org.vn/vendor/autoload.php(22): ComposerAutoloaderInit990736d62ad0d2d2a7ce791694caac23::getLoader()
+#2 /home/nguonnh1/mxh.org.vn/public/google-login.php(2): require_once('/home/nguonnh1/...')
+#3 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/vendor/composer/autoload_real.php on line 41

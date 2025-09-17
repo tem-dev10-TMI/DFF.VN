@@ -1,0 +1,90 @@
+[17-Sep-2025 10:16:31 Asia/Ho_Chi_Minh] PHP Warning:  require_once(/home/nguonnh1/mxh.org.vn/controller/homeController.php): failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:16:31 Asia/Ho_Chi_Minh] PHP Fatal error:  require_once(): Failed opening required '/home/nguonnh1/mxh.org.vn/controller/homeController.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:17:22 Asia/Ho_Chi_Minh] PHP Warning:  require_once(/home/nguonnh1/mxh.org.vn/controller/homeController.php): failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:17:22 Asia/Ho_Chi_Minh] PHP Fatal error:  require_once(): Failed opening required '/home/nguonnh1/mxh.org.vn/controller/homeController.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:17:29 Asia/Ho_Chi_Minh] PHP Warning:  require_once(/home/nguonnh1/mxh.org.vn/controller/homeController.php): failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:17:29 Asia/Ho_Chi_Minh] PHP Fatal error:  require_once(): Failed opening required '/home/nguonnh1/mxh.org.vn/controller/homeController.php' (include_path='.:/opt/alt/php74/usr/share/pear') in /home/nguonnh1/mxh.org.vn/index.php on line 31
+[17-Sep-2025 10:17:35 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/nguonnh1/mxh.org.vn/controller/HomeController.php:61
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(33): homeController::index()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/HomeController.php on line 61
+[17-Sep-2025 10:18:17 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/nguonnh1/mxh.org.vn/controller/HomeController.php:61
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(33): homeController::index()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/HomeController.php on line 61
+[17-Sep-2025 10:18:18 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to undefined function str_contains() in /home/nguonnh1/mxh.org.vn/controller/HomeController.php:61
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(33): homeController::index()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/HomeController.php on line 61
+[17-Sep-2025 10:28:18 Asia/Ho_Chi_Minh] PHP Warning:  require_once(/home/nguonnh1/mxh.org.vn/controller/auth/../../model/user/UserModel.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/controller/auth/loginController.php on line 10
+[17-Sep-2025 10:28:18 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/controller/auth/../../model/user/UserModel.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/controller/auth/loginController.php:10
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(53): loginController::index()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/auth/loginController.php on line 10
+[17-Sep-2025 10:31:23 Asia/Ho_Chi_Minh] PHP Warning:  require_once(/home/nguonnh1/mxh.org.vn/view/layout/../page/Profileuser.php): Failed to open stream: No such file or directory in /home/nguonnh1/mxh.org.vn/view/layout/Profile.php on line 274
+[17-Sep-2025 10:31:23 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Failed opening required '/home/nguonnh1/mxh.org.vn/view/layout/../page/Profileuser.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/nguonnh1/mxh.org.vn/view/layout/Profile.php:274
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/controller/account/profileUserController.php(32): require_once()
+#1 /home/nguonnh1/mxh.org.vn/index.php(72): profileUserController::index()
+#2 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/view/layout/Profile.php on line 274
+[17-Sep-2025 10:34:16 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Class "homeController" not found in /home/nguonnh1/mxh.org.vn/index.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/index.php on line 41
+[17-Sep-2025 10:34:37 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Class "homeController" not found in /home/nguonnh1/mxh.org.vn/index.php:41
+Stack trace:
+#0 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/index.php on line 41
+[17-Sep-2025 10:34:57 Asia/Ho_Chi_Minh] PHP Warning:  Undefined property: TopicController::$model in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:34:57 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to a member function getTopicById() on null in /home/nguonnh1/mxh.org.vn/controller/TopicController.php:40
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(113): TopicController->details_topic()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:04 Asia/Ho_Chi_Minh] PHP Warning:  Undefined property: TopicController::$model in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:04 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to a member function getTopicById() on null in /home/nguonnh1/mxh.org.vn/controller/TopicController.php:40
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(113): TopicController->details_topic()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:16 Asia/Ho_Chi_Minh] PHP Warning:  Undefined property: TopicController::$model in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:16 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to a member function getTopicById() on null in /home/nguonnh1/mxh.org.vn/controller/TopicController.php:40
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(113): TopicController->details_topic()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:45 Asia/Ho_Chi_Minh] PHP Warning:  Undefined property: TopicController::$model in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:35:45 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to a member function getTopicById() on null in /home/nguonnh1/mxh.org.vn/controller/TopicController.php:40
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/index.php(113): TopicController->details_topic()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/TopicController.php on line 40
+[17-Sep-2025 10:40:43 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot declare class EventModel, because the name is already in use in /home/nguonnh1/mxh.org.vn/model/event/Events.php on line 2
+[17-Sep-2025 10:44:34 Asia/Ho_Chi_Minh] PHP Fatal error:  Uncaught Error: Call to undefined method TopicsModel::all() in /home/nguonnh1/mxh.org.vn/controller/admin/TopicController.php:13
+Stack trace:
+#0 /home/nguonnh1/mxh.org.vn/admin.php(118): TopicController->admin()
+#1 {main}
+  thrown in /home/nguonnh1/mxh.org.vn/controller/admin/TopicController.php on line 13
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 38
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 39
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 40
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 41
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 42
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 43
+[17-Sep-2025 10:50:24 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 44
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 38
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 39
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 40
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 41
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 42
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 43
+[17-Sep-2025 10:50:27 Asia/Ho_Chi_Minh] PHP Warning:  Undefined variable $route in /home/nguonnh1/mxh.org.vn/view/admin/views/layout/header.php on line 44
+[17-Sep-2025 10:56:28 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot declare class EventModel, because the name is already in use in /home/nguonnh1/mxh.org.vn/model/event/Events.php on line 2
+[17-Sep-2025 11:14:37 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot declare class EventModel, because the name is already in use in /home/nguonnh1/mxh.org.vn/model/event/Events.php on line 2
+[17-Sep-2025 11:14:51 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot declare class EventModel, because the name is already in use in /home/nguonnh1/mxh.org.vn/model/event/Events.php on line 2
+[17-Sep-2025 11:16:15 Asia/Ho_Chi_Minh] PHP Fatal error:  Cannot declare class EventModel, because the name is already in use in /home/nguonnh1/mxh.org.vn/model/event/Events.php on line 2

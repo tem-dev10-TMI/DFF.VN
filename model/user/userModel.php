@@ -188,48 +188,36 @@ class UserModel
             return self::getUserByEmail($email);
         }
     }
-    public static function loginOrRegisterFacebookUser($name, $avatarUrl = null, $username = null)
+    public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
     {
         $db = new connect();
-    
-        // Nếu chưa có username thì tạo từ name
-        if (empty($username)) {
-            $username = strtolower(trim($name));
-            $username = preg_replace('/[^a-z0-9]+/', '', $username);
-            if (empty($username)) {
-                $username = 'user' . time();
-            }
-        }
-    
-        // Kiểm tra user đã tồn tại theo username
-        $stmt = $db->prepare("SELECT * FROM users WHERE username = :username LIMIT 1");
-        $stmt->execute(['username' => $username]);
+
+        // Kiểm tra user đã tồn tại theo name
+        $stmt = $db->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
+        $stmt->execute(['name' => $name]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    
+
         if ($user) {
             return $user; // user đã tồn tại
         }
-    
+
         // Nếu chưa có, tạo mới
         $stmt = $db->prepare("
-            INSERT INTO users 
-            (name, username, avatar_url, role, created_at, updated_at) 
-            VALUES 
-            (:name, :username, :avatar, 'user', NOW(), NOW())
-        ");
+        INSERT INTO users 
+        (name, avatar_url, role, created_at, updated_at) 
+        VALUES 
+        (:name, :avatar, 'user', NOW(), NOW())
+    ");
         $stmt->execute([
-            'name'     => $name,
-            'username' => $username,
-            'avatar'   => $avatarUrl
+            'name' => $name,
+            'avatar' => $avatarUrl
         ]);
-    
+
         // Lấy ID vừa tạo
-        $stmt = $db->prepare("SELECT id FROM users WHERE username = :username LIMIT 1");
-        $stmt->execute(['username' => $username]);
+        $stmt = $db->prepare("SELECT id FROM users WHERE name = :name LIMIT 1");
+        $stmt->execute(['name' => $name]);
         $id = $stmt->fetchColumn();
-    
+
         return self::getUserById($id);
     }
-    
-    
 }

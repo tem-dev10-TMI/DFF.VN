@@ -7,7 +7,7 @@ class loginController
             session_start();
         }
         // Load model
-        require_once 'model/user/UserModel.php';
+        require_once __DIR__.'/../../model/user/userModel.php';
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

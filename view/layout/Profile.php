@@ -271,7 +271,7 @@
     <!-- Sidebar -->
 
     <?php if ($profile_category == 'user') {
-      require_once  __DIR__ . '/../page/Profileuser.php';
+      require_once  __DIR__ . '/../page/ProfileUser.php';
     } ?>
     <?php if ($profile_category == 'businessmen') {
       require_once __DIR__ . '/../page/ProfileBusiness.php';

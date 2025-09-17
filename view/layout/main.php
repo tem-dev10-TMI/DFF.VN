@@ -9,16 +9,16 @@
     <meta charset="UTF-8" />
     <meta http-equiv="content-language" content="vi" />
     <meta http-equiv="REFRESH" content="1800" />
-    <title>Mạng xã hội Kinh tế - Tài chính DFF | DFF.VN </title>
+    <title>Mạng xã hội Kinh tế - MXH Trung Tâm </title>
     <meta name="description"
-        content="DFF.VN - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
+        content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
     <meta name="keywords"
-        content="DFF, DFF.VN, Mạng xã hội DFF, Mạng xã hội kinh tế, Mạng xã hội đầu tư, doanh nghiệp, doanh nhân, cổ phiếu, chứng khoán, quản lý tài chính, kinh doanh,Cộng đồng nhà đầu tư, mạng lưới nhà đầu tư, diễn đàn tài chính, diễn đàn nhà đầu tư, phân tích tài chính, thông tin doanh nghiệp, phân tích doanh nghiệp" />
-    <meta property="fb:app_id" content="1145361220537572" />
+        content="mxh, mxh.org.vn, Mạng xã hội TMI, Mạng xã hội kinh tế, Mạng xã hội đầu tư, doanh nghiệp, doanh nhân, cổ phiếu, chứng khoán, quản lý tài chính, kinh doanh,Cộng đồng nhà đầu tư, mạng lưới nhà đầu tư, diễn đàn tài chính, diễn đàn nhà đầu tư, phân tích tài chính, thông tin doanh nghiệp, phân tích doanh nghiệp" />
+    <meta property="fb:app_id" content="" />
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="DFF.VN" />
+    <meta property="og:site_name" content="MXH.ORG.VN" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-title" content="dff.vn" />
+    <meta name="apple-mobile-web-app-title" content="mxh.org.vn" />
     <meta name="robots" content="noarchive, max-image-preview:large, index, follow" />
     <meta name="GOOGLEBOT" content="noarchive, max-image-preview:large, index, follow" />
     <meta name="viewport"

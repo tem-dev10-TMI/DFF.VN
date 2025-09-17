@@ -91,7 +91,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                 <li class="name">
 
                                                     <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                    <a href="/DFF.VN/view_profile?id=<?= $biz['user_id'] ?>">
+                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
                                                         <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
                                                     </a>
                                                 </li>
@@ -157,7 +157,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                     <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
@@ -235,7 +235,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <div class="provider">
                                     <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
                                     <div class="p-covers">
-                                        <span class="name"><a href="/DFF.VN/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                        <span class="name"><a href="<?= BASE_URL ?>/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
                                         <span class="date"></span>
                                     </div>
                                 </div>
@@ -390,7 +390,7 @@ document.getElementById("send-comment").addEventListener("click", () => {
             ul.append(li);
 
             // ✅ auto scroll xuống cuối
-            ul.scrollTop = ul.scrollHeight;
+            ul.scrollTop = 0;
 
             if (data.comment.id > lastId) lastId = data.comment.id;
         } else {
@@ -421,11 +421,11 @@ function loadNewComments() {
                     if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
                         const li = createCommentElement(c);
 
-                        // ✅ cũng append xuống cuối
+                        // ✅ cũng append lên đầuđầu
                         ul.append(li);
 
-                        // ✅ scroll xuống cuối khi có comment mới
-                        ul.scrollTop = ul.scrollHeight;
+                        // ✅ scroll xuống  lên đàu khi có comment mới
+                        ul.scrollTop = 0;
 
                         if (c.id > lastId) lastId = c.id;
                     }

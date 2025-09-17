@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../model/TopicModel.php';
 require_once __DIR__ . '/../model/article/articlesmodel.php';
-class topicController
+class TopicController
 {
     // Hiển thị danh sách tất cả chủ đề (ví dụ trang chính hoặc sidebar)
     public static function index()
@@ -27,14 +27,31 @@ class topicController
 
         // Load view sidebar
         ob_start();
-        require __DIR__ . '/../view/layout/sidebarLeft.php';
+        require_once __DIR__ . '/../view/layout/sidebarLeft.php';
         $content = ob_get_clean();
 
         // Load layout
         $profile = false;
-        require __DIR__ . '/../view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
+    public function details_topic()
+    {
+        $topicModel = new TopicModel();
+        $id = $_GET['id'] ?? 0;
+        $topic = $topicModel->getById($id);
+        $articles = articlesmodel::getArticlesByTopicId($id, 10);
+        if (!$topic) {
+            echo "Chủ đề không tồn tại!";
+            return;
+        }
 
+        ob_start();
+        require_once __DIR__ . '/../view/page/DetailsTopic.php';
+        $content = ob_get_clean();
+
+        $profile = false;
+        require_once __DIR__ . '/../view/layout/main.php';
+    }
     // Chi tiết 1 chủ đề (ví dụ hiển thị bài viết theo topic)
     public static function details($id)
     {
