@@ -271,10 +271,10 @@
     <!-- Sidebar -->
 
     <?php if ($profile_category == 'user') {
-      require_once 'view/page/Profileuser.php';
+      require_once  __DIR__ . '/../page/Profileuser.php';
     } ?>
     <?php if ($profile_category == 'businessmen') {
-      require_once 'view/page/ProfileBusiness.php';
+      require_once __DIR__ . '/../page/ProfileBusiness.php';
     } ?>
     <!-- Main content -->
     <div class="col-md-9">
@@ -463,8 +463,9 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">Tên người dùng</label>
-              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
+              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
             </div>
+
             <div class="col-md-6">
               <label class="form-label">Số điện thoại</label>
               <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
@@ -472,6 +473,11 @@
           </div>
 
           <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">UserName</label>
+              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['username'] ?? '') ?>">
+            </div>
+
             <div class="col-md-6">
               <label class="form-label">Email</label>
               <input type="text" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>">

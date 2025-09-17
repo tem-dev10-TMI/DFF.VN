@@ -30,7 +30,7 @@ class viewBusinessmenController
         $stats = businessmenModel::getBusinessStats($businessman['user_id']);
 
         // Gọi view
-        include __DIR__ . "/../view/page/viewProfilebusiness.php";
+        require_once __DIR__ . "/../../view/page/viewProfilebusiness.php";
     }
 }
 

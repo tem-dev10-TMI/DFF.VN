@@ -8,9 +8,9 @@ class profileUserController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        require_once 'model/user/userModel.php';
-        require_once 'model/article/articlesmodel.php';
-        require_once 'model/user/profileUserModel.php';
+        require_once __DIR__.'/../../model/user/userModel.php';
+        require_once __DIR__.'/../../model/article/articlesmodel.php';
+        require_once __DIR__.'/../../model/user/profileUserModel.php';
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -29,12 +29,12 @@ class profileUserController
             //Load view
             ob_start();
             $profile_category = 'user';
-            require_once 'view/layout/Profile.php';
+            require_once __DIR__.'/../../view/layout/Profile.php';
             $content = ob_get_clean();
             $profile = true;
             //Load layout
             // đừng ai xóa
-            require_once 'view/layout/main.php';
+            require_once __DIR__.'/../../view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
             exit;
@@ -300,7 +300,8 @@ class profileUserController
             }
 
             // Lấy và làm sạch dữ liệu từ form
-            $user_name = htmlspecialchars($_POST['user_name'] ?? '');
+            $name = htmlspecialchars($_POST['name'] ?? '');
+            $username = htmlspecialchars($_POST['user_name'] ?? '');
             $email = htmlspecialchars($_POST['email'] ?? '');
             $phone = htmlspecialchars($_POST['phone'] ?? '');
             $description = htmlspecialchars($_POST['description'] ?? '');
@@ -312,7 +313,7 @@ class profileUserController
             $live_at = htmlspecialchars($_POST['live_at'] ?? '');
 
             // Cập nhật bảng `users`
-            $successUser = $userModel->updateUser($userId, $user_name, $email, $phone, $avatar_url, $cover_photo, $description);
+            $successUser = $userModel->updateUser($userId, $name, $username, $email, $phone, $avatar_url, $cover_photo, $description);
 
             // Cập nhật bảng `profile_user` (giữ nguyên logic)
             $existingProfile = $profileModel->getProfileUserByUserId($userId);

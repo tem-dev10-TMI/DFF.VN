@@ -8,9 +8,9 @@ class BusinessmenController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        require_once 'model/user/userModel.php';
-        require_once 'model/user/businessmenModel.php';
-        require_once 'model/article/articlesmodel.php';
+        require_once __DIR__.'/../../model/user/userModel.php';
+        require_once __DIR__.'/../../model/user/businessmenModel.php';
+        require_once __DIR__.'/../../model/article/articlesmodel.php';
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -29,12 +29,12 @@ class BusinessmenController
             //Load view
             ob_start();
             $profile_category = 'businessmen';
-            require_once 'view/layout/Profile.php';
+            require_once __DIR__.'/../../view/layout/Profile.php';
             $content = ob_get_clean();
 
             //Load layout
             $profile = true; // đừng ai xóa
-            require_once 'view/layout/main.php';
+            require_once __DIR__.'/../../view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
             exit;
@@ -42,24 +42,24 @@ class BusinessmenController
     }
 
     // Chi tiết 1 doanh nhân theo user_id
-    public static function show($user_id)
-    {
-        $biz = businessmenModel::getBusinessByUserId($user_id);
+    // public static function show($user_id)
+    // {
+    //     $biz = businessmenModel::getBusinessByUserId($user_id);
 
-        if (!$biz) {
-            // Nếu không có dữ liệu → load 404
-            require __DIR__ . '/../views/errors/404.php';
-            return;
-        }
+    //     if (!$biz) {
+    //         // Nếu không có dữ liệu → load 404
+    //         require __DIR__ . '/../views/errors/404.php';
+    //         return;
+    //     }
 
-        require __DIR__ . '/../views/businessmen/show.php';
-    }
+    //     require __DIR__ . '/../views/businessmen/show.php';
+    // }
 
     // Form tạo doanh nhân
-    public static function create()
-    {
-        require __DIR__ . '/../views/businessmen/create.php';
-    }
+    // public static function create()
+    // {
+    //     require __DIR__ . '/../views/businessmen/create.php';
+    // }
 
     // Xử lý lưu doanh nhân mới
     public static function store()
@@ -90,8 +90,8 @@ class BusinessmenController
         }
         $userId = $_SESSION['user']['id'];
 
-        require_once 'model/user/businessmenModel.php';
-        require_once 'model/user/userModel.php';
+        require_once __DIR__.'/../../model/user/businessmenModel.php';
+        require_once __DIR__.'/../../model/user/userModel.php';
 
         $modelBusiness = new businessmenModel();
         $modelUser = new userModel();
@@ -143,6 +143,7 @@ class BusinessmenController
             $successUser = $modelUser->updateUser(
                 $userId,
                 $name,
+                $username,
                 $email,
                 $phone,
                 $avatar_url,
@@ -187,7 +188,7 @@ class BusinessmenController
         }
 
         $business = $modelBusiness->getBusinessByUserId($userId);
-        require_once "view/page/profileUser.php";
+        require_once __DIR__."/../../view/page/profileUser.php";
     }
 
     // Xử lý update doanh nhân
@@ -224,7 +225,7 @@ class BusinessmenController
             exit;
         }
         $userId = $_SESSION['user']['id'];
-        require_once 'model/user/businessmenModel.php';
+        require_once __DIR__.'/../../model/user/businessmenModel.php';
         $modelBusiness = new businessmenModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -266,6 +267,6 @@ class BusinessmenController
         $careers = $modelBusiness->getCareersByBusinessmenId($business['businessman_id']);
         // Truyền dữ liệu này đến View nếu bạn muốn hiển thị ngay khi load trang
 
-        require_once "view/page/profileUser.php";
+        require_once __DIR__."/../../view/page/profileUser.php";
     }
 }

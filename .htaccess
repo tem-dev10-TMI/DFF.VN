@@ -18,13 +18,12 @@ RewriteBase /DFF.VN/
 #    Tắt: xóa file trên hoặc unset env
 # ------------------------------------
 # Bỏ qua nếu đã vào thư mục Fix hoặc file tĩnh
-RewriteCond %{ENV:MAINTENANCE} =on [OR]
-RewriteCond %{DOCUMENT_ROOT}/DFF.VN/Fix/maintenance.on -f
+##RewriteCond %{DOCUMENT_ROOT}/DFF.VN/Fix/maintenance.on -f
 # Nếu đang whitelist thì bỏ qua redirect (cho IP admin)
-RewriteCond %{ENV:MAINT_WHITELIST} !1
-RewriteCond %{REQUEST_URI} !^/DFF\.VN/Fix/ [NC]
-RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|txt|mp4|webp)$ [NC]
-RewriteRule ^.*$ Fix/ [R=302,L]
+#RewriteCond %{ENV:MAINT_WHITELIST} !1
+#RewriteCond %{REQUEST_URI} !^/DFF\.VN/Fix/ [NC]
+#RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|txt|mp4|webp)$ [NC]
+#RewriteRule ^.*$ Fix/ [R=302,L]
 
 
 # ------------------------------------

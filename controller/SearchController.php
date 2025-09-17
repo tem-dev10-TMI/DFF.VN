@@ -12,11 +12,9 @@ class SearchController
         // $articles = ArticlesModel::searchArticles($q);
 
         ob_start();
-        require_once 'view/page/Search.php';
+        require_once __DIR__ . '/../view/page/Search.php';
         $content = ob_get_clean();
         $profile = false; // dùng cho layout
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 }
-
-

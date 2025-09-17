@@ -53,9 +53,9 @@ class loginController
         }
         //Load view
         ob_start();
-        require_once 'view/layout/header.php';
+        require_once __DIR__.'/../../view/layout/header.php';
         $content = ob_get_clean();
-        require_once 'view/layout/main.php';
+        require_once __DIR__.'/../../view/layout/main.php';
     }
 
     public static function logout()

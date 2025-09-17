@@ -28,7 +28,7 @@
             <div class="header-right">
                 <?php
                 if (!isset($headerEvents)) {
-                    require_once 'model/event/Events.php';
+                    require_once __DIR__ . '/../../model/event/Events.php';
                     if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
                     global $pdo;
                     $eventModelHeader = new EventModel($pdo);
