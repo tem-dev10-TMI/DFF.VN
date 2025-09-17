@@ -37,7 +37,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=1.4" />
+    <link rel="stylesheet" href="public/css/style.css?v=1.5" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -194,7 +194,9 @@
     <?php
     if (!isset($headerEvents)) {
         require_once  __DIR__ . '/../../model/event/Events.php';
-        if (!isset($pdo)) { require_once __DIR__ . '/../../config/db.php'; }
+        if (!isset($pdo)) {
+            require_once __DIR__ . '/../../config/db.php';
+        }
         global $pdo;
         $eventModelMobile = new EventModel($pdo);
         $headerEvents = $eventModelMobile->all(5);
@@ -248,22 +250,68 @@
 
     <style>
         /* Mobile alerts list */
-        .m-alerts { list-style: none; margin: 0; padding: 0; }
-        .m-alerts li { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0; }
-        .m-alerts li:last-child { border-bottom: 0; }
-        .m-alerts .ic { width: 28px; height: 28px; border-radius: 50%; background: #f5f7ff; color: #2b5cff; display: flex; align-items: center; justify-content: center; font-size: 14px; flex: 0 0 28px; }
-        .m-alerts .txt { flex: 1; min-width: 0; }
-        .m-alerts .txt a { font-weight: 600; color: #111; display: block; text-decoration: none; }
-        .m-alerts .meta { color: #6c757d; font-size: 12px; margin-top: 2px; }
-        .m-section-title { font-weight: 700; font-size: 16px; margin: 0 0 8px; }
+        .m-alerts {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .m-alerts li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .m-alerts li:last-child {
+            border-bottom: 0;
+        }
+
+        .m-alerts .ic {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f5f7ff;
+            color: #2b5cff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex: 0 0 28px;
+        }
+
+        .m-alerts .txt {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .m-alerts .txt a {
+            font-weight: 600;
+            color: #111;
+            display: block;
+            text-decoration: none;
+        }
+
+        .m-alerts .meta {
+            color: #6c757d;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .m-section-title {
+            font-weight: 700;
+            font-size: 16px;
+            margin: 0 0 8px;
+        }
     </style>
 
     <script>
-        (function(){
+        (function() {
             // Dữ liệu sự kiện từ PHP
-            const headerEvents = <?php echo json_encode($headerEvents ?? [] , JSON_UNESCAPED_UNICODE); ?>;
+            const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
-            function renderAlerts(events){
+            function renderAlerts(events) {
                 if (!Array.isArray(events) || events.length === 0) {
                     return '<div class="text-muted">Chưa có thông báo nào.</div>';
                 }
@@ -271,7 +319,9 @@
                     const title = (ev.title || '').toString();
                     const id = ev.id;
                     const when = ev.event_date ? new Date(ev.event_date.replace(' ', 'T')) : null;
-                    const dateStr = when ? when.toLocaleString('vi-VN', { hour12: false }) : '';
+                    const dateStr = when ? when.toLocaleString('vi-VN', {
+                        hour12: false
+                    }) : '';
                     const href = `${window.BASE_URL || ''}?url=event&id=${id}`;
                     return `<li>
                         <span class="ic"><i class="fas fa-bell"></i></span>
@@ -286,7 +336,7 @@
 
             let mobileModalInstance = null;
 
-            function openMobileModal(type){
+            function openMobileModal(type) {
                 const body = document.getElementById('mobileModalBody');
                 const title = document.getElementById('mobileModalLabel');
                 if (!body || !title) return;
@@ -311,12 +361,15 @@
                     document.body.style.removeProperty('padding-right');
 
                     // Tạo hoặc lấy lại instance để tránh chồng nhiều lớp backdrop
-                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, { backdrop: true, focus: true });
+                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
+                        backdrop: true,
+                        focus: true
+                    });
                     mobileModalInstance.show();
                 }
             }
 
-            document.addEventListener('click', function(e){
+            document.addEventListener('click', function(e) {
                 const a = e.target.closest('.js-mobile-modal');
                 if (!a) return;
                 const type = a.getAttribute('data-mobile-modal');

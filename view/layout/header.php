@@ -592,11 +592,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
         <header class="chat-header">
             <div class="agent">
                 <div class="agent-avatar">🤖</div>
-                <div>
+                <div class="agent-info">
                     <div class="agent-name">Chatbot TMI</div>
+                    <div class="status" id="status">Sẵn sàng</div>
                 </div>
             </div>
-            <div class="status" id="status">Sẵn sàng</div>
+            <button class="chat-close" onclick="toggleChatbotBox()">✖</button>
         </header>
 
         <!-- Nội dung chat -->

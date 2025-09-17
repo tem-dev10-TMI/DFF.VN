@@ -34,6 +34,12 @@ a {
     color: #fff;
 }
 
+#chatbot-box .agent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
 #chatbot-box .agent-name {
     font-weight: 600;
     font-size: 20px;
@@ -49,7 +55,21 @@ a {
     font-size: 12px;
     color: green;
     font-weight: 500;
-    margin-left: auto;
+}
+
+#chatbot-box .chat-close {
+    background: transparent;
+    border: none;
+    font-size: 18px;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: 8px;
+    transition: color 0.2s;
+}
+
+#chatbot-box .chat-close:hover {
+    color: #000;
 }
 
 /* Chat messages */
@@ -4839,7 +4859,7 @@ div[data-notify="container"] .close {
     background: #fff;
     border-radius: 12px;
     overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     font-family: Arial, sans-serif;
 }
 
@@ -4952,28 +4972,33 @@ div[data-notify="container"] .close {
 
 /* Ô nhập bình luận */
 .h-comment {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px;
-  border-top: 1px solid #ddd;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    border-top: 1px solid #ddd;
 }
 
 .h-comment textarea {
-  flex: 1;
-  min-height: 50px;   /* tăng chiều cao mặc định */
-  max-height: 120px;  /* không để quá cao */
-  resize: none;       /* chặn resize bằng tay, cho gọn */
-  padding: 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 14px;
+    flex: 1;
+    min-height: 50px;
+    /* tăng chiều cao mặc định */
+    max-height: 120px;
+    /* không để quá cao */
+    resize: none;
+    /* chặn resize bằng tay, cho gọn */
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
 }
+
 .h-comment i {
     font-size: 18px;
     color: #0d47a1;
     cursor: pointer;
 }
+
 .d-balimage {
     background-color: #f5efef;
     padding: 7px 15px 0 15px;
@@ -6992,6 +7017,6 @@ ul.timeline .left-arrow:after {
         padding: 30px 0 0 50px;
     }
 
-    
+
 
 }
