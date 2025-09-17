@@ -1,20 +1,23 @@
 <?php
-require_once 'model/article/articlesmodel.php';
-require_once 'model/commentmodel.php';
-require_once 'model/user/businessmenModel.php';
-require_once 'model/MarketDataModel.php';
-require_once 'model/event/Events.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
+require_once __DIR__ . '/../model/commentmodel.php';
+require_once __DIR__ . '/../model/user/businessmenModel.php';
+require_once __DIR__ . '/../model/MarketDataModel.php';
+require_once __DIR__ . '/../model/event/Events.php';
 
-class Events {
+class Events
+{
     protected $pdo;
 
-    public function __construct() {
+    public function __construct()
+    {
         // Lấy PDO toàn cục nếu không truyền tham số
         global $pdo;
         $this->pdo = $pdo;
     }
 
-    public function getAll($limit = 10) {
+    public function getAll($limit = 10)
+    {
         $stmt = $this->pdo->prepare("SELECT * FROM events ORDER BY event_date DESC LIMIT ?");
         $stmt->bindValue(1, (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -96,18 +99,20 @@ class homeController
         $articlesInitial = array_slice($articlesInitialCombined, 0, 5);
 
         // Tạo nhóm RSS cho các box HOT và ANALYSIS (từ nguồn RSS trong mảng tổng)
-        $onlyRss = array_values(array_filter(array_merge($rssArticles1, $rssArticles2), function($it){ return !empty($it['is_rss']); }));
+        $onlyRss = array_values(array_filter(array_merge($rssArticles1, $rssArticles2), function ($it) {
+            return !empty($it['is_rss']);
+        }));
         $rssArticles3 = array_slice($onlyRss, 0, 6);
         $rssArticles4 = array_slice($onlyRss, 6, 6);
 
         // 4. Load view Home
         ob_start();
-        require_once 'view/page/Home.php';
+        require_once __DIR__ . '/../view/page/Home.php';
         $content = ob_get_clean();
 
         // 5. Load layout chính
         $profile = false;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 
     // API: Load thêm bài viết (lazy load)
@@ -172,28 +177,28 @@ class homeController
     {
         ob_start();
         $profile_category = 'businessmen';
-        require_once 'view/layout/Profile.php';
+        require_once __DIR__ . '/../view/layout/Profile.php';
         $content = ob_get_clean();
 
         $profile = true;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 
     public static function profile_user()
     {
         ob_start();
         $profile_category = 'user';
-        require_once 'view/layout/Profile.php';
+        require_once __DIR__ . '/../view/layout/Profile.php';
         $content = ob_get_clean();
 
         $profile = true;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 
     public static function trends()
     {
-        require_once 'model/TopicModel.php';
-        require_once 'model/article/articlesmodel.php';
+        require_once __DIR__ . '/../model/TopicModel.php';
+        require_once __DIR__ . '/../model/article/articlesmodel.php';
 
         $topicModel = new TopicModel();
         $topics = $topicModel->getAll();
@@ -209,20 +214,20 @@ class homeController
         }
 
         ob_start();
-        require_once 'view/page/Trends.php';
+        require_once __DIR__ . '/../view/page/trends.php';
         $content = ob_get_clean();
 
         $profile = false;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 
     public static function about()
     {
         ob_start();
-        require_once 'view/page/About.php';
+        require_once __DIR__ . '/../view/page/About.php';
         $content = ob_get_clean();
 
         $profile = true;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../view/layout/main.php';
     }
 }
