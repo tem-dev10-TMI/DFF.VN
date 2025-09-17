@@ -34,11 +34,12 @@ class UserModel
     }
 
     // Cập nhật thông tin user
-    public static function updateUser($user_id, $name, $email, $phone, $avatar_url, $cover_photo, $description)
+    public static function updateUser($user_id, $name, $username, $email, $phone, $avatar_url, $cover_photo, $description)
     {
         $db = new connect();
         $sql = "UPDATE users SET 
                 name = :name, 
+                username = :username, 
                 email = :email, 
                 phone = :phone, 
                 avatar_url = :avatar_url,
@@ -49,6 +50,7 @@ class UserModel
         return $stmt->execute([
             ':user_id' => $user_id,
             ':name' => $name,
+            ':username' => $username,
             ':email' => $email,
             ':phone' => $phone,
             ':avatar_url' => $avatar_url,
@@ -186,39 +188,36 @@ class UserModel
             return self::getUserByEmail($email);
         }
     }
-public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
-{
-    $db = new connect();
+    public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
+    {
+        $db = new connect();
 
-    // Kiểm tra user đã tồn tại theo name
-    $stmt = $db->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
-    $stmt->execute(['name' => $name]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Kiểm tra user đã tồn tại theo name
+        $stmt = $db->prepare("SELECT * FROM users WHERE name = :name LIMIT 1");
+        $stmt->execute(['name' => $name]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($user) {
-        return $user; // user đã tồn tại
-    }
+        if ($user) {
+            return $user; // user đã tồn tại
+        }
 
-    // Nếu chưa có, tạo mới
-    $stmt = $db->prepare("
+        // Nếu chưa có, tạo mới
+        $stmt = $db->prepare("
         INSERT INTO users 
         (name, avatar_url, role, created_at, updated_at) 
         VALUES 
         (:name, :avatar, 'user', NOW(), NOW())
     ");
-    $stmt->execute([
-        'name' => $name,
-        'avatar' => $avatarUrl
-    ]);
+        $stmt->execute([
+            'name' => $name,
+            'avatar' => $avatarUrl
+        ]);
 
-    // Lấy ID vừa tạo
-    $stmt = $db->prepare("SELECT id FROM users WHERE name = :name LIMIT 1");
-    $stmt->execute(['name' => $name]);
-    $id = $stmt->fetchColumn();
+        // Lấy ID vừa tạo
+        $stmt = $db->prepare("SELECT id FROM users WHERE name = :name LIMIT 1");
+        $stmt->execute(['name' => $name]);
+        $id = $stmt->fetchColumn();
 
-    return self::getUserById($id);
-}
-
-
-
+        return self::getUserById($id);
+    }
 }

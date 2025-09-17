@@ -300,7 +300,8 @@ class profileUserController
             }
 
             // Lấy và làm sạch dữ liệu từ form
-            $user_name = htmlspecialchars($_POST['user_name'] ?? '');
+            $name = htmlspecialchars($_POST['name'] ?? '');
+            $username = htmlspecialchars($_POST['user_name'] ?? '');
             $email = htmlspecialchars($_POST['email'] ?? '');
             $phone = htmlspecialchars($_POST['phone'] ?? '');
             $description = htmlspecialchars($_POST['description'] ?? '');
@@ -312,7 +313,7 @@ class profileUserController
             $live_at = htmlspecialchars($_POST['live_at'] ?? '');
 
             // Cập nhật bảng `users`
-            $successUser = $userModel->updateUser($userId, $user_name, $email, $phone, $avatar_url, $cover_photo, $description);
+            $successUser = $userModel->updateUser($userId, $name, $username, $email, $phone, $avatar_url, $cover_photo, $description);
 
             // Cập nhật bảng `profile_user` (giữ nguyên logic)
             $existingProfile = $profileModel->getProfileUserByUserId($userId);
