@@ -6,7 +6,7 @@ class EventController {
 
     public function __construct($pdo) {
         $this->pdo = $pdo;
-        $this->model = new EventModel($pdo); // ✅ dùng đúng class
+        $this->model = new EventModels($pdo); // ✅ dùng đúng class
     }
 
     // Hiển thị danh sách sự kiện

@@ -134,7 +134,7 @@
         require_once __DIR__ . '/../../config/db.php';
     }
     global $pdo;
-    $eventModelHeader = new EventModel($pdo);
+    $eventModelHeader = new EventModels($pdo);
     $headerEvents = $eventModelHeader->all(5);
 
     ?>

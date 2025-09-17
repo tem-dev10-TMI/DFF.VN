@@ -502,7 +502,7 @@ setInterval(loadNewComments, 2000);
         <div class="block-k bg-box-a">
             <div class="tieu-diem">
                 <h2>
-                    <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+                    <i class="fab fa-hotjar"></i> TMI <span>HOT</span>
                 </h2>
                 <ul>
             <?php foreach ($rssArticles3 as $article): ?>
@@ -550,7 +550,7 @@ setInterval(loadNewComments, 2000);
                     <li class="card-list-item" key="<?php echo $index; ?>">
                         <a 
     title="<?= htmlspecialchars($event['title']); ?>"
-    href="<?= BASE_URL ?>?url=event&id=<?= $event['id'] ?>"
+    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>"
 >
     <?= htmlspecialchars($event['title']); ?>
 </a>

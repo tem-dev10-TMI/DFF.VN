@@ -1,5 +1,5 @@
 <?php
-class EventModel {
+class EventModels {
     protected $pdo;
 
     public function __construct($pdo) {
