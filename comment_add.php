@@ -31,6 +31,15 @@ $ok = CommentGlobalModel::addComment($user_id, $content, $parent_id);
 if ($ok) {
     $lastId = $db->db->lastInsertId();
     $comment = CommentGlobalModel::getCommentById($lastId);
+
+    if ($comment) {
+        // Thêm trường time_ago vào để JS có thể render
+        require_once __DIR__ . '/helpers.php'; // Đảm bảo hàm timeAgo tồn tại
+        if (function_exists('timeAgo')) {
+            $comment['time_ago'] = timeAgo($comment['created_at']);
+        }
+    }
+
     echo json_encode(['success' => true, 'comment' => $comment]);
 } else {
     echo json_encode(['success' => false, 'error' => 'Lỗi: không thể thêm bình luận.']);

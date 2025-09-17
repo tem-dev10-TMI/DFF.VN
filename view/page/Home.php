@@ -427,7 +427,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     })
                     .then(res => res.json())
                     .then(data => {
-                        if (data.success) {
+                        if (data.success && data.comment) { // ✅ KIỂM TRA KỸ HƠN
                             const ul = document.querySelector(".list_comment");
                             const li = createCommentElement(data.comment);
 
@@ -439,7 +439,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             if (data.comment.id > lastId) lastId = data.comment.id;
                         } else {
-                            alert(data.error);
+                            // Ghi log lỗi nếu có để dễ debug
+                            console.error("Lỗi khi thêm comment:", data.error || "Dữ liệu trả về không hợp lệ");
+                            alert(data.error || "Có lỗi xảy ra, vui lòng thử lại.");
                         }
                     })
                     .finally(() => textarea.value = "");
