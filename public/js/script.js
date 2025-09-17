@@ -603,3 +603,14 @@ window.addEventListener('beforeunload', function() {
         wsConnection.close();
     }
 });
+const menuItems = document.querySelectorAll('.sidebar a');
+
+menuItems.forEach(item => {
+  item.addEventListener('click', () => {
+    // Bỏ active ở tất cả menu
+    menuItems.forEach(el => el.classList.remove('active'));
+    // Gắn active vào cái vừa click
+    item.classList.add('active');
+  });
+});
+
