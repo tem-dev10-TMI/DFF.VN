@@ -84,17 +84,17 @@ switch ($url) {
         break;
     case 'profile_business':
         require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new BusinessmenController();
+        $controller = new businessmenController();
         $controller->index();
         break;
     case 'edit_business':
         require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new BusinessmenController();
+        $controller = new businessmenController();
         $controller->editBusiness();
         break;
     case 'edit_business_career':
         require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new BusinessmenController();
+        $controller = new businessmenController();
         $controller->editBusinessCareer();
         break;
     case 'add_article':
@@ -108,7 +108,7 @@ switch ($url) {
         $controller->trends();
         break;
     case 'details_topic':
-        require_once __DIR__ . '/controller/admin/TopicController.php';
+        require_once __DIR__ . '/controller/TopicController.php';
         $controller = new TopicController();
         $controller->details_topic();
         break;

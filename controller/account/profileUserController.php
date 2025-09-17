@@ -111,7 +111,7 @@ class profileUserController
     public static function addArticle()
     {
         header('Content-Type: application/json');
-        require_once 'model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
 
         // Chỉ chấp nhận POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -202,7 +202,7 @@ class profileUserController
 
     public static function editArticle($id)
     {
-        require_once 'model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
         $modelArticle = new ArticlesModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -218,13 +218,13 @@ class profileUserController
         }
 
         $article = $modelArticle->getArticleById($id);
-        require_once 'view/account/editArticle.php';
+        require_once __DIR__ . '/../../view/account/editArticle.php';
     }
 
     // ========== Quản lý Hồ sơ ==========
     public static function addProfile()
     {
-        require_once 'model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/user/profileUserModel.php';
         $modelProfile = new profileUserModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
@@ -246,7 +246,7 @@ class profileUserController
         }
 
         // Hiển thị form thêm thông tin
-        require_once 'view/account/addProfile.php';
+        require_once __DIR__ . '/../../view/account/addProfile.php';
     }
 
     public function editProfile()
@@ -256,8 +256,8 @@ class profileUserController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        require_once 'model/user/profileUserModel.php';
-        require_once 'model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $userId = $_SESSION['user']['id'];
 
         $profileModel = new profileUserModel();
@@ -351,12 +351,12 @@ class profileUserController
         // 5. Xử lý yêu cầu GET (hiển thị form)
         $profileUser = $profileModel->getProfileUserByUserId($userId);
         $user = $userModel->getUserById($userId);
-        require_once "view/page/profileUser.php";
+        require_once __DIR__ . "/../../view/page/profileUser.php";
     }
     // ========== Đăng kí làm doanh nhân ==========
     public static function registerBusiness()
     {
-        require_once 'model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/user/profileUserModel.php';
         // 1. Xác thực và Phân quyền
         if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
             header("Location: " . BASE_URL . "/login");
@@ -394,7 +394,7 @@ class profileUserController
         }
 
         $userId = $_SESSION['user_id'];
-        require_once 'model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $userModel = new userModel();
         $user = $userModel->getUserById($userId);
 
@@ -431,18 +431,18 @@ class profileUserController
         }
         //Load view
         ob_start();
-        require_once 'view/layout/header.php';
+        require_once __DIR__ . '/../../view/layout/header.php';
         $content = ob_get_clean();
         $profile = false;
         //Load layout;
-        require_once 'view/layout/main.php';
+        require_once __DIR__ . '/../../view/layout/main.php';
     }
 
     // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========
     public static function loadArticle()
     {
         header('Content-Type: application/json');
-        require_once 'model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
 
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode([

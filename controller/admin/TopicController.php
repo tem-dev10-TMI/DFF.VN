@@ -38,7 +38,7 @@ class TopicController {
         redirect(BASE_URL . '/admin.php?route=topics'); 
     }
 
-    public function details_topic() {
+/*     public function details_topic() {
         $id = $_GET['id'] ?? 0;
         $topic = $this->model->getTopicById($id);
         $articles = articlesmodel::getArticlesByTopicId($id, 10);
@@ -53,5 +53,5 @@ class TopicController {
 
         $profile = false; 
         require_once 'view/layout/main.php';
-    }
+    } */
 }
