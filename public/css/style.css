@@ -6899,24 +6899,22 @@ ul.timeline .left-arrow:after {
     }
 
 }
-.menu input {
-  display: none; /* ẩn radio */
-}
-
-.menu label {
+/* Style mặc định cho menu */
+.sidebar a {
   display: flex;
   align-items: center;
-  padding: 5px 10px;
-  color: #333; /* màu mặc định */
-  cursor: pointer;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  transition: 0.3s;
 }
 
-.menu input:checked + label {
-  color: red; /* chữ đỏ khi chọn */
-}
-
-.menu input:checked + label .icon {
-  fill: red; /* icon đỏ khi chọn */
+/* Khi được chọn (active) */
+.sidebar a.active {
+  color: red;
+  font-weight: bold;
+  background: #f5f5f5;
+  border-radius: 8px;
 }
 
  

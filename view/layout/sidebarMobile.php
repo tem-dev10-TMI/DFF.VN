@@ -1,4 +1,6 @@
 <div class="collapse navbar-collapse m-menu-i" id="navbarNav5">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
     <ul class="">
         <li class="item"><svg class="home-icon" rpl="" fill="currentColor" height="20" icon-name="home-outline"
                 viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
