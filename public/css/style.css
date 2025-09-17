@@ -6853,3 +6853,6 @@ ul.timeline .left-arrow:after {
     }
 
 }
+#navbarNav5 ul li a:active {
+    color: red;
+}
