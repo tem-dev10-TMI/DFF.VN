@@ -143,6 +143,7 @@ class BusinessmenController
             $successUser = $modelUser->updateUser(
                 $userId,
                 $name,
+                $username,
                 $email,
                 $phone,
                 $avatar_url,
