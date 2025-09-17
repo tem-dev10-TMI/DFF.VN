@@ -444,6 +444,7 @@ echo json_encode([
     'sources' => $publicSources,
 ]);
 
+
 /* echo json_encode([
     'reply' => $reply,
     'sources' => $sources,
