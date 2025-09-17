@@ -605,12 +605,18 @@ window.addEventListener('beforeunload', function() {
 });
 const menuItems = document.querySelectorAll('.sidebar a');
 
-menuItems.forEach(item => {
-  item.addEventListener('click', () => {
-    // Bỏ active ở tất cả menu
-    menuItems.forEach(el => el.classList.remove('active'));
-    // Gắn active vào cái vừa click
-    item.classList.add('active');
+document.addEventListener("DOMContentLoaded", () => {
+  const menuItems = document.querySelectorAll('.sidebar a');
+
+  menuItems.forEach(item => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault(); // tránh nhảy link #
+      // Xóa active ở tất cả menu
+      menuItems.forEach(el => el.classList.remove('active'));
+      // Gắn active vào cái vừa click
+      item.classList.add('active');
+    });
   });
 });
+
 
