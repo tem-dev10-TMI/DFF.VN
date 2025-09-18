@@ -2,7 +2,7 @@
     </style>
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
-            <li class="item active"><svg class="home-icon" rpl="" fill="currentColor" height="20"
+            <li class="item active"><svg class="bi bi-house-fill home-icon"  class="bi bi-house-fill home-icon" rpl="" fill="currentColor" height="20"
                     icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$-->
                     <!--?lit$03863286$-->
@@ -14,11 +14,11 @@
                 <a href="home" title="Trang chủ">Trang chủ</a>
             </li>
             <li class="item" data-ref="d">
-                <i class="bi bi-newspaper idiscuss"></i>
+                <i class="bi bi-book-half idiscuss"></i>
                 <a href="news" title="Trang chủ">Mới nhất</a>
             </li>
             <li class="item">
-                <i class="bi bi-box-arrow-up-right trend-icon"></i>
+                <i class="bi bi-currency-exchange trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
 
