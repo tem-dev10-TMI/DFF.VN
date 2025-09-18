@@ -4333,8 +4333,8 @@ div[data-notify="container"] .close {
 .m-top-info {
     display: none;
     padding: 3px 8px 3px 8px;
-    font-size: 13px;
-    color: #7f7e7e;
+    font-size: 16px;
+    color: #fbfbfb;
     position: fixed;
     top: 0;
     width: 100%;
