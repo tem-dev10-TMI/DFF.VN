@@ -296,7 +296,7 @@
      alt="<?= htmlspecialchars($article['title']) ?>">
           <div class="item">
             <h3>
-              <a href="/article.php?id=<?= $article['id'] ?>">
+              <a href="details_blog?id=<?= $article['id'] ?>">
                 <?= htmlspecialchars($article['title']) ?>
               </a>
             </h3>
