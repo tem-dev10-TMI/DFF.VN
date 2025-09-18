@@ -47,7 +47,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                 c.id, c.user_id, c.content, c.upvotes, c.created_at,
-                u.name, u.avatar_url
+                u.name AS username, u.avatar_url
             FROM comment_global c
             LEFT JOIN users u ON c.user_id = u.id
             ORDER BY c.created_at DESC
@@ -66,7 +66,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                     c.id, c.user_id, c.content, c.upvotes, c.created_at,
-                    u.username, u.avatar_url
+                    u.name AS username, u.avatar_url
                 FROM comment_global c
                 LEFT JOIN users u ON c.user_id = u.id
                 WHERE c.parent_id = :parent_id
@@ -91,7 +91,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
             c.id, c.user_id, c.parent_id, c.content, c.upvotes, c.created_at,
-            u.username, u.avatar_url
+            u.name AS username, u.avatar_url
         FROM comment_global c
         LEFT JOIN users u ON c.user_id = u.id
         WHERE c.id = :id";
@@ -105,7 +105,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                 c.id, c.user_id, c.parent_id, c.content, c.upvotes, c.created_at,
-                u.name, u.username, u.avatar_url
+                u.name AS username, u.avatar_url
             FROM comment_global c
             LEFT JOIN users u ON c.user_id = u.id
             WHERE c.id > :last_id

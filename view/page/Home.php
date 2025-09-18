@@ -362,14 +362,14 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
                                 <?php else: ?>
-                                    <span class="avatar-fallback"><?= strtoupper(substr($c['name'], 0, 1)) ?></span>
+                                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
                                 <?php endif; ?>
                             </div>
                             <div class="chat-body"
                                 data-comment-id="<?= (int)$c['id'] ?>"
-                                data-username="<?= htmlspecialchars($c['name']) ?>">
+                                data-username="<?= htmlspecialchars($c['username']) ?>">
                                 <div class="chat-meta">
-                                    <span class="chat-name"><?= htmlspecialchars($c['name']) ?></span>
+                                    <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
                                     <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
                                 </div>
                                 <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
@@ -506,7 +506,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             const li = createCommentElement(data.comment);
 
                             // ✅ thêm xuống cuối
-                            ul.prepend(li);
+                            // ul.prepend(li);
 
                             // ✅ auto scroll xuống cuối
                             ul.scrollTop = 0;
