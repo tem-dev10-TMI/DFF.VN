@@ -82,11 +82,11 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->editProfile();
         break;
-    case 'profile_business':
-        require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
-        $controller = new businessmenController();
-        $controller->index();
-        break;
+    // case 'profile_business':
+    //     require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
+    //     $controller = new businessmenController();
+    //     $controller->index();
+    //     break;
     case 'edit_business':
         require_once __DIR__ . '/controller/account/businessmenController.php'; // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new businessmenController();

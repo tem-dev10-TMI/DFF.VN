@@ -47,7 +47,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                 c.id, c.user_id, c.content, c.upvotes, c.created_at,
-                u.username, u.avatar_url
+                u.name, u.avatar_url
             FROM comment_global c
             LEFT JOIN users u ON c.user_id = u.id
             ORDER BY c.created_at DESC

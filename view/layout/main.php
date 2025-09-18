@@ -377,12 +377,12 @@
     <div id="mobile-profile-template" class="d-none">
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin') {
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
                                                                             echo 'profile_user';
                                                                         } else {
-                                                                            echo 'profile_business';
+                                                                            //echo 'profile_business';
                                                                         } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
-                <li class="list-group-item"><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-plus"></i> Viết bài</a></li>
+                <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
             <?php else: ?>
