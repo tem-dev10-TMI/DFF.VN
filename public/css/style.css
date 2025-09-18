@@ -842,9 +842,9 @@ a:hover {
 }
 /*ẢNH LOGO*/
 .header-logo img {
-    width: 60px;               /* vừa khung header */
-    height: auto;              /* giữ tỉ lệ gốc */
-    border-radius: 10px;       /* bo nhẹ góc, không méo */
+    width: 60px;            
+    height: 52px;              
+    border-radius: 10px;       
     background: #fff;
     padding: 3px;
     border: 2px solid #4CAF50;
@@ -855,8 +855,6 @@ a:hover {
     box-shadow: 0 0 10px #4CAF50;
     transform: scale(1.05);
 }
-
-
 /*END*/
 .header-logo>a {
     float: left;
@@ -2004,16 +2002,15 @@ ul.ul-history i {
     width: 1260px;
     margin: 0 auto;
 }
-
+    
 .hmain {
-    background: color #40b029;;
+    background-color:#40b029;
     width: 100%;
     position: fixed;
     height: 66px;
     top: 0;
     z-index: 9999;
 }
-
 .main>* {
     width: 100%;
 }
@@ -2315,16 +2312,22 @@ a.disabled {
     color: #504d4d;
 }
 /*MENU BÊN TRÁI*/
+
+
+.left-menu ul li:hover,
+.left-menu ul li.active {
+    background-color: #ebebeb;
+}
 .left-menu ul li.add a {
     color: #124889;
     font-weight: bold;
-}
+}     
 
 .left-menu .h-info li {
     font-size: 11px;
     line-height: 18px;
     padding: 0px 3px;
-    color: #878383;
+    color: #76c8c2;
 }
 
 .left-menu .h-info {
@@ -2363,25 +2366,22 @@ a.disabled {
 }
 
 .left-menu ul li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  color: #1C1C1C;
-  border-radius: 8px;
-  margin: 4px 8px;
-  transition: 0.2s ease;
-  cursor: pointer;
+ width: 100%;
+ padding: 6px 6px 6px 20px;
+ border-radius: 12px;
+
 }
 
 .left-menu ul li a {
   color: inherit;
   text-decoration: none;
   flex: 1;
+  font-size: 14px;         
+
 }
 
 .left-menu ul li.active {
-  background: #4B6F44;   
+  background: #40a92b;   
   color: #fff;
 }
 
@@ -2393,7 +2393,27 @@ a.disabled {
 .left-menu ul li:hover {
   background: rgba(75, 111, 68, 0.1);
 }
+/**/
+.left-menu ul li img {
+  width: 28px;             
+  height: 28px;
+  border-radius: 50%;      
+  object-fit: cover;        
+  flex-shrink: 0;  
+}  
+  .left-menu ul li .icon-right {
+  margin-left: auto;       /* đẩy icon sang phải */
+  font-size: 14px;         /* size vừa phải */
+  color: #888;             /* màu nhạt nhẹ */
+  display: flex;
+  align-items: center;     /* căn giữa dọc */
+  justify-content: center;
+  min-width: 20px;    
+   
+}       
+
 /*END*/
+
 .line {
     height: 1px;
     border-top: 1px solid rgb(235, 235, 235);
@@ -2502,7 +2522,7 @@ a.disabled {
 }
 
 .left-menu .i-topic:before {
-    padding-left: 5px;
+    padding-left: 4px;
 }
 
 .left-menu .fa-plus:before {
@@ -4383,7 +4403,7 @@ div[data-notify="container"] .close {
 
 .box-alert .nav .nav-item button.active::after {
     content: "";
-    border-bottom: 3px solid #124889 !important;
+    border-bottom: 3px solid #f6f6f6 !important;
     width: 100%;
     position: absolute;
     left: 0;
@@ -4399,7 +4419,7 @@ div[data-notify="container"] .close {
 }
 
 .box-alert .tab-content .label {
-    color: #9F9F9F;
+    color: #2a14b8;
     font-size: 12px;
     float: left;
     margin-bottom: 6px;
