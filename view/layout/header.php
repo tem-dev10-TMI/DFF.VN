@@ -607,7 +607,7 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             <div class="msg">
                 <div class="avatar">🤖</div>
                 <div class="bubble">
-                    <div class="meta">Chatbot TMI • <?= date('d/m/Y H:i') ?></div>
+                    <div class="meta">Chatbot TMI</div>
                     <div class="content">
                         Chào bạn! Tôi là Chatbot TMI. Tôi có thể giúp gì cho bạn?
                     </div>
