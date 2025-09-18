@@ -7030,7 +7030,31 @@ ul.timeline .left-arrow:after {
         width: calc(100% - 250px);
         padding: 30px 0 0 50px;
     }
+/* Desktop giữ nguyên */
+.left-sidebar {
+  position: relative;
+}
 
+/* Mobile menu */
+@media (max-width: 768px) {
+  .left-sidebar {
+    position: fixed;
+    top: 60px; /* chiều cao header */
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 60px);
+    background: #fff;
+    z-index: 2000;
+    overflow-y: auto;
+    display: none; /* ẩn mặc định */
+  }
+
+  .left-sidebar.open {
+    display: block; /* hiện khi bấm nút 3 gạch */
+  }
+}
+    
 
 
 }
