@@ -37,6 +37,34 @@
         <div class="line"></div>
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
+        <ul class=" top-item">
+
+        <li><img src="../img.dff.vn/Image/2024/07/17/ktvm-104446377.png"><a title="Vĩ mô" href="vi-mo-t128-1.html">
+                Vĩ mô</a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/07/17/ck-153008757.png"><a title="Thị trường"
+                href="thi-truong-t129-1.html"> Thị trường</a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/08/12/2-12045699.png"><a title="Crypto " href="crypto-t2202-1.html">
+                Crypto </a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/07/17/dn-104202856.png"><a title="360° Doanh nghiệp"
+                href="360-doanh-nghiep-t123-1.html"> 360° Doanh nghiệp</a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/07/17/nh-154022179.png"><a title="Tài chính"
+                href="tai-chinh-t139-1.html"> Tài chính</a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/07/17/bds-153325898.png"><a title="Nhà đất" href="nha-dat-t140-1.html">
+                Nhà đất</a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/08/12/1-120418263.png"><a title="Quốc tế " href="quoc-te-t2201-1.html">
+                Quốc tế </a> </li>
+
+        <li><img src="../img.dff.vn/Image/2024/08/12/3-120542176.png"><a title="Thảo luận"
+                href="thao-luan-t2203-1.html"> Thảo luận</a> </li>
+
+    </ul>
+
         <?php if (!empty($topTopics)): ?>
         <ul class=" top-item">
             <?php foreach ($topTopics as $topic): ?>
