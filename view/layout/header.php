@@ -105,11 +105,13 @@
                                                                                         } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li>
-                                        <a class="dropdown-item" href="<?= BASE_URL ?>/change_password" data-bs-toggle="modal" data-bs-target="#changePassModal">
-                                            <i class="fas fa-unlock"></i> Đổi mật khẩu
-                                        </a>
-                                    </li>
+                                    <?php if (!empty($_SESSION['user']['password_hash'])): ?>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= BASE_URL ?>/change_password" data-bs-toggle="modal" data-bs-target="#changePassModal">
+                                                <i class="fas fa-unlock"></i> Đổi mật khẩu
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
                                     <li>
                                         <!-- module-load="logout" cai nay trong the a dang xuat     -->
                                         <a class="dropdown-item" href="<?= BASE_URL ?>/logout"><i
@@ -601,7 +603,17 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
         </header>
 
         <!-- Nội dung chat -->
-        <section id="messages" class="messages" aria-live="polite"></section>
+        <section id="messages" class="messages" aria-live="polite">
+            <div class="msg">
+                <div class="avatar">🤖</div>
+                <div class="bubble">
+                    <div class="meta">Chatbot TMI • <?= date('d/m/Y H:i') ?></div>
+                    <div class="content">
+                        Chào bạn! Tôi là Chatbot TMI. Tôi có thể giúp gì cho bạn?
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Footer -->
         <footer class="composer">

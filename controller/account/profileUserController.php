@@ -11,6 +11,9 @@ class profileUserController
         require_once __DIR__ . '/../../model/user/userModel.php';
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/article/topicsmodel.php';
+
+        $modelTopic = new TopicsModel();
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -19,6 +22,8 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
+
+        $topics = $modelTopic->getAllTopics();
 
         /*         $articles = $modelArticle->getArticleById($userId);
  */
