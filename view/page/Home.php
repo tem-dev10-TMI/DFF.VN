@@ -587,7 +587,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div class="block-k bg-box-a">
                 <div class="tieu-diem t-analysis">
                     <h2>
-                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
                     </h2>
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
