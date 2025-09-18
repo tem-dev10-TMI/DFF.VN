@@ -132,12 +132,6 @@
             <div class="collapse box-alert" id="id_alert">
 
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold active position-relative" id="pills-home-tab"
-                            data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
-                            aria-controls="pills-home" aria-selected="true">Thông báo</button>
-                    </li>
-
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
 

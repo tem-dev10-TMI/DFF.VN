@@ -810,7 +810,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #ffffff;
+    background-color: #40a92b;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -840,11 +840,22 @@ a:hover {
 .header-logo {
     width: fit-content;
 }
-
+/*ẢNH LOGO*/
 .header-logo img {
-    height: 52px;
+    width: 60px;            
+    height: 52px;              
+    border-radius: 10px;       
+    background: #fff;
+    padding: 3px;
+    border: 2px solid #4CAF50;
+    transition: all 0.3s ease;
 }
 
+.header-logo img:hover {
+    box-shadow: 0 0 10px #4CAF50;
+    transform: scale(1.05);
+}
+/*END*/
 .header-logo>a {
     float: left;
     margin-right: 125px;
@@ -1991,16 +2002,15 @@ ul.ul-history i {
     width: 1260px;
     margin: 0 auto;
 }
-
+    
 .hmain {
-    background-color: #fff;
+    background-color:#40b029;
     width: 100%;
     position: fixed;
     height: 66px;
     top: 0;
     z-index: 9999;
 }
-
 .main>* {
     width: 100%;
 }
@@ -2301,34 +2311,23 @@ a.disabled {
     width: 100%;
     color: #504d4d;
 }
+/*MENU BÊN TRÁI*/
 
-.left-menu ul li {
-    width: 100%;
-    padding: 6px 6px 6px 20px;
-    border-radius: 12px;
-}
 
 .left-menu ul li:hover,
 .left-menu ul li.active {
     background-color: #ebebeb;
 }
-
-.left-menu ul li:hover a,
-.left-menu ul li.active a {
-    color: #000;
-    font-weight: 600;
-}
-
 .left-menu ul li.add a {
     color: #124889;
     font-weight: bold;
-}
+}     
 
 .left-menu .h-info li {
     font-size: 11px;
     line-height: 18px;
     padding: 0px 3px;
-    color: #878383;
+    color: #76c8c2;
 }
 
 .left-menu .h-info {
@@ -2351,6 +2350,69 @@ a.disabled {
     border-top: 1px solid rgb(235, 235, 235);
     margin: 8px 0;
 }
+.left-menu {
+  width: 240px;
+  background: #F5F7F4;
+  padding: 16px 0;
+  border-right: 1px solid #E0E3E0;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+}
+
+.left-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.left-menu ul li {
+ width: 100%;
+ padding: 6px 6px 6px 20px;
+ border-radius: 12px;
+
+}
+
+.left-menu ul li a {
+  color: inherit;
+  text-decoration: none;
+  flex: 1;
+  font-size: 14px;         
+
+}
+
+.left-menu ul li.active {
+  background: #40a92b;   
+  color: #fff;
+}
+
+.left-menu ul li.active a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.left-menu ul li:hover {
+  background: rgba(75, 111, 68, 0.1);
+}
+/**/
+.left-menu ul li img {
+  width: 28px;             
+  height: 28px;
+  border-radius: 50%;      
+  object-fit: cover;        
+  flex-shrink: 0;  
+}  
+  .left-menu ul li .icon-right {
+  margin-left: auto;       /* đẩy icon sang phải */
+  font-size: 14px;         /* size vừa phải */
+  color: #888;             /* màu nhạt nhẹ */
+  display: flex;
+  align-items: center;     /* căn giữa dọc */
+  justify-content: center;
+  min-width: 20px;    
+   
+}       
+
+/*END*/
 
 .line {
     height: 1px;
@@ -2460,7 +2522,7 @@ a.disabled {
 }
 
 .left-menu .i-topic:before {
-    padding-left: 5px;
+    padding-left: 4px;
 }
 
 .left-menu .fa-plus:before {
@@ -4291,14 +4353,15 @@ div[data-notify="container"] .close {
 .m-top-info {
     display: none;
     padding: 3px 8px 3px 8px;
-    font-size: 13px;
-    color: #7f7e7e;
+    font-size: 16px;
+    color: #021fdc;
     position: fixed;
     top: 0;
     width: 100%;
     background-color: #f7f7f7;
     z-index: 9999;
 }
+
 
 .m-top-info i {
     padding-right: 3px;
@@ -4340,7 +4403,7 @@ div[data-notify="container"] .close {
 
 .box-alert .nav .nav-item button.active::after {
     content: "";
-    border-bottom: 3px solid #124889 !important;
+    border-bottom: 3px solid #f6f6f6 !important;
     width: 100%;
     position: absolute;
     left: 0;
@@ -4356,7 +4419,7 @@ div[data-notify="container"] .close {
 }
 
 .box-alert .tab-content .label {
-    color: #9F9F9F;
+    color: #2a14b8;
     font-size: 12px;
     float: left;
     margin-bottom: 6px;
@@ -7030,7 +7093,26 @@ ul.timeline .left-arrow:after {
         width: calc(100% - 250px);
         padding: 30px 0 0 50px;
     }
+/* Desktop giữ nguyên */
+.left-sidebar {
+  position: relative;
+}
+}
+@media (max-width: 768px) {
+  .left-sidebar {
+    position: fixed;
+    top: 60px;   /* chiều cao header */
+    left: 0;
+    width: 100%;
+    height: auto;
+    max-height: calc(100vh - 60px);
+    background: #fff;
+    z-index: 2000;
+    overflow-y: auto;
+    display: none; /* ẩn mặc định */
+  }
 
-
-
+  .left-sidebar.open {
+    display: block; /* hiện khi bấm 3 gạch */
+  }
 }

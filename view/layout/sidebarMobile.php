@@ -36,7 +36,8 @@
         </ul>
         <div class="line"></div>
 
-        <label class="bg-tranparent">CHỦ ĐỀ</label>
+      
+
         <?php if (!empty($topTopics)): ?>
         <ul class=" top-item">
             <?php foreach ($topTopics as $topic): ?>
