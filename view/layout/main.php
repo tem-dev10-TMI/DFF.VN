@@ -241,7 +241,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle"></i></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
             </div>
