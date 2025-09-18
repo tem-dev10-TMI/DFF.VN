@@ -134,15 +134,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
         //LẤY TRONG CSDL
         // Function to calculate time ago
-        function timeAgo($datetime)
-        {
-            $time = time() - strtotime($datetime);
-            if ($time < 60) return 'vừa xong';
-            if ($time < 3600) return floor($time / 60) . ' phút trước';
-            if ($time < 86400) return floor($time / 3600) . ' giờ trước';
-            if ($time < 2592000) return floor($time / 86400) . ' ngày trước';
-            return date('d/m/Y', strtotime($datetime));
-        }
+        require_once __DIR__ . '/../../time.php';
         ?>
 
         <?php if (!empty($articlesInitial)): ?>

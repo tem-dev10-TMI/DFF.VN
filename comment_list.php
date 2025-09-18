@@ -10,10 +10,10 @@ $comments = CommentGlobalModel::getNewComments($last_id, 20);
 
 foreach ($comments as &$c) {
     // Đổi tên key để nhất quán với JS render
-    if (isset($c['name'])) {
-        $c['username'] = $c['name'];
-        unset($c['name']);
-    }
+    // if (isset($c['name'])) {
+    //     $c['username'] = $c['name'];
+    //     unset($c['name']);
+    // }
     $c['time_ago'] = timeAgo($c['created_at']);
 }
 

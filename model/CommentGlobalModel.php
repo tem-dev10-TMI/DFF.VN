@@ -10,7 +10,7 @@ class CommentGlobalModel
         // Nếu muốn tránh lỗi vì ràng buộc sai -> bỏ parent_id khi insert root comment
         if ($parent_id === null) {
             $sql = "INSERT INTO comment_global (user_id, content, created_at, updated_at)
-                    VALUES (:user_id, :content, NOW(), NOW())";
+                VALUES (:user_id, :content, DATE_ADD(NOW(), INTERVAL 7 HOUR), DATE_ADD(NOW(), INTERVAL 7 HOUR))";
             $stmt = $db->db->prepare($sql);
             return $stmt->execute([
                 ':user_id' => $user_id,
@@ -19,7 +19,7 @@ class CommentGlobalModel
         } else {
             // nếu có parent_id thì bạn phải đảm bảo parent_id nằm trong bảng comments
             $sql = "INSERT INTO comment_global (user_id, parent_id, content, created_at, updated_at)
-                    VALUES (:user_id, :parent_id, :content, NOW(), NOW())";
+                VALUES (:user_id, :parent_id, :content, DATE_ADD(NOW(), INTERVAL 7 HOUR), DATE_ADD(NOW(), INTERVAL 7 HOUR))";
             $stmt = $db->db->prepare($sql);
             return $stmt->execute([
                 ':user_id'   => $user_id,
@@ -28,6 +28,7 @@ class CommentGlobalModel
             ]);
         }
     }
+
 
 
 
