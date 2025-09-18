@@ -240,7 +240,7 @@ class UserModel
     public static function searchUsers($q)
 {
     $db = new connect();
-    $sql = "SELECT id, name, username, email 
+    $sql = "SELECT id, name, username, email, avatar_url 
             FROM users 
             WHERE name COLLATE utf8mb4_general_ci LIKE :q 
                OR username COLLATE utf8mb4_general_ci LIKE :q 

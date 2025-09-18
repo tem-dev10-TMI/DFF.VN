@@ -61,7 +61,7 @@ class TagsModel
         public static function searchTags($q)
     {
         $db = new connect();
-        $sql = "SELECT id, name, slug 
+        $sql = "SELECT id, name, slug, icon_url 
                 FROM tags 
                 WHERE name COLLATE utf8mb4_general_ci LIKE :q 
                 OR slug COLLATE utf8mb4_general_ci LIKE :q 

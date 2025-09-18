@@ -274,8 +274,9 @@ class ArticlesModel
         $sql = "SELECT a.*, u.name AS author_name
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
-                WHERE a.title LIKE :q OR a.content LIKE :q
-                ORDER BY a.created_at DESC";
+               WHERE name COLLATE utf8mb4_general_ci LIKE :q 
+               OR username COLLATE utf8mb4_general_ci LIKE :q 
+            ORDER BY name ASC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':q' => "%$q%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

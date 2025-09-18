@@ -17,8 +17,8 @@ class SearchController
             require_once 'model/user/UserModel.php';
             require_once 'model/article/TagsModel.php';
 
-            $articles = ArticlesModel::searchArticles($q);
-            $users = UserModel::searchUsers($q);             
+            $articles = ArticlesModel::searchArticles($q);            
+            $users = UserModel::searchUsers($q);         
             $tags = TagsModel::searchTags($q);
             
         }
