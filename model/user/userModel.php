@@ -237,4 +237,17 @@ class UserModel
 
         return self::getUserById($id);
     }
+    public static function searchUsers($q)
+{
+    $db = new connect();
+    $sql = "SELECT id, name, username, email 
+            FROM users 
+            WHERE name COLLATE utf8mb4_general_ci LIKE :q 
+               OR username COLLATE utf8mb4_general_ci LIKE :q 
+            ORDER BY name ASC";
+    $stmt = $db->db->prepare($sql);
+    $stmt->execute([':q' => "%$q%"]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

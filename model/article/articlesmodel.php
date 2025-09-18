@@ -268,5 +268,18 @@ class ArticlesModel
         }
         return false;
     }
+    public static function searchArticles($q)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                WHERE a.title LIKE :q OR a.content LIKE :q
+                ORDER BY a.created_at DESC";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':q' => "%$q%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
