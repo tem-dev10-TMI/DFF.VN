@@ -6,9 +6,12 @@
     border-radius: 8px;
     margin-bottom: 80px;
   }
-.modal-footer {
-    padding-bottom: 60px; /* đẩy nút lên một chút */
+
+  .modal-footer {
+    padding-bottom: 60px;
+    /* đẩy nút lên một chút */
   }
+
   .avatar {
     width: 120px;
     height: 120px;
@@ -349,6 +352,16 @@ if ($profile_category == 'user' && $user_id) {
 
         <!-- Nội dung chính -->
         <textarea id="newPost" class="form-control mb-3" rows="4" placeholder="Nội dung chính của bài viết..."></textarea>
+
+        <div class="mb-2">
+          <label for="topicSelect" class="form-label">Chọn chủ đề:</label>
+          <select class="form-select" id="topicSelect" name="topic_id" required>
+            <option value="">-- Chọn chủ đề --</option>
+            <?php foreach ($topics as $topic): ?>
+              <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
 
         <!-- Thanh công cụ -->
         <div class="d-flex justify-content-between align-items-center post-box">
@@ -924,6 +937,8 @@ if ($profile_category == 'user' && $user_id) {
     var postTitle = document.getElementById('postTitle').value.trim();
     var postSummary = document.getElementById('postSummary').value.trim();
     var postContent = document.getElementById('newPost').value.trim();
+    var postTopic = document.getElementById('topicSelect').value;
+
 
     if (!postTitle || !postContent) {
       alert('Vui lòng nhập tiêu đề và nội dung!');
@@ -939,7 +954,7 @@ if ($profile_category == 'user' && $user_id) {
     formData.append('title', postTitle);
     formData.append('summary', postSummary);
     formData.append('content', postContent);
-    formData.append('topic_id', 1); // tạm fix cứng, hoặc để user chọn
+    formData.append('topic_id', postTopic); // tạm fix cứng, hoặc để user chọn
 
     var imageFile = document.getElementById('postImage').files[0];
     if (imageFile) {
@@ -964,6 +979,7 @@ if ($profile_category == 'user' && $user_id) {
           document.getElementById('postTitle').value = '';
           document.getElementById('postSummary').value = '';
           document.getElementById('newPost').value = '';
+          document.getElementById('topicSelect').value = '';
           document.getElementById('postImage').value = '';
           document.getElementById('imagePreview').innerHTML = '';
 
@@ -1016,8 +1032,8 @@ if ($profile_category == 'user' && $user_id) {
   }
 
   function clearVideoPreview() {
-      document.getElementById('postVideo').value = ''; // Xóa file đã chọn
-      document.getElementById('videoPreview').innerHTML = ''; // Xóa hiển thị
+    document.getElementById('postVideo').value = ''; // Xóa file đã chọn
+    document.getElementById('videoPreview').innerHTML = ''; // Xóa hiển thị
   }
 
   // Like/Unlike bài viết

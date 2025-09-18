@@ -14,6 +14,15 @@ class TopicsModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function getAllTopics()
+    {
+        $db = new connect();
+        $sql = "SELECT * FROM topics ORDER BY display_order ASC";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Thêm topic mới
     public function create($data)
     {
