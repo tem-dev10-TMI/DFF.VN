@@ -134,46 +134,33 @@ return $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->execute([':user_id' => $user_id]);
         return (int) $stmt->fetchColumn();
     }
-    public static function getAllBusinessmen()
-    {
-        $db = new connect();
+   
 
-        // Lấy tất cả doanh nhân + thông tin user
-        $sql = "SELECT 
-                b.id,
-                b.user_id,
-                b.position,              
-                u.name,
-                u.username,
-                u.avatar_url as logo_url
-            FROM businessmen b
-            LEFT JOIN users u ON b.user_id = u.id
-            ORDER BY b.id DESC";
+     public static function getAllBusinessmen($limit = 10) {
+        global $pdo;
 
-        $stmt = $db->db->prepare($sql);
+       $sql = "
+    SELECT 
+        b.id, 
+        u.id AS user_id, 
+        u.username, 
+        u.name, 
+        u.avatar_url,
+        b.position,
+        (SELECT COUNT(*) FROM user_follows f WHERE f.following_id = u.id) AS followers
+    FROM businessmen b
+    JOIN users u ON b.user_id = u.id
+    ORDER BY followers DESC
+    LIMIT :limit
+";
+
+        
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
-        $businessmen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // Nếu không có dữ liệu, tạo dữ liệu mẫu
-        if (empty($businessmen)) {
-            businessmenModel::createSampleBusinessmen();
-            $stmt->execute();
-            $businessmen = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        }
-
-        // Fallback nếu trống
-        foreach ($businessmen as &$biz) {
-            if (empty($biz['position'])) {
-                $biz['position'] = 'Doanh nhân';
-            }
-            if (empty($biz['logo_url'])) {
-                $biz['logo_url'] = 'https://via.placeholder.com/150';
-            }
-        }
-
-        return $businessmen;
+        
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
     // Tạo dữ liệu mẫu cho businessmen
     public static function createSampleBusinessmen()
     {
@@ -266,4 +253,6 @@ return $stmt->fetchAll(PDO::FETCH_ASSOC);
             'likes' => $likesCount
         ];
     }
+
+    
 }

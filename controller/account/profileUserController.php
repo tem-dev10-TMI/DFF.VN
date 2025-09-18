@@ -2,44 +2,64 @@
 class profileUserController
 {
     // Trang hồ sơ người dùng
-    public static function index()
-    {
-        if (!isset($_SESSION['user'])) {
-            header("Location: " . BASE_URL . "/login");
-            exit;
-        }
-        require_once __DIR__ . '/../../model/user/userModel.php';
-        require_once __DIR__ . '/../../model/article/articlesmodel.php';
-        require_once __DIR__ . '/../../model/user/profileUserModel.php';
-
-        $modelArticle = new ArticlesModel();
-        $modelUser = new UserModel();
-        $modelProfile = new profileUserModel();
-
-        $userId = $_SESSION['user']['id'];
-
-        $user = $modelUser->getUserById($userId);
-
-        /*         $articles = $modelArticle->getArticleById($userId);
- */
-        $role = $_SESSION['user']['role'];
-        if ($role === 'user') {
-            $profileUser = $modelProfile->getProfileUserByUserId($userId);
-            $stats = $modelProfile->getUserStats($userId);
-            //Load view
-            ob_start();
-            $profile_category = 'user';
-            require_once __DIR__ . '/../../view/layout/Profile.php';
-            $content = ob_get_clean();
-            $profile = true;
-            //Load layout
-            // đừng ai xóa
-            require_once __DIR__ . '/../../view/layout/main.php';
-        } else {
-            header("Location: " . BASE_URL);
-            exit;
-        }
+   public static function index()
+{
+    if (!isset($_SESSION['user'])) {
+        header("Location: " . BASE_URL . "/login");
+        exit;
     }
+
+    require_once __DIR__ . '/../../model/user/userModel.php';
+    require_once __DIR__ . '/../../model/article/articlesmodel.php';
+    require_once __DIR__ . '/../../model/user/profileUserModel.php';
+
+    $modelArticle = new ArticlesModel();
+    $modelUser = new UserModel();
+    $modelProfile = new profileUserModel();
+
+    $userId = $_SESSION['user']['id'];
+    $user   = $modelUser->getUserById($userId);
+
+    $role = $user['role'] ?? 'user'; // lấy role trong DB
+
+    // Nếu là user thường → load profile user
+    if ($role === 'user') {
+        $profileUser = $modelProfile->getProfileUserByUserId($userId);
+        $stats       = $modelProfile->getUserStats($userId);
+
+        ob_start();
+        $profile_category = 'user';
+        require_once __DIR__ . '/../../view/layout/Profile.php';
+        $content = ob_get_clean();
+        $profile = true;
+        require_once __DIR__ . '/../../view/layout/main.php';
+    }
+    // Nếu là doanh nhân → load profile doanh nhân
+    elseif ($role === 'businessmen') {
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
+
+        $businessman = businessmenModel::getBusinessByUserId($userId);
+        $careers     = !empty($businessman['businessman_id'])
+            ? businessmenModel::getCareersByBusinessmenId($businessman['businessman_id'])
+            : [];
+        $stats = !empty($businessman['user_id'])
+            ? businessmenModel::getBusinessStats($businessman['user_id'])
+            : ['articles' => 0, 'followers' => 0, 'following' => 0, 'likes' => 0];
+
+        ob_start();
+        $profile_category = 'businessmen';
+        require_once __DIR__ . '/../../view/layout/Profile.php';
+        $content = ob_get_clean();
+        $profile = true;
+        require_once __DIR__ . '/../../view/layout/main.php';
+    }
+    // Trường hợp khác → đá về trang chủ
+    else {
+        header("Location: " . BASE_URL);
+        exit;
+    }
+}
+
 
     public static function viewprofileUser()
     {
@@ -599,4 +619,7 @@ class profileUserController
             ]);
         }
     }
+
+    
+
 }

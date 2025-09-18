@@ -73,11 +73,11 @@
         <div class="line"></div>
         <ul class=" about-c">
             <li><i class="bi bi-tv"></i>
-                <a href="policy.html#about"> Về chúng tôi</a>
+                <a href="about#"> Về chúng tôi</a>
             </li>
             <li>
                 <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service"> Chính sách nội dung</a>
+                <a href="about#gioithieu"> Chính sách nội dung</a>
             </li>
             <li><svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +92,7 @@
                     </path>
                     <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                 </svg>
-                <a href="policy.html#privacy-policy"> Chính sách riêng tư</a>
+                <a href="about#thuthap"> Chính sách riêng tư</a>
             </li>
             <li><i class="bi bi-badge-ad"></i>
                 <a href="policy.html#advertisement"> Quảng cáo </a>

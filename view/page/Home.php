@@ -81,24 +81,32 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <?php //var_dump($topBusinessmen);
                                 ?>
                                 <?php foreach ($topBusinessmen as $biz): ?>
+                                    <?php
+                                        $isFollowing = false;
+                                        if (isset($_SESSION['user']['id'])) {
+                                            require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+                                            $db = new connect();
+                                            $pdo = $db->db;
+                                            $followModel = new UserFollowModel($pdo);
+                                            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
+                                        }
+                                    ?>
                                     <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                                         <div class="item">
                                             <ul>
                                                 <li>
                                                     <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                                                        src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                                        src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
                                                 </li>
                                                 <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
                                                 <li class="name">
-
-                                                    <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
-                                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                                                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                                                        </a>
+                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                    </a>
                                                 </li>
                                                 <li class="f-folw">
-                                                    <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
-                                                        <val>Theo dõi</val>
+                                                    <a class="btn-follow" href="javascript:void(0)" data-user="<?= $biz['user_id'] ?>">
+                                                        <val><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></val>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
                                                 </li>
@@ -106,6 +114,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
+
                             <?php else: ?>
                                 <p>Chưa có doanh nhân nào.</p>
                             <?php endif; ?>
@@ -1000,6 +1009,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             });
         </script>
+
+        
         <script>
             $(document).ready(function() {
                 $('.owl-carousel.box-company').owlCarousel({
@@ -1024,7 +1035,36 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
             });
+
+
         </script>
+
+
+<script>document.querySelectorAll(".btn-follow").forEach(btn => {
+    btn.addEventListener("click", function() {
+        const userId = this.getAttribute("data-user");
+
+        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "user_id=" + userId
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                this.querySelector("val").innerText = data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                this.querySelector(".number").innerText = data.followers;
+            } else {
+                alert(data.message);
+            }
+        })
+        .catch(() => {
+            alert("Không thể kết nối đến server!");
+        });
+    });
+});
+
+</script>
 
 
 

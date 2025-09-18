@@ -254,6 +254,44 @@
     }
   }
 </style>
+
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// kết nối DB
+require_once __DIR__ . '/../../config/db.php';
+$db = new connect();
+$pdo = $db->db;
+
+// Lấy user_id từ session
+$user_id = $_SESSION['user']['id'] ?? null;
+
+// Mặc định là chưa có request
+$hasBusinessRequest = false;
+
+// Chỉ kiểm tra khi là tài khoản user & đã đăng nhập
+if ($profile_category == 'user' && $user_id) {
+    try {
+        // Kiểm tra bảng có tồn tại không trước khi query
+        $check = $pdo->query("SHOW TABLES LIKE 'businessmen_requests'");
+        if ($check->rowCount() > 0) {
+            $stmt = $pdo->prepare("
+                SELECT id 
+                FROM businessmen_requests 
+                WHERE user_id = ? AND status = 'pending'
+            ");
+            $stmt->execute([$user_id]);
+            $hasBusinessRequest = $stmt->fetchColumn();
+        }
+    } catch (PDOException $e) {
+        // Ghi log nếu cần
+        error_log("Lỗi khi kiểm tra businessmen_requests: " . $e->getMessage());
+    }
+}
+?>
+
 <div class="container mt-3">
   <!-- Cover -->
   <div class="cover">
@@ -382,6 +420,7 @@
     /* giữ nền trắng để không trong suốt */
   }
 </style>
+
 <!-- Modal xác nhận chuyển đổi -->
 <div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -614,74 +653,50 @@
   }
 
   function submitConversion() {
-    // Lấy form element
-    var form = document.getElementById('convertForm');
-    var formData = new FormData(form);
+  var form = document.getElementById('convertForm');
+  var formData = new FormData(form);
 
-    // Kiểm tra validation trước khi submit
-    var companyName = document.getElementById('companyName').value;
-    var taxCode = document.getElementById('taxCode').value;
-    var businessField = document.getElementById('businessField').value;
-    var businessAddress = document.getElementById('businessAddress').value;
-    var agreeTerms = document.getElementById('agreeTerms').checked;
-
-    if (!companyName || !taxCode || !businessField || !businessAddress) {
-      alert('Vui lòng điền đầy đủ thông tin bắt buộc!');
-      return;
-    }
-
-    if (!agreeTerms) {
-      alert('Vui lòng đồng ý với điều khoản sử dụng!');
-      return;
-    }
-
-    // Hiển thị loading
-    var submitBtn = event.target;
-    var originalText = submitBtn.innerHTML;
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang xử lý...';
-    submitBtn.disabled = true;
-
-    // Submit form tới PHP
-    fetch('controller/test-api-profile/convertToBusiness.php', {
-        method: 'POST',
-        body: formData
-      })
-      .then(response => response.json())
-      .then(data => {
-        // Reset button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-
-        if (data.success) {
-          // Close modal
-          var convertModal = bootstrap.Modal.getInstance(document.getElementById('convertModal'));
-          convertModal.hide();
-
-          // Show success message
-          alert(data.message);
-
-          // Reset form
-          form.reset();
-
-          // Reload page để cập nhật giao diện
-          setTimeout(function() {
-            window.location.reload();
-          }, 1000);
-        } else {
-          // Show error message
-          alert(data.message);
-        }
-      })
-      .catch(error => {
-        // Reset button
-        submitBtn.innerHTML = originalText;
-        submitBtn.disabled = false;
-
-        // Show error message
-        alert('Có lỗi xảy ra khi xử lý yêu cầu. Vui lòng thử lại sau!');
-        console.error('Error:', error);
-      });
+  // Check đã tick đồng ý chưa
+  var agreeTerms = document.getElementById('agreeTerms').checked;
+  if (!agreeTerms) {
+    alert('Vui lòng đồng ý với điều khoản sử dụng!');
+    return;
   }
+
+  // Loading button
+  var submitBtn = event.target;
+  var originalText = submitBtn.innerHTML;
+  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang xử lý...';
+  submitBtn.disabled = true;
+
+  // Gửi request đến PHP xử lý
+  fetch('businessman_register.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+
+      if (data.success) {
+        alert('✅ Đăng ký doanh nhân thành công, vui lòng chờ admin duyệt!');
+        var convertModal = bootstrap.Modal.getInstance(document.getElementById('convertModal'));
+        convertModal.hide();
+        form.reset();
+        window.location.reload();
+      } else {
+        alert('❌ ' + (data.message || 'Đăng ký thất bại!'));
+      }
+    })
+    .catch(err => {
+      submitBtn.innerHTML = originalText;
+      submitBtn.disabled = false;
+      alert('Lỗi kết nối tới server!');
+      console.error(err);
+    });
+}
+
 
   // Load bài viết từ PHP
   function loadPosts() {

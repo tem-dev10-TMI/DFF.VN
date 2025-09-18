@@ -50,7 +50,6 @@
       </div>
     </div>
 
-
     <!-- Sở thích/Chuyên môn -->
     <div class="user-interests mt-4">
       <h6 class="mb-3">Sở thích</h6>
@@ -71,9 +70,25 @@
       <button class="btn btn-outline-success btn-sm w-100 mb-2">
         <i class="fas fa-share-alt me-1"></i> Chia sẻ hồ sơ
       </button>
-      <button class="btn btn-warning btn-sm w-100 mb-2" onclick="convertToBusiness()">
-        <i class="fas fa-building me-1"></i> Chuyển thành doanh nhân
-      </button>
+
+      <?php if ($profile_category == 'user'): ?>
+        <!-- Chỉ hiện khi là tài khoản thường -->
+        <?php if ($profile_category == 'user'): ?>
+    <?php if (empty($hasBusinessRequest)): ?>
+        <!-- Chỉ hiện khi là user thường và chưa gửi request -->
+        <button class="btn btn-warning btn-sm w-100 mb-2" onclick="convertToBusiness()">
+          <i class="fas fa-building me-1"></i> Chuyển thành doanh nhân
+        </button>
+    <?php else: ?>
+        <!-- Nếu đã gửi yêu cầu thì báo chờ -->
+        <div class="alert alert-warning py-2 text-center mb-2">
+          ⏳ Đã gửi yêu cầu, vui lòng chờ admin duyệt
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+
+      <?php endif; ?>
+
       <button class="btn btn-outline-info btn-sm w-100">
         <i class="fas fa-cog me-1"></i> Cài đặt
       </button>
