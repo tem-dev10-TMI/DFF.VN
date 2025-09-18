@@ -81,32 +81,24 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <?php //var_dump($topBusinessmen);
                                 ?>
                                 <?php foreach ($topBusinessmen as $biz): ?>
-                                    <?php
-                                        $isFollowing = false;
-                                        if (isset($_SESSION['user']['id'])) {
-                                            require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-                                            $db = new connect();
-                                            $pdo = $db->db;
-                                            $followModel = new UserFollowModel($pdo);
-                                            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
-                                        }
-                                    ?>
                                     <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                                         <div class="item">
                                             <ul>
                                                 <li>
                                                     <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                                                        src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                                        src="<?= htmlspecialchars($biz['logo_url'] ?? 'https://via.placeholder.com/150') ?>">
                                                 </li>
                                                 <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
                                                 <li class="name">
-                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                                                    </a>
+
+                                                    <a href="viewProfilebusiness?id=<?= $biz['id'] ?>">
+                                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                        </a>
                                                 </li>
                                                 <li class="f-folw">
-                                                    <a class="btn-follow" href="javascript:void(0)" data-user="<?= $biz['user_id'] ?>">
-                                                        <val><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></val>
+                                                    <a data-type="5" href="javascript:void(0)" data-ref="<?= $biz['id'] ?>">
+                                                        <val>Theo dõi</val>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
                                                 </li>
@@ -114,7 +106,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         </div>
                                     </div>
                                 <?php endforeach; ?>
-
                             <?php else: ?>
                                 <p>Chưa có doanh nhân nào.</p>
                             <?php endif; ?>
@@ -371,22 +362,87 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
                                 <?php else: ?>
-                                    <span class="avatar-fallback"><?= strtoupper(substr($c['name'], 0, 1)) ?></span>
+                                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
                                 <?php endif; ?>
                             </div>
-                            <div class="chat-body">
-                                <div class="chat-meta">
-                                    <span class="chat-name"><?= htmlspecialchars($c['name']) ?></span>
-                                    <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
-                                </div>
-                                <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
-                                <div class="chat-actions">
-                                    <button>⬆</button>
-                                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
-                                    <button>⬇</button>
-                                    <a href="#" class="chat-reply">Trả lời</a>
-                                </div>
-                            </div>
+                            <div class="chat-body" 
+     data-comment-id="<?= (int)$c['id'] ?>" 
+     data-username="<?= htmlspecialchars($c['username']) ?>">
+    <div class="chat-meta">
+        <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
+        <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+    </div>
+    <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+    <div class="chat-actions">
+        <button>⬆</button>
+        <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+        <button>⬇</button>
+        <a href="#" class="chat-reply">Trả lời</a>
+    </div>
+</div>
+<input type="hidden" id="parent_id" name="parent_id" value="">
+
+<script>
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('chat-reply')) {
+        e.preventDefault();
+
+        const chatBody = e.target.closest('.chat-body');
+        const parentId = chatBody.dataset.commentId;
+        const username = chatBody.dataset.username;
+
+        // Gán id comment cha
+        document.getElementById('parent_id').value = parentId;
+
+        // Chèn @username (nếu muốn)
+        const textarea = document.getElementById('comment-content');
+        if (!textarea.value.startsWith('@' + username)) {
+            textarea.value = '@' + username + ' ' + textarea.value;
+        }
+
+        // Cuộn tới ô nhập và focus
+        textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        textarea.focus();
+    }
+});
+</script>
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener('click', function (e) {
+    if (e.target.classList.contains('chat-reply')) {
+        e.preventDefault();
+
+        // Tìm khối comment chứa nút này
+        const chatBody  = e.target.closest('.chat-body');
+        const parentId  = chatBody.dataset.commentId;
+        const username  = chatBody.dataset.username;
+
+        // Gán vào hidden input & chèn @username vào đầu ô nhập
+        document.getElementById('parent_id').value = parentId;
+
+        const box = document.getElementById('comment-box');
+        box.focus();
+        // Nếu chưa có @username ở đầu thì thêm
+        if (!box.value.startsWith('@' + username)) {
+            box.value = '@' + username + ' ' + box.value;
+        }
+    }
+});
+</script>
+
+
+
+
+
+
+                            
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -587,7 +643,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div class="block-k bg-box-a">
                 <div class="tieu-diem t-analysis">
                     <h2>
-                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
+                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
                     </h2>
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
@@ -1009,8 +1065,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             });
         </script>
-
-        
         <script>
             $(document).ready(function() {
                 $('.owl-carousel.box-company').owlCarousel({
@@ -1035,36 +1089,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
             });
-
-
         </script>
-
-
-<script>document.querySelectorAll(".btn-follow").forEach(btn => {
-    btn.addEventListener("click", function() {
-        const userId = this.getAttribute("data-user");
-
-        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "user_id=" + userId
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                this.querySelector("val").innerText = data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-                this.querySelector(".number").innerText = data.followers;
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(() => {
-            alert("Không thể kết nối đến server!");
-        });
-    });
-});
-
-</script>
 
 
 
