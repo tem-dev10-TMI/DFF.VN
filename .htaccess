@@ -1,6 +1,6 @@
 # Bật Rewrite Engine
 RewriteEngine On
-RewriteBase /DFF.VN/
+RewriteBase /
 # thangwf naof dua len server xoa cai DFF.VN/
 
 
@@ -18,10 +18,10 @@ RewriteBase /DFF.VN/
 #    Tắt: xóa file trên hoặc unset env
 # ------------------------------------
 # Bỏ qua nếu đã vào thư mục Fix hoặc file tĩnh
-##RewriteCond %{DOCUMENT_ROOT}/DFF.VN/Fix/maintenance.on -f
+##RewriteCond %{DOCUMENT_ROOT}/Fix/maintenance.on -f
 # Nếu đang whitelist thì bỏ qua redirect (cho IP admin)
 #RewriteCond %{ENV:MAINT_WHITELIST} !1
-#RewriteCond %{REQUEST_URI} !^/DFF\.VN/Fix/ [NC]
+#RewriteCond %{REQUEST_URI} !^/Fix/ [NC]
 #RewriteCond %{REQUEST_URI} !\.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|pdf|txt|mp4|webp)$ [NC]
 #RewriteRule ^.*$ Fix/ [R=302,L]
 
@@ -87,8 +87,8 @@ ServerSignature Off
 </IfModule>
 
 # php -- BEGIN cPanel-generated handler, do not edit
-# Set the “alt-php82” package as the default “PHP” programming language.
+# Set the “alt-php83” package as the default “PHP” programming language.
 <IfModule mime_module>
-  AddHandler application/x-httpd-alt-php82 .php .php8 .phtml
+  AddHandler application/x-httpd-alt-php83 .php .php8 .phtml
 </IfModule>
 # php -- END cPanel-generated handler, do not edit

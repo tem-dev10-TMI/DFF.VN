@@ -427,7 +427,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     })
                     .then(res => res.json())
                     .then(data => {
-                        if (data.success && data.comment) { // ✅ KIỂM TRA KỸ HƠN
+                        if (data.success) {
                             const ul = document.querySelector(".list_comment");
                             const li = createCommentElement(data.comment);
 

@@ -4,6 +4,20 @@ a {
     vertical-align: baseline;
     cursor: pointer;
 }
+/* Cho sidebar có cuộn khi dài quá */
+.sidebar {
+  max-height: 100vh; /* Không vượt quá chiều cao màn hình */
+  overflow-y: auto;  /* Thêm cuộn dọc */
+  padding-bottom: 80px; /* Chừa chỗ để không che nút cuối */
+}
+
+/* Nếu trên mobile thì thêm khoảng cách nhiều hơn */
+@media (max-width: 767px) {
+  .sidebar {
+    padding-bottom: 180px; /* chừa khoảng trống cho mobile */
+  }
+}
+
 
 /* Chat header */
 #chatbot-box .chat-header {

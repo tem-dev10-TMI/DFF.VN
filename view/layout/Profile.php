@@ -6,7 +6,9 @@
     border-radius: 8px;
     margin-bottom: 80px;
   }
-
+.modal-footer {
+    padding-bottom: 60px; /* đẩy nút lên một chút */
+  }
   .avatar {
     width: 120px;
     height: 120px;

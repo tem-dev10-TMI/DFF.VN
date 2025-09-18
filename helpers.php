@@ -11,3 +11,4 @@ function flash($k, $v = null){
     }
 }
 function redirect($url){ header('Location: ' . $url); exit; }
+?>
