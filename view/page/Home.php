@@ -362,87 +362,90 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
                                 <?php else: ?>
-                                    <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
+                                    <span class="avatar-fallback"><?= strtoupper(substr($c['name'], 0, 1)) ?></span>
                                 <?php endif; ?>
                             </div>
-                            <div class="chat-body" 
-     data-comment-id="<?= (int)$c['id'] ?>" 
-     data-username="<?= htmlspecialchars($c['username']) ?>">
-    <div class="chat-meta">
-        <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
-        <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
-    </div>
-    <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
-    <div class="chat-actions">
-        <button>⬆</button>
-        <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
-        <button>⬇</button>
-        <a href="#" class="chat-reply">Trả lời</a>
-    </div>
-</div>
-<input type="hidden" id="parent_id" name="parent_id" value="">
+                            <div class="chat-body"
+                                data-comment-id="<?= (int)$c['id'] ?>"
+                                data-username="<?= htmlspecialchars($c['name']) ?>">
+                                <div class="chat-meta">
+                                    <span class="chat-name"><?= htmlspecialchars($c['name']) ?></span>
+                                    <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
+                                </div>
+                                <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+                                <div class="chat-actions">
+                                    <button>⬆</button>
+                                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                                    <button>⬇</button>
+                                    <a href="#" class="chat-reply">Trả lời</a>
+                                </div>
+                            </div>
+                            <input type="hidden" id="parent_id" name="parent_id" value="">
 
-<script>
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('chat-reply')) {
-        e.preventDefault();
+                            <script>
+                                document.addEventListener('click', function(e) {
+                                    if (e.target.classList.contains('chat-reply')) {
+                                        e.preventDefault();
 
-        const chatBody = e.target.closest('.chat-body');
-        const parentId = chatBody.dataset.commentId;
-        const username = chatBody.dataset.username;
+                                        const chatBody = e.target.closest('.chat-body');
+                                        const parentId = chatBody.dataset.commentId;
+                                        const username = chatBody.dataset.username;
 
-        // Gán id comment cha
-        document.getElementById('parent_id').value = parentId;
+                                        // Gán id comment cha
+                                        document.getElementById('parent_id').value = parentId;
 
-        // Chèn @username (nếu muốn)
-        const textarea = document.getElementById('comment-content');
-        if (!textarea.value.startsWith('@' + username)) {
-            textarea.value = '@' + username + ' ' + textarea.value;
-        }
+                                        // Chèn @username (nếu muốn)
+                                        const textarea = document.getElementById('comment-content');
+                                        if (!textarea.value.startsWith('@' + username)) {
+                                            textarea.value = '@' + username + ' ' + textarea.value;
+                                        }
 
-        // Cuộn tới ô nhập và focus
-        textarea.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        textarea.focus();
-    }
-});
-</script>
-
-
-
-
-
-
-
-
-<script>
-document.addEventListener('click', function (e) {
-    if (e.target.classList.contains('chat-reply')) {
-        e.preventDefault();
-
-        // Tìm khối comment chứa nút này
-        const chatBody  = e.target.closest('.chat-body');
-        const parentId  = chatBody.dataset.commentId;
-        const username  = chatBody.dataset.username;
-
-        // Gán vào hidden input & chèn @username vào đầu ô nhập
-        document.getElementById('parent_id').value = parentId;
-
-        const box = document.getElementById('comment-box');
-        box.focus();
-        // Nếu chưa có @username ở đầu thì thêm
-        if (!box.value.startsWith('@' + username)) {
-            box.value = '@' + username + ' ' + box.value;
-        }
-    }
-});
-</script>
+                                        // Cuộn tới ô nhập và focus
+                                        textarea.scrollIntoView({
+                                            behavior: 'smooth',
+                                            block: 'center'
+                                        });
+                                        textarea.focus();
+                                    }
+                                });
+                            </script>
 
 
 
 
 
 
-                            
+
+
+                            <script>
+                                document.addEventListener('click', function(e) {
+                                    if (e.target.classList.contains('chat-reply')) {
+                                        e.preventDefault();
+
+                                        // Tìm khối comment chứa nút này
+                                        const chatBody = e.target.closest('.chat-body');
+                                        const parentId = chatBody.dataset.commentId;
+                                        const username = chatBody.dataset.username;
+
+                                        // Gán vào hidden input & chèn @username vào đầu ô nhập
+                                        document.getElementById('parent_id').value = parentId;
+
+                                        const box = document.getElementById('comment-box');
+                                        box.focus();
+                                        // Nếu chưa có @username ở đầu thì thêm
+                                        if (!box.value.startsWith('@' + username)) {
+                                            box.value = '@' + username + ' ' + box.value;
+                                        }
+                                    }
+                                });
+                            </script>
+
+
+
+
+
+
+
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -464,16 +467,22 @@ document.addEventListener('click', function (e) {
                 li.dataset.id = c.id;
                 li.innerHTML = `
         <div class="chat-avatar">
-            ${c.avatar_url 
+            ${c.avatar_url
                 ? `<img src="${c.avatar_url}">`
-                : `<span class="avatar-fallback">${c.username[0].toUpperCase()}</span>`}
+                : `<span class="avatar-fallback">${c.username ? c.username[0].toUpperCase() : '#'}</span>`}
         </div>
-        <div class="chat-body">
+        <div class="chat-body" data-comment-id="${c.id}" data-username="${c.username}">
             <div class="chat-meta">
                 <span class="chat-name">${c.username}</span>
                 <span class="chat-time">${c.time_ago}</span>
             </div>
             <div class="chat-content">${c.content}</div>
+            <div class="chat-actions">
+                <button>⬆</button>
+                <span class="vote-count">${c.upvotes || 0}</span>
+                <button>⬇</button>
+                <a href="#" class="chat-reply">Trả lời</a>
+            </div>
         </div>`;
                 return li;
             }

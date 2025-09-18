@@ -33,6 +33,10 @@ if ($ok) {
     $comment = CommentGlobalModel::getCommentById($lastId);
 
     if ($comment) {
+        // Đổi tên key để nhất quán với JS render
+        $comment['username'] = $comment['name'];
+        unset($comment['name']);
+
         // Thêm trường time_ago vào để JS có thể render
         require_once __DIR__ . '/helpers.php'; // Đảm bảo hàm timeAgo tồn tại
         if (function_exists('timeAgo')) {
