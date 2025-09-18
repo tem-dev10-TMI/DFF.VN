@@ -364,7 +364,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
                                     <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
                                 </div>
-                                <div class="chat-content"><?= nl2br(htmlspecialchars($c['content'])) ?></div>
+                                <div class="chat-content">
+                                    <?= nl2br(preg_replace('/@(\w+)/', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content']))) ?>
+                                </div>
+
                                 <div class="chat-actions">
                                     <button>⬆</button>
                                     <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
@@ -468,7 +471,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 <span class="chat-name">${c.username}</span>
                 <span class="chat-time">${c.time_ago}</span>
             </div>
-            <div class="chat-content">${c.content}</div>
+            <div class="chat-content">${c.content.replace(/@(\w+)/g, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
             <div class="chat-actions">
                 <button>⬆</button>
                 <span class="vote-count">${c.upvotes || 0}</span>
