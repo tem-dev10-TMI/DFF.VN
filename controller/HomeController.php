@@ -5,6 +5,9 @@ require_once __DIR__ . '/../model/user/businessmenModel.php';
 require_once __DIR__ . '/../model/MarketDataModel.php';
 require_once __DIR__ . '/../model/event/Events.php';
 
+require_once __DIR__ . '/../model/TopicModel.php';
+
+
 class Events
 {
     protected $pdo;
@@ -106,6 +109,14 @@ class homeController
         }));
         $rssArticles3 = array_slice($onlyRss, 0, 6);
         $rssArticles4 = array_slice($onlyRss, 6, 6);
+
+        if ($_SESSION['user']['role'] == 'user') {
+            $profile_category = "user";
+        } else {
+            $profile_category = "businessmen";
+        }
+        $topicModel = new TopicModel();
+        $allTopics = $topicModel->getAll();
 
         // 4. Load view Home
         ob_start();
