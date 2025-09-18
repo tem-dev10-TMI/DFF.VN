@@ -373,7 +373,7 @@ class profileUserController
             $description = htmlspecialchars($_POST['description'] ?? '');
 
             $display_name = htmlspecialchars($_POST['display_name'] ?? '');
-            $birth_year = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
+            $birth_year = isset($_POST['birth_year']) && is_numeric($_POST['birth_year']) ? (int)$_POST['birth_year'] : null;
             $workplace = htmlspecialchars($_POST['workplace'] ?? '');
             $studied_at = htmlspecialchars($_POST['studied_at'] ?? '');
             $live_at = htmlspecialchars($_POST['live_at'] ?? '');
