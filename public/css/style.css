@@ -886,6 +886,7 @@ a:hover {
 
 .header-logo input {
     width: 340px !important;
+    
     border-radius: 8px !important;
 }
 
@@ -917,7 +918,7 @@ a:hover {
 }
 
 .company-filter .box-search label {
-    font-size: 14px;
+    font-size: 10px;
     padding: 8px 8px 0;
     white-space: nowrap;
     color: #100f0f;
@@ -1316,7 +1317,7 @@ textarea.form-control {
 }
 
 .header-logo .box-search input {
-    font-size: 14px;
+    font-size: 10px;
     border-radius: 0 10px 10px 0 !important;
     border-right: 1px solid #dee2e6 !important;
 }
@@ -5492,14 +5493,14 @@ span.mncolor13,
 .box-company ul li.alias,
 .h-topic .alias {
     font-size: 12px;
-    color: #605e5e;
+    color: #e00e0e;
     padding: 6px;
 }
 
 .box-company-label h5 .c-note,
 .box-trends h5 .c-note {
     font-size: 12px;
-    color: #605e5e;
+    color: #db0c0c;
     float: right;
     padding-top: 6px;
 }
