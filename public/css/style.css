@@ -810,7 +810,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #ffffff;
+    background-color: #4B6F44;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -840,11 +840,24 @@ a:hover {
 .header-logo {
     width: fit-content;
 }
-
+/*ẢNH LOGO*/
 .header-logo img {
-    height: 52px;
+    width: 60px;               /* vừa khung header */
+    height: auto;              /* giữ tỉ lệ gốc */
+    border-radius: 10px;       /* bo nhẹ góc, không méo */
+    background: #fff;
+    padding: 3px;
+    border: 2px solid #4CAF50;
+    transition: all 0.3s ease;
 }
 
+.header-logo img:hover {
+    box-shadow: 0 0 10px #4CAF50;
+    transform: scale(1.05);
+}
+
+
+/*END*/
 .header-logo>a {
     float: left;
     margin-right: 125px;
@@ -1993,7 +2006,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color: #fff;
+    background-color:#4B6F44;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -2301,24 +2314,7 @@ a.disabled {
     width: 100%;
     color: #504d4d;
 }
-
-.left-menu ul li {
-    width: 100%;
-    padding: 6px 6px 6px 20px;
-    border-radius: 12px;
-}
-
-.left-menu ul li:hover,
-.left-menu ul li.active {
-    background-color: #ebebeb;
-}
-
-.left-menu ul li:hover a,
-.left-menu ul li.active a {
-    color: #000;
-    font-weight: 600;
-}
-
+/*MENU BÊN TRÁI*/
 .left-menu ul li.add a {
     color: #124889;
     font-weight: bold;
@@ -2351,7 +2347,53 @@ a.disabled {
     border-top: 1px solid rgb(235, 235, 235);
     margin: 8px 0;
 }
+.left-menu {
+  width: 240px;
+  background: #F5F7F4;
+  padding: 16px 0;
+  border-right: 1px solid #E0E3E0;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+}
 
+.left-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.left-menu ul li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  color: #1C1C1C;
+  border-radius: 8px;
+  margin: 4px 8px;
+  transition: 0.2s ease;
+  cursor: pointer;
+}
+
+.left-menu ul li a {
+  color: inherit;
+  text-decoration: none;
+  flex: 1;
+}
+
+.left-menu ul li.active {
+  background: #4B6F44;   
+  color: #fff;
+}
+
+.left-menu ul li.active a {
+  color: #fff;
+  font-weight: 600;
+}
+
+.left-menu ul li:hover {
+  background: rgba(75, 111, 68, 0.1);
+}
+/*END*/
 .line {
     height: 1px;
     border-top: 1px solid rgb(235, 235, 235);
@@ -4299,6 +4341,7 @@ div[data-notify="container"] .close {
     background-color: #f7f7f7;
     z-index: 9999;
 }
+
 
 .m-top-info i {
     padding-right: 3px;
