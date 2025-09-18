@@ -6,6 +6,7 @@ require_once __DIR__ . '/config.php';
 
 class connect {
     public $db = null;
+    public $pdo;
 
     public function __construct(){
         $host = DB_HOST;
@@ -25,6 +26,16 @@ class connect {
         } catch (PDOException $e) {
             die("Database connection failed: " . $e->getMessage());
         }
+        try {
+    $this->pdo = new PDO(
+        "mysql:host=$host;port=$port;dbname=$dbname;charset=utf8",
+        $user,
+        $pass
+    );
+    $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Kết nối thất bại: " . $e->getMessage());
+}
     }
 
     public function getList($select){
