@@ -810,7 +810,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #4B6F44;
+    background-color: #40a92b;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -2006,7 +2006,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color:#4B6F44;
+    background: color #40b029;;
     width: 100%;
     position: fixed;
     height: 66px;
