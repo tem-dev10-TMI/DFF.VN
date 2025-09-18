@@ -53,18 +53,45 @@ $mainImage = $article['main_image_url'] ?? '';
                     <div class="bysource"></div>
                 </div>
 
+                <?php
+                // --- BẮT ĐẦU LOGIC LẤY BÀI VIẾT LIÊN QUAN ---
+                require_once __DIR__ . '/../../model/article/articlesmodel.php';
+                $articlesModel = new ArticlesModel();
+                $relatedArticles = [];
+
+                // Chỉ lấy bài liên quan nếu bài hiện tại có topic_id
+                if (!empty($article['topic_id']) && !empty($article['id'])) {
+                    // Lấy 6 bài để phòng trường hợp bài hiện tại nằm trong danh sách
+                    $tempArticles = $articlesModel->getArticlesByTopicId($article['topic_id'], 6);
+
+                    // Loại bỏ chính bài viết hiện tại ra khỏi danh sách liên quan
+                    $currentArticleId = $article['id'];
+                    $relatedArticles = array_filter($tempArticles, function($item) use ($currentArticleId) {
+                        return $item['id'] != $currentArticleId;
+                    });
+
+                    // Chỉ lấy 5 bài cuối cùng
+                    $relatedArticles = array_slice($relatedArticles, 0, 5);
+                }
+                // --- KẾT THÚC LOGIC LẤY BÀI VIẾT LIÊN QUAN ---
+                ?>
+
+                <?php if (!empty($relatedArticles)): ?>
                 <div class="box-trends" bis_skin_checked="1">
                     <h5>
-                        <a href="#" title="360° Doanh nghiệp">Nội dung liên quan </a>
+                        <a href="#" title="Nội dung liên quan">Nội dung liên quan</a>
                     </h5>
                     <ul>
-
-                        <li><a href="/hyperliquid-vuot-moc-1500-ty-usd-khoi-luong-giao-dich-phai-sinh-p20250630152347523.html" title="Hyperliquid vượt mốc 1.500 tỷ USD khối lượng giao dịch phái sinh">Hyperliquid vượt mốc 1.500 tỷ USD khối lượng giao dịch phái sinh</a>
-                        </li>
-
-
+                        <?php foreach ($relatedArticles as $related): ?>
+                            <li>
+                                <a href="details_blog?id=<?= htmlspecialchars($related['id']) ?>" title="<?= htmlspecialchars($related['title']) ?>">
+                                    <?= htmlspecialchars($related['title']) ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
+                <?php endif; ?>
 
                 <div id="anc_comment" style="padding-bottom:20px;"></div>
 
