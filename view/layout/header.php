@@ -10,17 +10,41 @@
                     <img alt="" title=""
                         src="public/img/logo/logo.jpg" /></a>
                 <div class="box-search">
-                    <div class="input-group ">
-                        <span class="input-group-append">
-                            <button
-                                class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
-                                module-load="onSearch" type="button">
-                                <i class="fa fa-search"></i>
-                            </button>
-                        </span>
-                        <input class="form-control border-end-0 border rounded-pill"
-                            onkeypress="return OnEnter(event)" placeholder="Tìm kiếm" type="search" />
-                    </div>
+                         <div class="input-group" onkeypress="return OnEnter(event)">
+    <span class="input-group-append">
+        <button
+            class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
+            type="button"
+            onclick="doSearch()">
+            <i class="fa fa-search"></i>
+        </button>
+    </span>
+    <input 
+        id="searchInput"
+        class="form-control border-end-0 border rounded-pill"
+        placeholder="Tìm kiếm" 
+        type="search"
+    />
+</div>
+
+<script>
+function OnEnter(event) {
+    if (event.key === "Enter") {
+        doSearch();
+        return false; // chặn reload mặc định
+    }
+    return true;
+}
+
+function doSearch() {
+    const keyword = document.getElementById("searchInput").value.trim();
+    if (keyword) {
+        // chuyển trang sang search
+        window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
+    }
+}
+</script>
+
                     <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
                 </div>
             </div>

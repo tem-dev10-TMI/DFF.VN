@@ -58,4 +58,17 @@ class TagsModel
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([':id' => $id]);
     }
+        public static function searchTags($q)
+    {
+        $db = new connect();
+        $sql = "SELECT id, name, slug, icon_url 
+                FROM tags 
+                WHERE name COLLATE utf8mb4_general_ci LIKE :q 
+                OR slug COLLATE utf8mb4_general_ci LIKE :q 
+                ORDER BY name ASC";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':q' => "%$q%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

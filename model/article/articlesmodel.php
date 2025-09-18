@@ -268,5 +268,19 @@ class ArticlesModel
         }
         return false;
     }
+    public static function searchArticles($q)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+               WHERE name COLLATE utf8mb4_general_ci LIKE :q 
+               OR username COLLATE utf8mb4_general_ci LIKE :q 
+            ORDER BY name ASC";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':q' => "%$q%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
 
