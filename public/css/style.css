@@ -18,8 +18,8 @@ a {
 
 #chatbot-box .agent {
     display: flex;
-    align-items: center;h
-    gap: 10px;
+    align-items: center;
+    gap  : 10px;
 }
 
 #chatbot-box .agent-avatar {
@@ -6915,6 +6915,53 @@ ul.timeline .left-arrow:after {
         padding: 30px 0 0 50px;
     }
 
+}
+/* Đặt biến màu chủ đạo ở root để dễ tái sử dụng */
+:root {
+  --primary-color: #4B6F44; /* xanh quân đội sáng */
+  --primary-hover: #3f5d39;
+  --text-color: #000;
+  --background-color: #f9f9f9;
+}
+
+/* Áp dụng toàn trang */
+body {
+  font-family: Arial, sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+}
+
+/* Header, footer, navbar */
+header, footer, .navbar {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+/* Nút bấm */
+button, .btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover, .btn:hover {
+  background-color: var(--primary-hover);
+}
+
+/* Link menu */
+.menu-item a.active,
+.tab-item a.active {
+  color: var(--primary-color);
+}
+
+.menu-item a:hover,
+.tab-item a:hover {
+  color: var(--primary-hover);
 }
  
     
