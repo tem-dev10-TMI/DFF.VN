@@ -2,7 +2,7 @@
 
 
 // Database Configuration
-$useConfig1 = true; // true dùng config 1, false dùng config 2
+$useConfig1 = false; // true dùng config 1, false dùng config 2
 
 if ($useConfig1) {
     // Cấu hình 1 triển khai cho server nhưng database trỏ tại server
@@ -21,7 +21,7 @@ if ($useConfig1) {
     define('DB_PASS', 'AVNS_brCrqfhHuYX88MkBMqS');
     define('DB_NAME', 'dff_db');
     define('DB_PORT', '27925');
-    $use = "serverl"; // mặc định server
+    $use = "local"; // mặc định server
     if ($use == "server") {
         define('BASE_URL', 'https://mxh.org.vn');
         define('SITE_NAME', 'MXH.ORG.VN');

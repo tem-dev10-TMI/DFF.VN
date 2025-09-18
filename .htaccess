@@ -1,6 +1,6 @@
 # Bật Rewrite Engine
 RewriteEngine On
-RewriteBase /
+RewriteBase /DFF.VN/
 # thangwf naof dua len server xoa cai DFF.VN/
 
 
