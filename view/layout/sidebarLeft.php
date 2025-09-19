@@ -2,8 +2,9 @@
     </style>
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
-            <li class="item active"><svg class="bi bi-house-fill home-icon" class="bi bi-house-fill home-icon" rpl="" fill="currentColor" height="20"
-                    icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
+            <li class="item active"><svg class="bi bi-house-fill home-icon" class="bi bi-house-fill home-icon" rpl=""
+                    fill="currentColor" height="20" icon-name="home-outline" viewBox="0 0 20 20" width="20"
+                    xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$-->
                     <!--?lit$03863286$-->
                     <path
@@ -31,44 +32,44 @@
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
         <?php if (!empty($topTopics)): ?>
-            <ul class="nav nav-second-level top-item">
-                <?php foreach ($topTopics as $topic): ?>
-                    <li>
-                        <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
-                            alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
-                        <a title="<?= htmlspecialchars($topic['name']) ?>"
-                            href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
-                            <?= htmlspecialchars($topic['name']) ?>
-                        </a>
-                        <i class="fas fa-plus icon-right"></i>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
+        <ul class="nav nav-second-level top-item">
+            <?php foreach ($topTopics as $topic): ?>
+            <li>
+                <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
+                    alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
+                <a title="<?= htmlspecialchars($topic['name']) ?>"
+                    href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
+                    <?= htmlspecialchars($topic['name']) ?>
+                </a>
+                <i class="fas fa-plus icon-right"></i>
+            </li>
+            <?php endforeach; ?>
+        </ul>
         <?php else: ?>
-            <p>Chưa có chủ đề nào</p>
+        <p>Chưa có chủ đề nào</p>
         <?php endif; ?>
 
         <?php if (!empty($moreTopics)): ?>
-            <div id="flush-collapseOne" class="accordion-collapse collapse">
-                <ul class="nav nav-second-level top-item">
-                    <?php foreach ($moreTopics as $topic): ?>
-                        <li>
-                            <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
-                                title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
-                                border="0" />
-                            <a title="<?= htmlspecialchars($topic['name']) ?>"
-                                href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
-                                <?= htmlspecialchars($topic['name']) ?>
-                            </a>
-                            <i class="fas fa-plus icon-right"></i>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
-            </div>
-            <div class="to-expend">
-                <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                    aria-expanded="false" aria-controls="flush-collapseOne"></i>
-            </div>
+        <div id="flush-collapseOne" class="accordion-collapse collapse">
+            <ul class="nav nav-second-level top-item">
+                <?php foreach ($moreTopics as $topic): ?>
+                <li>
+                    <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
+                        title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
+                        border="0" />
+                    <a title="<?= htmlspecialchars($topic['name']) ?>"
+                        href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
+                        <?= htmlspecialchars($topic['name']) ?>
+                    </a>
+                    <i class="fas fa-plus icon-right"></i>
+                </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+        <div class="to-expend">
+            <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                aria-expanded="false" aria-controls="flush-collapseOne"></i>
+        </div>
 
         <?php endif; ?>
 
@@ -115,3 +116,4 @@
     </div>
 
 </section>
+<script src="public/js/mau.js"></script>
