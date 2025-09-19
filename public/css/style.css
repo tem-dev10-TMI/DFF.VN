@@ -810,7 +810,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #4B6F44;
+    background-color:  #40a92b ;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -842,9 +842,9 @@ a:hover {
 }
 /*ẢNH LOGO*/
 .header-logo img {
-    width: 60px;               /* vừa khung header */
-    height: auto;              /* giữ tỉ lệ gốc */
-    border-radius: 10px;       /* bo nhẹ góc, không méo */
+    width: 60px;            
+    height: 52px;              
+    border-radius: 10px;       
     background: #fff;
     padding: 3px;
     border: 2px solid #4CAF50;
@@ -855,7 +855,6 @@ a:hover {
     box-shadow: 0 0 10px #4CAF50;
     transform: scale(1.05);
 }
-
 
 /*END*/
 .header-logo>a {
@@ -2006,7 +2005,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color:#4B6F44;
+    background-color:#40b029;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -2315,16 +2314,22 @@ a.disabled {
     color: #504d4d;
 }
 /*MENU BÊN TRÁI*/
+
+
+.left-menu ul li:hover,
+.left-menu ul li.active {
+    background-color: #ebebeb;
+}
 .left-menu ul li.add a {
     color: #124889;
     font-weight: bold;
-}
+}     
 
 .left-menu .h-info li {
     font-size: 11px;
     line-height: 18px;
     padding: 0px 3px;
-    color: #878383;
+    color: #76c8c2;
 }
 
 .left-menu .h-info {
@@ -2363,25 +2368,22 @@ a.disabled {
 }
 
 .left-menu ul li {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 16px;
-  color: #1C1C1C;
-  border-radius: 8px;
-  margin: 4px 8px;
-  transition: 0.2s ease;
-  cursor: pointer;
+ width: 100%;
+ padding: 6px 6px 6px 20px;
+ border-radius: 12px;
+
 }
 
 .left-menu ul li a {
   color: inherit;
   text-decoration: none;
   flex: 1;
+  font-size: 14px;         
+
 }
 
 .left-menu ul li.active {
-  background: #4B6F44;   
+  background: #40a92b;   
   color: #fff;
 }
 
@@ -2393,6 +2395,25 @@ a.disabled {
 .left-menu ul li:hover {
   background: rgba(75, 111, 68, 0.1);
 }
+/**/
+.left-menu ul li img {  
+  width: 28px;             
+  height: 28px;
+  border-radius: 50%;      
+  object-fit: cover;        
+  flex-shrink: 0;  
+}  
+  .left-menu ul li .icon-right {
+  margin-left: auto;     
+  font-size: 14px;       
+  color: #888;        
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+  min-width: 20px;    
+   
+}       
+
 /*END*/
 .line {
     height: 1px;
@@ -7096,3 +7117,31 @@ ul.timeline .left-arrow:after {
     display: block; /* hiện khi bấm 3 gạch */
   }
 }
+@media (max-width: 991.98px) {
+    .m-menu-i {
+        position: fixed;
+        top: 60px; /* cao bằng thanh navbar */
+        left: 0;
+        width: 100%;
+        height: calc(100vh - 60px);
+        background: #fff;
+        z-index: 1050;
+        padding: 15px;
+        overflow-y: auto;
+    }
+    .m-menu-i .item a {
+        display: flex;
+        align-items: center;
+        padding: 10px 0;
+        font-size: 16px;
+        border-bottom: 1px solid #eee;
+        color: #333;
+        text-decoration: none;
+    }
+    .m-menu-i .item svg,
+    .m-menu-i .item i {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+}
+
