@@ -465,7 +465,7 @@
                 }
             }
         </style>
-        ...
+       
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
