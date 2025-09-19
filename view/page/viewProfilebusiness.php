@@ -137,28 +137,88 @@
                 </ul>
             </div>
         </div>
+<!-- ✅ KHUNG NHẬP BÌNH LUẬN -->
+<div class="comment-input-box"
+     style="border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:20px;background:#fafafa;">
+  <h5 style="margin-top:0;margin-bottom:10px;">
+    <i class="fas fa-comments"></i> Viết bình luận
+  </h5>
+  <div style="display:flex;align-items:flex-start;gap:10px;">
+    <img src="/Upload/img_static//profile_638930336755560936.png"
+         style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+    <textarea id="comment-text"
+              placeholder="Bạn nghĩ gì về nội dung này?"
+              style="flex:1;min-height:60px;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
+    <button id="send-comment"
+            style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">
+      Gửi
+    </button>
+  </div>
+  <div id="comment-message" style="display:none;color:green;margin-top:8px;">Đã thêm bình luận</div>
+</div>
+
+<!-- Khung hiển thị bình luận -->
+<div class="comment-display-box"
+     style="border:1px solid #ccc;border-radius:8px;padding:15px;background:#fff;display:none;">
+  <h5 style="margin:0 0 10px 0;">Bình luận đã đăng</h5>
+  <ul id="comment-list" style="list-style:none;margin:0;padding:0;"></ul>
+</div>
+                              
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sendBtn     = document.getElementById('send-comment');
+  const textarea    = document.getElementById('comment-text');
+  const message     = document.getElementById('comment-message');
+  const displayBox  = document.querySelector('.comment-display-box');
+  const commentList = document.getElementById('comment-list');
+
+function createCommentItem(text) {
+  const li = document.createElement('li');
+  li.style.cssText = 'display:block;width:100%;margin-bottom:12px;'; // <- quan trọng
+  li.innerHTML = `
+    <div style="display:flex;align-items:flex-start;gap:10px;">
+      <img src="/Upload/img_static//profile_638930336755560936.png"
+           style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+      <div style="background:#f1f1f1;padding:10px;border-radius:6px;flex:1;">
+        <span style="white-space:pre-wrap;">${text}</span>
+      </div>
+    </div>
+  `;
+  return li;
+}
 
 
-        <div class="block-k" bis_skin_checked="1">
-            <h5 class="total-cm"><i class="fas fa-comments"></i>Bình luận <span></span></h5>
-            <div class="comment-box" bis_skin_checked="1">
-                <a href="javascript:void(0)" class="img-own"><img class="logo" alt=""
-                        src="/Upload/img_static//profile_638930336755560936.png"></a>
-                <textarea class="form-control autoresizing" placeholder=" Bạn nghĩ gì về nội dung này?"></textarea>
-                <i class="fas fa-paper-plane" data-id="2017" module-load="csend"></i>
-            </div>
+  // Lấy bình luận cũ từ localStorage, hiển thị cũ trước mới sau
+  const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
+  if (savedComments.length > 0) {
+    savedComments.forEach(text => commentList.prepend(createCommentItem(text)));
+    displayBox.style.display = 'block';
+  }
 
-            <div class="comment-cover" bis_skin_checked="1">
-                <ul class="list_comment col-md-12">
-                </ul>
-                <div class="cm-more" bis_skin_checked="1">Xem thêm</div>
-            </div>
+  sendBtn.addEventListener('click', function () {
+    const text = textarea.value.trim();
+    if (!text) return;
 
-            <div class="first-comment" bis_skin_checked="1">
-                <i class="far fa-comments"></i>
-                <p>Trở thành người bình luận đầu tiên</p>
-            </div>
-        </div>
+    // Lưu mới nhất lên đầu mảng để lần tải sau vẫn giữ thứ tự mới -> cũ
+    savedComments.unshift(text);
+    localStorage.setItem('comments', JSON.stringify(savedComments));
+
+    // Hiển thị mới nhất lên trên cùng
+    commentList.prepend(createCommentItem(text));
+    displayBox.style.display = 'block';
+
+    message.style.display = 'block';
+    setTimeout(() => { message.style.display = 'none'; }, 1500);
+    textarea.value = '';
+  });
+});
+</script>
+
+
+
+
+
 
 
 
