@@ -110,7 +110,7 @@ class homeController
         $rssArticles3 = array_slice($onlyRss, 0, 6);
         $rssArticles4 = array_slice($onlyRss, 6, 6);
 
-        if ($_SESSION['user']['role'] == 'user') {
+        if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == 'user') {
             $profile_category = "user";
         } else {
             $profile_category = "businessmen";

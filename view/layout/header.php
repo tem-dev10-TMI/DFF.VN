@@ -10,40 +10,39 @@
                     <img alt="" title=""
                         src="public/img/logo/logo.jpg" /></a>
                 <div class="box-search">
-                         <div class="input-group" onkeypress="return OnEnter(event)">
-    <span class="input-group-append">
-        <button
-            class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
-            type="button"
-            onclick="doSearch()">
-            <i class="fa fa-search"></i>
-        </button>
-    </span>
-    <input 
-        id="searchInput"
-        class="form-control border-end-0 border rounded-pill"
-        placeholder="Tìm kiếm" 
-        type="search"
-    />
-</div>
+                    <div class="input-group" onkeypress="return OnEnter(event)">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
+                                type="button"
+                                onclick="doSearch()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                        <input
+                            id="searchInput"
+                            class="form-control border-end-0 border rounded-pill"
+                            placeholder="Tìm kiếm"
+                            type="search" />
+                    </div>
 
-<script>
-function OnEnter(event) {
-    if (event.key === "Enter") {
-        doSearch();
-        return false; // chặn reload mặc định
-    }
-    return true;
-}
+                    <script>
+                        function OnEnter(event) {
+                            if (event.key === "Enter") {
+                                doSearch();
+                                return false; // chặn reload mặc định
+                            }
+                            return true;
+                        }
 
-function doSearch() {
-    const keyword = document.getElementById("searchInput").value.trim();
-    if (keyword) {
-        // chuyển trang sang search
-        window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
-    }
-}
-</script>
+                        function doSearch() {
+                            const keyword = document.getElementById("searchInput").value.trim();
+                            if (keyword) {
+                                // chuyển trang sang search
+                                window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
+                            }
+                        }
+                    </script>
 
                     <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
                 </div>
@@ -122,9 +121,11 @@ function doSearch() {
                                     <li class="menu-ai"><a class="dropdown-item" href="home"><i
                                                 class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] == 'admin' ) {
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] == 'admin') {
                                                                                             echo 'profile_user';
-                                                                                        }else{  echo 'profile_business';} ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                                                                        } else {
+                                                                                            echo 'profile_business';
+                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
                                     <?php if (!empty($_SESSION['user']['password_hash'])): ?>
@@ -227,7 +228,7 @@ function doSearch() {
                         </div>
 
                         <div class="col-12 text-right">
-                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:void(0)" onclick="showForgotModal()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
@@ -399,6 +400,88 @@ function doSearch() {
     </div>
 </div>
 
+<!-- Modal Quên mật khẩu -->
+<div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true" aria-modal="true" tabindex="-1">
+    <div class="modal-dialog modal-lg" style="width:450px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><span class="core-popup-title">Quên mật khẩu</span></h4>
+                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+            </div>
+
+            <div class="modal-body" style="padding:10px 15px 10px">
+
+                <!-- Bước 1: Nhập email + mật khẩu -->
+                <form id="forgot_step1">
+                    <div class="f-register">
+                        <div class="col-12">
+                            <div class="title">Nhập email để nhận mã OTP đặt lại mật khẩu</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="fas fa-at"></i></div>
+                                <input name="email" id="forgot_email" type="email" class="form-control" placeholder="Email">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="forgot_password" type="password" class="form-control" placeholder="Mật khẩu mới">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-lock"></i></div>
+                                <input id="forgot_password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="f-submit">
+                                <button type="submit" class="btn btn-primary w-100">Gửi OTP</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Bước 2: Nhập OTP -->
+                <form id="forgot_step2" style="display:none;">
+                    <div class="f-register">
+                        <div class="col-12">
+                            <div class="title">Nhập mã OTP đã được gửi về email</div>
+                        </div>
+                        <div class="col-12">
+                            <div class="input-group">
+                                <div class="input-group-text"><i class="bi bi-key"></i></div>
+                                <input id="forgot_otp" type="text" class="form-control" placeholder="Nhập mã OTP">
+                            </div>
+                        </div>
+                        <div class="col-12">
+                            <div class="f-submit">
+                                <button type="submit" class="btn btn-success w-100">Xác nhận OTP</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+                <!-- Bước 3: Thành công -->
+                <div id="forgot_step3" style="display:none; text-align:center;">
+                    <h5>✅ Đặt lại mật khẩu thành công!</h5>
+                    <p>Bạn có thể đăng nhập với mật khẩu mới.</p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm">
+                    <span data-button="icon" class="fas fa-sign-out-alt"></span>
+                    <span data-button="text">Thoát</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
@@ -410,6 +493,10 @@ function doSearch() {
         // Lấy modal register
         var registerElement = document.getElementById('register_modal');
         var registerModal = registerElement ? new bootstrap.Modal(registerElement) : null;
+
+        // Lấy modal forgot password
+        var forgotElement = document.getElementById('forgot_modal');
+        var forgotModal = forgotElement ? new bootstrap.Modal(forgotElement) : null;
 
         // Lấy mobile modal nếu có để ẩn khi bật form đăng nhập/đăng ký
         var mobileElement = document.getElementById('mobileModal');
@@ -432,6 +519,14 @@ function doSearch() {
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };
 
+        // Hàm mở modal quên mật khẩu
+        window.showForgotModal = function() {
+            if (mobileModal) mobileModal.hide();
+            if (loginModal) loginModal.hide();
+            if (registerModal) registerModal.hide();
+            if (forgotModal) forgotModal.show();
+        };
+
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
         window.switchToLogin = function() {
             if (registerModal) registerModal.hide();
@@ -446,6 +541,71 @@ function doSearch() {
         $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
             if (registerModal) registerModal.hide();
         });
+
+
+        $('#forgot_modal .sh-popup-close, #forgot_modal .cmd-cancel').on('click', function() {
+            if (forgotModal) forgotModal.hide();
+        });
+    });
+</script>
+
+<script>
+    document.getElementById("forgot_step1").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let email = document.getElementById("forgot_email").value;
+        let pass = document.getElementById("forgot_password").value;
+        let pass2 = document.getElementById("forgot_password_confirm").value;
+
+        if (pass !== pass2) {
+            alert("Mật khẩu nhập lại không khớp!");
+            return;
+        }
+
+        fetch("send-otp.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    pass: pass
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById("forgot_step1").style.display = "none";
+                    document.getElementById("forgot_step2").style.display = "block";
+                } else {
+                    alert(data.msg);
+                }
+            });
+    });
+
+    document.getElementById("forgot_step2").addEventListener("submit", function(e) {
+        e.preventDefault();
+        let email = document.getElementById("forgot_email").value;
+        let otp = document.getElementById("forgot_otp").value;
+
+        fetch("verify-otp.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    otp: otp
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    document.getElementById("forgot_step2").style.display = "none";
+                    document.getElementById("forgot_step3").style.display = "block";
+                } else {
+                    alert(data.msg);
+                }
+            });
     });
 </script>
 
