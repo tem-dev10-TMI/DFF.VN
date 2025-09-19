@@ -329,7 +329,7 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="username" id="username" type="text" class="form-control"
+                                <input name="usernamemodal" id="usernamemodal" type="text" class="form-control"
                                     placeholder="Tên đăng nhập (Viết liền không Dấu)">
                             </div>
                         </div>
@@ -349,7 +349,7 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control"
+                                <input id="passwordmodal" name="password" type="password" class="form-control"
                                     placeholder="Mật khẩu">
                             </div>
                         </div>
@@ -362,7 +362,7 @@
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
-                                <button type="submit" id="submit">Đăng ký</button>
+                                <button type="submit" id="submitmodal">Đăng ký</button>
                             </div>
                         </div>
                         <div class="col-12">
