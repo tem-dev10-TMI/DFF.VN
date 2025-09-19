@@ -76,9 +76,12 @@ class homeController
         usort($allForSlider, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
-
+        $article_nb = array_merge(
+            array_slice($rssArticles1, 0, 4),
+            array_slice($rssArticles2, 0, 4)
+        );
         // Giới hạn: 8 bài nổi bật cho slider
-        $featuredArticles = array_slice($allForSlider, 0, 8);
+        $featuredArticles = array_slice($article_nb, 0, 8);
 
         // Danh sách khởi tạo 5 bài: trộn RSS ít + DB 5 bài
         $rssForInitial = array_merge(
