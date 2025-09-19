@@ -68,8 +68,8 @@
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
                                 title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <ul class="dropdown-menu hide">
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <ul class="dropdown-menu hide">
                                     <li>
                                         <a style="position:relative" class="dropdown-item btquick" href="javascript:void(0)"
                                             data-bs-toggle="modal" data-bs-target="#createPostModal">
@@ -79,7 +79,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                                <?php endif; ?>
+                            <?php endif; ?>
                         </span>
                     </li>
                     <li class="n-chatbot">
@@ -131,10 +131,10 @@
 
                                     <li><a class="dropdown-item"
                                             href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
-                                                  echo 'profile_user';
-                                              } else {
-                                                  echo 'profile_business';
-                                              } ?>"><i
+                                                                        echo 'profile_user';
+                                                                    } else {
+                                                                        echo 'profile_business';
+                                                                    } ?>"><i
                                                 class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
@@ -214,21 +214,11 @@
                 <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
-                <div class="row">
-                    <div class="col-xs-12">
-                        <div class="popup-area-msg">
-                            <?php if (!empty($error)): ?>
-                                <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-                            <?php endif; ?>
-
-                            <?php if (isset($_SESSION['success'])): ?>
-                                <div class="alert alert-success">
-                                    <?= $_SESSION['success'] ?>
-                                    <?php unset($_SESSION['success']); ?>
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+                <div class="popup-area-msg">
+                    <?php if (isset($_SESSION['login_error'])): ?>
+                        <div class="alert alert-danger"><?= $_SESSION['login_error'] ?></div>
+                        <?php unset($_SESSION['login_error']); ?>
+                    <?php endif; ?>
                 </div>
                 <form id="login" method="POST" action="<?= BASE_URL ?>/login" novalidate="novalidate">
                     <div class="f-login">
@@ -243,8 +233,12 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control"
-                                    placeholder="Nhập mật khẩu">
+                                <div class="password-input-group">
+                                    <input id="password" name="password" type="password" class="form-control password-input" placeholder="Nhập mật khẩu">
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -293,9 +287,6 @@
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button"
-                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
-                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
@@ -353,15 +344,23 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control"
-                                    placeholder="Mật khẩu">
+                                <div class="password-input-group">
+                                    <input id="password" name="password" type="password" class="form-control password-input password-register" placeholder="Nhập mật khẩu">
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password_confirm" name="password_confirm" type="password"
-                                    class="form-control" placeholder="Xác nhận mật khẩu">
+                                <div class="password-input-group">
+                                    <input id="password_confirm" name="password_confirm" type="password" class="form-control password-input password-register" placeholder="Xác nhận mật khẩu">
+                                    <button type="button" class="password-toggle">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="col-12">
@@ -518,7 +517,7 @@
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
-    $(function () {
+    $(function() {
         // Lấy modal login
         var loginElement = document.getElementById('div_modal');
         var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
@@ -539,14 +538,14 @@
         }
 
         // Hàm mở modal đăng nhập
-        window.showLoginModal = function () {
+        window.showLoginModal = function() {
             if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
-        window.showRegisterModal = function () {
+        window.showRegisterModal = function() {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
@@ -561,17 +560,17 @@
         };
 
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
-        window.switchToLogin = function () {
+        window.switchToLogin = function() {
             if (registerModal) registerModal.hide();
             if (loginModal) loginModal.show();
         };
 
         // Đóng modal khi click nút close hoặc thoát
-        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function () {
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
             if (loginModal) loginModal.hide();
         });
 
-        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function () {
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
             if (registerModal) registerModal.hide();
         });
 

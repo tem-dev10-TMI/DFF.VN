@@ -4,11 +4,71 @@ a {
     vertical-align: baseline;
     cursor: pointer;
 }
+
 #createPostModal .modal-body {
-  max-height: 70vh; /* chiều cao tối đa chiếm 70% màn hình */
-  overflow-y: auto; /* thêm cuộn dọc */
+    max-height: 70vh;
+    /* chiều cao tối đa chiếm 70% màn hình */
+    overflow-y: auto;
+    /* thêm cuộn dọc */
 }
 
+.password-input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-group .form-control {
+    padding-right: 94px;
+}
+
+.password-input-group .password-register {
+    padding-right: 92px;
+}
+
+@media (max-width: 767px) {
+    .password-input-group .form-control {
+        padding-right: 55px;
+    }
+
+    .password-input-group .password-register {
+        padding-right: 52px;
+    }
+}
+
+@media (max-width: 480px) {
+    .password-input-group .form-control {
+        padding-right: 18px;
+    }
+
+    .password-input-group .password-register {
+        padding-right: 15px;
+    }
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+
+.popup-area-msg .alert-danger {
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.modal-dialog .modal-content {
+    margin-top: -25px;
+}
 
 .adv-banner {
     margin-bottom: 20px;
@@ -3078,7 +3138,7 @@ article p a {
 }
 
 .f-login {
-    padding: 30px 45px;
+    padding: 0 45px;
 }
 
 .f-register {

@@ -47,8 +47,8 @@ class loginController
                     exit;
                 } else {
                     // Sai mật khẩu hoặc không tồn tại user
-                    echo "<script>alert('Sai tài khoản hoặc mật khẩu!'); 
-    window.location.href = '" . BASE_URL . "/';</script>";
+                    $_SESSION['login_error'] = "Sai tài khoản hoặc mật khẩu!";
+                    header("Location: " . BASE_URL . "/");
                     exit;
                 }
             }

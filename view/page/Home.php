@@ -18,6 +18,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 <main class="main-content">
 
 
+    <!-- mo modal khi sai mat khau -->
+    <?php if (isset($_SESSION['login_error'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var myModal = new bootstrap.Modal(document.getElementById('div_modal'));
+                myModal.show();
+            });
+        </script>
+    <?php endif; ?>
+
     <!-- 4 cục bài viết nổi bật start -->
     <div class="owl-slider home-slider">
         <div id="home_slider" class="owl-carousel">
@@ -1030,8 +1040,8 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
     <!-- Modal for creating a new post -->
 
     <!-- Modal: Tạo bài viết mới -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+
         <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
 
@@ -1043,8 +1053,9 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                     <h5 class="modal-title fw-bold" id="createPostModalLabel">
                         <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Đóng"></button>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+
                 </div>
 
                 <!-- Body -->
@@ -1060,8 +1071,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                             }
                             ?>
                             <img src="<?= htmlspecialchars($avatarUrl) ?>"
+
                                 class="rounded-circle border border-2 border-success me-2" alt="avatar"
                                 style="width: 48px; height: 48px;">
+
                             <div>
                                 <h6 class="mb-0 fw-bold text-dark">
                                     <?php
@@ -1120,10 +1133,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                         </div>
 
                         <!-- Input hidden -->
-                        <input type="file" id="postImage" class="d-none" accept="image/*"
-                            onchange="previewImage(event)">
-                        <input type="file" id="postVideo" class="d-none" accept="video/*"
-                            onchange="previewVideo(event)">
+
+                        <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
+                        <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
+
                     </div>
 
                     <!-- Preview ảnh / video -->
@@ -1133,9 +1146,11 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             </div>
 
 
+
         </div>
 
     </div>
+
 
 
 </main>
