@@ -186,17 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
-const searchBtn = document.querySelector(".m-search span a");
-const searchBox = document.getElementById("searchBox");
+const menuBtn = document.querySelector('.menu-toggle');
+const sidebar = document.querySelector('.left-sidebar');
 
-searchBtn.addEventListener("click", (e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  searchBox.classList.toggle("active");
-});
-
-document.addEventListener("click", (e) => {
-  if (!searchBox.contains(e.target) && e.target !== searchBtn) {
-    searchBox.classList.remove("active");
-  }
+menuBtn.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
 });

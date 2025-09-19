@@ -79,7 +79,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+            document.querySelector(".openModalcreatePost").addEventListener("click", function() {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
@@ -89,7 +89,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     alert("Bạn cần đăng nhập để viết bài.");
                 <?php endif; ?>
             });
-
         </script>
         <!-- Modal: Tạo bài viết mới -->
         <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
@@ -176,9 +175,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <i class="fas fa-link me-1"></i> Link
                                     </button>
                                 </div>
-                               <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
-    <i class="fas fa-paper-plane me-1"></i> Đăng bài
-</button>
+                                <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+                                    <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                </button>
 
                             </div>
 
@@ -214,7 +213,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
                                 <?php //var_dump($topBusinessmen);
-                                    ?>
+                                ?>
 
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <?php
@@ -250,7 +249,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                             class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
-                                                    
+
 
                                                 </li>
 
@@ -338,7 +337,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
-                                    // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
+                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
 
                                 if ($badgeText) {
@@ -402,16 +401,23 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div id="loading" style="text-align:center; display:none; margin:20px;">
                 <em>Đang tải thêm...</em>
             </div>
+            <!-- Nút tải thêm cho mobile -->
+            <div id="load-more-container" class="text-center" style="display: none; margin: 20px;">
+                <button id="load-more-btn" class="btn btn-primary">Xem thêm</button>
+            </div>
+
             <script>
-                (function () {
+                (function() {
                     let offset = 5; // đã render 5 bài đầu
                     const limit = 5;
                     let isLoading = false;
                     const listEl = document.getElementById('articles-list');
                     const loadingEl = document.getElementById('loading');
-                    // Lấy user ID từ PHP session để so sánh ở client-side
+                    const loadMoreContainer = document.getElementById('load-more-container');
+                    const loadMoreBtn = document.getElementById('load-more-btn');
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
+                    const isMobile = window.innerWidth < 768;
 
                     function timeAgo(datetime) {
                         if (!datetime) return '';
@@ -433,13 +439,11 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
-                        // Logic để tạo HTML cho badge trạng thái
                         let statusBadgeHtml = '';
-                        // Giả sử 'currentUserId' là biến toàn cục hoặc được truyền vào, chứa ID của người dùng đang đăng nhập
                         if (currentUserId && article.author_id == currentUserId) {
                             let badgeClass = '';
                             let badgeText = '';
-                            switch (article.status) { // Sử dụng cột 'status' từ dữ liệu API
+                            switch (article.status) {
                                 case 'pending':
                                     badgeClass = 'bg-warning text-dark';
                                     badgeText = 'Chờ duyệt';
@@ -448,58 +452,53 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     badgeClass = 'bg-success';
                                     badgeText = 'Công khai';
                                     break;
-                                // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
                             }
-
                             if (badgeText) {
                                 statusBadgeHtml = `
-            <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
-                <span class="badge ${badgeClass}">${badgeText}</span>
-            </div>`;
+                                <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
+                                    <span class="badge ${badgeClass}">${badgeText}</span>
+                                </div>`;
                             }
                         }
 
-                        // Cấu trúc HTML hoàn chỉnh của một bài viết
                         div.innerHTML = `
-    <div class="view-carde f-frame">
-        <div class="provider">
-            <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
-            <div class="p-covers">
-                <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
-                <span class="date">${timeAgo(article.created_at)}</span>
-            </div>
-        </div>
-
-        ${statusBadgeHtml} <!-- Badge trạng thái sẽ được chèn vào đây nếu có -->
-
-        <div class="title">
-            <a href="${articleLink}" target="${target}">${article.title || ''}</a>
-        </div>
-        <div class="sapo">
-            ${article.summary || ''}
-            <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
-        </div>
-        ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
-        <div class="item-bottom">
-            <div class="bt-cover com-like" data-id="${article.id}">
-                <span class="value">${article.upvotes || 0}</span>
-            </div>
-            <div class="button-ar">
-                <a href="details_blog/${article.slug}#anc_comment">
-                    <span>${article.comment_count || 0}</span>
-                </a>
-            </div>
-            <div class="button-ar">
-                <div class="dropdown home-item">
-                    <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                        <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>`;
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+                                <div class="p-covers">
+                                    <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                    <span class="date">${timeAgo(article.created_at)}</span>
+                                </div>
+                            </div>
+                            ${statusBadgeHtml}
+                            <div class="title">
+                                <a href="${articleLink}" target="${target}">${article.title || ''}</a>
+                            </div>
+                            <div class="sapo">
+                                ${article.summary || ''}
+                                <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
+                            </div>
+                            ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                            <div class="item-bottom">
+                                <div class="bt-cover com-like" data-id="${article.id}">
+                                    <span class="value">${article.upvotes || 0}</span>
+                                </div>
+                                <div class="button-ar">
+                                    <a href="details_blog/${article.slug}#anc_comment">
+                                        <span>${article.comment_count || 0}</span>
+                                    </a>
+                                </div>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
+                                        <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
                         return div;
                     }
 
@@ -507,55 +506,71 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         if (isLoading) return;
                         isLoading = true;
                         loadingEl.style.display = 'block';
-                        // API endpoint của bạn sẽ trả về dữ liệu có cột status và author_id
+                        if (isMobile) {
+                            loadMoreContainer.style.display = 'none';
+                        }
+
                         fetch('api/loadMoreArticles?offset=' + offset + '&limit=' + limit)
                             .then(r => r.json())
                             .then(data => {
                                 if (data.success && Array.isArray(data.items) && data.items.length > 0) {
                                     data.items.forEach(item => listEl.appendChild(renderItem(item)));
                                     offset += data.items.length;
-
-                                    // Re-initialize Bootstrap dropdowns for new items
-                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'))
-                                    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
-                                        return new bootstrap.Dropdown(dropdownToggleEl)
+                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'));
+                                    dropdownElementList.map(function(dropdownToggleEl) {
+                                        return new bootstrap.Dropdown(dropdownToggleEl);
                                     });
                                 } else {
-                                    window.removeEventListener('scroll', handleScroll);
+                                    if (!isMobile) {
+                                        window.removeEventListener('scroll', handleScroll);
+                                    }
+                                    loadMoreContainer.style.display = 'none';
                                     loadingEl.innerHTML = '<em>Không còn bài viết nào.</em>';
+                                    loadingEl.style.display = 'block';
                                 }
                             })
                             .catch(error => {
                                 console.error('Error loading more articles:', error);
                                 loadingEl.innerHTML = '<em>Đã có lỗi xảy ra.</em>';
+                                loadingEl.style.display = 'block';
                             })
                             .finally(() => {
                                 isLoading = false;
                                 if (loadingEl.innerHTML.includes('Đang tải thêm')) {
                                     loadingEl.style.display = 'none';
+                                    if (isMobile) {
+                                        loadMoreContainer.style.display = 'block';
+                                    }
                                 }
                             });
                     }
 
-                    const handleScroll = function () {
+                    const handleScroll = function() {
                         const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
                         if (nearBottom) loadMore();
                     }
 
-                    window.addEventListener('scroll', handleScroll);
+                    if (isMobile) {
+                        loadMoreContainer.style.display = 'block';
+                        loadMoreBtn.addEventListener('click', loadMore);
+                    } else {
+                        window.addEventListener('scroll', handleScroll);
+                    }
                 })();
 
                 //// Đừng có xóa dòng này mấy cha
                 document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
+                    btn.addEventListener("click", function() {
                         const userId = this.getAttribute("data-user");
 
                         fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: "user_id=" + encodeURIComponent(userId),
-                            credentials: "include"
-                        })
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: "user_id=" + encodeURIComponent(userId),
+                                credentials: "include"
+                            })
                             .then(res => res.json())
                             .then(data => {
                                 if (data.success) {
@@ -575,17 +590,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             });
                     });
                 });
-
-
-
-
-
-
-
-
-
-
-
             </script>
         <?php else: ?>
             <div class="block-k ">
@@ -645,7 +649,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
                                 </div>
                                 <div class="chat-content">
-                                    <?= nl2br(preg_replace('/@(\w+)/', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content']))) ?>
+                                    <?= nl2br(preg_replace('/@(\w+)/u', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content']))) ?>
                                 </div>
 
                                 <div class="chat-actions">
@@ -658,7 +662,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
                             <script>
-                                document.addEventListener('click', function (e) {
+                                document.addEventListener('click', function(e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -669,10 +673,15 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         // Gán id comment cha
                                         document.getElementById('parent_id').value = parentId;
 
-                                        // Chèn @username (nếu muốn)
+                                        // Chèn @username
                                         const textarea = document.getElementById('comment-content');
-                                        if (!textarea.value.startsWith('@' + username)) {
-                                            textarea.value = '@' + username + ' ' + textarea.value;
+
+                                        // Sửa lỗi: Loại bỏ tất cả khoảng trống khỏi username
+                                        const formattedUsername = username.replace(/\s/g, '');
+
+                                        if (!textarea.value.startsWith('@' + formattedUsername)) {
+                                            // Sử dụng tên người dùng đã được định dạng
+                                            textarea.value = '@' + formattedUsername + ' ' + textarea.value;
                                         }
 
                                         // Cuộn tới ô nhập và focus
@@ -693,7 +702,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
                             <script>
-                                document.addEventListener('click', function (e) {
+                                document.addEventListener('click', function(e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -751,7 +760,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 <span class="chat-name">${c.username}</span>
                 <span class="chat-time">${c.time_ago}</span>
             </div>
-            <div class="chat-content">${c.content.replace(/@(\w+)/g, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
+            <div class="chat-content">${c.content.replace(/@([\p{L}\p{N}_]+)/gu, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
             <div class="chat-actions">
                 <button>⬆</button>
                 <span class="vote-count">${c.upvotes || 0}</span>
@@ -768,12 +777,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 if (!content) return;
 
                 fetch("comment_add.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "content=" + encodeURIComponent(content)
-                })
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "content=" + encodeURIComponent(content)
+                    })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
@@ -799,7 +808,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // nhấn enter 
             const textarea = document.getElementById("comment-content");
 
-            textarea.addEventListener("keydown", function (e) {
+            textarea.addEventListener("keydown", function(e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); // chặn xuống dòng
                     document.getElementById("send-comment").click(); // gọi nút gửi
@@ -862,8 +871,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles3 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                      ? htmlspecialchars($article['link'])
-                                      : 'details_blog/' . urlencode($article['slug']) ?>">
+                                                                                                ? htmlspecialchars($article['link'])
+                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -930,8 +939,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                      ? htmlspecialchars($article['link'])
-                                      : 'details_blog/' . urlencode($article['slug']) ?>">
+                                                                                                ? htmlspecialchars($article['link'])
+                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -972,9 +981,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <script>
-            $(function () {
+            $(function() {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function () {
+                $(window).scroll(function() {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -989,7 +998,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             });
         </script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,
