@@ -1,6 +1,11 @@
 <?php
 
 require_once __DIR__ . '/helpers.php';
+ini_set('session.cookie_path', '/');
+ini_set('session.cookie_domain', 'localhost'); // nếu chạy ở localhost
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();

@@ -5,13 +5,13 @@ class UserFollows {
     private $db;
 
     public function __construct() {
-        global $conn;
-        $this->db = $conn;
+        $db = new connect();       // ✅ dùng class connect
+        $this->db = $db->db;       // ✅ lấy PDO instance
     }
 
     // Thêm follow
     public function add($follower_id, $following_id) {
-        $sql = "INSERT INTO user_follows (follower_id, following_id) VALUES (?, ?)";
+        $sql = "INSERT IGNORE INTO user_follows (follower_id, following_id) VALUES (?, ?)";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$follower_id, $following_id]);
     }
@@ -44,7 +44,7 @@ class UserFollows {
         $sql = "SELECT following_id, created_at FROM user_follows WHERE follower_id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$follower_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // Lấy danh sách người theo dõi
@@ -52,6 +52,6 @@ class UserFollows {
         $sql = "SELECT follower_id, created_at FROM user_follows WHERE following_id = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$following_id]);
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }

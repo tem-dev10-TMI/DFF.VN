@@ -1,132 +1,98 @@
 <?php
-require_once  __DIR__ . '/../model/commentmodel.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: application/json; charset=utf-8');
 
-class CommentController
-{
+require_once __DIR__ . '/../model/commentmodel.php';
 
+class CommentController {
+    // =====================
     // Thêm comment mới
-    public function addComment()
-    {
+    // =====================
+    public function addComment() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $article_id = $_POST['article_id'] ?? null;
-            $user_id = $_POST['user_id'] ?? null;
-            $content = $_POST['content'] ?? '';
-            $parent_id = $_POST['parent_id'] ?? null;
+            $user_id    = $_POST['user_id'] ?? null;
+            $content    = trim($_POST['content'] ?? '');
+            $parent_id  = $_POST['parent_id'] ?? null;
 
             if ($article_id && $user_id && $content) {
-                $result = CommentsModel::addComment($article_id, $user_id, $content, $parent_id);
-                if ($result) {
-                    echo json_encode(['status' => 'success', 'message' => 'Comment added successfully.']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to add comment.']);
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
-            }
-        }
-    }
-
-    // Lấy tất cả comment của một bài viết
-    public function getComments($article_id)
-    {
-        $comments = CommentsModel::getCommentsByArticle($article_id);
-        echo json_encode($comments);
-    }
-
-    // Lấy trả lời của một comment
-    public function getReplies($parent_id)
-    {
-        $replies = CommentsModel::getReplies($parent_id);
-        echo json_encode($replies);
-    }
-
-    // Cập nhật comment
-    public function updateComment()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'] ?? null;
-            $content = $_POST['content'] ?? '';
-
-            if ($id && $content) {
-                $result = CommentsModel::updateComment($id, $content);
-                if ($result) {
-                    echo json_encode(['status' => 'success', 'message' => 'Comment updated successfully.']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to update comment.']);
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
-            }
-        }
-    }
-
-    // Xóa comment
-    public function deleteComment()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'] ?? null;
-
-            if ($id) {
-                $result = CommentsModel::deleteComment($id);
-                if ($result) {
-                    echo json_encode(['status' => 'success', 'message' => 'Comment deleted successfully.']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to delete comment.']);
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Missing comment ID.']);
-            }
-        }
-    }
-
-    // Tăng upvote
-    public function upvoteComment()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $id = $_POST['id'] ?? null;
-
-            if ($id) {
-                $result = CommentsModel::upvoteComment($id);
-                if ($result) {
-                    echo json_encode(['status' => 'success', 'message' => 'Comment upvoted successfully.']);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to upvote comment.']);
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Missing comment ID.']);
-            }
-        }
-    }
-            // Trả lời một comment (dạng @tennguoidung)
-     public function replyComment(): void
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $article_id = $_POST['article_id'] ?? null;
-            $user_id    = $_POST['user_id'] ?? null;      // người trả lời
-            $content    = $_POST['content'] ?? '';
-            $parent_id  = $_POST['parent_id'] ?? null;    // id comment gốc
-            $mention    = $_POST['mention'] ?? '';        // tên người được nhắc
-
-            if ($article_id && $user_id && $content && $parent_id && $mention) {
-                // Tự động gắn @mention vào đầu nội dung
-                $finalContent = '@' . $mention . ' ' . $content;
-
-                $result = CommentsModel::addComment($article_id, $user_id, $finalContent, $parent_id);
-                if ($result) {
+                try {
+                    $result = CommentsModel::insertComment($article_id, $user_id, $content, $parent_id);
                     echo json_encode([
-                        'status'  => 'success',
-                        'message' => 'Reply added successfully.',
-                        'data'    => [
-                            'content' => $finalContent,
-                            'parent_id' => $parent_id
-                        ]
+                        'status'  => $result ? 'success' : 'error',
+                        'message' => $result ? 'Comment added successfully' : 'Failed to add comment'
                     ]);
-                } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to add reply.']);
+                } catch (Exception $e) {
+                    echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
                 }
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Missing required fields.']);
+                echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
             }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Request method must be POST']);
         }
     }
+
+    // =====================
+    // Lấy comment theo bài viết
+    // =====================
+    public function getComments($article_id) {
+        if (!$article_id) {
+            echo json_encode(['status' => 'error', 'message' => 'article_id is required']);
+            return;
+        }
+        $comments = CommentsModel::getComments($article_id);
+        echo json_encode(['status' => 'success', 'comments' => $comments]);
+    }
+
+    // =====================
+    // Lấy tất cả comment
+    // =====================
+    public function getAllComments() {
+        $comments = CommentsModel::getAllComments();
+        echo json_encode(['status' => 'success', 'comments' => $comments]);
+    }
+
+    // =====================
+    // Lấy reply theo comment cha
+    // =====================
+    public function getReplies($parent_id) {
+        if (!$parent_id) {
+            echo json_encode(['status' => 'error', 'message' => 'parent_id is required']);
+            return;
+        }
+        $replies = CommentsModel::getReplies($parent_id);
+        echo json_encode(['status' => 'success', 'replies' => $replies]);
+    }
+}
+
+// =====================
+// Router cho AJAX
+// =====================
+$controller = new CommentController();
+$action = $_GET['action'] ?? null;
+
+switch ($action) {
+    case 'addComment':
+        $controller->addComment();
+        break;
+
+    case 'getComments':
+        $article_id = $_GET['article_id'] ?? null;
+        $controller->getComments($article_id);
+        break;
+
+    case 'getAllComments':
+        $controller->getAllComments();
+        break;
+
+    case 'getReplies':
+        $parent_id = $_GET['parent_id'] ?? null;
+        $controller->getReplies($parent_id);
+        break;
+
+    default:
+        echo json_encode(['status' => 'error', 'message' => 'No action specified']);
+        break;
 }
