@@ -67,6 +67,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <!-- ////////////////////// -->
+<<<<<<< Updated upstream
 
       <div class="block-k box-company-label">
     <h5>
@@ -76,6 +77,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </span>
     </h5>
 
+=======
+      <div class="block-k box-company-label">
+    <h5>
+        <span><a href="#">Top doanh nhân</a></span>
+        <span class="c-note">
+            <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
+        </span>
+    </h5>
+
+>>>>>>> Stashed changes
     <div class="owl-slider">
         <div class="owl-carousel box-company owl-loaded owl-drag">
             <div class="owl-stage-outer owl-height" style="height: 256px;">
@@ -116,12 +127,20 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
     <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
     <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
 </a>
+<<<<<<< Updated upstream
 
 </li>
 
 
                 </ul>
 
+=======
+
+</li>
+
+
+                </ul>
+>>>>>>> Stashed changes
             </div>
         </div>
     <?php endforeach; ?>
@@ -450,7 +469,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
 
 
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
             </script>
         <?php else: ?>
             <div class="block-k ">
@@ -522,7 +544,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                             </div>
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
                 <script>
                                 document.addEventListener('click', function(e) {
 
@@ -836,9 +861,13 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             <div class="box-follow"></div>
         </div>
 
+<<<<<<< Updated upstream
 
        
 
+=======
+       
+>>>>>>> Stashed changes
 
         <script>
             $(function () {
@@ -995,5 +1024,9 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
         </div>
 
     </div>
+<<<<<<< Updated upstream
 
+=======
+  
+>>>>>>> Stashed changes
 </main>
