@@ -164,9 +164,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <i class="fas fa-link me-1"></i> Link
                                     </button>
                                 </div>
-                                <button class="btn btn-success px-4 rounded-pill" onclick="addPost()">
-                                    <i class="fas fa-paper-plane me-1"></i> Đăng bài
-                                </button>
+                               <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+    <i class="fas fa-paper-plane me-1"></i> Đăng bài
+</button>
+
                             </div>
 
                             <!-- Input hidden -->
