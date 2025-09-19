@@ -249,12 +249,25 @@
     overflow-x: hidden;
   }
 
-  /* Fix cho Bootstrap modal */
+  /* Fix for Bootstrap modal */
   @media (min-width: 576px) {
     .modal-dialog {
       max-width: 800px;
       margin: 1.75rem auto;
     }
+  }
+
+  .delete-post-icon {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      cursor: pointer;
+      color: #dc3545; /* Bootstrap danger color */
+      font-size: 1.2em;
+      z-index: 1;
+  }
+  .delete-post-icon:hover {
+      color: #bd2130; /* Darker red on hover */
   }
 </style>
 
@@ -645,6 +658,7 @@ if ($profile_category == 'user' && $user_id) {
         window.location.href = "<?= BASE_URL ?>/profile_user";
         break;
     }
+    const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
   </script>
 <?php endif; ?>
 

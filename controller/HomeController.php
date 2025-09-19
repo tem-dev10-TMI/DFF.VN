@@ -33,7 +33,7 @@ class homeController
     public static function index()
     {
         // 1. Lấy dữ liệu từ Database (giảm tải: chỉ lấy 8 cho slider và 5 cho danh sách ban đầu)
-        $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 8);
+        $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
 
         $comments = CommentsModel::getComments();

@@ -1293,7 +1293,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
         </div>
     </div>
-    <script>
+    <!-- <script>
         // Submit bài viết mới
         function addPost() {
             var postTitle = document.getElementById('postTitle').value.trim();
@@ -1439,5 +1439,5 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 });
             }
         });
-    </script>>
+    </script> -->
 </main>
