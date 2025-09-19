@@ -10,6 +10,7 @@
     <meta http-equiv="content-language" content="vi" />
     <meta http-equiv="REFRESH" content="1800" />
     <title>Mạng xã hội Kinh tế - MXH Trung Tâm </title>
+    <base href="http://localhost/DFF.VN/">
     <meta name="description"
         content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
     <meta name="keywords"
@@ -37,7 +38,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=1.5" />
+    <link rel="stylesheet" href="public/css/style.css?v=2.0" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>

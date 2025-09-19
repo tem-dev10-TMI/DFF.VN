@@ -171,6 +171,38 @@ class homeController
 
             $slice = array_slice($articles, $offset, $limit);
 
+            $normalized = [];
+            foreach ($slice as $art) {
+                if (!empty($art['is_rss'])) {
+                    // RSS giữ nguyên
+                    $normalized[] = [
+                        'title' => $art['title'],
+                        'summary' => $art['summary'] ?? '',
+                        'link' => $art['link'],
+                        'created_at' => $art['created_at'],
+                        'author_name' => $art['author_name'] ?? '',
+                        'avatar_url' => $art['avatar_url'] ?? '',
+                        'main_image_url' => $art['main_image_url'] ?? '',
+                        'is_rss' => true
+                    ];
+                } else {
+                    // Bài trong DB → thêm slug
+                    $normalized[] = [
+                        'id' => $art['id'],
+                        'slug' => $art['slug'], // 👈 thêm slug
+                        'title' => $art['title'],
+                        'summary' => $art['summary'] ?? '',
+                        'created_at' => $art['created_at'],
+                        'author_name' => $art['author_name'] ?? '',
+                        'avatar_url' => $art['avatar_url'] ?? '',
+                        'main_image_url' => $art['main_image_url'] ?? '',
+                        'comment_count' => $art['comment_count'] ?? 0,
+                        'upvotes' => $art['upvotes'] ?? 0,
+                        'is_rss' => false
+                    ];
+                }
+            }
+
             echo json_encode([
                 'success' => true,
                 'items' => $slice,

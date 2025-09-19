@@ -26,7 +26,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
                                 target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
@@ -40,7 +40,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <div class="text" style="">
                             <h4>
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                    href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
                                     target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -189,7 +189,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             ?>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
                                     target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -197,7 +197,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
                                     class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     Xem thêm
                                 </a>
@@ -215,7 +215,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
                                 </div>
                                 <div class="button-ar">
-                                    <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
+                                    <a href="details_blog?id<?= $article['id'] ?>#anc_comment">
                                         <span><?= $article['comment_count'] ?? 0 ?></span>
                                     </a>
                                 </div>
@@ -224,10 +224,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item copylink"
-                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -270,8 +270,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     function renderItem(article) {
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
-                        const articleLink = article.is_rss ? article.link : `details_blog?id=${article.id}`;
+                        const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
+
 
                         // LOGIC MỚI: Tạo HTML cho badge trạng thái dựa trên author_id và status
                         let statusBadgeHtml = '';
@@ -292,6 +293,44 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 statusBadgeHtml = `
                             <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
                                 <span class="badge ${badgeClass}">${badgeText}</span>
+
+                        div.innerHTML = `
+                            <div class="view-carde f-frame">
+                                <div class="provider">
+                                    <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+                                    <div class="p-covers">
+                                        <span class="name"><a href="<?= BASE_URL ?>/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                        <span class="date">${timeAgo(article.created_at)}</span>
+                                    </div>
+                                </div>
+                                <div class="title">
+                                    <a href="${articleLink}" target="${target}">${article.title || ''}</a>
+                                </div>
+                                <div class="sapo">
+                                    ${article.summary || ''}
+                                    <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
+                                </div>
+                                ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                                <div class="item-bottom">
+                                    <div class="bt-cover com-like" data-id="${article.id}">
+                                        <span class="value">${article.upvotes || 0}</span>
+                                    </div>
+                                    <div class="button-ar">
+                                        <a href="details_blog/${article.slug}#anc_comment">
+                                            <span>${article.comment_count || 0}</span>
+                                        </a>
+                                    </div>
+                                    <div class="button-ar">
+                                        <div class="dropdown home-item">
+                                            <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                                            <ul class="dropdown-menu">
+                                                <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                                <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>`;
                             }
                         }
@@ -658,7 +697,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
                                     href="<?= !empty($article['is_rss'])
                                                 ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -729,7 +768,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
                                     href="<?= !empty($article['is_rss'])
                                                 ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 

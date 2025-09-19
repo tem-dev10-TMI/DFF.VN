@@ -39,6 +39,14 @@ class TopicModel
         }
     }
 
+    // Lấy chủ đề theo slug
+    public function getBySlug($slug)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM topics WHERE slug = :slug LIMIT 1");
+        $stmt->execute(['slug' => $slug]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     // Lấy chủ đề giới hạn số lượng (ví dụ sidebar)
     public function getTop($limit = 5)
     {
@@ -54,9 +62,9 @@ class TopicModel
         }
     }
     public static function getLatestArticles($limit = 6)
-{
-    $db = new connect();
-    $sql = "SELECT a.*, 
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, 
                    u.name AS author_name, 
                    u.avatar_url, 
                    t.name AS topic_name
@@ -67,12 +75,12 @@ class TopicModel
             ORDER BY a.created_at DESC, a.id DESC
             LIMIT :limit";
 
-    $stmt = $db->db->prepare($sql);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->execute();
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Lấy ID chủ đề theo tên (khớp tương đối, không phân biệt hoa thường)
     public function getIdByName($name)

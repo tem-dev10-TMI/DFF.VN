@@ -109,6 +109,41 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getArticleBySlug($slug)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.slug = :slug AND a.status = 'public'";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':slug' => $slug]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public static function getRelatedArticles($topic_id, $exclude_id, $limit = 5)
+    {
+        $db = new connect();
+        $sql = "SELECT id, title, slug 
+            FROM articles 
+            WHERE topic_id = :topic_id 
+              AND id != :exclude_id 
+              AND status = 'public'
+            ORDER BY created_at DESC
+            LIMIT :limit";
+
+        $stmt = $db->db->prepare($sql);
+        // PDO không hỗ trợ bindParam trực tiếp với LIMIT, phải ép kiểu int
+        $stmt->bindValue(':topic_id', $topic_id, PDO::PARAM_INT);
+        $stmt->bindValue(':exclude_id', $exclude_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getByUserId($userId)
     {
         global $pdo;
@@ -185,6 +220,26 @@ class ArticlesModel
         $stmt = $db->db->prepare($sql);
         $stmt->bindValue(':topic_id', $topic_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // Lấy bài viết theo topic (chỉ public)
+    public static function getArticlesByTopicSlug($topic_slug, $limit = 10)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, t.slug AS topic_slug
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id = t.id
+            WHERE t.slug = :topic_slug AND a.status = 'public'
+            ORDER BY a.created_at DESC, a.id DESC
+            LIMIT :limit";
+
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':topic_slug', $topic_slug, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

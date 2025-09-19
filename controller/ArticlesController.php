@@ -131,15 +131,18 @@ class ArticlesController
     //     header("Location: admin.php?route=article&action=reviewList");
     //     exit;
     // }
-    public static function details_blog($id)
+    public static function details_blog($slug)
     {
         require_once __DIR__ . '/../model/article/articlesmodel.php';
         require_once __DIR__ . '/../model/user/userModel.php';
 
         // Lấy dữ liệu từ model
-        $article = ArticlesModel::getArticleById($id);
+        $article = ArticlesModel::getArticleBySlug($slug);
         $authorId = UserModel::getUserById($article['author_id']);
         $user = UserModel::getUserById($authorId['id']);
+
+        // Lấy bài viết liên quan
+        $relatedArticles = ArticlesModel::getRelatedArticles($article['topic_id'], $article['id'], 5);
 
         if (!$article) {
             require_once __DIR__ . '/../view/errors/404.php';

@@ -2,7 +2,7 @@
     </style>
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
-            <li class="item active"><svg class="bi bi-house-fill home-icon"  class="bi bi-house-fill home-icon" rpl="" fill="currentColor" height="20"
+            <li class="item active"><svg class="bi bi-house-fill home-icon" class="bi bi-house-fill home-icon" rpl="" fill="currentColor" height="20"
                     icon-name="home-outline" viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$-->
                     <!--?lit$03863286$-->
@@ -37,7 +37,7 @@
                         <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
                             alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
                         <a title="<?= htmlspecialchars($topic['name']) ?>"
-                            href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                            href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
                             <?= htmlspecialchars($topic['name']) ?>
                         </a>
                         <i class="fas fa-plus icon-right"></i>
@@ -54,10 +54,10 @@
                     <?php foreach ($moreTopics as $topic): ?>
                         <li>
                             <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
-title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
+                                title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 border="0" />
                             <a title="<?= htmlspecialchars($topic['name']) ?>"
-                                href="<?= BASE_URL ?>details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
+                                href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
                                 <?= htmlspecialchars($topic['name']) ?>
                             </a>
                             <i class="fas fa-plus icon-right"></i>
@@ -105,7 +105,7 @@ title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic
         <ul class="nav nav-second-level h-info">
             <li>TEAM TIM (DEV - K25)</li>
             <li>Viện Phát triển Đào tạo và Quản lý (TMI)</li>
-<li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
+            <li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
             <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
             <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
 
