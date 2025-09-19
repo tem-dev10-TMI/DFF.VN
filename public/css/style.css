@@ -4460,6 +4460,9 @@ div[data-notify="container"] .close {
     justify-content: space-between;
     width: 100%;
 }
+.box-alert .tab-content #content{
+    color: #2a14b8;
+}
 
 .box-alert .tab-content .label>span:last-child {
     color: #0866ff;
@@ -7174,3 +7177,15 @@ ul.timeline .left-arrow:after {
         color: #dc3545;
     }
 }
+/*Tiêu Đề Thông Báo*/
+.title-thongbao {
+  font-size: 22px;
+  font-weight: bold;
+  color: rebeccapurple;
+  padding: 10px 15px;
+  border-left: 5px solid #007bff;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+}
+/*End*/
