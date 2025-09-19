@@ -62,8 +62,26 @@ function submitConversion() {
 
 // Load bài viết từ PHP
 function loadPosts() {
+  // Lấy thẻ div chứa dữ liệu từ PHP
+  const profileDataElement = document.getElementById('profileData');
+
+  // Nếu không tìm thấy thẻ div này, dừng lại và báo lỗi để tránh sự cố
+  if (!profileDataElement) {
+    console.error('Lỗi nghiêm trọng: Không tìm thấy thẻ div#profileData. Không thể tải bài viết.');
+    // Bạn có thể hiển thị một thông báo lỗi cho người dùng ở đây
+    const postsContainer = document.getElementById('posts');
+    if (postsContainer) {
+      postsContainer.innerHTML = '<p class="text-danger text-center">Lỗi cấu hình trang. Không thể tải dữ liệu.</p>';
+    }
+    return;
+  }
+
+  // Đọc dữ liệu từ các thuộc tính data-*
+  const profileCategory = profileDataElement.dataset.category;
+  const userId = profileDataElement.dataset.userId;
+
   // Hiển thị loading indicator
-  var loadingElement = document.getElementById('loadingPosts');
+  const loadingElement = document.getElementById('loadingPosts');
   if (loadingElement) {
     loadingElement.style.display = 'block';
   }
@@ -73,9 +91,10 @@ function loadPosts() {
     headers: {
       'Content-Type': 'application/json',
     },
+    // Sử dụng dữ liệu đã đọc từ thẻ div
     body: JSON.stringify({
-      profile_category: '<?php echo $profile_category; ?>',
-      user_id: '<?php echo isset($user_id) ? $user_id : 0; ?>'
+      profile_category: profileCategory,
+      user_id: userId
     })
   })
     .then(response => response.json())
@@ -86,24 +105,25 @@ function loadPosts() {
       }
 
       if (data && (data.success === true || typeof data.success === 'undefined')) {
-        var posts = Array.isArray(data.posts) ? data.posts : (data.data && Array.isArray(data.data.posts) ? data.data.posts : []);
+        const posts = Array.isArray(data.posts) ? data.posts : (data.data && Array.isArray(data.data.posts) ? data.data.posts : []);
+        // Giả sử bạn có hàm displayPosts(posts) để hiển thị bài viết
         displayPosts(posts);
       } else {
         console.error('Lỗi load bài viết:', data.message);
         // Hiển thị thông báo lỗi
-        var postsContainer = document.getElementById('posts');
+        const postsContainer = document.getElementById('posts');
         postsContainer.innerHTML = `
-        <div class="block-k">
-          <div class="view-carde f-frame">
-            <div class="text-center p-4">
-              <p class="text-danger">Không thể tải bài viết. Vui lòng thử lại sau!</p>
-              <button class="btn btn-outline-primary btn-sm" onclick="loadPosts()">
-                <i class="fas fa-refresh me-1"></i> Thử lại
-              </button>
+          <div class="block-k">
+            <div class="view-carde f-frame">
+              <div class="text-center p-4">
+                <p class="text-danger">Không thể tải bài viết. Vui lòng thử lại sau!</p>
+                <button class="btn btn-outline-primary btn-sm" onclick="loadPosts()">
+                  <i class="fas fa-refresh me-1"></i> Thử lại
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
       }
     })
     .catch(error => {
@@ -114,7 +134,7 @@ function loadPosts() {
 
       console.error('Lỗi fetch:', error);
       // Hiển thị thông báo lỗi
-      var postsContainer = document.getElementById('posts');
+      const postsContainer = document.getElementById('posts');
       postsContainer.innerHTML = `
       <div class="block-k">
         <div class="view-carde f-frame">
@@ -195,39 +215,59 @@ function deletePost(postId, buttonElement) {
 
 
 function createPostElement(post) {
+  const profileDataElement = document.getElementById('profileData');
+
+  // Nếu không tìm thấy thẻ div này, dừng lại và báo lỗi để tránh sự cố
+  if (!profileDataElement) {
+    console.error('Lỗi nghiêm trọng: Không tìm thấy thẻ div#profileData. Không thể tải bài viết.');
+    const postsContainer = document.getElementById('posts');
+    if (postsContainer) {
+      postsContainer.innerHTML = '<p class="text-danger text-center">Lỗi cấu hình trang. Không thể tải dữ liệu.</p>';
+    }
+    return document.createElement('div'); // Trả về một element rỗng để không làm crash vòng lặp
+  }
+
+  const userId = profileDataElement.dataset.userId;
+
   var postDiv = document.createElement('div');
-  // Thêm ID cho postDiv để dễ dàng tìm và xóa
   postDiv.className = 'block-k';
   postDiv.setAttribute('id', `post-${post.id}`);
 
-  // Logic tạo icon thùng rác nếu đây là bài viết của người dùng hiện tại
-  const deleteButtonHtml = (currentUserId && post.author_id == currentUserId)
+  // --- START FIX ---
+  // Đảm bảo post.content là một chuỗi để tránh lỗi
+  const safeContent = post.content || '';
+  const safeTitle = post.title || safeContent.substring(0, 70);
+  // --- END FIX ---
+
+  const deleteButtonHtml = (userId && post.author_id == userId)
     ? `<div class="post-actions">
-               <span class="delete-post-btn" onclick="deletePost(${post.id}, this)" title="Xóa bài viết">
-                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                       <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-                   </svg>
-               </span>
-           </div>`
+           <span class="delete-post-btn" onclick="deletePost(${post.id}, this)" title="Xóa bài viết">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                   <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+               </svg>
+           </span>
+       </div>`
     : '';
 
   postDiv.innerHTML = `
     <div class="view-carde f-frame">
       <div class="provider">
-        <img class="logo" alt="" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+        <img class="logo" alt="Avatar" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
         <div class="p-covers">
-          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px;" title="${post.review_reason ? post.review_reason.replace(/"/g, '&quot;') : ''}">${renderStatusText(post.status)}</span>
-          <span class="name" title="">
-            <a href="/profile.html?q=${post.author_id || post.user_id}" title="${post.author_name}">${post.author_name}</a>
+          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px;" title="${post.review_reason ? escapeHtml(post.review_reason) : ''}">${renderStatusText(post.status)}</span>
+          <span class="name" title="${escapeHtml(post.author_name)}">
+            <a href="/profile.html?q=${post.author_id || post.user_id}" title="${escapeHtml(post.author_name)}">${escapeHtml(post.author_name)}</a>
           </span>
-          <span class="date">${post.time_ago}</span>
+          <span class="date">${post.time_ago || ''}</span>
         </div>
-        ${deleteButtonHtml} </div>
+        ${deleteButtonHtml}
+      </div>
 
       <div class="title">
-        <a title="${post.title || post.content.substring(0, 50)}" href="/post-${post.id}.html">${post.title || post.content.substring(0, 50)}</a>
+        <a title="${escapeHtml(safeTitle)}" href="/post-${post.id}.html">${escapeHtml(safeTitle)}</a>
       </div>
+
       ${post.status && (post.status.toLowerCase() === 'rejected' || post.status.toLowerCase() === 'reject') && post.review_reason ? `
       <div class="mt-1 mb-2">
         <div class="alert alert-danger py-1 px-2 m-0">
@@ -235,9 +275,10 @@ function createPostElement(post) {
         </div>
       </div>
       ` : ''}
+
       <div class="sapo">
-        ${post.content}
-        ${post.content.length > 100 ? '<a href="/post-' + post.id + '.html" class="d-more">Xem thêm</a>' : ''}
+        ${safeContent}
+        ${(safeContent && safeContent.length > 100) ? `<a href="/post-${post.id}.html" class="d-more">Xem thêm</a>` : ''}
       </div>
 
       ${post.video_url ? `
@@ -249,7 +290,7 @@ function createPostElement(post) {
       </div>
       ` : ''}
 
-      ${post.image ? `<img class="h-img" src="${post.image}" title="${post.title || 'Post image'}" alt="${post.title || 'Post image'}" border="0">` : ''}
+      ${post.image ? `<img class="h-img" src="${post.image}" title="${escapeHtml(safeTitle)}" alt="${escapeHtml(safeTitle)}" border="0">` : ''}
 
       <div class="item-bottom">
         <div class="bt-cover com-like" data-id="${post.id}">

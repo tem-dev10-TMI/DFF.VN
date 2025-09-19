@@ -5,7 +5,7 @@ class profileUserController
     public static function index()
     {
         if (!isset($_SESSION['user'])) {
-            header("Location: " . BASE_URL . "/login");
+            header("Location: " . BASE_URL . "");
             exit;
         }
         require_once __DIR__ . '/../../model/user/userModel.php';

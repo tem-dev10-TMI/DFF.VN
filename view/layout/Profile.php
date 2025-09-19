@@ -258,16 +258,19 @@
   }
 
   .delete-post-icon {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      cursor: pointer;
-      color: #dc3545; /* Bootstrap danger color */
-      font-size: 1.2em;
-      z-index: 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: #dc3545;
+    /* Bootstrap danger color */
+    font-size: 1.2em;
+    z-index: 1;
   }
+
   .delete-post-icon:hover {
-      color: #bd2130; /* Darker red on hover */
+    color: #bd2130;
+    /* Darker red on hover */
   }
 </style>
 
@@ -404,6 +407,10 @@ if ($profile_category == 'user' && $user_id) {
 
       <!-- Posts -->
       <!-- Danh sách bài viết -->
+      <div id="profileData"
+        data-category="<?= $profile_category ?>"
+        data-user-id="<?= isset($user_id) ? $user_id : 0 ?>">
+      </div>
       <div id="posts">
         <div class="block-k" id="loadingPosts">
           <div class="view-carde f-frame">
@@ -661,5 +668,3 @@ if ($profile_category == 'user' && $user_id) {
     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
   </script>
 <?php endif; ?>
-
-
