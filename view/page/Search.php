@@ -370,13 +370,13 @@
                             <img src="<?= !empty($tag['icon_url'])
                                             ? htmlspecialchars($tag['icon_url'])
                                             : '/uploads/default.jpg' ?>"
-                                class="tag-avatar"
+                                class=""
                                 alt="<?= htmlspecialchars($tag['name']) ?>">
 
                             <h3>
-                                <a href="/tag.php?id=<?= $tag['id'] ?>">
-                                    #<?= htmlspecialchars($tag['name']) ?>
-                                </a>
+                                <a href="<?= BASE_URL ?>/details_topic/<?= $tag['slug'] ?>">
+                                        <?= htmlspecialchars($tag['name']) ?>
+                                    </a>
                             </h3>
                         </div>
                     <?php endforeach; ?>
@@ -400,7 +400,10 @@
                             <!-- Thông tin -->
                             <div class="info">
                                 <h3 class="name">
-                                    <a href="#"><?= htmlspecialchars($user['name']) ?></a>
+                                   <a title="<?= htmlspecialchars($user['name']) ?>"
+                            href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
+                            <?= htmlspecialchars($user['name']) ?>
+                        </a>
                                 </h3>
                                 <p>@<?= htmlspecialchars($user['username']) ?></p>
                                 <small>Email: <?= htmlspecialchars($user['email']) ?></small>
