@@ -401,6 +401,11 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div id="loading" style="text-align:center; display:none; margin:20px;">
                 <em>Đang tải thêm...</em>
             </div>
+            <!-- Nút tải thêm cho mobile -->
+            <div id="load-more-container" class="text-center" style="display: none; margin: 20px;">
+                <button id="load-more-btn" class="btn btn-primary">Xem thêm</button>
+            </div>
+
             <script>
                 (function() {
                     let offset = 5; // đã render 5 bài đầu
@@ -408,9 +413,11 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     let isLoading = false;
                     const listEl = document.getElementById('articles-list');
                     const loadingEl = document.getElementById('loading');
-                    // Lấy user ID từ PHP session để so sánh ở client-side
+                    const loadMoreContainer = document.getElementById('load-more-container');
+                    const loadMoreBtn = document.getElementById('load-more-btn');
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
+                    const isMobile = window.innerWidth < 768;
 
                     function timeAgo(datetime) {
                         if (!datetime) return '';
@@ -432,13 +439,11 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
-                        // Logic để tạo HTML cho badge trạng thái
                         let statusBadgeHtml = '';
-                        // Giả sử 'currentUserId' là biến toàn cục hoặc được truyền vào, chứa ID của người dùng đang đăng nhập
                         if (currentUserId && article.author_id == currentUserId) {
                             let badgeClass = '';
                             let badgeText = '';
-                            switch (article.status) { // Sử dụng cột 'status' từ dữ liệu API
+                            switch (article.status) {
                                 case 'pending':
                                     badgeClass = 'bg-warning text-dark';
                                     badgeText = 'Chờ duyệt';
@@ -447,58 +452,53 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     badgeClass = 'bg-success';
                                     badgeText = 'Công khai';
                                     break;
-                                    // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
                             }
-
                             if (badgeText) {
                                 statusBadgeHtml = `
-            <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
-                <span class="badge ${badgeClass}">${badgeText}</span>
-            </div>`;
+                                <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
+                                    <span class="badge ${badgeClass}">${badgeText}</span>
+                                </div>`;
                             }
                         }
 
-                        // Cấu trúc HTML hoàn chỉnh của một bài viết
                         div.innerHTML = `
-    <div class="view-carde f-frame">
-        <div class="provider">
-            <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
-            <div class="p-covers">
-                <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
-                <span class="date">${timeAgo(article.created_at)}</span>
-            </div>
-        </div>
-
-        ${statusBadgeHtml} <!-- Badge trạng thái sẽ được chèn vào đây nếu có -->
-
-        <div class="title">
-            <a href="${articleLink}" target="${target}">${article.title || ''}</a>
-        </div>
-        <div class="sapo">
-            ${article.summary || ''}
-            <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
-        </div>
-        ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
-        <div class="item-bottom">
-            <div class="bt-cover com-like" data-id="${article.id}">
-                <span class="value">${article.upvotes || 0}</span>
-            </div>
-            <div class="button-ar">
-                <a href="details_blog/${article.slug}#anc_comment">
-                    <span>${article.comment_count || 0}</span>
-                </a>
-            </div>
-            <div class="button-ar">
-                <div class="dropdown home-item">
-                    <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                        <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>`;
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+                                <div class="p-covers">
+                                    <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                    <span class="date">${timeAgo(article.created_at)}</span>
+                                </div>
+                            </div>
+                            ${statusBadgeHtml}
+                            <div class="title">
+                                <a href="${articleLink}" target="${target}">${article.title || ''}</a>
+                            </div>
+                            <div class="sapo">
+                                ${article.summary || ''}
+                                <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
+                            </div>
+                            ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                            <div class="item-bottom">
+                                <div class="bt-cover com-like" data-id="${article.id}">
+                                    <span class="value">${article.upvotes || 0}</span>
+                                </div>
+                                <div class="button-ar">
+                                    <a href="details_blog/${article.slug}#anc_comment">
+                                        <span>${article.comment_count || 0}</span>
+                                    </a>
+                                </div>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
+                                        <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
                         return div;
                     }
 
@@ -506,32 +506,41 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         if (isLoading) return;
                         isLoading = true;
                         loadingEl.style.display = 'block';
-                        // API endpoint của bạn sẽ trả về dữ liệu có cột status và author_id
+                        if (isMobile) {
+                            loadMoreContainer.style.display = 'none';
+                        }
+
                         fetch('api/loadMoreArticles?offset=' + offset + '&limit=' + limit)
                             .then(r => r.json())
                             .then(data => {
                                 if (data.success && Array.isArray(data.items) && data.items.length > 0) {
                                     data.items.forEach(item => listEl.appendChild(renderItem(item)));
                                     offset += data.items.length;
-
-                                    // Re-initialize Bootstrap dropdowns for new items
-                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'))
-                                    var dropdownList = dropdownElementList.map(function(dropdownToggleEl) {
-                                        return new bootstrap.Dropdown(dropdownToggleEl)
+                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'));
+                                    dropdownElementList.map(function(dropdownToggleEl) {
+                                        return new bootstrap.Dropdown(dropdownToggleEl);
                                     });
                                 } else {
-                                    window.removeEventListener('scroll', handleScroll);
+                                    if (!isMobile) {
+                                        window.removeEventListener('scroll', handleScroll);
+                                    }
+                                    loadMoreContainer.style.display = 'none';
                                     loadingEl.innerHTML = '<em>Không còn bài viết nào.</em>';
+                                    loadingEl.style.display = 'block';
                                 }
                             })
                             .catch(error => {
                                 console.error('Error loading more articles:', error);
                                 loadingEl.innerHTML = '<em>Đã có lỗi xảy ra.</em>';
+                                loadingEl.style.display = 'block';
                             })
                             .finally(() => {
                                 isLoading = false;
                                 if (loadingEl.innerHTML.includes('Đang tải thêm')) {
                                     loadingEl.style.display = 'none';
+                                    if (isMobile) {
+                                        loadMoreContainer.style.display = 'block';
+                                    }
                                 }
                             });
                     }
@@ -541,7 +550,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         if (nearBottom) loadMore();
                     }
 
-                    window.addEventListener('scroll', handleScroll);
+                    if (isMobile) {
+                        loadMoreContainer.style.display = 'block';
+                        loadMoreBtn.addEventListener('click', loadMore);
+                    } else {
+                        window.addEventListener('scroll', handleScroll);
+                    }
                 })();
 
                 //// Đừng có xóa dòng này mấy cha
