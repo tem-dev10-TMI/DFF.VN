@@ -296,8 +296,8 @@
      alt="<?= htmlspecialchars($article['title']) ?>">
           <div class="item">
             <h3>
-              <a href="/article.php?id=<?= $article['id'] ?>">
-                <?= htmlspecialchars($article['title']) ?>
+               <a href="details_blog?id=<?= $article['id'] ?>">
+                 <?= htmlspecialchars($article['title']) ?>
               </a>
             </h3>
             <span><?= htmlspecialchars($article['summary']) ?></span><br>
@@ -325,9 +325,10 @@
           alt="<?= htmlspecialchars($tag['name']) ?>">
 
           <h3>
-            <a href="/tag.php?id=<?= $tag['id'] ?>">
-              #<?= htmlspecialchars($tag['name']) ?>
-            </a>
+           <a title="<?= htmlspecialchars($tag['name']) ?>"
+                            href="details_topic?id=<?= htmlspecialchars($tag['id']) ?>">
+                            <?= htmlspecialchars($tag['name']) ?>
+                        </a>
           </h3>
         </div>
       <?php endforeach; ?>
@@ -351,7 +352,10 @@
         <!-- Thông tin -->
         <div class="info">
           <h3 class="name">
-            <a href="#"><?= htmlspecialchars($user['name']) ?></a>
+             <a title="<?= htmlspecialchars($user['name']) ?>"
+                            href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
+                            <?= htmlspecialchars($user['name']) ?>
+                        </a>
           </h3>
           <p>@<?= htmlspecialchars($user['username']) ?></p>
           <small>Email: <?= htmlspecialchars($user['email']) ?></small>
