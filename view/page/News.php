@@ -54,7 +54,12 @@
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                 <span class="name" title="">
-                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                 <a href="/DFF.VN/details_blog?id=<?= $article['id'] ?>" 
+   title="<?= htmlspecialchars($article['title']) ?>">
+   <?= htmlspecialchars($article['title']) ?>
+</a>
+
+
                                 </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                             </div>
                         </div>

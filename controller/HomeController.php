@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/article/articlesmodel.php';
-require_once __DIR__ . '/../model/commentmodel.php';
+
 require_once __DIR__ . '/../model/user/businessmenModel.php';
 require_once __DIR__ . '/../model/MarketDataModel.php';
 require_once __DIR__ . '/../model/event/Events.php';
@@ -36,7 +36,6 @@ class homeController
         $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
 
-        $comments = CommentsModel::getComments();
         $topBusinessmen = businessmenModel::getAllBusinessmen();
         $marketData = MarketDataModel::getCachedMarketData();
 
@@ -138,7 +137,8 @@ class homeController
         try {
             require_once __DIR__ . '/../model/article/articlesmodel.php';
             require_once __DIR__ . '/../model/MarketDataModel.php';
-            require_once __DIR__ . '/../model/commentmodel.php';
+          require_once __DIR__ . '/../model/CommentsModel.php';   // Đúng tên file
+
             require_once __DIR__ . '/../model/user/businessmenModel.php';
 
             $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;

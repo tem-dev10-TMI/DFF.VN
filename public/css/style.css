@@ -11,12 +11,171 @@ a {
     overflow-y: auto;
     /* thêm cuộn dọc */
 }
+.article-image {
+    width: 100%;
+    max-width: 450px;   /* 👈 chỉnh nhỏ lại, bạn thử 400–500px tùy ý */
+    margin: 0 auto 20px auto; /* căn giữa + cách dưới */
+}
+
+.article-image img {
+    width: 100%;
+    height: 300px;  /* 👈 giảm chiều cao cho cân đối */
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+
 
 .password-input-group {
     position: relative;
     display: flex;
     align-items: center;
 }
+        /* Khung bình luận */
+        .comment-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fefefe;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        /* Tiêu đề */
+        .comment-section-title {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #198754;
+            font-weight: 600;
+        }
+
+        /* Form nhập bình luận */
+        .comment-form-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .comment-form-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-form-input {
+            flex: 1;
+            min-height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .comment-form-btn {
+            background: #198754;
+            border: none;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .comment-form-btn:hover {
+            background: #157347;
+        }
+
+        /* Danh sách comment */
+        .comment-items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Mỗi comment */
+        .comment-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        /* Avatar */
+        .comment-card-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        /* Nội dung comment */
+        .comment-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Meta (avatar + tên + thời gian) */
+        .comment-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .comment-card-name {
+            font-weight: 600;
+            color: #198754;
+            font-size: 14px;
+        }
+
+        .comment-card-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Nội dung text */
+        .comment-card-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            background: #fff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        /* Hành động */
+        .comment-card-actions {
+            margin-top: 6px;
+        }
+
+        .comment-card-actions a {
+            font-size: 13px;
+            color: #198754;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .comment-card-actions a:hover {
+            text-decoration: underline;
+        }
+
+        /* Khi chưa có comment */
+        .comment-empty {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+        }
 
 .password-input-group .form-control {
     padding-right: 94px;

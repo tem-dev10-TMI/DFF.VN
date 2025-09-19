@@ -23,7 +23,9 @@ spl_autoload_register(function ($class) {
 
     ];
 
-    foreach ($paths as $p) if (file_exists($p)) require_once $p;
+    foreach ($paths as $p)
+        if (file_exists($p))
+            require_once $p;
 });
 
 
@@ -168,6 +170,16 @@ switch ($url) {
         $controller->details($id);
         break;
 
+    case 'comment':
+        require_once __DIR__ . '/controller/CommentsController.php';
+        break;
+
+    case 'details_blog':
+        $id = $_GET['id'] ?? 0;
+        require_once __DIR__ . '/controller/BlogController.php';
+        $controller = new BlogController();
+        $controller->show($id);
+        break;
 
 
     // ========== API ROUTES ==========
@@ -192,11 +204,11 @@ switch ($url) {
         break;
 
     default:
-        //404 page
-        /*         require_once 'controller/error/404Controller.php';
-        $controller = new NotFoundController;
-        require_once 'controller/error/404Controller.php';
-        //$controller = new NotFoundController;
-        $controller->index();
-        break; */
+    //404 page
+    /*         require_once 'controller/error/404Controller.php';
+    $controller = new NotFoundController;
+    require_once 'controller/error/404Controller.php';
+    //$controller = new NotFoundController;
+    $controller->index();
+    break; */
 }
