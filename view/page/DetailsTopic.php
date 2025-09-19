@@ -1,78 +1,78 @@
 <main class="main-content">
     <div class="content-left cover-page">
-    <div class="block-k box-company-label">
-        <h5>
-            <span><a href="#">Chủ đề</a></span>
-            <span class="c-note"><i class="fas fa-tag"></i> <?= htmlspecialchars($topic['name']) ?></span>
-        </h5>
-        <div class="box-company">
-            <div class="item">
-                <ul>
-                    <li>
-                        <img class="logo" alt="<?= htmlspecialchars($topic['name']) ?>"
-                            src="<?= !empty($topic['icon_url']) ? htmlspecialchars($topic['icon_url']) : 'https://via.placeholder.com/80x80/4A90E2/FFFFFF?text=🌍' ?>">
-                    </li>
-                    <li class="alias">Chủ đề</li>
-                    <li class="name">
-                        <a href="/topic-<?= $topic['slug'] ?>-t<?= $topic['id'] ?>.html"><?= htmlspecialchars($topic['name']) ?></a>
-                    </li>
-                    <li class="f-folw">
-                        <a data-type="5" href="javascript:void(0)" data-ref="topic-<?= $topic['slug'] ?>">
-                            <val>Theo dõi</val>
-                            <span class="number"><?= number_format($topic['follower_count'] ?? 0) ?></span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <?php if (!empty($topic['description'])): ?>
-            <div class="topic-description mt-2">
-                <?= nl2br(htmlspecialchars($topic['description'])) ?>
-            </div>
-        <?php endif; ?>
-    </div>
-
-    <?php if (!empty($articles)): ?>
-        <?php foreach ($articles as $article): ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="provider">
-                        <img class="logo"
-                            src="<?= htmlspecialchars($article['avatar_url'] ?? 'https://via.placeholder.com/50') ?>"
-                            alt="<?= htmlspecialchars($article['author_name']) ?>">
-                        <div class="p-covers">
-                            <span class="name">
-                                <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
-                                    <?= htmlspecialchars($article['author_name']) ?>
-                                </a>
-                            </span>
-                            <!-- Bỏ timeAgo, thay bằng hiển thị ngày giờ -->
-                            <span class="date"><?= date("d/m/Y H:i", strtotime($article['created_at'])) ?></span>
-                        </div>
-                    </div>
-
-                    <div class="title">
-                    <a href="details_blog?id=<?= $article['id'] ?>">
-
-                            <?= htmlspecialchars($article['title']) ?>
-                        </a>
-                    </div>
-
-                    <div class="sapo">
-                        <?= htmlspecialchars($article['summary']) ?>
-                    </div>
-
-                    <?php if (!empty($article['main_image_url'])): ?>
-                        <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                            alt="<?= htmlspecialchars($article['title']) ?>">
-                    <?php endif; ?>
+        <div class="block-k box-company-label">
+            <h5>
+                <span><a href="#">Chủ đề</a></span>
+                <span class="c-note"><i class="fas fa-tag"></i> <?= htmlspecialchars($topic['name']) ?></span>
+            </h5>
+            <div class="box-company">
+                <div class="item">
+                    <ul>
+                        <li>
+                            <img class="logo" alt="<?= htmlspecialchars($topic['name']) ?>"
+                                src="<?= !empty($topic['icon_url']) ? htmlspecialchars($topic['icon_url']) : 'https://via.placeholder.com/80x80/4A90E2/FFFFFF?text=🌍' ?>">
+                        </li>
+                        <li class="alias">Chủ đề</li>
+                        <li class="name">
+                            <a href="/topic-<?= $topic['slug'] ?>-t<?= $topic['slug'] ?>.html"><?= htmlspecialchars($topic['name']) ?></a>
+                        </li>
+                        <li class="f-folw">
+                            <a data-type="5" href="javascript:void(0)" data-ref="topic-<?= $topic['slug'] ?>">
+                                <val>Theo dõi</val>
+                                <span class="number"><?= number_format($topic['follower_count'] ?? 0) ?></span>
+                            </a>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>Chưa có bài viết nào trong chủ đề này.</p>
-    <?php endif; ?>
+            <?php if (!empty($topic['description'])): ?>
+                <div class="topic-description mt-2">
+                    <?= nl2br(htmlspecialchars($topic['description'])) ?>
+                </div>
+            <?php endif; ?>
         </div>
+
+        <?php if (!empty($articles)): ?>
+            <?php foreach ($articles as $article): ?>
+                <div class="block-k">
+                    <div class="view-carde f-frame">
+                        <div class="provider">
+                            <img class="logo"
+                                src="<?= htmlspecialchars($article['avatar_url'] ?? 'https://via.placeholder.com/50') ?>"
+                                alt="<?= htmlspecialchars($article['author_name']) ?>">
+                            <div class="p-covers">
+                                <span class="name">
+                                    <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <?= htmlspecialchars($article['author_name']) ?>
+                                    </a>
+                                </span>
+                                <!-- Bỏ timeAgo, thay bằng hiển thị ngày giờ -->
+                                <span class="date"><?= date("d/m/Y H:i", strtotime($article['created_at'])) ?></span>
+                            </div>
+                        </div>
+
+                        <div class="title">
+                            <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
+
+                                <?= htmlspecialchars($article['title']) ?>
+                            </a>
+                        </div>
+
+                        <div class="sapo">
+                            <?= htmlspecialchars($article['summary']) ?>
+                        </div>
+
+                        <?php if (!empty($article['main_image_url'])): ?>
+                            <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                alt="<?= htmlspecialchars($article['title']) ?>">
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <p>Chưa có bài viết nào trong chủ đề này.</p>
+        <?php endif; ?>
+    </div>
     <!-- bài viết chính block end -->
 
 
@@ -120,32 +120,32 @@
 
 
 
-       <?php if (!empty($articles)): ?>
-    <div class="block-k bg-box-a">
-        <div class="tieu-diem">
-            <h2>
-                <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
-            </h2>
-            <ul>
-                <?php foreach ($articles as $article): ?>
-                    <li class="new-style">
-                        <a title="<?= htmlspecialchars($article['title']) ?>" 
-                           href="details_blog?id=<?= $article['id'] ?>">
-                            <?= htmlspecialchars($article['title']) ?>
-                        </a>
-                        
-                        <?php if (!empty($article['main_image_url'])): ?>
-                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>" 
-                                 title="<?= htmlspecialchars($article['title']) ?>" 
-                                 alt="<?= htmlspecialchars($article['title']) ?>" 
-                                 border="0" />
-                        <?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    </div>
-<?php endif; ?>
+        <?php if (!empty($articles)): ?>
+            <div class="block-k bg-box-a">
+                <div class="tieu-diem">
+                    <h2>
+                        <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+                    </h2>
+                    <ul>
+                        <?php foreach ($articles as $article): ?>
+                            <li class="new-style">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="details_blog?id=<?= $article['id'] ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
+
+                                <?php if (!empty($article['main_image_url'])): ?>
+                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                        title="<?= htmlspecialchars($article['title']) ?>"
+                                        alt="<?= htmlspecialchars($article['title']) ?>"
+                                        border="0" />
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            </div>
+        <?php endif; ?>
 
 
 

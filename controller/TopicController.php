@@ -34,12 +34,11 @@ class TopicController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
-    public function details_topic()
+    public function details_topic($slug)
     {
         $topicModel = new TopicModel();
-        $id = $_GET['id'] ?? 0;
-        $topic = $topicModel->getById($id);
-        $articles = articlesmodel::getArticlesByTopicId($id, 10);
+        $topic = $topicModel->getBySlug($slug);
+        $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
         if (!$topic) {
             echo "Chủ đề không tồn tại!";
             return;

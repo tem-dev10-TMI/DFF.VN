@@ -26,7 +26,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
                                 target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
@@ -40,7 +40,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <div class="text" style="">
                             <h4>
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_Blog?id=' . urlencode($article['id'])) ?>"
+                                    href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
                                     target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -167,7 +167,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             </div>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
                                     target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -175,7 +175,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
                                     class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     Xem thêm
                                 </a>
@@ -193,7 +193,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
                                 </div>
                                 <div class="button-ar">
-                                    <a href="details_blog?id=<?= $article['id'] ?>#anc_comment">
+                                    <a href="details_blog?id<?= $article['id'] ?>#anc_comment">
                                         <span><?= $article['comment_count'] ?? 0 ?></span>
                                     </a>
                                 </div>
@@ -202,10 +202,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
                                             <li><a class="dropdown-item copylink"
-                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                    data-url="details_blog?id=<?= $article['id'] ?>"
+                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -245,7 +245,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     function renderItem(article) {
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
-                        const articleLink = article.is_rss ? article.link : `details_blog?id=${article.id}`;
+                        const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
                         div.innerHTML = `
@@ -270,7 +270,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <span class="value">${article.upvotes || 0}</span>
                                     </div>
                                     <div class="button-ar">
-                                        <a href="details_blog?id=${article.id}#anc_comment">
+                                        <a href="details_blog/i${article.slug}#anc_comment">
                                             <span>${article.comment_count || 0}</span>
                                         </a>
                                     </div>
@@ -278,8 +278,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <div class="dropdown home-item">
                                             <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item copylink" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Copy link</a></li>
-                                                <li><a class="dropdown-item sharefb" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Share FB</a></li>
+                                                <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                                <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
                                             </ul>
                                         </div>
                                     </div>
@@ -589,7 +589,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
                                     href="<?= !empty($article['is_rss'])
                                                 ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -660,7 +660,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
                                     href="<?= !empty($article['is_rss'])
                                                 ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
+                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
