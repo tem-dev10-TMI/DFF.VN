@@ -198,6 +198,10 @@
                 </div>
             </div>
             <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
+            <div id="searchBox" class="search-box">
+            <input type="text" placeholder="Tìm kiếm...">
+            <button><i class="fas fa-search"></i></button>
+            </div>
 
         </div>
     </div>
