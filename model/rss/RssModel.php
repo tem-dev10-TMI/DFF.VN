@@ -108,7 +108,7 @@ class RssModel
 
         return [
             'id' => md5($link),
-            'title' => (string)($item->title ?? ''),
+            'title' => html_entity_decode((string)($item->title ?? ''), ENT_QUOTES, 'UTF-8'), // Sửa lại thành $item
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
             'author_name' => $author_name,
@@ -138,7 +138,7 @@ class RssModel
 
         return [
             'id' => md5($link),
-            'title' => (string)($entry->title ?? ''),
+            'title' => html_entity_decode((string)($item->title ?? ''), ENT_QUOTES, 'UTF-8'), // Sửa lại thành $item
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
             'author_name' => $author_name,
