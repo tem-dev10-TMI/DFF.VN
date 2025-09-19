@@ -2,34 +2,29 @@
 class UserFollowModel {
     private $db;
 
-    public function __construct() {
-        $db = new connect();
-        $this->db = $db->db;
+    public function __construct($pdo) {
+        $this->db = $pdo;
     }
 
-    public function isFollowing($follower_id, $following_id) {
-        $sql = "SELECT 1 FROM user_follows WHERE follower_id = ? AND following_id = ? LIMIT 1";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$follower_id, $following_id]);
-        return $stmt->fetchColumn() ? true : false;
+    public function follow($followerId, $followingId) {
+        $stmt = $this->db->prepare("INSERT INTO user_follows (follower_id, following_id) VALUES (?, ?)");
+        return $stmt->execute([$followerId, $followingId]);
     }
 
-    public function add($follower_id, $following_id) {
-        $sql = "INSERT IGNORE INTO user_follows (follower_id, following_id) VALUES (?, ?)";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$follower_id, $following_id]);
+    public function unfollow($followerId, $followingId) {
+        $stmt = $this->db->prepare("DELETE FROM user_follows WHERE follower_id = ? AND following_id = ?");
+        return $stmt->execute([$followerId, $followingId]);
     }
 
-    public function remove($follower_id, $following_id) {
-        $sql = "DELETE FROM user_follows WHERE follower_id = ? AND following_id = ?";
-        $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$follower_id, $following_id]);
+    public function isFollowing($followerId, $followingId) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND following_id = ?");
+        $stmt->execute([$followerId, $followingId]);
+        return $stmt->fetchColumn() > 0;
     }
 
-    public function countFollowers($user_id) {
-        $sql = "SELECT COUNT(*) FROM user_follows WHERE following_id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$user_id]);
-        return $stmt->fetchColumn();
+    public function countFollowers($userId) {
+        $stmt = $this->db->prepare("SELECT COUNT(*) FROM user_follows WHERE following_id = ?");
+        $stmt->execute([$userId]);
+        return (int)$stmt->fetchColumn();
     }
 }
