@@ -34,8 +34,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <div class="cover-hover" style="">
                             <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                 title="<?= htmlspecialchars($article['title']) ?>"
-                                alt="<?= htmlspecialchars($article['title']) ?>"
-                                border="0" />
+                                alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
                         </div>
                         <div class="text" style="">
                             <h4>
@@ -57,28 +56,133 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
     <!-- bài viết chính block start -->
     <div class="content-left cover-page">
-        <div class="block-k box-write">
-            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg"> </a>
+        <div class="block-k box-write openModalcreatePost">
+            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
+            </a>
             <div class="input-group box-search">
-                <div class="post-input"><a href="javascript:void(0)" data-bs-toggle="modal" data-bs-target="#createPostModal"><span>Viết bài, chia sẻ, đặt câu hỏi…</span></a></div>
+                <div data-bs-toggle="modal"><span>Viết
+                            bài, chia sẻ, đặt câu hỏi…</span></div>
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-document.getElementById("openWriteBox").addEventListener("click", function() {
-    <?php if ($_SESSION['user']): ?>
-        // Nếu đã đăng nhập thì mở modal
-        var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
-        myModal.show();
-    <?php else: ?>
-        // Nếu chưa đăng nhập thì chuyển sang login hoặc cảnh báo
-        alert("Bạn cần đăng nhập để viết bài.");
-        window.location.href = "login.php";
-    <?php endif; ?>
-});
-</script>
+            document.querySelector("openModalcreatePost").addEventListener("click", function () {
+                <?php if (isset($_SESSION['user']) && $_SESSION['user']): ?>
+                    // Nếu đã đăng nhập thì mở modal
+                    var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+                    myModal.show();
+                <?php else: ?>
+                    // Nếu chưa đăng nhập thì chuyển sang login hoặc cảnh báo
+                    alert("Bạn cần đăng nhập để viết bài.");
+                    window.location.href = "login.php";
+                <?php endif; ?>
+            });
+        </script>
+    <!-- Modal: Tạo bài viết mới -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
+
+
+            <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+
+                <!-- Header -->
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                        <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Đóng"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body bg-light">
+                    <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                        <!-- Avatar + tên -->
+                        <div class="d-flex align-items-center mb-3">
+                            <?php
+                            $avatarUrl = $user['avatar_url'] ?? null;
+                            if (!$avatarUrl || trim($avatarUrl) === '') {
+                                $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                            }
+                            ?>
+                            <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                style="width: 48px; height: 48px;">
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <?php
+                                    if ($profile_category == 'businessmen') {
+                                        echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
+                                    } else {
+                                        echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
+                                    }
+                                    ?>
+                                </h6>
+                                <small class="text-muted">
+                                    <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Tiêu đề -->
+                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                            placeholder="✏️ Nhập tiêu đề bài viết...">
+
+                        <!-- Tóm tắt -->
+                        <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                            placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
+
+                        <!-- Nội dung chính -->
+                        <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                            placeholder="💡 Nội dung chính của bài viết..."></textarea>
+
+                        <!-- Chọn chủ đề -->
+                        <div class="mb-3">
+                            <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
+                            <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                <option value="">-- Chọn chủ đề --</option>
+                                <?php foreach ($allTopics as $topic): ?>
+                                    <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Thanh công cụ -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-2">
+                                <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                    <i class="fas fa-image me-1"></i> Hình ảnh
+                                </label>
+                                <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                    <i class="fas fa-video me-1"></i> Video
+                                </label>
+                                <button class="btn btn-outline-success btn-sm" type="button">
+                                    <i class="fas fa-link me-1"></i> Link
+                                </button>
+                            </div>
+                            <button class="btn btn-success px-4 rounded-pill" onclick="addPost()">
+                                <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                            </button>
+                        </div>
+
+                        <!-- Input hidden -->
+                        <input type="file" id="postImage" class="d-none" accept="image/*"
+                            onchange="previewImage(event)">
+                        <input type="file" id="postVideo" class="d-none" accept="video/*"
+                            onchange="previewVideo(event)">
+                    </div>
+
+                    <!-- Preview ảnh / video -->
+                    <div id="imagePreview" class="mt-2 bt-4"></div>
+                    <div id="videoPreview" class="mt-2 bt-4"></div>
+                </div>
+            </div>
+        </div>
+    </div>
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
 
@@ -89,16 +193,18 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
             <div class="owl-slider">
                 <div class="owl-carousel box-company owl-loaded owl-drag">
                     <div class="owl-stage-outer owl-height" style="height: 256px;">
-                        <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
+                        <div class="owl-stage"
+                            style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
                                 <?php //var_dump($topBusinessmen);
-                                ?>
+                                    ?>
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
                                         <div class="item">
                                             <ul>
                                                 <li>
-                                                    <img class="logo" alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                                    <img class="logo"
+                                                        alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
                                                         src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
                                                 </li>
                                                 <li class="alias"><?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?></li>
@@ -125,8 +231,10 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                         </div>
                     </div>
                     <div class="owl-nav">
-                        <button type="button" role="presentation" class="owl-prev disabled"><i class="fa fa-chevron-left"></i></button>
-                        <button type="button" role="presentation" class="owl-next"><i class="fa fa-chevron-right"></i></button>
+                        <button type="button" role="presentation" class="owl-prev disabled"><i
+                                class="fa fa-chevron-left"></i></button>
+                        <button type="button" role="presentation" class="owl-next"><i
+                                class="fa fa-chevron-right"></i></button>
                     </div>
                     <div class="owl-dots disabled"></div>
                 </div>
@@ -191,7 +299,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
-                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
+                                    // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
 
                                 if ($badgeText) {
@@ -218,8 +326,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                             </div>
 
                             <?php if (!empty($article['main_image_url'])): ?>
-                                <img class="h-img"
-                                    src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
 
@@ -257,7 +364,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                 <em>Đang tải thêm...</em>
             </div>
             <script>
-                (function() {
+                (function () {
                     let offset = 5; // đã render 5 bài đầu
                     const limit = 5;
                     let isLoading = false;
@@ -302,7 +409,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                                     badgeClass = 'bg-success';
                                     badgeText = 'Công khai';
                                     break;
-                                    // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
+                                // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
                             }
 
                             if (badgeText) {
@@ -371,7 +478,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
 
                                     // Re-initialize Bootstrap dropdowns for new items
                                     var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'))
-                                    var dropdownList = dropdownElementList.map(function(dropdownToggleEl) {
+                                    var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
                                         return new bootstrap.Dropdown(dropdownToggleEl)
                                     });
                                 } else {
@@ -391,7 +498,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                             });
                     }
 
-                    const handleScroll = function() {
+                    const handleScroll = function () {
                         const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
                         if (nearBottom) loadMore();
                     }
@@ -450,8 +557,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                                     <span class="avatar-fallback"><?= strtoupper(substr($c['username'], 0, 1)) ?></span>
                                 <?php endif; ?>
                             </div>
-                            <div class="chat-body"
-                                data-comment-id="<?= (int)$c['id'] ?>"
+                            <div class="chat-body" data-comment-id="<?= (int) $c['id'] ?>"
                                 data-username="<?= htmlspecialchars($c['username']) ?>">
                                 <div class="chat-meta">
                                     <span class="chat-name"><?= htmlspecialchars($c['username']) ?></span>
@@ -463,7 +569,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
 
                                 <div class="chat-actions">
                                     <button>⬆</button>
-                                    <span class="vote-count"><?= (int)$c['upvotes'] ?></span>
+                                    <span class="vote-count"><?= (int) $c['upvotes'] ?></span>
                                     <button>⬇</button>
                                     <a href="#" class="chat-reply">Trả lời</a>
                                 </div>
@@ -471,7 +577,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -506,7 +612,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
 
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -556,8 +662,8 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                 li.innerHTML = `
         <div class="chat-avatar">
             ${c.avatar_url
-                ? `<img src="${c.avatar_url}">`
-                : `<span class="avatar-fallback">${c.username ? c.username[0].toUpperCase() : '#'}</span>`}
+                        ? `<img src="${c.avatar_url}">`
+                        : `<span class="avatar-fallback">${c.username ? c.username[0].toUpperCase() : '#'}</span>`}
         </div>
         <div class="chat-body" data-comment-id="${c.id}" data-username="${c.username}">
             <div class="chat-meta">
@@ -581,12 +687,12 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                 if (!content) return;
 
                 fetch("comment_add.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: "content=" + encodeURIComponent(content)
-                    })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "content=" + encodeURIComponent(content)
+                })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
@@ -612,7 +718,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
             // nhấn enter 
             const textarea = document.getElementById("comment-content");
 
-            textarea.addEventListener("keydown", function(e) {
+            textarea.addEventListener("keydown", function (e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); // chặn xuống dòng
                     document.getElementById("send-comment").click(); // gọi nút gửi
@@ -648,9 +754,9 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
         </script>
 
         <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline"
-                data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
-                data-hide-cover="false" data-show-facepile="true">
+            <div class="fb-page" data-href="https://www.facebook.com/vientmi" data-tabs="timeline" data-width=""
+                data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+                data-show-facepile="true">
                 <blockquote cite="https://www.facebook.com/vientmi" class="fb-xfbml-parse-ignore"><a
                         href="https://www.facebook.com/vientmi">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
                 </blockquote>
@@ -674,18 +780,16 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                     <ul>
                         <?php foreach ($rssArticles3 as $article): ?>
                             <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss'])
-                                                ? htmlspecialchars($article['link'])
-                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
                                 <?php if (!empty($article['main_image_url'])): ?>
                                     <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                         title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>"
-                                        border="0" />
+                                        alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
@@ -715,8 +819,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                     <?php if (!empty($events)): ?>
                         <?php foreach ($events as $index => $event): ?>
                             <li class="card-list-item" key="<?php echo $index; ?>">
-                                <a
-                                    title="<?= htmlspecialchars($event['title']); ?>"
+                                <a title="<?= htmlspecialchars($event['title']); ?>"
                                     href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>">
                                     <?= htmlspecialchars($event['title']); ?>
                                 </a>
@@ -745,18 +848,16 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss'])
-                                                ? htmlspecialchars($article['link'])
-                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
                                 <?php if (!empty($article['main_image_url'])): ?>
                                     <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                         title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>"
-                                        border="0" />
+                                        alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
@@ -1146,9 +1247,9 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
         </div> -->
 
         <script>
-            $(function() {
+            $(function () {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function() {
+                $(window).scroll(function () {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -1163,7 +1264,7 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
             });
         </script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,
@@ -1193,107 +1294,110 @@ document.getElementById("openWriteBox").addEventListener("click", function() {
 
     </div>
 
-    <!-- Modal for creating a new post -->
-<!-- Modal: Tạo bài viết mới -->
-<div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
-<div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
+    <!-- Modal: Tạo bài viết mới -->
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
 
 
-    <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
-      
-      <!-- Header -->
-      <div class="modal-header bg-success text-white">
-        <h5 class="modal-title fw-bold" id="createPostModalLabel">
-          <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
-        </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-      </div>
-      
-      <!-- Body -->
-      <div class="modal-body bg-light">
-        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+            <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
-          <!-- Avatar + tên -->
-          <div class="d-flex align-items-center mb-3">
-            <?php
-            $avatarUrl = $user['avatar_url'] ?? null;
-            if (!$avatarUrl || trim($avatarUrl) === '') {
-              $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-            }
-            ?>
-            <img src="<?= htmlspecialchars($avatarUrl) ?>" 
-                 class="rounded-circle border border-2 border-success me-2" 
-                 alt="avatar" style="width: 48px; height: 48px;">
-            <div>
-              <h6 class="mb-0 fw-bold text-dark">
-                <?php
-                if ($profile_category == 'businessmen') {
-                    echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
-                } else {
-                    echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
-                }
-                ?>
-              </h6>
-              <small class="text-muted">
-                <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
-              </small>
+                <!-- Header -->
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                        <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Đóng"></button>
+                </div>
+
+                <!-- Body -->
+                <div class="modal-body bg-light">
+                    <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                        <!-- Avatar + tên -->
+                        <div class="d-flex align-items-center mb-3">
+                            <?php
+                            $avatarUrl = $user['avatar_url'] ?? null;
+                            if (!$avatarUrl || trim($avatarUrl) === '') {
+                                $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                            }
+                            ?>
+                            <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                style="width: 48px; height: 48px;">
+                            <div>
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <?php
+                                    if ($profile_category == 'businessmen') {
+                                        echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
+                                    } else {
+                                        echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
+                                    }
+                                    ?>
+                                </h6>
+                                <small class="text-muted">
+                                    <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Tiêu đề -->
+                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                            placeholder="✏️ Nhập tiêu đề bài viết...">
+
+                        <!-- Tóm tắt -->
+                        <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                            placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
+
+                        <!-- Nội dung chính -->
+                        <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                            placeholder="💡 Nội dung chính của bài viết..."></textarea>
+
+                        <!-- Chọn chủ đề -->
+                        <div class="mb-3">
+                            <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
+                            <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                <option value="">-- Chọn chủ đề --</option>
+                                <?php foreach ($allTopics as $topic): ?>
+                                    <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+
+                        <!-- Thanh công cụ -->
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex gap-2">
+                                <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                    <i class="fas fa-image me-1"></i> Hình ảnh
+                                </label>
+                                <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                    <i class="fas fa-video me-1"></i> Video
+                                </label>
+                                <button class="btn btn-outline-success btn-sm" type="button">
+                                    <i class="fas fa-link me-1"></i> Link
+                                </button>
+                            </div>
+                            <button class="btn btn-success px-4 rounded-pill" onclick="addPost()">
+                                <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                            </button>
+                        </div>
+
+                        <!-- Input hidden -->
+                        <input type="file" id="postImage" class="d-none" accept="image/*"
+                            onchange="previewImage(event)">
+                        <input type="file" id="postVideo" class="d-none" accept="video/*"
+                            onchange="previewVideo(event)">
+                    </div>
+
+                    <!-- Preview ảnh / video -->
+                    <div id="imagePreview" class="mt-2 bt-4"></div>
+                    <div id="videoPreview" class="mt-2 bt-4"></div>
+                </div>
             </div>
-          </div>
-
-          <!-- Tiêu đề -->
-          <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success" 
-                 placeholder="✏️ Nhập tiêu đề bài viết...">
-
-          <!-- Tóm tắt -->
-          <textarea id="postSummary" class="form-control mb-3 border-success" rows="2" 
-                    placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
-
-          <!-- Nội dung chính -->
-          <textarea id="newPost" class="form-control mb-3 border-success" rows="5" 
-                    placeholder="💡 Nội dung chính của bài viết..."></textarea>
-
-          <!-- Chọn chủ đề -->
-          <div class="mb-3">
-            <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
-            <select class="form-select border-success" id="topicSelect" name="topic_id" required>
-              <option value="">-- Chọn chủ đề --</option>
-              <?php foreach ($allTopics as $topic): ?>
-                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-              <?php endforeach; ?>
-            </select>
-          </div>
-
-          <!-- Thanh công cụ -->
-          <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex gap-2">
-              <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                <i class="fas fa-image me-1"></i> Hình ảnh
-              </label>
-              <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                <i class="fas fa-video me-1"></i> Video
-              </label>
-              <button class="btn btn-outline-success btn-sm" type="button">
-                <i class="fas fa-link me-1"></i> Link
-              </button>
-            </div>
-            <button class="btn btn-success px-4 rounded-pill" onclick="addPost()">
-              <i class="fas fa-paper-plane me-1"></i> Đăng bài
-            </button>
-          </div>
-
-          <!-- Input hidden -->
-          <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
-          <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
         </div>
-
-        <!-- Preview ảnh / video -->
-        <div id="imagePreview" class="mt-2 bt-4"></div>
-        <div id="videoPreview" class="mt-2 bt-4"></div>
-      </div>
     </div>
-  </div>
-</div>
 
     <!-- <script>
         // Submit bài viết mới
