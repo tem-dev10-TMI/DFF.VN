@@ -11,10 +11,8 @@ require_once __DIR__ . '/middleware.php';
 spl_autoload_register(function ($class) {
     $paths = [
         __DIR__ . '/model/admin/' . $class . '.php',
-
         __DIR__ . '/model/' . $class . '.php',              // thêm model thường
         __DIR__ . '/model/event/' . $class . '.php',
-
         __DIR__ . '/controller/admin/' . $class . '.php',
     ];
     foreach ($paths as $p) {
@@ -107,6 +105,41 @@ switch ($route) {
         require_role('admin');
         $ctrl = new EventController($pdo);
         break;
+
+   case 'accounts': // ✅ duyệt tài khoản doanh nhân
+    require_login();
+    require_role('admin');
+
+    if ($action === 'reviewList') {
+        include __DIR__ . '/view/admin/views/accounts/review_accounts.php';
+        exit;
+    }
+
+    if ($action === 'approve') {
+        $id = intval($_GET['id']);
+        $stmt = $pdo->prepare("SELECT user_id FROM businessmen WHERE id = ?");
+        $stmt->execute([$id]);
+        $user_id = $stmt->fetchColumn();
+
+        if ($user_id) {
+            // Cập nhật status = approved + đổi role
+            $pdo->prepare("UPDATE businessmen SET status = 'approved', updated_at = NOW() WHERE id = ?")
+                ->execute([$id]);
+            $pdo->prepare("UPDATE users SET role = 'businessmen' WHERE id = ?")
+                ->execute([$user_id]);
+        }
+
+        header("Location: admin.php?route=accounts&action=reviewList");
+        exit;
+    }
+
+    if ($action === 'reject') {
+        $id = intval($_GET['id']);
+        $pdo->prepare("DELETE FROM businessmen WHERE id=?")->execute([$id]);
+        header("Location: admin.php?route=accounts&action=reviewList");
+        exit;
+    }
+    break;
 
     default:
         require_login();

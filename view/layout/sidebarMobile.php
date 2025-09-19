@@ -14,7 +14,7 @@
         </style>
 
         <ul class="">
-            <li class="item"><svg class="home-icon" rpl="" fill="currentColor" height="20" icon-name="home-outline"
+            <li class="item"><svg class="bi bi-house-fill home-icon"   rpl="" fill="currentColor" height="20" icon-name="home-outline"
                     viewBox="0 0 20 20" width="20" xmlns="http://www.w3.org/2000/svg">
                     <!--?lit$03863286$--><!--?lit$03863286$-->
                     <path
@@ -24,11 +24,11 @@
                 <a href="home" title="Trang chủ">Trang chủ</a>
             </li>
             <li class="item">
-                <i class="bi bi-newspaper idiscuss"></i>
+                <i class="bi bi-book-half idiscuss"></i>
                 <a href="news" title="Trang chủ">Mới nhất</a>
             </li>
             <li class="item">
-                <i class="bi bi-box-arrow-up-right trend-icon"></i>
+                <i class="bi bi-currency-exchange trend-icon"></i>
                 <a href="trends" title="Trang chủ">Xu hướng</a>
             </li>
             
@@ -36,7 +36,8 @@
         </ul>
         <div class="line"></div>
 
-        <label class="bg-tranparent">CHỦ ĐỀ</label>
+      
+
         <?php if (!empty($topTopics)): ?>
         <ul class=" top-item">
             <?php foreach ($topTopics as $topic): ?>
@@ -73,11 +74,11 @@
         <div class="line"></div>
         <ul class=" about-c">
             <li><i class="bi bi-tv"></i>
-                <a href="policy.html#about"> Về chúng tôi</a>
+                <a href="about#"> Về chúng tôi</a>
             </li>
             <li>
                 <i class="bi bi-book"></i>
-                <a href="policy.html#terms-of-service"> Chính sách nội dung</a>
+                <a href="about#gioithieu"> Chính sách nội dung</a>
             </li>
             <li><svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
                     xmlns="http://www.w3.org/2000/svg">
@@ -92,7 +93,7 @@
                     </path>
                     <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
                 </svg>
-                <a href="policy.html#privacy-policy"> Chính sách riêng tư</a>
+                <a href="about#thuthap"> Chính sách riêng tư</a>
             </li>
             <li><i class="bi bi-badge-ad"></i>
                 <a href="policy.html#advertisement"> Quảng cáo </a>

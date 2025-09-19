@@ -52,20 +52,48 @@ class ArticlesModel
     // Lấy bài viết phân trang (chỉ public)
     public static function getArticlesPaged(int $offset, int $limit)
     {
+        $currentUserId = $_SESSION['user']['id'] ?? null;
         $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+
+        if ($currentUserId) {
+            // Logic cho người dùng đã đăng nhập
+            // Vế thứ hai của UNION đã được cập nhật để loại trừ bài viết 'rejected'
+            $sql = "(SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.status = 'public')
+                UNION
+                (SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.author_id = :current_user_id AND a.status != 'rejected')
+                ORDER BY created_at DESC, id DESC
+                LIMIT :limit OFFSET :offset";
+
+            $stmt = $db->db->prepare($sql);
+            $stmt->bindValue(':current_user_id', $currentUserId, PDO::PARAM_INT);
+        } else {
+            // Logic cho khách không thay đổi
+            $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
                 WHERE a.status = 'public'
                 ORDER BY a.created_at DESC, a.id DESC
                 LIMIT :limit OFFSET :offset";
-        $stmt = $db->db->prepare($sql);
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+            $stmt = $db->db->prepare($sql);
+        }
+
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+
 
     // Lấy bài viết theo ID (chỉ public)
     public static function getArticleById($id)
@@ -81,14 +109,49 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public static function getArticleBySlug($slug)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                FROM articles a
+                LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id = t.id
+                WHERE a.slug = :slug AND a.status = 'public'";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':slug' => $slug]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+
+    public static function getRelatedArticles($topic_id, $exclude_id, $limit = 5)
+    {
+        $db = new connect();
+        $sql = "SELECT id, title, slug 
+            FROM articles 
+            WHERE topic_id = :topic_id 
+              AND id != :exclude_id 
+              AND status = 'public'
+            ORDER BY created_at DESC
+            LIMIT :limit";
+
+        $stmt = $db->db->prepare($sql);
+        // PDO không hỗ trợ bindParam trực tiếp với LIMIT, phải ép kiểu int
+        $stmt->bindValue(':topic_id', $topic_id, PDO::PARAM_INT);
+        $stmt->bindValue(':exclude_id', $exclude_id, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function getByUserId($userId)
     {
         global $pdo;
         $stmt = $pdo->prepare("SELECT * FROM articles WHERE author_id = ? ORDER BY created_at DESC");
         $stmt->execute([$userId]);
         return $stmt->fetchAll();
-    }   
-    
+    }
+
     // Cập nhật bài viết
     public static function updateArticle($id, $title, $summary, $content, $main_image_url, $topic_id, $status = 'public', $is_hot = 0, $is_analysis = 0)
     {
@@ -162,6 +225,26 @@ class ArticlesModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Lấy bài viết theo topic (chỉ public)
+    public static function getArticlesByTopicSlug($topic_slug, $limit = 10)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, t.slug AS topic_slug
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id = t.id
+            WHERE t.slug = :topic_slug AND a.status = 'public'
+            ORDER BY a.created_at DESC, a.id DESC
+            LIMIT :limit";
+
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':topic_slug', $topic_slug, PDO::PARAM_STR);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Lấy bài viết theo author (bao gồm mọi trạng thái)
     public static function getArticlesByAuthorId($author_id)
     {
@@ -195,9 +278,9 @@ class ArticlesModel
         return $row ? ($row['reason'] ?? null) : null;
     }
     public static function getLatestArticles($limit = 6)
-{
-    $db = new connect();
-    $sql = "SELECT a.*, 
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, 
                    u.name AS author_name, 
                    u.avatar_url, 
                    t.name AS topic_name
@@ -208,12 +291,12 @@ class ArticlesModel
             ORDER BY a.created_at DESC, a.id DESC
             LIMIT :limit";
 
-    $stmt = $db->db->prepare($sql);
-    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-    $stmt->execute();
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->execute();
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     // Helper để kiểm tra slug tồn tại
     public static function slugExists($slug)
@@ -247,7 +330,7 @@ class ArticlesModel
                 (title, slug, summary, content, main_image_url, author_id, topic_id, status, published_at, is_hot, is_analysis) 
                 VALUES 
                 (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, NOW(), :is_hot, :is_analysis)";
-        
+
         $stmt = $db->db->prepare($sql);
 
         $success = $stmt->execute([
@@ -281,6 +364,4 @@ class ArticlesModel
         $stmt->execute([':q' => "%$q%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-
 }
-

@@ -62,4 +62,28 @@
   </div>
 </div>
 
+<!-- Duyệt tài khoản -->
+<div class="col-md-3">
+  <div class="card shadow-sm border-0 h-100">
+    <div class="card-body text-center">
+      <div class="mb-2 text-danger">
+        <i class="bi bi-person-check-fill" style="font-size:2.5rem;"></i>
+      </div>
+      <h5 class="card-title">Duyệt tài khoản</h5>
+      <?php 
+        $pendingAccounts = $pdo->query("
+            SELECT COUNT(*) 
+            FROM businessmen b 
+            JOIN users u ON b.user_id = u.id 
+            WHERE u.role = 'user'
+        ")->fetchColumn(); 
+      ?>
+      <p class="display-6 fw-bold"><?= intval($pendingAccounts) ?></p>
+      <a href="<?= BASE_URL ?>/admin.php?route=accounts&action=reviewList" 
+         class="btn btn-outline-danger btn-sm">Quản lý</a>
+    </div>
+  </div>
+</div>
+
+
 <?php include __DIR__ . '/layout/footer.php'; ?>

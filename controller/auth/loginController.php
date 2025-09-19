@@ -7,7 +7,7 @@ class loginController
             session_start();
         }
         // Load model
-        require_once __DIR__.'/../../model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $error = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -27,6 +27,7 @@ class loginController
                         'id' => $user['id'],
                         'name' => $user['name'],
                         'username' => $user['username'],
+                        'password_hash' => $user['password_hash'],
                         'email' => $user['email'],
                         'phone' => $user['phone'],
                         'role' => $user['role'],
@@ -36,6 +37,7 @@ class loginController
                     $_SESSION['user_id']           = $user['id'];
                     $_SESSION['user_name']         = $user['name'];
                     $_SESSION['user_username']     = $user['username'];
+                    $_SESSION['user_password_hash'] = $user['password_hash'];
                     $_SESSION['user_email']        = $user['email'];
                     $_SESSION['user_role']         = $user['role'];
                     $_SESSION['user_avatar_url']   = $user['avatar_url'] ?? null;
@@ -53,9 +55,9 @@ class loginController
         }
         //Load view
         ob_start();
-        require_once __DIR__.'/../../view/layout/header.php';
+        require_once __DIR__ . '/../../view/layout/header.php';
         $content = ob_get_clean();
-        require_once __DIR__.'/../../view/layout/main.php';
+        require_once __DIR__ . '/../../view/layout/main.php';
     }
 
     public static function logout()

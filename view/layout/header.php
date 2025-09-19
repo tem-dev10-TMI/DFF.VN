@@ -7,43 +7,37 @@
             </div>
             <div class="header-logo">
                 <a href="home">
-                    <img alt="" title=""
-                        src="public/img/logo/logo.jpg" /></a>
+                    <img alt="" title="" src="public/img/logo/logo.jpg" /></a>
                 <div class="box-search">
-                         <div class="input-group" onkeypress="return OnEnter(event)">
-    <span class="input-group-append">
-        <button
-            class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
-            type="button"
-            onclick="doSearch()">
-            <i class="fa fa-search"></i>
-        </button>
-    </span>
-    <input 
-        id="searchInput"
-        class="form-control border-end-0 border rounded-pill"
-        placeholder="Tìm kiếm" 
-        type="search"
-    />
-</div>
+                    <div class="input-group" onkeypress="return OnEnter(event)">
+                        <span class="input-group-append">
+                            <button
+                                class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
+                                type="button" onclick="doSearch()">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </span>
+                        <input id="searchInput" class="form-control border-end-0 border rounded-pill"
+                            placeholder="Tìm kiếm" type="search" />
+                    </div>
 
-<script>
-function OnEnter(event) {
-    if (event.key === "Enter") {
-        doSearch();
-        return false; // chặn reload mặc định
-    }
-    return true;
-}
+                    <script>
+                        function OnEnter(event) {
+                            if (event.key === "Enter") {
+                                doSearch();
+                                return false; // chặn reload mặc định
+                            }
+                            return true;
+                        }
 
-function doSearch() {
-    const keyword = document.getElementById("searchInput").value.trim();
-    if (keyword) {
-        // chuyển trang sang search
-        window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
-    }
-}
-</script>
+                        function doSearch() {
+                            const keyword = document.getElementById("searchInput").value.trim();
+                            if (keyword) {
+                                // chuyển trang sang search
+                                window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
+                            }
+                        }
+                    </script>
 
                     <div class="header-info"><i class="far fa-clock"></i><span class="currentDate"> </span></div>
                 </div>
@@ -64,18 +58,20 @@ function doSearch() {
                 ?>
                 <ul>
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
-                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown"
-                                aria-expanded="false" title="Tạo mới" href="javascript:void(0)"><i
-                                    class="fas fa-plus"></i></a>
-                            <ul class="dropdown-menu hide">
-                                <li><a style="position:relative" class="dropdown-item btquick"
-                                        href="javascript:void(0)" module-load="loadwrite"><i
-                                            class="fas fa-plus"></i><span class="number"><i
-                                                class="bi bi-lightning-charge-fill"></i></span> Viết bài nhanh</a>
-                                </li>
-                                <li><a class="dropdown-item" href="javascript:void(0)" data-url="/write.html"
-                                        module-load="redirect"><i class="fas fa-plus"></i> Viết bài thường</a></li>
-                            </ul>
+                    <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
+                                title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
+                                <?php if (isset($_SESSION['user_id'])): ?>
+                                    <ul class="dropdown-menu hide">
+                                    <li>
+                                        <a style="position:relative" class="dropdown-item btquick" href="javascript:void(0)"
+                                            data-bs-toggle="modal" data-bs-target="#createPostModal">
+                                            <i class="fas fa-plus"></i>
+                                            <span class="number"><i class="bi bi-lightning-charge-fill"></i></span>
+                                            Viết bài nhanh
+                                        </a>
+                                    </li>
+                                </ul>
+                                <?php endif; ?>
                         </span>
                     </li>
                     <li class="n-chatbot">
@@ -87,7 +83,8 @@ function doSearch() {
                     </li>
                     <li class="n-alert"><span data-bs-toggle="collapse" data-bs-target="#id_alert"
                             aria-controls="id_alert" aria-expanded="false"><a href="javascript:void(0)"
-                                title="Thông báo"><i class="fas fa-bell"></i></a> <span class="number"><?= $notifCount ?></span>
+                                title="Thông báo"><i class="fas fa-bell"></i></a> <span
+                                class="number"><?= $notifCount ?></span>
                         </span>
                     </li>
                     <li class="top-pro ">
@@ -97,12 +94,13 @@ function doSearch() {
                         <?php if (isset($_SESSION['user_id'])): ?>
                             <!-- Đã đăng nhập -->
                             <span class="dropdown signed" style="display: block;">
-                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false" href="javascript:void(0)">
+                                <a class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"
+                                    href="javascript:void(0)">
                                     <?php
                                     // Ưu tiên lấy avatar từ session sau khi đăng nhập thành công
                                     $avatarUrl = $_SESSION['user_avatar_url']
                                         ?? ($_SESSION['user']['avatar_url'] ?? null);
-                                    if (!$avatarUrl || trim((string)$avatarUrl) === '') {
+                                    if (!$avatarUrl || trim((string) $avatarUrl) === '') {
                                         $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
                                     }
                                     ?>
@@ -119,25 +117,29 @@ function doSearch() {
                                             </div>
                                         </div>
                                     </li>
-                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i
-                                                class="fas fa-dice-d20"></i> Hỗ trợ AI</a></li>
+                                    <li class="menu-ai"><a class="dropdown-item" href="home"><i class="fas fa-dice-d20"></i>
+                                            Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role']  == 'user' || $_SESSION['user_role'] == 'admin') {
-                                                                                            echo 'profile_user';
-                                                                                        } else {
-                                                                                            echo 'profile_business';
-                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
+                                                  echo 'profile_user';
+                                              } else {
+                                                  echo 'profile_business';
+                                              } ?>"><i
+                                                class="fas fa-user"></i> Profile</a></li>
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
-                                    <li>
-                                        <a class="dropdown-item" href="<?= BASE_URL ?>/change_password" data-bs-toggle="modal" data-bs-target="#changePassModal">
-                                            <i class="fas fa-unlock"></i> Đổi mật khẩu
-                                        </a>
-                                    </li>
+                                    <?php if (!empty($_SESSION['user']['password_hash'])): ?>
+                                        <li>
+                                            <a class="dropdown-item" href="<?= BASE_URL ?>/change_password"
+                                                data-bs-toggle="modal" data-bs-target="#changePassModal">
+                                                <i class="fas fa-unlock"></i> Đổi mật khẩu
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
                                     <li>
                                         <!-- module-load="logout" cai nay trong the a dang xuat     -->
                                         <a class="dropdown-item" href="<?= BASE_URL ?>/logout"><i
-
                                                 class="fas fa-sign-out-alt"></i> Đăng xuất</a>
                                     </li>
                                 </ul>
@@ -156,21 +158,17 @@ function doSearch() {
             <div class="collapse box-alert" id="id_alert">
 
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold active position-relative" id="pills-home-tab"
-                            data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
-                            aria-controls="pills-home" aria-selected="true">Thông báo</button>
-                    </li>
-
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
 
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
+                        aria-labelledby="pills-home-tab">
                         <?php if (!empty($headerEvents)): ?>
                             <ul class="list-unstyled" style="margin:10px 0;">
                                 <?php foreach ($headerEvents as $ev): ?>
                                     <li style="margin-bottom:8px;">
-                                        <a title="<?= htmlspecialchars($ev['title']) ?>" href="<?= BASE_URL ?>?url=event&id=<?= $ev['id'] ?>">
+                                        <a title="<?= htmlspecialchars($ev['title']) ?>"
+                                            href="<?= BASE_URL ?>?url=event&id=<?= $ev['id'] ?>">
                                             <?= htmlspecialchars($ev['title']) ?>
                                         </a>
                                         <small class="text-muted" style="margin-left:6px;">
@@ -193,17 +191,19 @@ function doSearch() {
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
-<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
+    aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
+                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
                     <div class="col-xs-12">
                         <div class="popup-area-msg">
-                            <?php if (!empty($error)) : ?>
+                            <?php if (!empty($error)): ?>
                                 <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
                             <?php endif; ?>
 
@@ -221,19 +221,23 @@ function doSearch() {
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-user"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
+                                <input name="username" id="username" type="text" class="form-control"
+                                    placeholder="Nhập tài khoản" data-listener-added_226719fc="true">
                             </div>
                         </div>
 
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Nhập mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Nhập mật khẩu">
                             </div>
                         </div>
 
                         <div class="col-12 text-right">
-                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:Page.forgot()">Quên mật khẩu?</a> | <a
+                                class="color-logo" id="boxregister" href="javascript:void(0)"
+                                onclick="showRegisterModal()">Tạo tài khoản</a>
                         </div>
                         <div class="col-12">
                             <div class="f-submit">
@@ -244,15 +248,15 @@ function doSearch() {
 
                         <div class="col-12">
                             <div class="input-social">
-                                <button type="button" class="login-with-google-btn" onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
+                                <button type="button" class="login-with-google-btn"
+                                    onclick="window.location.href='<?= BASE_URL ?>/public/google-login.php'">
                                     Đăng nhập bằng Google
                                 </button>
                             </div>
                         </div>
                         <div class="input-social" style="margin-top:10px;">
                             <button type="button" class="login-with-facebook-btn"
-                                onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'"
-                                style="
+                                onclick="window.location.href='<?= BASE_URL ?>/public/facebook-login.php'" style="
                 background-color:#1877f2;
                 color:#fff;
                 border:none;
@@ -263,9 +267,7 @@ function doSearch() {
                 cursor:pointer;
                 width:100%;
                 transition: background-color 0.3s ease;
-            "
-                                onmouseover="this.style.backgroundColor='#145dbf';"
-                                onmouseout="this.style.backgroundColor='#1877f2';">
+            " onmouseover="this.style.backgroundColor='#145dbf';" onmouseout="this.style.backgroundColor='#1877f2';">
                                 Đăng nhập bằng Facebook
                             </button>
                         </div>
@@ -277,16 +279,20 @@ function doSearch() {
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
 <!-- Modal đăng kí -->
-<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true" data-popup-id="8268" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
+    data-popup-id="8268" aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span></h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
+                </h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -306,13 +312,15 @@ function doSearch() {
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên" data-listener-added_14c2e35c="true">
+                                <input name="name" id="name" type="text" class="form-control" placeholder="Họ và tên"
+                                    data-listener-added_14c2e35c="true">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-person"></i></div>
-                                <input name="username" id="username" type="text" class="form-control" placeholder="Tên đăng nhập (Viết liền không Dấu)">
+                                <input name="username" id="username" type="text" class="form-control"
+                                    placeholder="Tên đăng nhập (Viết liền không Dấu)">
                             </div>
                         </div>
                         <div class="col-12">
@@ -324,19 +332,22 @@ function doSearch() {
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-phone"></i></div>
-                                <input name="phone" id="phone" type="text" class="form-control" placeholder="Số điện thoại">
+                                <input name="phone" id="phone" type="text" class="form-control"
+                                    placeholder="Số điện thoại">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password" name="password" type="password" class="form-control" placeholder="Mật khẩu">
+                                <input id="password" name="password" type="password" class="form-control"
+                                    placeholder="Mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="password_confirm" name="password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                                <input id="password_confirm" name="password_confirm" type="password"
+                                    class="form-control" placeholder="Xác nhận mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
@@ -359,7 +370,9 @@ function doSearch() {
                     </div>
                 </form>
             </div>
-            <div class="modal-footer"><button type="button" class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon" class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
+            <div class="modal-footer"><button type="button"
+                    class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
+                        class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
     </div>
 </div>
@@ -392,7 +405,8 @@ function doSearch() {
                     </div>
                     <div class="mb-3">
                         <label for="confirmPassword" class="form-label">Xác nhận mật khẩu mới</label>
-                        <input type="password" class="form-control" id="confirmPassword" name="confirm_new_password" required>
+                        <input type="password" class="form-control" id="confirmPassword" name="confirm_new_password"
+                            required>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
@@ -408,7 +422,7 @@ function doSearch() {
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
-    $(function() {
+    $(function () {
         // Lấy modal login
         var loginElement = document.getElementById('div_modal');
         var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
@@ -425,31 +439,31 @@ function doSearch() {
         }
 
         // Hàm mở modal đăng nhập
-        window.showLoginModal = function() {
+        window.showLoginModal = function () {
             if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
-        window.showRegisterModal = function() {
+        window.showRegisterModal = function () {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };
 
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
-        window.switchToLogin = function() {
+        window.switchToLogin = function () {
             if (registerModal) registerModal.hide();
             if (loginModal) loginModal.show();
         };
 
         // Đóng modal khi click nút close hoặc thoát
-        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function () {
             if (loginModal) loginModal.hide();
         });
 
-        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function () {
             if (registerModal) registerModal.hide();
         });
     });
@@ -475,10 +489,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VNINDEX']['change'] ?? '9.51' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
             </div>
         </div>
         <div class="item co-HNX">
@@ -489,10 +505,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['HNX']['change'] ?? '2.33' ?></index>
                 </span>
-                <span class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
+                <span
+                    class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30F1M">
@@ -502,10 +520,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VN30F1M']['change'] ?? '5.5' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
             </div>
         </div>
         <div class="item co-VN30">
@@ -515,10 +535,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['VN30']['change'] ?? '10.37' ?></index>
                 </span>
-                <span class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
+                <span
+                    class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
             </div>
         </div>
         <div class="item co-UPCOM">
@@ -528,10 +550,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['UPCOM']['change'] ?? '-0.01' ?></index>
                 </span>
-                <span class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
+                <span
+                    class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
             </div>
         </div>
 
@@ -542,10 +566,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Silver']['change'] ?? '0.68' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
             </div>
         </div>
         <div class="item co-Oil">
@@ -555,10 +581,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Oil']['change'] ?? '0.32' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
             </div>
         </div>
 
@@ -569,10 +597,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Bitcoin']['change'] ?? '745.53' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
             </div>
         </div>
 
@@ -583,10 +613,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['Ethereum']['change'] ?? '271.52' ?></index>
                 </span>
-                <span class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
+                <span
+                    class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
             </div>
         </div>
 
@@ -597,10 +629,12 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             </div>
             <div class="irow content">
                 <span>
-                    <i class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                    <i
+                        class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                     <index><?= $marketData['BNB']['change'] ?? '25.54' ?></index>
                 </span>
-                <span class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
+                <span
+                    class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
             </div>
         </div>
 
@@ -610,7 +644,8 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
 </div>
 
 <!-- Chatbot Box -->
-<div id="chatbot-box" style="display:none; position:fixed; bottom:80px; right:30px; width:350px; max-width:95vw; z-index:9999; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.15); border:1px solid #eee;">
+<div id="chatbot-box"
+    style="display:none; position:fixed; bottom:80px; right:30px; width:350px; max-width:95vw; z-index:9999; background:#fff; border-radius:12px; box-shadow:0 4px 24px rgba(0,0,0,0.15); border:1px solid #eee;">
     <main class="chat">
         <!-- Header -->
         <header class="chat-header">
@@ -625,7 +660,17 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
         </header>
 
         <!-- Nội dung chat -->
-        <section id="messages" class="messages" aria-live="polite"></section>
+        <section id="messages" class="messages" aria-live="polite">
+            <div class="msg">
+                <div class="avatar">🤖</div>
+                <div class="bubble">
+                    <div class="meta">Chatbot TMI</div>
+                    <div class="content">
+                        Chào bạn! Tôi là Chatbot TMI. Tôi có thể giúp gì cho bạn?
+                    </div>
+                </div>
+            </div>
+        </section>
 
         <!-- Footer -->
         <footer class="composer">

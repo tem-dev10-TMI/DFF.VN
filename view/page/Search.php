@@ -296,8 +296,9 @@
      alt="<?= htmlspecialchars($article['title']) ?>">
           <div class="item">
             <h3>
+
                <a href="details_blog?id=<?= $article['id'] ?>">
-                 <?= htmlspecialchars($article['title']) ?>
+                 <?= htmlspecialchars($article['title']) ?>              
               </a>
             </h3>
             <span><?= htmlspecialchars($article['summary']) ?></span><br>
@@ -524,7 +525,7 @@
             <div class="block-k bg-box-a">
                 <div class="tieu-diem t-analysis">
                     <h2>
-                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
                     </h2>
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
