@@ -4,6 +4,11 @@ a {
     vertical-align: baseline;
     cursor: pointer;
 }
+#createPostModal .modal-body {
+  max-height: 70vh; /* chiều cao tối đa chiếm 70% màn hình */
+  overflow-y: auto; /* thêm cuộn dọc */
+}
+
 
 /* Cho sidebar có cuộn khi dài quá */
 .sidebar {
