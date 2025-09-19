@@ -173,6 +173,10 @@
 
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
                         aria-labelledby="pills-home-tab">
+                        <div class="add" id="conte">
+                            <h4 class="title-thongbao">Thông Báo</h4>
+                        </div>
+ 
                         <?php if (!empty($headerEvents)): ?>
                             <ul class="list-unstyled" style="margin:10px 0;">
                                 <?php foreach ($headerEvents as $ev): ?>

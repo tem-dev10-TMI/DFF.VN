@@ -69,6 +69,7 @@
                 <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
                     aria-expanded="false" aria-controls="flush-collapseOne"></i>
             </div>
+
         <?php endif; ?>
 
         <div class="line"></div>
