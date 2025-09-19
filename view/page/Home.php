@@ -273,13 +273,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
-
-                        // LOGIC MỚI: Tạo HTML cho badge trạng thái dựa trên author_id và status
+                        // Logic để tạo HTML cho badge trạng thái
                         let statusBadgeHtml = '';
+                        // Giả sử 'currentUserId' là biến toàn cục hoặc được truyền vào, chứa ID của người dùng đang đăng nhập
                         if (currentUserId && article.author_id == currentUserId) {
                             let badgeClass = '';
                             let badgeText = '';
-                            switch (article.status) { // Sử dụng cột status gốc từ API
+                            switch (article.status) { // Sử dụng cột 'status' từ dữ liệu API
                                 case 'pending':
                                     badgeClass = 'bg-warning text-dark';
                                     badgeText = 'Chờ duyệt';
@@ -288,92 +288,58 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     badgeClass = 'bg-success';
                                     badgeText = 'Công khai';
                                     break;
+                                    // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
                             }
+
                             if (badgeText) {
                                 statusBadgeHtml = `
-                            <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
-                                <span class="badge ${badgeClass}">${badgeText}</span>
-
-                        div.innerHTML = `
-                            <div class="view-carde f-frame">
-                                <div class="provider">
-                                    <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
-                                    <div class="p-covers">
-                                        <span class="name"><a href="<?= BASE_URL ?>/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
-                                        <span class="date">${timeAgo(article.created_at)}</span>
-                                    </div>
-                                </div>
-                                <div class="title">
-                                    <a href="${articleLink}" target="${target}">${article.title || ''}</a>
-                                </div>
-                                <div class="sapo">
-                                    ${article.summary || ''}
-                                    <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
-                                </div>
-                                ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
-                                <div class="item-bottom">
-                                    <div class="bt-cover com-like" data-id="${article.id}">
-                                        <span class="value">${article.upvotes || 0}</span>
-                                    </div>
-                                    <div class="button-ar">
-                                        <a href="details_blog/${article.slug}#anc_comment">
-                                            <span>${article.comment_count || 0}</span>
-                                        </a>
-                                    </div>
-                                    <div class="button-ar">
-                                        <div class="dropdown home-item">
-                                            <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                                                <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>`;
+            <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
+                <span class="badge ${badgeClass}">${badgeText}</span>
+            </div>`;
                             }
                         }
 
-                        // Cập nhật innerHTML để chèn badge vào đúng vị trí
+                        // Cấu trúc HTML hoàn chỉnh của một bài viết
                         div.innerHTML = `
-                    <div class="view-carde f-frame">
-                        <div class="provider">
-                            <img class="logo" alt="" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
-                            <div class="p-covers">
-                                <span class="name"><a href="<?= BASE_URL ?>/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
-                                <span class="date">${timeAgo(article.created_at)}</span>
-                            </div>
-                        </div>
-                        ${statusBadgeHtml}
-                        <div class="title">
-                            <a href="${articleLink}" target="${target}">${article.title || ''}</a>
-                        </div>
-                        <div class="sapo">
-                            ${article.summary || ''}
-                            <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
-                        </div>
-                        ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
-                        <div class="item-bottom">
-                            <div class="bt-cover com-like" data-id="${article.id}">
-                                <span class="value">${article.upvotes || 0}</span>
-                            </div>
-                            <div class="button-ar">
-                                <a href="details_blog?id=${article.id}#anc_comment">
-                                    <span>${article.comment_count || 0}</span>
-                                </a>
-                            </div>
-                            <div class="button-ar">
-                                <div class="dropdown home-item">
-                                    <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item copylink" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Copy link</a></li>
-                                        <li><a class="dropdown-item sharefb" data-url="details_blog?id=${article.id}" href="javascript:void(0)">Share FB</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
+    <div class="view-carde f-frame">
+        <div class="provider">
+            <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+            <div class="p-covers">
+                <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                <span class="date">${timeAgo(article.created_at)}</span>
+            </div>
+        </div>
+
+        ${statusBadgeHtml} <!-- Badge trạng thái sẽ được chèn vào đây nếu có -->
+
+        <div class="title">
+            <a href="${articleLink}" target="${target}">${article.title || ''}</a>
+        </div>
+        <div class="sapo">
+            ${article.summary || ''}
+            <a href="${articleLink}" class="d-more" target="${target}">Xem thêm</a>
+        </div>
+        ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+        <div class="item-bottom">
+            <div class="bt-cover com-like" data-id="${article.id}">
+                <span class="value">${article.upvotes || 0}</span>
+            </div>
+            <div class="button-ar">
+                <a href="details_blog/${article.slug}#anc_comment">
+                    <span>${article.comment_count || 0}</span>
+                </a>
+            </div>
+            <div class="button-ar">
+                <div class="dropdown home-item">
+                    <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                        <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>`;
                         return div;
                     }
 
