@@ -52,8 +52,14 @@
                         </div>
 
                         <div class="title">
-                            <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
-
+                            <a href="<?php
+                            if( isset($article['link'])) {
+                                echo htmlspecialchars($article['link']);
+                            } else {
+                                echo "details_blog/". $article['slug'];
+                            }
+                            ?>">
+                                
                                 <?= htmlspecialchars($article['title']) ?>
                             </a>
                         </div>
