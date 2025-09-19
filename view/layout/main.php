@@ -447,9 +447,6 @@
     </script>
     <a module-load="boxIndex"></a>
 
-
-
-
     <div id="wrapper">
 
 
@@ -468,7 +465,6 @@
                 }
             }
         </style>
-        ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
@@ -492,7 +488,6 @@
 
             </div>
         <?php endif; ?>
-        ...
 
         <input type="hidden" id="hdd_id" value="24166" />
 
