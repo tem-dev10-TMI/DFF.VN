@@ -65,6 +65,20 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
+        <script>
+document.getElementById("openWriteBox").addEventListener("click", function() {
+    <?php if ($_SESSION['user']): ?>
+        // Nếu đã đăng nhập thì mở modal
+        var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+        myModal.show();
+    <?php else: ?>
+        // Nếu chưa đăng nhập thì chuyển sang login hoặc cảnh báo
+        alert("Bạn cần đăng nhập để viết bài.");
+        window.location.href = "login.php";
+    <?php endif; ?>
+});
+</script>
+
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
 
@@ -726,7 +740,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div class="block-k bg-box-a">
                 <div class="tieu-diem t-analysis">
                     <h2>
-                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
                     </h2>
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
