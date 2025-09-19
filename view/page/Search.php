@@ -205,181 +205,235 @@
             </li>
         </ul>
 
-        
-<style>
-    /* Tabs */
-    #pills-search-tab .nav-link {
-        border-radius: 20px;
-        padding: 8px 14px;
-        background: #f5f5f7;
-        color: #333;
-        transition: all .2s ease;
-        margin-right: 6px;
-    }
-    #pills-search-tab { margin: 10px 0 18px; }
-    #pills-search-tab .nav-link:hover { background: #ececf1; }
-    #pills-search-tab .nav-link.active {
-        background: linear-gradient(135deg, #3b82f6, #06b6d4);
-        color: #fff;
-        box-shadow: 0 6px 18px rgba(59,130,246,.35);
-    }
 
-    /* Result sections */
-    .cover-page { display: none; margin-top: 14px; }
-    .cover-page.active { display: block; }
+        <style>
+            /* Tabs */
+            #pills-search-tab .nav-link {
+                border-radius: 20px;
+                padding: 8px 14px;
+                background: #f5f5f7;
+                color: #333;
+                transition: all .2s ease;
+                margin-right: 6px;
+            }
 
-    /* Cards chung */
-    .sea-news, .sea-tag, .sea-user {
-        background: #fff;
-        border: 1px solid #eee;
-        border-radius: 10px;
-        padding: 12px;
-        margin-bottom: 16px;
-        transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .sea-news:hover, .sea-tag:hover, .sea-user:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(0,0,0,.06);
-    }
+            #pills-search-tab {
+                margin: 10px 0 18px;
+            }
 
-    /* Bài viết */
-    .sea-news { display: flex; gap: 12px; align-items: flex-start; }
-    .sea-news .s-img {
-        width: 120px;
-        height: 80px;
-        object-fit: cover;
-        border-radius: 8px;
-        margin-right: 12px;
-    }
-    .sea-news .item h3 { font-size: 16px; margin: 0 0 6px; }
-    .sea-news .item span { color: #555; font-size: 13px; }
+            #pills-search-tab .nav-link:hover {
+                background: #ececf1;
+            }
 
-    /* Tag */
-    .sea-tag h3 { font-size: 15px; margin: 0; }
-    .sea-tag a { text-decoration: none; color: #3b82f6; }
-    .sea-tag a:hover { text-decoration: underline; }
+            #pills-search-tab .nav-link.active {
+                background: linear-gradient(135deg, #3b82f6, #06b6d4);
+                color: #fff;
+                box-shadow: 0 6px 18px rgba(59, 130, 246, .35);
+            }
 
-    /* User */
-    .sea-user { display: flex; align-items: center; gap: 12px; }
-    .sea-user .user-avatar {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        object-fit: cover;
-        flex-shrink: 0;
-    }
-    .sea-user .info h3 {
-        font-size: 15px;
-        margin: 0 0 4px;
-    }
-    .sea-user .info p {
-        margin: 0;
-        font-size: 13px;
-        color: #555;
-    }
-    .sea-user .info small {
-        font-size: 12px;
-        color: #777;
-    }
-</style>
+            /* Result sections */
+            .cover-page {
+                display: none;
+                margin-top: 14px;
+            }
 
-           <div class="tab-content">
+            .cover-page.active {
+                display: block;
+            }
 
-  <!-- Tab Bài viết -->
-  <div class="tab-pane fade show active" id="pills-articles" role="tabpanel" aria-labelledby="pills-articles-tab">
-    <?php if (!empty($articles)): ?>
-      <?php foreach ($articles as $article): ?>
-        <div class="sea-news">
-          <!-- Nếu có ảnh thì dùng, còn không thì bỏ -->
-          <img src="<?= !empty($article['main_image_url']) ? htmlspecialchars($article['main_image_url']) : '/uploads/default.jpg' ?>" 
-     class="s-img" 
-     alt="<?= htmlspecialchars($article['title']) ?>">
-          <div class="item">
-            <h3>
-              <a href="details_blog?id=<?= $article['id'] ?>">
-                <?= htmlspecialchars($article['title']) ?>
-              </a>
-            </h3>
-            <span><?= htmlspecialchars($article['summary']) ?></span><br>
-            <small>
-              Tác giả: <?= htmlspecialchars($article['author_name']) ?> | 
-              <?= htmlspecialchars($article['created_at']) ?>
-            </small>
-          </div>
+            /* Cards chung */
+            .sea-news,
+            .sea-tag,
+            .sea-user {
+                background: #fff;
+                border: 1px solid #eee;
+                border-radius: 10px;
+                padding: 12px;
+                margin-bottom: 16px;
+                transition: transform .15s ease, box-shadow .15s ease;
+            }
+
+            .sea-news:hover,
+            .sea-tag:hover,
+            .sea-user:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, .06);
+            }
+
+            /* Bài viết */
+            .sea-news {
+                display: flex;
+                gap: 12px;
+                align-items: flex-start;
+            }
+
+            .sea-news .s-img {
+                width: 120px;
+                height: 80px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-right: 12px;
+            }
+
+            .sea-news .item h3 {
+                font-size: 16px;
+                margin: 0 0 6px;
+            }
+
+            .sea-news .item span {
+                color: #555;
+                font-size: 13px;
+            }
+
+            /* Tag */
+            .sea-tag h3 {
+                font-size: 15px;
+                margin: 0;
+            }
+
+            .sea-tag a {
+                text-decoration: none;
+                color: #3b82f6;
+            }
+
+            .sea-tag a:hover {
+                text-decoration: underline;
+            }
+
+            /* User */
+            .sea-user {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+
+            .sea-user .user-avatar {
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                object-fit: cover;
+                flex-shrink: 0;
+            }
+
+            .sea-user .info h3 {
+                font-size: 15px;
+                margin: 0 0 4px;
+            }
+
+            .sea-user .info p {
+                margin: 0;
+                font-size: 13px;
+                color: #555;
+            }
+
+            .sea-user .info small {
+                font-size: 12px;
+                color: #777;
+            }
+        </style>
+
+        <div class="tab-content">
+
+            <!-- Tab Bài viết -->
+            <div class="tab-pane fade show active" id="pills-articles" role="tabpanel" aria-labelledby="pills-articles-tab">
+                <?php if (!empty($articles)): ?>
+                    <?php foreach ($articles as $article): ?>
+                        <div class="sea-news">
+                            <!-- Nếu có ảnh thì dùng, còn không thì bỏ -->
+                            <img src="<?= !empty($article['main_image_url']) ? htmlspecialchars($article['main_image_url']) : '/uploads/default.jpg' ?>"
+                                class="s-img"
+                                alt="<?= htmlspecialchars($article['title']) ?>">
+                            <div class="item">
+                                <h3>
+                                    <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
+                                        <?= htmlspecialchars($article['title']) ?>
+                                    </a>
+                                </h3>
+                                <span><?= htmlspecialchars($article['summary']) ?></span><br>
+                                <small>
+                                    Tác giả: <?= htmlspecialchars($article['author_name']) ?> |
+                                    <?= htmlspecialchars($article['created_at']) ?>
+                                </small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Không tìm thấy bài viết.</p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tab Tags -->
+            <div class="tab-pane fade" id="pills-tags" role="tabpanel" aria-labelledby="pills-tags-tab">
+                <?php if (!empty($tags)): ?>
+                    <?php foreach ($tags as $tag): ?>
+                        <div class="sea-tag">
+                            <img src="<?= !empty($tag['icon_url'])
+                                            ? htmlspecialchars($tag['icon_url'])
+                                            : '/uploads/default.jpg' ?>"
+                                class="tag-avatar"
+                                alt="<?= htmlspecialchars($tag['name']) ?>">
+
+                            <h3>
+                                <a href="/tag.php?id=<?= $tag['id'] ?>">
+                                    #<?= htmlspecialchars($tag['name']) ?>
+                                </a>
+                            </h3>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Không tìm thấy tag.</p>
+                <?php endif; ?>
+            </div>
+
+            <!-- Tab Người dùng -->
+            <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
+                <?php if (!empty($users)): ?>
+                    <?php foreach ($users as $user): ?>
+                        <div class="sea-user">
+                            <!-- Avatar -->
+                            <img src="<?= !empty($user['avatar_url'])
+                                            ? htmlspecialchars($user['avatar_url'])
+                                            : '/uploads/default.jpg' ?>"
+                                class="user-avatar"
+                                alt="<?= htmlspecialchars($user['name']) ?>">
+
+                            <!-- Thông tin -->
+                            <div class="info">
+                                <h3 class="name">
+                                    <a href="#"><?= htmlspecialchars($user['name']) ?></a>
+                                </h3>
+                                <p>@<?= htmlspecialchars($user['username']) ?></p>
+                                <small>Email: <?= htmlspecialchars($user['email']) ?></small>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Không tìm thấy người dùng.</p>
+                <?php endif; ?>
+            </div>
+
+
         </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>Không tìm thấy bài viết.</p>
-    <?php endif; ?>
-  </div>
-
-  <!-- Tab Tags -->
-  <div class="tab-pane fade" id="pills-tags" role="tabpanel" aria-labelledby="pills-tags-tab">
-    <?php if (!empty($tags)): ?>
-      <?php foreach ($tags as $tag): ?>
-        <div class="sea-tag">
-            <img src="<?= !empty($tag['icon_url']) 
-            ? htmlspecialchars($tag['icon_url']) 
-            : '/uploads/default.jpg' ?>" 
-          class="tag-avatar" 
-          alt="<?= htmlspecialchars($tag['name']) ?>">
-
-          <h3>
-            <a href="/tag.php?id=<?= $tag['id'] ?>">
-              #<?= htmlspecialchars($tag['name']) ?>
-            </a>
-          </h3>
-        </div>
-      <?php endforeach; ?>
-    <?php else: ?>
-      <p>Không tìm thấy tag.</p>
-    <?php endif; ?>
-  </div>
-
-  <!-- Tab Người dùng -->
- <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
-  <?php if (!empty($users)): ?>   
-    <?php foreach ($users as $user): ?>        
-      <div class="sea-user">
-        <!-- Avatar -->
-        <img src="<?= !empty($user['avatar_url']) 
-            ? htmlspecialchars($user['avatar_url']) 
-            : '/uploads/default.jpg' ?>" 
-          class="user-avatar" 
-          alt="<?= htmlspecialchars($user['name']) ?>">
-
-        <!-- Thông tin -->
-        <div class="info">
-          <h3 class="name">
-            <a href="#"><?= htmlspecialchars($user['name']) ?></a>
-          </h3>
-          <p>@<?= htmlspecialchars($user['username']) ?></p>
-          <small>Email: <?= htmlspecialchars($user['email']) ?></small>
-        </div>
-      </div>
-    <?php endforeach; ?>
-  <?php else: ?>
-    <p>Không tìm thấy người dùng.</p>
-  <?php endif; ?>
-</div>
-
-
-</div>
 
 
 
         <script>
             (function() {
                 var tabs = document.querySelectorAll('#pills-search-tab .nav-link');
+
                 function showPane(target) {
-                    document.querySelectorAll('.cover-page').forEach(function(p){ p.classList.remove('active'); });
+                    document.querySelectorAll('.cover-page').forEach(function(p) {
+                        p.classList.remove('active');
+                    });
                     var el = document.querySelector(target);
                     if (el) el.classList.add('active');
                 }
-                tabs.forEach(function(btn){
-                    btn.addEventListener('click', function(e){
+                tabs.forEach(function(btn) {
+                    btn.addEventListener('click', function(e) {
                         e.preventDefault();
-                        tabs.forEach(function(b){ b.classList.remove('active'); });
+                        tabs.forEach(function(b) {
+                            b.classList.remove('active');
+                        });
                         this.classList.add('active');
                         var target = this.getAttribute('data-bs-target');
                         showPane(target);
@@ -397,165 +451,29 @@
 
 
     <div class="content-right">
-        <div class="block-k bs-coin">
-            <div class="search-container">
-                <div class="input-group imput-group-lg">
-                    <span class="input-group-text border-end-0"><i class="fas fa-search"></i></span>
-                    <input type="text" id="searchInput" class="form-control border-start-0"
-                        placeholder="Tra cứu crypto: BTC, ETH, SOL, BNB,...">
-                </div>
-                <ul id="coin_suggestions">
-                </ul>
-            </div>
-        </div>
-        <div class="block-k cover-chat">
-            <h5>
-                <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
-            </h5>
-            <div class="comment-cover">
-                <div class="fr-content">
-                    <ul class="list_comment col-md-12">
-                    </ul>
-                    <div class="cm-more">Xem thêm</div>
-                </div>
-                <div class="h-comment">
-                    <a href="javascript:void(0)" class="img-own">
-                        <img src="vendor/dffvn/content/img/user.svg">
-                    </a>
-                    <textarea class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
-                    <i class="fas fa-paper-plane" module-load="csend"></i>
-                </div>
-            </div>
-        </div>
-        <div class="adv block-k">
-            <div class="fb-page" data-href="https://www.facebook.com/vientmi/?locale=vi_VN" data-tabs="timeline"
-                data-width="" data-height="" data-small-header="false" data-adapt-container-width="true"
-                data-hide-cover="false" data-show-facepile="true">
-                <blockquote cite="https://www.facebook.com/vientmi/?locale=vi_VN" class="fb-xfbml-parse-ignore"><a
-                        href="../www.facebook.com/vientmi.html">TMI - Viện Phát Triển Đào Tạo và Quản Lý </a>
-                </blockquote>
-            </div>
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post4.jpg" alt="Banner" />
+            </a>
         </div>
 
-
-
-
-        <?php
-        // Giả sử $topArticles chứa 6 bài viết HOT đã lấy từ database
-        // $topArticles = ArticlesModel::getTopArticles(6);
-        ?>
-
-        <?php if (!empty($rssArticles3)): ?>
-            <div class="block-k bg-box-a">
-                <div class="tieu-diem">
-                    <h2>
-                        <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
-                    </h2>
-                    <ul>
-                        <?php foreach ($rssArticles3 as $article): ?>
-                            <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss'])
-                                                ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
-                                    <?= htmlspecialchars($article['title']) ?>
-                                </a>
-
-                                <?php if (!empty($article['main_image_url'])): ?>
-                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                        title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>"
-                                        border="0" />
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết nổi bật nào.</p>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-
-
-
-
-        <div class="block-k bg-box-a">
-            <div class="view-right-a h-lsk">
-                <div class="title">
-                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
-                </div>
-
-                <ol class="content-ol">
-                    <?php if (!empty($events)): ?>
-                        <?php foreach ($events as $index => $event): ?>
-                            <li class="card-list-item" key="<?php echo $index; ?>">
-                                <a
-                                    title="<?php echo htmlspecialchars($event['title']); ?>"
-                                    href="javascript:void(0)"
-                                    onclick="showEventModal('<?php echo htmlspecialchars(addslashes($event['title'])); ?>', '<?php echo htmlspecialchars(addslashes($event['description'] ?? '')); ?>')">
-                                    <?php echo htmlspecialchars($event['title']); ?>
-                                </a>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="card-list-item">
-                            <span>Chưa có sự kiện nào</span>
-                        </li>
-                    <?php endif; ?>
-                </ol>
-            </div>
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post3.jpg" alt="Banner" />
+            </a>
         </div>
 
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post1.jpg" alt="Banner" />
+            </a>
+        </div>
 
-
-
-
-        <?php if (!empty($rssArticles4)): ?>
-            <div class="block-k bg-box-a">
-                <div class="tieu-diem t-analysis">
-                    <h2>
-                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
-                    </h2>
-                    <ul>
-                        <?php foreach ($rssArticles4 as $article): ?>
-                            <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>"
-                                    href="<?= !empty($article['is_rss'])
-                                                ? htmlspecialchars($article['link'])
-                                                : 'details_blog?id=' . urlencode($article['id']) ?>">
-                                    <?= htmlspecialchars($article['title']) ?>
-                                </a>
-
-                                <?php if (!empty($article['main_image_url'])): ?>
-                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                        title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>"
-                                        border="0" />
-                                <?php endif; ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết phân tích nào.</p>
-                    </div>
-                </div>
-            </div>
-        <?php endif; ?>
-
-
-
-
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post2.jpg" alt="Banner" />
+            </a>
+        </div>
 
         <div class="adv">
             <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"

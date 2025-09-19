@@ -39,7 +39,7 @@
                             const keyword = document.getElementById("searchInput").value.trim();
                             if (keyword) {
                                 // chuyển trang sang search
-                                window.location.href = "index.php?url=search&q=" + encodeURIComponent(keyword);
+                                window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
                             }
                         }
                     </script>
