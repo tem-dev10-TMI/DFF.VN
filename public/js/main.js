@@ -186,9 +186,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
-const menuBtn = document.querySelector('.menu-toggle');
-const sidebar = document.querySelector('.left-sidebar');
+const searchBtn = document.querySelector(".m-search span a");
+const searchBox = document.getElementById("searchBox");
 
-menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
+searchBtn.addEventListener("click", (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  searchBox.classList.toggle("active");
+});
+
+document.addEventListener("click", (e) => {
+  if (!searchBox.contains(e.target) && e.target !== searchBtn) {
+    searchBox.classList.remove("active");
+  }
 });
