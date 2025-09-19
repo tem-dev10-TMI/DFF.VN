@@ -1,5 +1,5 @@
 a {
-    text-decoration: none;
+    text-decoratioline: none;
     color: #124889;
     vertical-align: baseline;
     cursor: pointer;
@@ -2357,7 +2357,7 @@ a.disabled {
 }
 
 .left-menu .h-info li {
-    font-size: 11px;
+    font-size: 10;
     line-height: 18px;
     padding: 0px 3px;
     color: #76c8c2;

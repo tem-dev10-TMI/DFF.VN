@@ -1,19 +1,16 @@
 <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
-            <li class="item active"><svg class="bi bi-house-fill home-icon" class="bi bi-house-fill home-icon" rpl=""
-                    fill="currentColor" height="20" icon-name="home-outline" viewBox="0 0 20 20" width="20"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <!--?lit$03863286$-->
-                    <!--?lit$03863286$-->
-                    <path
-                        d="m17.71 8.549 1.244.832v8.523a1.05 1.05 0 0 1-1.052 1.046H12.73a.707.707 0 0 1-.708-.707v-4.507c0-.76-1.142-1.474-2.026-1.474-.884 0-2.026.714-2.026 1.474v4.507a.71.71 0 0 1-.703.707H2.098a1.046 1.046 0 0 1-1.052-1.043V9.381l1.244-.835v9.158h4.44v-3.968c0-1.533 1.758-2.72 3.27-2.72s3.27 1.187 3.27 2.72v3.968h4.44V8.549Zm2.04-1.784L10.646.655a1.12 1.12 0 0 0-1.28-.008L.25 6.765l.696 1.036L10 1.721l9.054 6.08.696-1.036Z">
-                    </path>
-                    <!--?-->
-                </svg>
+           <li class="item active">
+               
+                <i id="icon-home" class="fa-solid fa-house home-icon" style="font-size:20px;"></i>
+
+              
                 <a href="home" title="Trang chủ">Trang chủ</a>
             </li>
+
             <li class="item" data-ref="d">
                 <i class="bi bi-book-half idiscuss"></i>
                 <a href="news" title="Trang chủ">Mới nhất</a>
@@ -32,44 +29,44 @@
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
         <?php if (!empty($topTopics)): ?>
-        <ul class="nav nav-second-level top-item">
-            <?php foreach ($topTopics as $topic): ?>
-            <li>
-                <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
-                    alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
-                <a title="<?= htmlspecialchars($topic['name']) ?>"
-                    href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
-                    <?= htmlspecialchars($topic['name']) ?>
-                </a>
-                <i class="fas fa-plus icon-right"></i>
-            </li>
-            <?php endforeach; ?>
-        </ul>
+            <ul class="nav nav-second-level top-item">
+                <?php foreach ($topTopics as $topic): ?>
+                    <li>
+                        <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
+                            alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
+                        <a title="<?= htmlspecialchars($topic['name']) ?>"
+                            href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
+                            <?= htmlspecialchars($topic['name']) ?>
+                        </a>
+                        <i class="fas fa-plus icon-right"></i>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
         <?php else: ?>
-        <p>Chưa có chủ đề nào</p>
+            <p>Chưa có chủ đề nào</p>
         <?php endif; ?>
 
         <?php if (!empty($moreTopics)): ?>
-        <div id="flush-collapseOne" class="accordion-collapse collapse">
-            <ul class="nav nav-second-level top-item">
-                <?php foreach ($moreTopics as $topic): ?>
-                <li>
-                    <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
-                        title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
-                        border="0" />
-                    <a title="<?= htmlspecialchars($topic['name']) ?>"
-                        href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
-                        <?= htmlspecialchars($topic['name']) ?>
-                    </a>
-                    <i class="fas fa-plus icon-right"></i>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-        <div class="to-expend">
-            <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                aria-expanded="false" aria-controls="flush-collapseOne"></i>
-        </div>
+            <div id="flush-collapseOne" class="accordion-collapse collapse">
+                <ul class="nav nav-second-level top-item">
+                    <?php foreach ($moreTopics as $topic): ?>
+                        <li>
+                            <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
+                                title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
+                                border="0" />
+                            <a title="<?= htmlspecialchars($topic['name']) ?>"
+                                href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
+                                <?= htmlspecialchars($topic['name']) ?>
+                            </a>
+                            <i class="fas fa-plus icon-right"></i>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="to-expend">
+                <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                    aria-expanded="false" aria-controls="flush-collapseOne"></i>
+            </div>
 
         <?php endif; ?>
 
@@ -116,4 +113,3 @@
     </div>
 
 </section>
-<script src="public/js/mau.js"></script>
