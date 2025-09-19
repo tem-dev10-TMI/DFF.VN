@@ -108,11 +108,11 @@ class RssModel
 
         return [
             'id' => md5($link),
-            'title' => html_entity_decode((string)($item->title ?? ''), ENT_QUOTES, 'UTF-8'), // Sửa lại thành $item
+            'title' => html_entity_decode((string)($item->title ?? ''), ENT_QUOTES, 'UTF-8'),
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
             'author_name' => $author_name,
-            'author_id' => 66,
+            'author_id' => self::getAuthorIdByFeed($feedUrl), // <-- SỬA Ở ĐÂY
             'avatar_url' => self::getAvatarByFeed($feedUrl),
             'created_at' => $created_at,
             'upvotes' => 0,
@@ -138,11 +138,11 @@ class RssModel
 
         return [
             'id' => md5($link),
-            'title' => html_entity_decode((string)($item->title ?? ''), ENT_QUOTES, 'UTF-8'), // Sửa lại thành $item
+            'title' => html_entity_decode((string)($entry->title ?? ''), ENT_QUOTES, 'UTF-8'),
             'summary' => self::makeSummary($description, 220),
             'main_image_url' => $image,
             'author_name' => $author_name,
-            'author_id' => 66,
+            'author_id' => self::getAuthorIdByFeed($feedUrl), // <-- SỬA Ở ĐÂY
             'avatar_url' => self::getAvatarByFeed($feedUrl),
             'created_at' => $created_at,
             'upvotes' => 0,
@@ -162,7 +162,7 @@ class RssModel
         if (strpos($feedUrl, 'cafef.vn') !== false) return 'public/img/avatar/cafef.png';
         if (strpos($feedUrl, 'vietnamnet.vn') !== false) return 'public/img/avatar/vietnamnet.png';
         if (strpos($feedUrl, 'dantri.com.vn') !== false) return 'public/img/avatar/dantri.png';
-        if (strpos($feedUrl, 'zingnews.vn') !== false) return 'public/img/avatar/zingnews.png';
+        if (strpos($feedUrl, 'znews.vn') !== false) return 'public/img/avatar/zingnews.png'; // zingnews.vn cũ
         
         return 'public/img/avatar/default.png';
     }
@@ -177,8 +177,23 @@ class RssModel
         if (strpos($feedUrl, 'cafef.vn') !== false) return 'CafeF';
         if (strpos($feedUrl, 'vietnamnet.vn') !== false) return 'Vietnamnet';
         if (strpos($feedUrl, 'dantri.com.vn') !== false) return 'Dân Trí';
-        if (strpos($feedUrl, 'zingnews.vn') !== false) return 'Zing News';
+        if (strpos($feedUrl, 'znews.vn') !== false) return 'Zing News'; // zingnews.vn cũ
         return 'RSS';
+    }
+
+    // HÀM MỚI: Lấy author ID theo feed
+    private static function getAuthorIdByFeed($feedUrl): int
+    {
+        if (strpos($feedUrl, 'baochinhphu') !== false) return 66;
+        if (strpos($feedUrl, 'thanhnien') !== false) return 67;
+        if (strpos($feedUrl, 'vnexpress.net') !== false) return 94;
+        if (strpos($feedUrl, 'tuoitre.vn') !== false) return 92;
+        if (strpos($feedUrl, 'cafef.vn') !== false) return 70;
+        if (strpos($feedUrl, 'vietnamnet.vn') !== false) return 93;
+        if (strpos($feedUrl, 'dantri.com.vn') !== false) return 72;
+        if (strpos($feedUrl, 'znews.vn') !== false) return 73;
+        
+        return 99; // ID mặc định cho các nguồn RSS khác
     }
 
     // Fetch URL bằng cURL/fallback

@@ -4,7 +4,7 @@
 
     <?php
     // view/page/viewProfilebusiness.php (đầu file)
-    
+
     if (!isset($businessman) || !is_array($businessman)) {
         // Nếu có id trên URL thì cố load dữ liệu (quick-fix)
         if (isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -21,7 +21,7 @@
             $businessman = [
                 'name' => 'Chưa có tên',
                 'user_id' => 0,
-                'avatar_url' => '/Upload/img_static/profile_default.png',
+                'avatar_url' => $user['avatar_url'],
                 'birth_year' => null,
                 'nationality' => null,
                 'education' => null,
@@ -42,8 +42,9 @@
         <div class="block-k box-company-label">
             <div class="block-t p-t-20" bis_skin_checked="1">
                 <div class="block-t-top" bis_skin_checked="1">
-                    <img alt="image" class="profile-img"
-                        src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
+                <img alt="image" class="profile-img"
+     src="<?= !empty($user['avatar_url']) ? $user['avatar_url'] : '/Upload/img_static/profile_default.png' ?>">
+
                 </div>
                 <div class="h-topic">
                     <ul>
@@ -66,75 +67,77 @@
             </div>
         </div>
 
-<div class="box-history" bis_skin_checked="1">
-    <div class="persion-mmn" bis_skin_checked="1">
-        <ul>
+        <div class="box-history" bis_skin_checked="1">
+            <div class="persion-mmn" bis_skin_checked="1">
+                <ul>
 
-            <li>
-                <span>Họ và tên</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['name'] ?? 'Chưa có tên') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Họ và tên</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['name'] ?? 'Chưa có tên') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Ngày sinh</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['birth_year'] ?? 'Chưa có ngày sinh') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Ngày sinh</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['birth_year'] ?? 'Chưa có ngày sinh') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Quốc tịch</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['nationality'] ?? 'Chưa có quốc tịch') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Quốc tịch</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['nationality'] ?? 'Chưa có quốc tịch') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Trình độ</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['education'] ?? 'Chưa có trình độ') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Trình độ</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['education'] ?? 'Chưa có trình độ') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Chức vụ</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['current_position'] ?? 'Chưa có chức vụ') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Chức vụ</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['current_position'] ?? 'Chưa có chức vụ') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Vị trí khác</span>
-                <div bis_skin_checked="1">
-                    <pre><?= e($businessman['user_description'] ?? 'Chưa có mô tả') ?></pre>
-                </div>
-            </li>
+                    <li>
+                        <span>Vị trí khác</span>
+                        <div bis_skin_checked="1">
+                            <pre><?= e($businessman['user_description'] ?? 'Chưa có mô tả') ?></pre>
+                        </div>
+                    </li>
 
-            <li>
-                <span>Quá trình công tác</span>
-                <ul class="ul-history">
-                    <?php if (!empty($careers)): ?>
-                        <?php foreach ($careers as $career): ?>
-                            <li>
-                                <div class="cv-history" bis_skin_checked="1"></div>
-                                <h3><?= e($career['start_year'] ?? '') ?> - <?= e($career['end_year'] ?? 'nay') ?></h3>
-                                <div class="item" bis_skin_checked="1">
-                                    <pre><?= e($career['position'] ?? '') ?>, <?= e($career['company'] ?? '') ?></pre>
-                                    <pre><?= e($career['description'] ?? '') ?></pre>
-                                </div>
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li><pre>Chưa có quá trình công tác</pre></li>
-                    <?php endif; ?>
+                    <li>
+                        <span>Quá trình công tác</span>
+                        <ul class="ul-history">
+                            <?php if (!empty($careers)): ?>
+                                <?php foreach ($careers as $career): ?>
+                                    <li>
+                                        <div class="cv-history" bis_skin_checked="1"></div>
+                                        <h3><?= e($career['start_year'] ?? '') ?> - <?= e($career['end_year'] ?? 'nay') ?></h3>
+                                        <div class="item" bis_skin_checked="1">
+                                            <pre><?= e($career['position'] ?? '') ?>, <?= e($career['company'] ?? '') ?></pre>
+                                            <pre><?= e($career['description'] ?? '') ?></pre>
+                                        </div>
+                                    </li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li>
+                                    <pre>Chưa có quá trình công tác</pre>
+                                </li>
+                            <?php endif; ?>
+                        </ul>
+                    </li>
+
                 </ul>
-            </li>
-
-        </ul>
-    </div>
-</div>
+            </div>
+        </div>
 
 
         <div class="block-k" bis_skin_checked="1">
@@ -512,9 +515,9 @@
 
 
         <script>
-            $(function () {
+            $(function() {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function () {
+                $(window).scroll(function() {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -529,7 +532,7 @@
             });
         </script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,

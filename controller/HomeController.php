@@ -44,12 +44,14 @@ class homeController
             "https://cafef.vn/trang-chu.rss",
             "https://vietnamnet.vn/rss/kinh-doanh.rss",
             "https://dantri.com.vn/kinh-doanh.rss",
-            "https://znews.vn/kinh-doanh-tai-chinh.rss"
+            "https://znews.vn/kinh-doanh-tai-chinh.rss",
+            "https://tuoitre.vn/rss/the-gioi.rss",
+            "https://bnews.vn/rss/thi-truong-4.rss"
         ];
         
         // 2. Lấy bài viết từ RSS (1 lần gọi duy nhất) và từ Database
-        $rssArticles = RssModel::getMultipleFeeds($feedUrls, 50, 15);
-        $dbArticles = ArticlesModel::getArticlesPaged(0, 50); // Lấy 1 lượng lớn từ DB để trộn
+        $rssArticles = RssModel::getMultipleFeeds($feedUrls, 25, 15);
+        $dbArticles = ArticlesModel::getArticlesPaged(0, 15); // Lấy 1 lượng lớn từ DB để trộn
 
         // 3. Trộn tất cả lại
         $allArticles = array_merge($rssArticles, $dbArticles);

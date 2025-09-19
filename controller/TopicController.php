@@ -54,10 +54,10 @@ class TopicController
             $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'thi-truong') {
-            $feedUrl1 = "https://cafef.vn/trang-chu.rss";
+            $feedUrl1 = "https://bnews.vn/rss/thi-truong-4.rss";
             $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
 
-            $feedUrl2 = "https://znews.vn/kinh-doanh-tai-chinh.rss";
+            $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
             $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'quoc-te') {
