@@ -3,7 +3,7 @@
 // Fallbacks
 $authorName = htmlspecialchars($article['author_name'] ?? 'Tác giả');
 $authorId = isset($article['author_id']) ? intval($article['author_id']) : 0;
-$authorAvatar = $article['author_avatar_url'] ?? '/vendor/dffvn/content/img/user.svg';
+$authorAvatar = $article['avatar_url'] ?? '/vendor/dffvn/content/img/user.svg';
 if (!$authorAvatar || trim($authorAvatar) === '') {
     $authorAvatar = 'https://i.pravatar.cc/100?u=' . urlencode($authorName);
 }
