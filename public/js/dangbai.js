@@ -541,6 +541,10 @@ function showNotification(message, type = 'info') {
 // Đảm bảo modal scroll được khi mở và auto-load bài viết
 document.addEventListener('DOMContentLoaded', function () {
   // Auto-load bài viết khi trang load
+  const profileDataElement = document.getElementById('profileData');
+  if(!profileDataElement){
+    return;
+  }
   loadPosts();
 
   // Modal scroll setup

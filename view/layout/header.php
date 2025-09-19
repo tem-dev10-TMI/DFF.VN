@@ -68,8 +68,8 @@
                     <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
                                 title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
-                                <?php if (isset($_SESSION['user_id'])): ?>
-                                    <ul class="dropdown-menu hide">
+                            <?php if (isset($_SESSION['user_id'])): ?>
+                                <ul class="dropdown-menu hide">
                                     <li>
                                         <a style="position:relative" class="dropdown-item btquick" href="javascript:void(0)"
                                             data-bs-toggle="modal" data-bs-target="#createPostModal">
@@ -79,7 +79,7 @@
                                         </a>
                                     </li>
                                 </ul>
-                                <?php endif; ?>
+                            <?php endif; ?>
                         </span>
                     </li>
                     <li class="n-chatbot">
@@ -131,10 +131,10 @@
 
                                     <li><a class="dropdown-item"
                                             href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
-                                                  echo 'profile_user';
-                                              } else {
-                                                  echo 'profile_business';
-                                              } ?>"><i
+                                                                        echo 'profile_user';
+                                                                    } else {
+                                                                        echo 'profile_business';
+                                                                    } ?>"><i
                                                 class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
@@ -199,11 +199,82 @@
     </div>
 </div>
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
+<!-- HTML !-->
+<style>
+    /* CSS */
+    .button-85 {
+        padding: 0.6em 2em;
+        border: none;
+        outline: none;
+        color: rgb(255, 255, 255);
+        background: #111;
+        cursor: pointer;
+        position: relative;
+        z-index: 0;
+        border-radius: 10px;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+    }
 
+    .button-85:before {
+        content: "";
+        background: linear-gradient(45deg,
+                #ff0000,
+                #ff7300,
+                #fffb00,
+                #48ff00,
+                #00ffd5,
+                #002bff,
+                #7a00ff,
+                #ff00c8,
+                #ff0000);
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        background-size: 400%;
+        z-index: -1;
+        filter: blur(5px);
+        -webkit-filter: blur(5px);
+        width: calc(100% + 4px);
+        height: calc(100% + 4px);
+        animation: glowing-button-85 20s linear infinite;
+        transition: opacity 0.3s ease-in-out;
+        border-radius: 10px;
+    }
+
+    @keyframes glowing-button-85 {
+        0% {
+            background-position: 0 0;
+        }
+
+        50% {
+            background-position: 400% 0;
+        }
+
+        100% {
+            background-position: 0 0;
+        }
+    }
+
+    .button-85:after {
+        z-index: -1;
+        content: "";
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #222;
+        left: 0;
+        top: 0;
+        border-radius: 10px;
+    }
+</style>
 <!-- Modal đăng nhập -->
 <div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
+
     <div class="modal-dialog modal-lg" style="width:450px">
+        <div class="button-85">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
@@ -293,7 +364,9 @@
                     class="btn bg-purple cmd-cancel btn-flat btn-footer btn-sm"><span data-button="icon"
                         class="fas fa-sign-out-alt"></span> <span data-button="text">Thoát</span></button></div>
         </div>
+        </div>
     </div>
+
 </div>
 <!-- Modal đăng kí -->
 <div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
@@ -514,7 +587,7 @@
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
-    $(function () {
+    $(function() {
         // Lấy modal login
         var loginElement = document.getElementById('div_modal');
         var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
@@ -535,14 +608,14 @@
         }
 
         // Hàm mở modal đăng nhập
-        window.showLoginModal = function () {
+        window.showLoginModal = function() {
             if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
-        window.showRegisterModal = function () {
+        window.showRegisterModal = function() {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
@@ -557,17 +630,17 @@
         };
 
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
-        window.switchToLogin = function () {
+        window.switchToLogin = function() {
             if (registerModal) registerModal.hide();
             if (loginModal) loginModal.show();
         };
 
         // Đóng modal khi click nút close hoặc thoát
-        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function () {
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
             if (loginModal) loginModal.hide();
         });
 
-        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function () {
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
             if (registerModal) registerModal.hide();
         });
 
