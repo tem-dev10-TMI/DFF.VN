@@ -53,6 +53,13 @@ a {
     margin-top: -25px;
 }
 
+/*Mobile*/
+@media (max-width: 480px) {
+    .modal-dialog .modal-content {
+        margin-top: 10px;
+    }
+}
+
 .adv-banner {
     margin-bottom: 20px;
     text-align: center;
