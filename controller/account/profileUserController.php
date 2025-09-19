@@ -5,12 +5,15 @@ class profileUserController
     public static function index()
     {
         if (!isset($_SESSION['user'])) {
-            header("Location: " . BASE_URL . "/login");
+            header("Location: " . BASE_URL . "");
             exit;
         }
         require_once __DIR__ . '/../../model/user/userModel.php';
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
+        require_once __DIR__ . '/../../model/article/topicsmodel.php';
+
+        $modelTopic = new TopicsModel();
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -19,6 +22,8 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
+
+        $topics = $modelTopic->getAllTopics();
 
         /*         $articles = $modelArticle->getArticleById($userId);
  */
@@ -368,7 +373,7 @@ class profileUserController
             $description = htmlspecialchars($_POST['description'] ?? '');
 
             $display_name = htmlspecialchars($_POST['display_name'] ?? '');
-            $birth_year = filter_var($_POST['birth_year'] ?? null, FILTER_VALIDATE_INT);
+            $birth_year = isset($_POST['birth_year']) && is_numeric($_POST['birth_year']) ? (int)$_POST['birth_year'] : null;
             $workplace = htmlspecialchars($_POST['workplace'] ?? '');
             $studied_at = htmlspecialchars($_POST['studied_at'] ?? '');
             $live_at = htmlspecialchars($_POST['live_at'] ?? '');
@@ -597,6 +602,95 @@ class profileUserController
                 'success' => false,
                 'message' => 'Lỗi tải bài viết: ' . $e->getMessage()
             ]);
+        }
+    }
+    public static function deleteArticle()
+    {
+        header('Content-Type: application/json');
+
+        // Giả sử các file này đã được autoload hoặc require ở một nơi khác
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/mediamodel.php';
+        require_once __DIR__ . '/../../model/connect.php';
+
+        // 1. Chỉ chấp nhận phương thức POST
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo json_encode(['success' => false, 'message' => 'Phương thức không hợp lệ.']);
+            exit;
+        }
+
+        // 2. Kiểm tra đăng nhập
+        if (!isset($_SESSION['user']['id'])) {
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để thực hiện hành động này.']);
+            exit;
+        }
+
+        // 3. Lấy và xác thực dữ liệu đầu vào
+        $postId = $_POST['post_id'] ?? null;
+        if (empty($postId) || !is_numeric($postId)) {
+            echo json_encode(['success' => false, 'message' => 'ID bài viết không hợp lệ.']);
+            exit;
+        }
+
+        $currentUserId = $_SESSION['user']['id'];
+        $db = new connect();
+
+        try {
+            // --- BƯỚC 1: LẤY THÔNG TIN BÀI VIẾT VÀ KIỂM TRA QUYỀN SỞ HỮU ---
+            // Lấy đường dẫn ảnh và video trước khi xóa record
+            $sql_select = "SELECT main_image_url FROM articles WHERE id = :post_id AND author_id = :author_id";
+            $stmt_select = $db->db->prepare($sql_select);
+            $stmt_select->bindValue(':post_id', (int)$postId, PDO::PARAM_INT);
+            $stmt_select->bindValue(':author_id', (int)$currentUserId, PDO::PARAM_INT);
+            $stmt_select->execute();
+            $article = $stmt_select->fetch(PDO::FETCH_ASSOC);
+            
+            if (!$article) {
+                // Nếu không tìm thấy bài viết hoặc người dùng không phải tác giả
+                echo json_encode(['success' => false, 'message' => 'Không tìm thấy bài viết hoặc bạn không có quyền xóa.']);
+                exit;
+            }
+
+            // Lấy đường dẫn video từ bảng media
+            $videos = MediaModel::getMediaByArticle((int)$postId);
+            $videoPath = !empty($videos) ? $videos[0]['file_path'] : null;
+            $mainImagePath = $article['main_image_url'];
+
+            // --- BƯỚC 2: XÓA BÀI VIẾT KHỎI CSDL ---
+            // Câu lệnh DELETE vẫn phải kiểm tra author_id một lần nữa để đảm bảo an toàn tuyệt đối
+            $sql_delete = "DELETE FROM articles WHERE id = :post_id AND author_id = :author_id";
+            $stmt_delete = $db->db->prepare($sql_delete);
+            $stmt_delete->bindValue(':post_id', (int)$postId, PDO::PARAM_INT);
+            $stmt_delete->bindValue(':author_id', (int)$currentUserId, PDO::PARAM_INT);
+            $stmt_delete->execute();
+
+            // 4. Kiểm tra xem có dòng nào thực sự bị xóa không
+            if ($stmt_delete->rowCount() > 0) {
+                // --- BƯỚC 3: XÓA CÁC FILE VẬT LÝ ---
+                // Xóa ảnh chính
+                if (!empty($mainImagePath) && file_exists(__DIR__ . '/../../' . $mainImagePath)) {
+                    unlink(__DIR__ . '/../../' . $mainImagePath);
+                }
+
+                // Xóa video
+                if (!empty($videoPath) && file_exists(__DIR__ . '/../../' . $videoPath)) {
+                    unlink(__DIR__ . '/../../' . $videoPath);
+                }
+                
+                // (Tùy chọn) Xóa các media liên quan trong bảng media
+                //MediaModel::deleteMediaForArticle((int)$postId);
+
+                echo json_encode(['success' => true, 'message' => 'Đã xóa bài viết thành công.']);
+            } else {
+                // Trường hợp này hiếm khi xảy ra nếu câu SELECT ở trên đã chạy thành công,
+                // nhưng vẫn cần để phòng ngừa race condition.
+                echo json_encode(['success' => false, 'message' => 'Không thể xóa bài viết. Vui lòng thử lại.']);
+            }
+
+        } catch (PDOException $e) {
+            // Ghi lỗi vào log thay vì hiển thị cho người dùng
+            error_log("Delete article error: " . $e->getMessage());
+            echo json_encode(['success' => false, 'message' => 'Lỗi cơ sở dữ liệu. Vui lòng thử lại sau.']);
         }
     }
 }

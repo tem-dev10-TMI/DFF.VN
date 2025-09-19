@@ -34,12 +34,26 @@ class TopicController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
-    public function details_topic()
+    public function details_topic($slug)
     {
         $topicModel = new TopicModel();
-        $id = $_GET['id'] ?? 0;
-        $topic = $topicModel->getById($id);
-        $articles = articlesmodel::getArticlesByTopicId($id, 10);
+        $topic = $topicModel->getBySlug($slug);
+        require_once __DIR__ . '/../model/rss/RssModel.php';
+        if ($slug == 'tai-chinh') {
+            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            // RSS Thanh Niên
+            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        }else{
+            $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
+        }
+        //var_dump($articles);
+
+        // Gộp RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
+        
         if (!$topic) {
             echo "Chủ đề không tồn tại!";
             return;

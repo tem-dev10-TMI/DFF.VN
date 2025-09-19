@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded', function () {
+    // Password visibility toggle
+    const passwordInputs = document.querySelectorAll('.password-input');
+    const toggleButtons = document.querySelectorAll('.password-toggle');
+
+    toggleButtons.forEach((button, index) => {
+        button.addEventListener('click', function () {
+            const type = passwordInputs[index].getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInputs[index].setAttribute('type', type);
+            this.querySelector('i').classList.toggle('fa-eye');
+            this.querySelector('i').classList.toggle('fa-eye-slash');
+        });
+    });
+
     // Lấy các form: ưu tiên .auth-form, nếu không có thì fallback #login #register
     let formsArr = Array.from(document.querySelectorAll('.auth-form'));
     if (formsArr.length === 0) {

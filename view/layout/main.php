@@ -10,6 +10,7 @@
     <meta http-equiv="content-language" content="vi" />
     <meta http-equiv="REFRESH" content="1800" />
     <title>Mạng xã hội Kinh tế - MXH Trung Tâm </title>
+    <base href="http://localhost/DFF.VN/">
     <meta name="description"
         content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
     <meta name="keywords"
@@ -37,7 +38,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=1.5" />
+    <link rel="stylesheet" href="public/css/style.css?v=2.1" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -241,7 +242,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
-                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"><i class="far fa-times-circle"></i></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
             </div>
@@ -377,12 +378,12 @@
     <div id="mobile-profile-template" class="d-none">
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin') {
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
                                                                             echo 'profile_user';
                                                                         } else {
-                                                                            echo 'profile_business';
+                                                                            //echo 'profile_business';
                                                                         } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
-                <li class="list-group-item"><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-plus"></i> Viết bài</a></li>
+                <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
             <?php else: ?>
@@ -446,9 +447,6 @@
     </script>
     <a module-load="boxIndex"></a>
 
-
-
-
     <div id="wrapper">
 
 
@@ -467,7 +465,6 @@
                 }
             }
         </style>
-        ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
@@ -491,7 +488,6 @@
 
             </div>
         <?php endif; ?>
-        ...
 
         <input type="hidden" id="hdd_id" value="24166" />
 
@@ -569,7 +565,7 @@
 
         <script src="public/js/main1c07.js"></script>
         <script src="public/js/articleade1.js"></script>
-        <script src="/public/js/loadMore.js"></script>
+        <script src="public/js/loadMore.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>
@@ -595,7 +591,8 @@
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.0"></script>
+    <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
 </body>
 
 <!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:53 GMT -->

@@ -4,18 +4,45 @@ a {
     vertical-align: baseline;
     cursor: pointer;
 }
+#createPostModal .modal-body {
+  max-height: 70vh; /* chiều cao tối đa chiếm 70% màn hình */
+  overflow-y: auto; /* thêm cuộn dọc */
+}
+
+
+.adv-banner {
+    margin-bottom: 20px;
+    text-align: center;
+
+}
+
+.adv-banner img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    transition: all 0.3s ease 0s;
+}
+
+.adv-banner img:hover {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 6px;
+}
+
 /* Cho sidebar có cuộn khi dài quá */
 .sidebar {
-  max-height: 100vh; /* Không vượt quá chiều cao màn hình */
-  overflow-y: auto;  /* Thêm cuộn dọc */
-  padding-bottom: 80px; /* Chừa chỗ để không che nút cuối */
+    max-height: 100vh;
+    /* Không vượt quá chiều cao màn hình */
+    overflow-y: auto;
+    /* Thêm cuộn dọc */
+    padding-bottom: 80px;
+    /* Chừa chỗ để không che nút cuối */
 }
 
 /* Nếu trên mobile thì thêm khoảng cách nhiều hơn */
 @media (max-width: 767px) {
-  .sidebar {
-    padding-bottom: 180px; /* chừa khoảng trống cho mobile */
-  }
+    .sidebar {
+        padding-bottom: 180px;
+        /* chừa khoảng trống cho mobile */
+    }
 }
 
 
@@ -810,7 +837,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color:  #40a92b ;
+    background-color: #40a92b;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -840,11 +867,12 @@ a:hover {
 .header-logo {
     width: fit-content;
 }
+
 /*ẢNH LOGO*/
 .header-logo img {
-    width: 60px;            
-    height: 52px;              
-    border-radius: 10px;       
+    width: 60px;
+    height: 52px;
+    border-radius: 10px;
     background: #fff;
     padding: 3px;
     border: 2px solid #4CAF50;
@@ -887,6 +915,7 @@ a:hover {
 
 .header-logo input {
     width: 340px !important;
+
     border-radius: 8px !important;
 }
 
@@ -918,7 +947,7 @@ a:hover {
 }
 
 .company-filter .box-search label {
-    font-size: 14px;
+    font-size: 10px;
     padding: 8px 8px 0;
     white-space: nowrap;
     color: #100f0f;
@@ -1317,7 +1346,7 @@ textarea.form-control {
 }
 
 .header-logo .box-search input {
-    font-size: 14px;
+    font-size: 10px;
     border-radius: 0 10px 10px 0 !important;
     border-right: 1px solid #dee2e6 !important;
 }
@@ -2005,7 +2034,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color:#40b029;
+    background-color: #40b029;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -2313,6 +2342,7 @@ a.disabled {
     width: 100%;
     color: #504d4d;
 }
+
 /*MENU BÊN TRÁI*/
 
 
@@ -2320,10 +2350,11 @@ a.disabled {
 .left-menu ul li.active {
     background-color: #ebebeb;
 }
+
 .left-menu ul li.add a {
     color: #124889;
     font-weight: bold;
-}     
+}
 
 .left-menu .h-info li {
     font-size: 11px;
@@ -2352,69 +2383,77 @@ a.disabled {
     border-top: 1px solid rgb(235, 235, 235);
     margin: 8px 0;
 }
+
 .left-menu {
-  width: 240px;
-  background: #F5F7F4;
-  padding: 16px 0;
-  border-right: 1px solid #E0E3E0;
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
+    width: 240px;
+    background: #F5F7F4;
+    padding: 16px 0;
+    border-right: 1px solid #E0E3E0;
+    font-family: 'Inter', sans-serif;
+    font-size: 15px;
 }
 
 .left-menu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 .left-menu ul li {
- width: 100%;
- padding: 6px 6px 6px 20px;
- border-radius: 12px;
+    width: 100%;
+    padding: 6px 6px 6px 20px;
+    border-radius: 12px;
 
 }
 
 .left-menu ul li a {
-  color: inherit;
-  text-decoration: none;
-  flex: 1;
-  font-size: 14px;         
+    color: inherit;
+    text-decoration: none;
+    flex: 1;
+    font-size: 14px;
 
 }
 
 .left-menu ul li.active {
-  background: #40a92b;   
-  color: #fff;
+    background: #40a92b;
+    color: #fff;
 }
 
 .left-menu ul li.active a {
-  color: #fff;
-  font-weight: 600;
+    color: #fff;
+    font-weight: 600;
 }
 
 .left-menu ul li:hover {
-  background: rgba(75, 111, 68, 0.1);
+    background: rgba(75, 111, 68, 0.1);
 }
+
 /**/
-.left-menu ul li img {  
-  width: 28px;             
-  height: 28px;
-  border-radius: 50%;      
-  object-fit: cover;        
-  flex-shrink: 0;  
-}  
-  .left-menu ul li .icon-right {
-  margin-left: auto;     
-  font-size: 14px;       
-  color: #888;        
-  display: flex;
-  align-items: center; 
-  justify-content: center;
-  min-width: 20px;    
-   
-}       
+.left-menu ul li img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.left-menu ul li .icon-right {
+    margin-left: auto;
+    /* đẩy icon sang phải */
+    font-size: 14px;
+    /* size vừa phải */
+    color: #888;
+    /* màu nhạt nhẹ */
+    display: flex;
+    align-items: center;
+    /* căn giữa dọc */
+    justify-content: center;
+    min-width: 20px;
+
+}
 
 /*END*/
+
 .line {
     height: 1px;
     border-top: 1px solid rgb(235, 235, 235);
@@ -2523,7 +2562,7 @@ a.disabled {
 }
 
 .left-menu .i-topic:before {
-    padding-left: 5px;
+    padding-left: 4px;
 }
 
 .left-menu .fa-plus:before {
@@ -4354,8 +4393,8 @@ div[data-notify="container"] .close {
 .m-top-info {
     display: none;
     padding: 3px 8px 3px 8px;
-    font-size: 13px;
-    color: #7f7e7e;
+    font-size: 16px;
+    color: #021fdc;
     position: fixed;
     top: 0;
     width: 100%;
@@ -4404,7 +4443,7 @@ div[data-notify="container"] .close {
 
 .box-alert .nav .nav-item button.active::after {
     content: "";
-    border-bottom: 3px solid #124889 !important;
+    border-bottom: 3px solid #f6f6f6 !important;
     width: 100%;
     position: absolute;
     left: 0;
@@ -4420,7 +4459,7 @@ div[data-notify="container"] .close {
 }
 
 .box-alert .tab-content .label {
-    color: #9F9F9F;
+    color: #2a14b8;
     font-size: 12px;
     float: left;
     margin-bottom: 6px;
@@ -5493,14 +5532,14 @@ span.mncolor13,
 .box-company ul li.alias,
 .h-topic .alias {
     font-size: 12px;
-    color: #605e5e;
+    color: #e00e0e;
     padding: 6px;
 }
 
 .box-company-label h5 .c-note,
 .box-trends h5 .c-note {
     font-size: 12px;
-    color: #605e5e;
+    color: #db0c0c;
     float: right;
     padding-top: 6px;
 }
@@ -7094,62 +7133,51 @@ ul.timeline .left-arrow:after {
         width: calc(100% - 250px);
         padding: 30px 0 0 50px;
     }
-/* Desktop giữ nguyên */
-.left-sidebar {
-  position: relative;
-}
-}
-/* Desktop giữ nguyên */
-.left-sidebar {
-  position: relative;
+
+    /* Desktop giữ nguyên */
+    .left-sidebar {
+        position: relative;
+    }
 }
 
-/* Mobile menu xử lý lại */
 @media (max-width: 768px) {
-  .left-sidebar {
-    position: fixed !important;
-    top: 60px;        /* chiều cao header */
-    left: -100%;      /* ẩn sang trái */
-    width: 80%;       /* chiếm 80% màn hình */
-    height: 100vh;    /* chiếm toàn bộ chiều cao */
-    background: #fff;
-    overflow-y: auto;
-    transition: left 0.3s ease;
-    z-index: 2000;
-  }
-
-  /* Khi mở menu (sau khi click 3 gạch) */
-  .left-sidebar.open {
-    left: 0;
-  }
-}
-
-@media (max-width: 991.98px) {
-    .m-menu-i {
+    .left-sidebar {
         position: fixed;
-        top: 60px; /* cao bằng thanh navbar */
+        top: 60px;
+        /* chiều cao header */
         left: 0;
         width: 100%;
-        height: calc(100vh - 60px);
+        height: auto;
+        max-height: calc(100vh - 60px);
         background: #fff;
-        z-index: 1050;
-        padding: 15px;
+        z-index: 2000;
         overflow-y: auto;
+        display: none;
+        /* ẩn mặc định */
     }
-    .m-menu-i .item a {
-        display: flex;
-        align-items: center;
-        padding: 10px 0;
-        font-size: 16px;
-        border-bottom: 1px solid #eee;
-        color: #333;
-        text-decoration: none;
+
+    .left-sidebar.open {
+        display: block;
+        /* hiện khi bấm 3 gạch */
     }
-    .m-menu-i .item svg,
-    .m-menu-i .item i {
-        margin-right: 8px;
-        font-size: 18px;
+
+    .provider {
+        position: relative;
+    }
+
+    .post-actions {
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+
+    .delete-post-btn {
+        cursor: pointer;
+        color: #6c757d;
+        padding: 5px;
+    }
+
+    .delete-post-btn:hover {
+        color: #dc3545;
     }
 }
-
-

@@ -107,22 +107,27 @@ switch ($url) {
         $controller = new homeController();
         $controller->trends();
         break;
-    case 'details_topic':
-        require_once __DIR__ . '/controller/TopicController.php';
+    /*case 'details_topic':
+                 require_once __DIR__ . '/controller/TopicController.php';
         $controller = new TopicController();
         $controller->details_topic();
+        break; */
+    case (preg_match('/^details_topic\/([^\/]+)$/', $url, $matches) ? true : false):
+        require_once __DIR__ . '/controller/TopicController.php';
+        $controller = new TopicController();
+        $controller->details_topic($matches[1]);
         break;
     case 'about':
         require_once __DIR__ . '/controller/HomeController.php';  // tui required home để test giao diện á, nên gắn backend sửa lại chỗ này nha
         $controller = new homeController();
         $controller->about();
         break;
-    case 'details_blog':
+    case (preg_match('/^details_blog\/([^\/]+)$/', $url, $matches) ? true : false):
         require_once __DIR__ . '/controller/ArticlesController.php';
         $controller = new ArticlesController();
 
         $id = $_GET['id'] ?? null;
-        $controller->details_blog($id);
+        $controller->details_blog($matches[1]);
         break;
     case 'search':
         require_once __DIR__ . '/controller/SearchController.php';
@@ -166,14 +171,17 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->addArticle();
         exit;
+    case 'api/deletePost':
+        require_once __DIR__ . '/controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->deleteArticle();
+        exit;
     case 'api/loadPost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         $controller = new profileUserController();
         $controller->loadArticle();
         exit;
-    case 'api/add-post':
-        require_once __DIR__ . '/controller/account/profileUserController.php';
-        break;
+
     case 'api/toggle-like':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         break;

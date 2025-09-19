@@ -3,7 +3,7 @@
 // Fallbacks
 $authorName = htmlspecialchars($article['author_name'] ?? 'Tác giả');
 $authorId = isset($article['author_id']) ? intval($article['author_id']) : 0;
-$authorAvatar = $article['author_avatar_url'] ?? '/vendor/dffvn/content/img/user.svg';
+$authorAvatar = $article['avatar_url'] ?? '/vendor/dffvn/content/img/user.svg';
 if (!$authorAvatar || trim($authorAvatar) === '') {
     $authorAvatar = 'https://i.pravatar.cc/100?u=' . urlencode($authorName);
 }
@@ -55,14 +55,20 @@ $mainImage = $article['main_image_url'] ?? '';
 
                 <div class="box-trends" bis_skin_checked="1">
                     <h5>
-                        <a href="#" title="360° Doanh nghiệp">Nội dung liên quan </a>
+                        <a href="#" title="Bài viết liên quan">Nội dung liên quan</a>
                     </h5>
                     <ul>
-
-                        <li><a href="/hyperliquid-vuot-moc-1500-ty-usd-khoi-luong-giao-dich-phai-sinh-p20250630152347523.html" title="Hyperliquid vượt mốc 1.500 tỷ USD khối lượng giao dịch phái sinh">Hyperliquid vượt mốc 1.500 tỷ USD khối lượng giao dịch phái sinh</a>
-                        </li>
-
-
+                        <?php if (!empty($relatedArticles)): ?>
+                            <?php foreach ($relatedArticles as $ra): ?>
+                                <li>
+                                    <a href="<?= BASE_URL ?>/details_blog/<?= $ra['slug'] ?>" title="<?= htmlspecialchars($ra['title']) ?>">
+                                        <?= htmlspecialchars($ra['title']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <li>Chưa có bài viết liên quan</li>
+                        <?php endif; ?>
                     </ul>
                 </div>
 
