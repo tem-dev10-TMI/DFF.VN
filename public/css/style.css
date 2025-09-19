@@ -897,7 +897,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #40a92b;
+    background-color: #4CAF50;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -1422,6 +1422,28 @@ textarea.form-control {
     color: #7b7676 !important;
     font-weight: bold !important;
 }
+.header-logo .box-search input {
+  flex: 1;
+  padding: 8px 12px;
+  border-radius: 20px;
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+.header-logo .box-search.show {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+header-logo .box-search > .inner {
+  width: 100%;
+  max-width: 720px;   /* tùy chỉnh */
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  padding: 0 10px;
+}
+
 
 .view-card .title a {
     font-weight: 600;
@@ -2094,7 +2116,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color: #40b029;
+    background-color: #4CAF50;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -2417,7 +2439,7 @@ a.disabled {
 }
 
 .left-menu .h-info li {
-    font-size: 10;
+    font-size: 11px;
     line-height: 18px;
     padding: 0px 3px;
     color: #76c8c2;
@@ -6770,6 +6792,15 @@ ul.timeline .left-arrow:after {
     .header-logo .box-search button {
         width: 40px;
     }
+    @media (min-width: 992px) {
+  .header-logo .box-search {
+    display: inline-flex !important;
+    position: static;
+    width: auto;
+    background: transparent;
+    padding: 0;
+  }
+}
 
     .m-top-info {
         display: flex;
@@ -6889,6 +6920,7 @@ ul.timeline .left-arrow:after {
 
     .header-logo .box-search {
         display: none;
+        position: absolute;
         background-color: #124889;
         position: absolute;
         width: 100%;
@@ -6897,7 +6929,12 @@ ul.timeline .left-arrow:after {
         height: 55px;
         padding-top: 8px;
         z-index: 9;
+        box-sizing: border-box;
     }
+    .search-box.show {
+  display: block;              /* hiện ra khi có class .show */
+}
+
 
     .home-slider .owl-item .item .text h4 a {
         font-size: 20px;
@@ -7249,7 +7286,11 @@ ul.timeline .left-arrow:after {
   border-radius: 6px;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
 }
-a{
-    text-decoration: none;
+text-box {
+  width: 300px;         /* Quy định chiều rộng tối đa */
+  white-space: normal;  /* Cho phép xuống dòng */
+  word-wrap: break-word;/* Tự động xuống dòng nếu từ quá dài */
+  overflow-wrap: break-word; /* Chuẩn mới thay cho word-wrap */
 }
+
 
