@@ -157,19 +157,228 @@ $mainImage = $article['main_image_url'] ?? '';
         <h5 class="total-cm"><i class="fas fa-comments"></i> Bình luận <span></span></h5>
         <div class="comment-box">
             <a href="javascript:void(0)" class="img-own"> <img src="/vendor/dffvn/content/img/user.svg"> </a>
-            <textarea class="form-control autoresizing" placeholder=" Bạn nghĩ gì về nội dung này?"></textarea>
-            <i class="fas fa-paper-plane" data-id="<?= htmlspecialchars($article['id'] ?? '') ?>" module-load="csend"></i>
-        </div>
+            <textarea id="comment-content" class="form-control autoresizing" placeholder="Bạn nghĩ gì về nội dung này?"></textarea>
+            <i id="send-comment" class="fas fa-paper-plane" data-id="<?= htmlspecialchars($article['id'] ?? '') ?>" module-load="csend"></i>
+            </div>
 
         <div class="comment-cover" style="display: none;">
-            <ul class="list_comment col-md-12">
-            </ul>
-            <div class="cm-more">Xem thêm</div>
-        </div>
+    <ul class="list_comment col-md-12 comment-list"></ul>
+    <div class="cm-more">Xem thêm</div>
+</div>
 
-        <div class="first-comment">
-            <i class="far fa-comments"></i>
-            <p>Trở thành người bình luận đầu tiên</p>
-        </div>
-    </div>
+<!-- Nếu chưa có comment -->
+<div class="first-comment">
+    <i class="far fa-comments"></i>
+    <p>Trở thành người bình luận đầu tiên</p>
+</div>
+
+<div class="no-comment" style="display:none;">
+    <i class="far fa-comments"></i>
+    <p>Chưa có bình luận nào</p>
+</div>
+
+<style>
+.comment-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.comment-list .chat-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    border-bottom: 1px solid #eee;
+    padding: 12px 0;
+}
+
+.comment-list .chat-avatar {
+    flex-shrink: 0;
+}
+
+.comment-list .chat-avatar img,
+.comment-list .chat-avatar .avatar-fallback {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    color: #555;
+}
+
+.comment-list .chat-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-list .chat-meta {
+    margin-bottom: 4px;
+}
+
+.comment-list .chat-name {
+    font-weight: 600;
+    color: #333;
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.comment-list .chat-time {
+    font-size: 12px;
+    color: #999;
+    display: inline-block;
+}
+
+.comment-list .chat-content {
+    font-size: 14px;
+    color: #222;
+    margin-bottom: 6px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.comment-list .chat-actions {
+    font-size: 13px;
+    color: #555;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.comment-list .chat-actions button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+}
+
+.comment-list .chat-actions .vote-count {
+    font-size: 13px;
+    font-weight: 500;
+    color: #333;
+}
+
+.comment-list .chat-actions a {
+    color: #004080;
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.comment-list .chat-actions a:hover {
+    text-decoration: underline;
+}
+
+</style>
+<script>
+function renderComments(comments) {
+    const ul = document.querySelector(".list_comment");
+    ul.innerHTML = "";
+
+    if (!comments || comments.length === 0) {
+        document.querySelector(".first-comment").style.display = "block"; 
+        document.querySelector(".comment-cover").style.display = "none";  
+        return;
+    }
+
+    document.querySelector(".first-comment").style.display = "none";  
+    document.querySelector(".comment-cover").style.display = "block"; 
+
+    comments.forEach(c => {
+        const li = document.createElement("li");
+        li.classList.add("chat-item");
+        li.innerHTML = `
+            <div class="chat-avatar">
+                ${c.avatar_url 
+                    ? `<img src="${c.avatar_url}" alt="${c.username}">`
+                    : `<span class="avatar-fallback">${c.username ? c.username.charAt(0).toUpperCase() : "?"}</span>`}
+            </div>
+            <div class="chat-body">
+                <div class="chat-meta">
+                    <span class="chat-name">${c.username || "Ẩn danh"}</span>
+                    <span class="chat-time">${new Date(c.created_at).toLocaleString("vi-VN")}</span>
+                </div>
+                <div class="chat-content">${c.content}</div>
+                <div class="chat-actions">
+                    <button class="vote-btn">⬆</button>
+                    <span class="vote-count">${c.upvotes ?? 0}</span>
+                    <button class="vote-btn">⬇</button>
+                    <a href="javascript:void(0)" class="chat-reply">Trả lời</a>
+                </div>
+            </div>
+        `;
+        // Thêm bình luận mới nhất lên trên cùng
+        ul.prepend(li);
+    });
+}
+
+function loadComments(articleId) {
+    fetch(`<?= BASE_URL ?>/controller/commentController.php?action=getComments&article_id=${articleId}`)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Server trả về:", data); // debug
+            if (data.status === "success") {
+                renderComments(data.comments);
+            } else {
+                document.querySelector(".first-comment").style.display = "block";
+                document.querySelector(".comment-cover").style.display = "none";
+            }
+        })
+        .catch(err => {
+            console.error("Lỗi fetch:", err);
+            document.querySelector(".first-comment").style.display = "block";
+            document.querySelector(".comment-cover").style.display = "none";
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    const articleId = document.getElementById("hdd_id").value;
+    const btnSend   = document.getElementById("send-comment"); 
+    const textarea  = document.getElementById("comment-content");
+
+    // Load sẵn bình luận khi vào trang
+    loadComments(articleId);
+
+    // Gửi comment mới
+    btnSend.addEventListener("click", function () {
+        const content = textarea.value.trim();
+        if (!content) {
+            alert("Vui lòng nhập nội dung bình luận!");
+            return;
+        }
+
+        fetch("<?= BASE_URL ?>/controller/commentController.php?action=addComment", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: "article_id=" + encodeURIComponent(articleId) +
+                  "&content=" + encodeURIComponent(content) +
+                  "&user_id=" + encodeURIComponent(<?= $_SESSION['user']['id'] ?? '0' ?>)
+        })
+        .then(res => res.json())
+        .then(data => {
+            console.log("Kết quả add:", data); // debug
+            if (data.status === "success") {
+                textarea.value = "";
+                loadComments(articleId); // reload lại danh sách
+            } else {
+                alert(data.message || "Lỗi khi gửi bình luận!");
+            }
+        })
+        .catch(err => {
+            console.error("Fetch lỗi:", err);
+            alert("Không thể kết nối server!");
+        });
+    });
+});
+</script>
+
+
+
 </main>

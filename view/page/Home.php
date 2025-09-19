@@ -117,7 +117,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                             class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
-                                                    >>>>>>> Stashed changes
+                                                    
 
                                                 </li>
 

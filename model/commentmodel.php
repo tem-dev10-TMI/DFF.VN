@@ -1,83 +1,92 @@
 <?php
-class CommentsModel {
+require_once __DIR__ . '/../config/db.php'; // chỗ này nhớ sửa lại đường dẫn nếu khác
+file_put_contents("debug_log.txt", date("H:i:s") . " " . json_encode($_POST) . "\n", FILE_APPEND);
+
+class CommentsModel
+{
+    // =====================
     // Thêm comment mới
-    public static function addComment($article_id, $user_id, $content, $parent_id = null) {
+    // =====================
+    public static function insertComment($article_id, $user_id, $content, $parent_id = null)
+    {
         $db = new connect();
-        $sql = "INSERT INTO comments (article_id, user_id, parent_id, content) 
-                VALUES (:article_id, :user_id, :parent_id, :content)";
-        $stmt = $db->db->prepare($sql);
+        $pdo = $db->db;
+
+        $sql = "INSERT INTO comments (article_id, user_id, content, parent_id, created_at) 
+                VALUES (:article_id, :user_id, :content, :parent_id, NOW())";
+        $stmt = $pdo->prepare($sql);
+
         return $stmt->execute([
             ':article_id' => $article_id,
-            ':user_id' => $user_id,
-            ':parent_id' => $parent_id,
-            ':content' => $content
+            ':user_id'    => $user_id,
+            ':content'    => $content,
+            ':parent_id'  => $parent_id
         ]);
     }
 
-    // Lấy tất cả comment của một bài viết (kể cả trả lời)
-    public static function getCommentsByArticle($article_id) {
-        $db = new connect();
-        $sql = "SELECT c.*, u.name AS user_name, u.avatar_url
-                FROM comments c
-                INNER JOIN users u ON c.user_id = u.id
-                WHERE c.article_id = :article_id
-                ORDER BY c.created_at ASC";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':article_id' => $article_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Lấy trả lời theo comment cha
-    public static function getReplies($parent_id) {
-        $db = new connect();
-        $sql = "SELECT c.*, u.name AS user_name, u.avatar_url
-                FROM comments c
-                INNER JOIN users u ON c.user_id = u.id
-                WHERE c.parent_id = :parent_id
-                ORDER BY c.created_at ASC";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':parent_id' => $parent_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    // Cập nhật nội dung comment
-    public static function updateComment($id, $content) {
-        $db = new connect();
-        $sql = "UPDATE comments SET content = :content WHERE id = :id";
-        $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':id' => $id,
-            ':content' => $content
-        ]);
-    }
-
-    // Xóa comment (kể cả reply nhờ ON DELETE CASCADE)
-    public static function deleteComment($id) {
-        $db = new connect();
-        $sql = "DELETE FROM comments WHERE id = :id";
-        $stmt = $db->db->prepare($sql);
-        return $stmt->execute([':id' => $id]);
-    }
-
-    // Tăng số lượt upvote
-    public static function upvoteComment($id) {
-        $db = new connect();
-        $sql = "UPDATE comments SET upvotes = upvotes + 1 WHERE id = :id";
-        $stmt = $db->db->prepare($sql);
-        return $stmt->execute([':id' => $id]);
-    }
-    // Lấy tất cả comment (không phân theo bài viết)
-public static function getComments() {
+    // =====================
+    // Lấy comment theo bài viết
+    // =====================
+    public static function getComments($article_id = null)
+{
     $db = new connect();
-    $sql = "SELECT c.id, c.user_id, c.content, c.upvotes, c.created_at,
-                   u.name AS user_name, u.avatar_url
-            FROM comment_global c
-            INNER JOIN users u ON c.user_id = u.id
-            ORDER BY c.created_at ASC";
-    $stmt = $db->db->prepare($sql);
-    $stmt->execute();
+    $pdo = $db->db;
+
+    $sql = "SELECT c.id, c.content, c.created_at, c.upvotes, 
+                   u.username, u.avatar_url
+            FROM comments c
+            JOIN users u ON c.user_id = u.id";
+
+    // Nếu truyền article_id thì lọc theo bài viết
+    if ($article_id !== null) {
+        $sql .= " WHERE c.article_id = :article_id AND c.parent_id IS NULL ORDER BY c.created_at DESC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':article_id' => $article_id]);
+    } else {
+        $sql .= " ORDER BY c.created_at DESC";
+        $stmt = $pdo->query($sql);
+    }
+
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
+    // =====================
+    // Lấy tất cả comment
+    // =====================
+    public static function getAllComments()
+    {
+        $db = new connect();
+        $pdo = $db->db;
+
+        $sql = "SELECT c.id, c.article_id, c.content, c.created_at, 
+                       u.username, u.avatar_url
+                FROM comments c
+                JOIN users u ON c.user_id = u.id
+                ORDER BY c.created_at DESC";
+        $stmt = $pdo->query($sql);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // =====================
+    // Lấy reply theo comment cha
+    // =====================
+    public static function getReplies($parent_id)
+    {
+        $db = new connect();
+        $pdo = $db->db;
+
+        $sql = "SELECT c.id, c.content, c.created_at, c.upvotes, 
+                       u.username, u.avatar_url
+                FROM comments c
+                JOIN users u ON c.user_id = u.id
+                WHERE c.parent_id = :parent_id
+                ORDER BY c.created_at ASC";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute([':parent_id' => $parent_id]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
+error_log("CommentModel loaded from: " . __FILE__);
