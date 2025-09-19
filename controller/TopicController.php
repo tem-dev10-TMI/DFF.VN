@@ -43,21 +43,58 @@ class TopicController
             $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
             $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
 
-            // RSS Thanh Niên
             $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
             $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
-        }else{
+        } else if ($slug == 'vi-mo') {
+            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        } else if ($slug == 'thi-truong') {
+            $feedUrl1 = "https://cafef.vn/trang-chu.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            $feedUrl2 = "https://znews.vn/kinh-doanh-tai-chinh.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        } else if ($slug == 'quoc-te') {
+            $feedUrl1 = "https://tuoitre.vn/rss/the-gioi.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            $feedUrl2 = "https://vnexpress.net/rss/the-gioi.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        } else if ($slug == 'nha-dat') {
+            $feedUrl1 = "https://thanhnien.vn/rss/bat-dong-san.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            $feedUrl2 = "https://vnexpress.net/rss/bat-dong-san.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        } else if ($slug == '360-doanh-nghiep') {
+            $feedUrl1 = "https://vnexpress.net/rss/kinh-doanh.rss";
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+            $feedUrl2 = "https://dantri.com.vn/kinh-doanh.rss";
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $articles = array_merge($rssArticles1, $rssArticles2);
+        } else {
+            // Với các slug khác (crypto, thao-luan), lấy bài từ database
             $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
         }
-        //var_dump($articles);
 
-        // Gộp RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
-        
         if (!$topic) {
             echo "Chủ đề không tồn tại!";
             return;
         }
+
+        // Sắp xếp lại tất cả bài viết theo thời gian mới nhất
+        usort($articles, function ($a, $b) {
+            return strtotime($b['created_at']) - strtotime($a['created_at']);
+        });
 
         ob_start();
         require_once __DIR__ . '/../view/page/DetailsTopic.php';

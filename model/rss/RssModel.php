@@ -157,6 +157,13 @@ class RssModel
     {
         if (strpos($feedUrl, 'baochinhphu') !== false) return 'public/img/avatar/baochinhphu.png';
         if (strpos($feedUrl, 'thanhnien') !== false) return 'public/img/avatar/thanhnien.png';
+        if (strpos($feedUrl, 'vnexpress.net') !== false) return 'public/img/avatar/vnexpress.png';
+        if (strpos($feedUrl, 'tuoitre.vn') !== false) return 'public/img/avatar/tuoitre.png';
+        if (strpos($feedUrl, 'cafef.vn') !== false) return 'public/img/avatar/cafef.png';
+        if (strpos($feedUrl, 'vietnamnet.vn') !== false) return 'public/img/avatar/vietnamnet.png';
+        if (strpos($feedUrl, 'dantri.com.vn') !== false) return 'public/img/avatar/dantri.png';
+        if (strpos($feedUrl, 'zingnews.vn') !== false) return 'public/img/avatar/zingnews.png';
+        
         return 'public/img/avatar/default.png';
     }
 
@@ -165,6 +172,12 @@ class RssModel
     {
         if (strpos($feedUrl, 'baochinhphu') !== false) return 'Báo Chính Phủ';
         if (strpos($feedUrl, 'thanhnien') !== false) return 'Thanh Niên';
+        if (strpos($feedUrl, 'vnexpress.net') !== false) return 'VNExpress';
+        if (strpos($feedUrl, 'tuoitre.vn') !== false) return 'Tuổi Trẻ';
+        if (strpos($feedUrl, 'cafef.vn') !== false) return 'CafeF';
+        if (strpos($feedUrl, 'vietnamnet.vn') !== false) return 'Vietnamnet';
+        if (strpos($feedUrl, 'dantri.com.vn') !== false) return 'Dân Trí';
+        if (strpos($feedUrl, 'zingnews.vn') !== false) return 'Zing News';
         return 'RSS';
     }
 
