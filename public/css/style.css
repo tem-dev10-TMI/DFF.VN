@@ -26,6 +26,26 @@ a {
     padding-right: 92px;
 }
 
+@media (max-width: 767px) {
+    .password-input-group .form-control {
+        padding-right: 55px;
+    }
+
+    .password-input-group .password-register {
+        padding-right: 52px;
+    }
+}
+
+@media (max-width: 480px) {
+    .password-input-group .form-control {
+        padding-right: 18px;
+    }
+
+    .password-input-group .password-register {
+        padding-right: 15px;
+    }
+}
+
 .password-toggle {
     position: absolute;
     right: 10px;
