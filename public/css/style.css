@@ -7099,24 +7099,31 @@ ul.timeline .left-arrow:after {
   position: relative;
 }
 }
+/* Desktop giữ nguyên */
+.left-sidebar {
+  position: relative;
+}
+
+/* Mobile menu xử lý lại */
 @media (max-width: 768px) {
   .left-sidebar {
-    position: fixed;
-    top: 60px;   /* chiều cao header */
-    left: 0;
-    width: 100%;
-    height: auto;
-    max-height: calc(100vh - 60px);
+    position: fixed !important;
+    top: 60px;        /* chiều cao header */
+    left: -100%;      /* ẩn sang trái */
+    width: 80%;       /* chiếm 80% màn hình */
+    height: 100vh;    /* chiếm toàn bộ chiều cao */
     background: #fff;
-    z-index: 2000;
     overflow-y: auto;
-    display: none; /* ẩn mặc định */
+    transition: left 0.3s ease;
+    z-index: 2000;
   }
 
+  /* Khi mở menu (sau khi click 3 gạch) */
   .left-sidebar.open {
-    display: block; /* hiện khi bấm 3 gạch */
+    left: 0;
   }
 }
+
 @media (max-width: 991.98px) {
     .m-menu-i {
         position: fixed;
@@ -7144,4 +7151,5 @@ ul.timeline .left-arrow:after {
         font-size: 18px;
     }
 }
+
 

@@ -128,17 +128,7 @@
                         <?php endif; ?>
                     </li>
                 </ul>
-            </div>
-            <div class="collapse box-alert" id="id_alert">
-
-                <ul class="nav nav-pills" id="pills-tab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link fw-semibold active position-relative" id="pills-home-tab"
-                            data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab"
-                            aria-controls="pills-home" aria-selected="true">Thông báo</button>
-                    </li>
-
-                </ul>
+           
                 <div class="tab-content" id="pills-tabContent">
 
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
@@ -160,7 +150,7 @@
                         <?php endif; ?>
                     </div>
                 </div>
-            </div>
+        
             <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
 
         </div>
