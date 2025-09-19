@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 const menuBtn = document.querySelector('.menu-toggle');
-const sidebar = document.querySelector('.left-sidebar');
+let sidebar = document.querySelector('.left-sidebar');
 
 menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
+    sidebar.classList.toggle('open');
 });

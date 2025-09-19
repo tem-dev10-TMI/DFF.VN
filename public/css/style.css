@@ -15,35 +15,18 @@ a {
 .password-input-group {
     position: relative;
     display: flex;
+    flex: 1;
     align-items: center;
 }
 
 .password-input-group .form-control {
-    padding-right: 94px;
+    width: 100%;
+    padding-right: 40px;
 }
 
 .password-input-group .password-register {
-    padding-right: 92px;
-}
-
-@media (max-width: 767px) {
-    .password-input-group .form-control {
-        padding-right: 55px;
-    }
-
-    .password-input-group .password-register {
-        padding-right: 52px;
-    }
-}
-
-@media (max-width: 480px) {
-    .password-input-group .form-control {
-        padding-right: 18px;
-    }
-
-    .password-input-group .password-register {
-        padding-right: 15px;
-    }
+    width: 100%;
+    padding-right: 40px;
 }
 
 .password-toggle {
@@ -2491,18 +2474,19 @@ a.disabled {
 /**/
 .left-menu ul li img {
 
-  width: 28px;             
-  height: 28px;
-  border-radius: 50%;      
-  object-fit: cover;        
-  flex-shrink: 0;  
-}  
-  .left-menu ul li .icon-right {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.left-menu ul li .icon-right {
     float: right;
-    padding-top: 4px ;
+    padding-top: 4px;
     cursor: pointer;
     padding-left: 0px;
-    margin-top: 5px;    
+    margin-top: 5px;
 }
 
 /*END*/
@@ -4520,7 +4504,8 @@ div[data-notify="container"] .close {
     justify-content: space-between;
     width: 100%;
 }
-.box-alert .tab-content #content{
+
+.box-alert .tab-content #content {
     color: #2a14b8;
 }
 
@@ -7238,16 +7223,15 @@ ul.timeline .left-arrow:after {
     }
 
 }
+
 /*Tiêu Đề Thông Báo*/
 .title-thongbao {
-  font-size: 22px;
-  font-weight: bold;
-  color: rebeccapurple;
-  padding: 10px 15px;
-  border-left: 5px solid #007bff;
-  background: #f9f9f9;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+    font-size: 22px;
+    font-weight: bold;
+    color: rebeccapurple;
+    padding: 10px 15px;
+    border-left: 5px solid #007bff;
+    background: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-
-

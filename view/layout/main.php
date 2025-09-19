@@ -465,7 +465,7 @@
                 }
             }
         </style>
-       
+
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
@@ -592,7 +592,7 @@
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.0"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
 </body>
 
