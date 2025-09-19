@@ -197,14 +197,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
         </div>
         <!-- ////////////////////// -->
-
-      <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note">
-            <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
-        </span>
-    </h5>
+        <div class="block-k box-company-label">
+            <h5>
+                <span><a href="#">Top doanh nhân</a></span>
+                <span class="c-note">
+                    <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
+                </span>
+            </h5>
 
 
             <div class="owl-slider">
@@ -218,44 +217,53 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     ?>
 
                                 <?php foreach ($topBusinessmen as $biz): ?>
-
                                     <?php
-                                        $isFollowing = false;
-                                        if (isset($_SESSION['user']['id'])) {
-                                            require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-                                            $db = new connect();
-                                            $pdo = $db->db;
-                                            $followModel = new UserFollowModel($pdo);
-                                            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
-                                        }
+                                    $isFollowing = false;
+                                    if (isset($_SESSION['user']['id'])) {
+                                        require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+                                        $db = new connect();
+                                        $pdo = $db->db;
+                                        $followModel = new UserFollowModel($pdo);
+                                        $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
+                                    }
                                     ?>
-        <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-            <div class="item">
-                <ul>
-                    <li>
-                        <img class="logo" 
-                             alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                             src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
-                    </li>
-                    <li class="alias">
-                        <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
-                    </li>
-                    <li class="name">
-                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                        </a>
-                    </li>
-                    <li class="f-folw">
-    <a class="btn-follow" href="javascript:void(0)" data-user="<?= $biz['user_id'] ?>">
-    <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-    <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
-</a>
+                                    <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                                        <div class="item">
+                                            <ul>
+                                                <li>
+                                                    <img class="logo"
+                                                        alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                                        src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                                </li>
+                                                <li class="alias">
+                                                    <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
+                                                </li>
+                                                <li class="name">
+                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                    </a>
+                                                </li>
+                                                <li class="f-folw">
+                                                    <a class="btn-follow" href="javascript:void(0)"
+                                                        data-user="<?= $biz['user_id'] ?>">
+                                                        <span
+                                                            class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
+                                                    </a>
+                                                    
 
-</li>
+                                                </li>
 
 
-                </ul>
-
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Chưa có doanh nhân nào.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
 
                     <div class="owl-nav">
 
@@ -269,28 +277,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     </div>
                     <div class="owl-dots disabled"></div>
                 </div>
-
             </div>
         </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>Chưa có doanh nhân nào.</p>
-<?php endif; ?>
-                </div>
-            </div>
-
-            <div class="owl-nav">
-                <button type="button" role="presentation" class="owl-prev disabled">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-                <button type="button" role="presentation" class="owl-next">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="owl-dots disabled"></div>
-        </div>
-    </div>
-</div>
 
 
 
@@ -557,37 +545,36 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     window.addEventListener('scroll', handleScroll);
                 })();
 
-//// Đừng có xóa dòng này mấy cha
-document.querySelectorAll(".btn-follow").forEach(btn => {
-    btn.addEventListener("click", function() {
-        const userId = this.getAttribute("data-user");
+                //// Đừng có xóa dòng này mấy cha
+                document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const userId = this.getAttribute("data-user");
 
-        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "user_id=" + encodeURIComponent(userId),
-            credentials: "include"
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                // cập nhật text nút
-                this.querySelector(".follow-text").innerText =
-                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: "user_id=" + encodeURIComponent(userId),
+                            credentials: "include"
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // cập nhật text nút
+                                    this.querySelector(".follow-text").innerText =
+                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
 
-                // cập nhật số follower
-                this.querySelector(".number").innerText = data.followers;
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Không thể kết nối đến server!");
-        });
-    });
-});
-
+                                    // cập nhật số follower
+                                    this.querySelector(".number").innerText = data.followers;
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Không thể kết nối đến server!");
+                            });
+                    });
+                });
 
 
 
@@ -610,7 +597,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             </div>
         <?php endif; ?>
 
-            
+
 
 
 
@@ -670,10 +657,8 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                             </div>
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
-
-                <script>
-                                document.addEventListener('click', function(e) {
-
+                            <script>
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -698,7 +683,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                                         textarea.focus();
                                     }
                                 });
-                </script>
+                            </script>
 
 
 
@@ -985,8 +970,6 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
         </div>
 
 
-       
-
 
         <script>
             $(function () {
@@ -1149,7 +1132,6 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
 
         </div>
 
-    </div>
 
 
 
