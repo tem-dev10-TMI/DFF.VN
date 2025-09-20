@@ -186,3 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 });
+const menuBtn = document.querySelector('.menu-toggle');
+const leftSidebar = document.querySelector('.left-sidebar');
+
+menuBtn.addEventListener('click', () => {
+    leftSidebar.classList.toggle('open');
+});

@@ -18,6 +18,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 <main class="main-content">
 
 
+    <!-- mo modal khi sai mat khau -->
+    <?php if (isset($_SESSION['login_error'])): ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                var myModal = new bootstrap.Modal(document.getElementById('div_modal'));
+                myModal.show();
+            });
+        </script>
+    <?php endif; ?>
+
     <!-- 4 cục bài viết nổi bật start -->
     <div class="owl-slider home-slider">
         <div id="home_slider" class="owl-carousel">
@@ -56,112 +66,219 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
     <!-- bài viết chính block start -->
     <div class="content-left cover-page">
-        <div class="block-k box-write">
+
+        <div class="block-k box-write openModalcreatePost">
             <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
             </a>
             <div class="input-group box-search">
-                <div class="post-input"><a href="javascript:void(0)" data-bs-toggle="modal"
-                        data-bs-target="#createPostModal"><span>Viết bài, chia sẻ, đặt câu hỏi…</span></a></div>
+                <div data-bs-toggle="modal"><span>Viết
+                        bài, chia sẻ, đặt câu hỏi…</span></div>
+
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
-        <!-- ////////////////////// -->
-<<<<<<< Updated upstream
+        <script>
+            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    // Nếu đã đăng nhập thì mở modal
+                    var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+                    myModal.show();
+                <?php else: ?>
+                    // Nếu chưa đăng nhập thì chuyển sang login hoặc cảnh báo
+                    alert("Bạn cần đăng nhập để viết bài.");
+                <?php endif; ?>
+            });
 
-      <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note">
-            <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
-        </span>
-    </h5>
+        </script>
+        <!-- Modal: Tạo bài viết mới -->
+        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
-=======
-      <div class="block-k box-company-label">
-    <h5>
-        <span><a href="#">Top doanh nhân</a></span>
-        <span class="c-note">
-            <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
-        </span>
-    </h5>
 
->>>>>>> Stashed changes
-    <div class="owl-slider">
-        <div class="owl-carousel box-company owl-loaded owl-drag">
-            <div class="owl-stage-outer owl-height" style="height: 256px;">
-                <div class="owl-stage" 
-                     style="transform: translate3d(0px, 0px, 0px); transition: all; 
-                            width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
-                    
-                    <?php if (!empty($topBusinessmen)): ?>
-     <?php foreach ($topBusinessmen as $biz): ?>
-                                    <?php
-                                        $isFollowing = false;
-                                        if (isset($_SESSION['user']['id'])) {
-                                            require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-                                            $db = new connect();
-                                            $pdo = $db->db;
-                                            $followModel = new UserFollowModel($pdo);
-                                            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
+
+                <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+
+                    <!-- Header -->
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                            <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Đóng"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body bg-light">
+                        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                            <!-- Avatar + tên -->
+                            <div class="d-flex align-items-center mb-3">
+                                <?php
+                                $avatarUrl = $user['avatar_url'] ?? null;
+                                if (!$avatarUrl || trim($avatarUrl) === '') {
+                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                }
+                                ?>
+                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                    style="width: 48px; height: 48px;">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">
+                                        <?php
+                                        if ($profile_category == 'businessmen') {
+                                            echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
+                                        } else {
+                                            echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
                                         }
-                                    ?>
-        <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-            <div class="item">
-                <ul>
-                    <li>
-                        <img class="logo" 
-                             alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                             src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
-                    </li>
-                    <li class="alias">
-                        <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
-                    </li>
-                    <li class="name">
-                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                            <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                        </a>
-                    </li>
-                    <li class="f-folw">
-    <a class="btn-follow" href="javascript:void(0)" data-user="<?= $biz['user_id'] ?>">
-    <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-    <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
-</a>
-<<<<<<< Updated upstream
+                                        ?>
+                                    </h6>
+                                    <small class="text-muted">
+                                        <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
+                                    </small>
+                                </div>
+                            </div>
 
-</li>
+                            <!-- Tiêu đề -->
+                            <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                                placeholder="✏️ Nhập tiêu đề bài viết...">
 
+                            <!-- Tóm tắt -->
+                            <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                                placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
 
-                </ul>
+                            <!-- Nội dung chính -->
+                            <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                                placeholder="💡 Nội dung chính của bài viết..."></textarea>
 
-=======
+                            <!-- Chọn chủ đề -->
+                            <div class="mb-3">
+                                <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
+                                <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                    <option value="">-- Chọn chủ đề --</option>
+                                    <?php foreach ($allTopics as $topic): ?>
+                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-</li>
+                            <!-- Thanh công cụ -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                        <i class="fas fa-image me-1"></i> Hình ảnh
+                                    </label>
+                                    <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                        <i class="fas fa-video me-1"></i> Video
+                                    </label>
+                                    <button class="btn btn-outline-success btn-sm" type="button">
+                                        <i class="fas fa-link me-1"></i> Link
+                                    </button>
+                                </div>
+                               <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+    <i class="fas fa-paper-plane me-1"></i> Đăng bài
+</button>
 
+                            </div>
 
-                </ul>
->>>>>>> Stashed changes
-            </div>
-        </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>Chưa có doanh nhân nào.</p>
-<?php endif; ?>
+                            <!-- Input hidden -->
+                            <input type="file" id="postImage" class="d-none" accept="image/*"
+                                onchange="previewImage(event)">
+                            <input type="file" id="postVideo" class="d-none" accept="video/*"
+                                onchange="previewVideo(event)">
+                        </div>
+
+                        <!-- Preview ảnh / video -->
+                        <div id="imagePreview" class="mt-2 bt-4"></div>
+                        <div id="videoPreview" class="mt-2 bt-4"></div>
+                    </div>
                 </div>
             </div>
-
-            <div class="owl-nav">
-                <button type="button" role="presentation" class="owl-prev disabled">
-                    <i class="fa fa-chevron-left"></i>
-                </button>
-                <button type="button" role="presentation" class="owl-next">
-                    <i class="fa fa-chevron-right"></i>
-                </button>
-            </div>
-            <div class="owl-dots disabled"></div>
         </div>
-    </div>
-</div>
+        <!-- ////////////////////// -->
+        <div class="block-k box-company-label">
+            <h5>
+                <span><a href="#">Top doanh nhân</a></span>
+                <span class="c-note">
+                    <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
+                </span>
+            </h5>
+
+
+            <div class="owl-slider">
+                <div class="owl-carousel box-company owl-loaded owl-drag">
+                    <div class="owl-stage-outer owl-height" style="height: 256px;">
+
+                        <div class="owl-stage"
+                            style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
+                            <?php if (!empty($topBusinessmen)): ?>
+                                <?php //var_dump($topBusinessmen);
+                                    ?>
+
+                                <?php foreach ($topBusinessmen as $biz): ?>
+                                    <?php
+                                    $isFollowing = false;
+                                    if (isset($_SESSION['user']['id'])) {
+                                        require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+                                        $db = new connect();
+                                        $pdo = $db->db;
+                                        $followModel = new UserFollowModel($pdo);
+                                        $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
+                                    }
+                                    ?>
+                                    <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
+                                        <div class="item">
+                                            <ul>
+                                                <li>
+                                                    <img class="logo"
+                                                        alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                                        src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
+                                                </li>
+                                                <li class="alias">
+                                                    <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
+                                                </li>
+                                                <li class="name">
+                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                                    </a>
+                                                </li>
+                                                <li class="f-folw">
+                                                    <a class="btn-follow" href="javascript:void(0)"
+                                                        data-user="<?= $biz['user_id'] ?>">
+                                                        <span
+                                                            class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
+                                                    </a>
+                                                    
+
+                                                </li>
+
+
+                                            </ul>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Chưa có doanh nhân nào.</p>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <div class="owl-nav">
+
+                        <button type="button" role="presentation" class="owl-prev disabled">
+                            <i class="fa fa-chevron-left"></i>
+                        </button>
+                        <button type="button" role="presentation" class="owl-next">
+                            <i class="fa fa-chevron-right"></i>
+                        </button>
+
+                    </div>
+                    <div class="owl-dots disabled"></div>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -428,38 +545,36 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     window.addEventListener('scroll', handleScroll);
                 })();
 
-//// Đừng có xóa dòng này mấy cha
-document.querySelectorAll(".btn-follow").forEach(btn => {
-    btn.addEventListener("click", function() {
-        const userId = this.getAttribute("data-user");
+                //// Đừng có xóa dòng này mấy cha
+                document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const userId = this.getAttribute("data-user");
 
-        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "user_id=" + encodeURIComponent(userId),
-            credentials: "include"
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                // cập nhật text nút
-                this.querySelector(".follow-text").innerText =
-                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: "user_id=" + encodeURIComponent(userId),
+                            credentials: "include"
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // cập nhật text nút
+                                    this.querySelector(".follow-text").innerText =
+                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
 
-                // cập nhật số follower
-                this.querySelector(".number").innerText = data.followers;
-            } else {
-                alert(data.message);
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Không thể kết nối đến server!");
-        });
-    });
-});
-
-
+                                    // cập nhật số follower
+                                    this.querySelector(".number").innerText = data.followers;
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Không thể kết nối đến server!");
+                            });
+                    });
+                });
 
 
 
@@ -469,10 +584,8 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
 
 
 
-<<<<<<< Updated upstream
 
-=======
->>>>>>> Stashed changes
+
             </script>
         <?php else: ?>
             <div class="block-k ">
@@ -484,7 +597,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             </div>
         <?php endif; ?>
 
-            
+
 
 
 
@@ -544,13 +657,8 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                             </div>
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
-                <script>
-                                document.addEventListener('click', function(e) {
-
+                            <script>
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -575,7 +683,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                                         textarea.focus();
                                     }
                                 });
-                </script>
+                            </script>
 
 
 
@@ -816,7 +924,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             <div class="block-k bg-box-a">
                 <div class="tieu-diem t-analysis">
                     <h2>
-                        <i class="fas fa-search-dollar"></i> DFF <span>ANALYSIS</span>
+                        <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
                     </h2>
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
@@ -861,13 +969,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             <div class="box-follow"></div>
         </div>
 
-<<<<<<< Updated upstream
 
-       
-
-=======
-       
->>>>>>> Stashed changes
 
         <script>
             $(function () {
@@ -917,10 +1019,12 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
 
     </div>
 
+
     <!-- Modal for creating a new post -->
+
     <!-- Modal: Tạo bài viết mới -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+
         <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
 
@@ -932,8 +1036,9 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                     <h5 class="modal-title fw-bold" id="createPostModalLabel">
                         <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
                     </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                        aria-label="Đóng"></button>
+
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+
                 </div>
 
                 <!-- Body -->
@@ -949,8 +1054,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                             }
                             ?>
                             <img src="<?= htmlspecialchars($avatarUrl) ?>"
+
                                 class="rounded-circle border border-2 border-success me-2" alt="avatar"
                                 style="width: 48px; height: 48px;">
+
                             <div>
                                 <h6 class="mb-0 fw-bold text-dark">
                                     <?php
@@ -1009,10 +1116,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                         </div>
 
                         <!-- Input hidden -->
-                        <input type="file" id="postImage" class="d-none" accept="image/*"
-                            onchange="previewImage(event)">
-                        <input type="file" id="postVideo" class="d-none" accept="video/*"
-                            onchange="previewVideo(event)">
+
+                        <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
+                        <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
+
                     </div>
 
                     <!-- Preview ảnh / video -->
@@ -1021,12 +1128,11 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                 </div>
             </div>
 
+
+
         </div>
 
-    </div>
-<<<<<<< Updated upstream
 
-=======
-  
->>>>>>> Stashed changes
+
+
 </main>

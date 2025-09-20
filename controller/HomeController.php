@@ -1,9 +1,12 @@
 <?php
 require_once __DIR__ . '/../model/article/articlesmodel.php';
-require_once __DIR__ . '/../model/commentmodel.php';
+
 require_once __DIR__ . '/../model/user/businessmenModel.php';
 require_once __DIR__ . '/../model/MarketDataModel.php';
 require_once __DIR__ . '/../model/event/Events.php';
+
+require_once __DIR__ . '/../model/TopicModel.php';
+
 
 class Events
 {
@@ -30,9 +33,8 @@ class homeController
     public static function index()
     {
         // 1. Lấy dữ liệu từ Database (giảm tải: chỉ lấy 8 cho slider và 5 cho danh sách ban đầu)
-        $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 8);
+        $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
-        $comments = CommentsModel::getAllComments();
 
         $topBusinessmen = businessmenModel::getAllBusinessmen();
         $marketData = MarketDataModel::getCachedMarketData();
@@ -73,9 +75,12 @@ class homeController
         usort($allForSlider, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
-
+        $article_nb = array_merge(
+            array_slice($rssArticles1, 0, 4),
+            array_slice($rssArticles2, 0, 4)
+        );
         // Giới hạn: 8 bài nổi bật cho slider
-        $featuredArticles = array_slice($allForSlider, 0, 8);
+        $featuredArticles = array_slice($article_nb, 0, 8);
 
         // Danh sách khởi tạo 5 bài: trộn RSS ít + DB 5 bài
         $rssForInitial = array_merge(
@@ -107,6 +112,14 @@ class homeController
         $rssArticles3 = array_slice($onlyRss, 0, 6);
         $rssArticles4 = array_slice($onlyRss, 6, 6);
 
+        if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == 'user') {
+            $profile_category = "user";
+        } else {
+            $profile_category = "businessmen";
+        }
+        $topicModel = new TopicModel();
+        $allTopics = $topicModel->getAll();
+
         // 4. Load view Home
         ob_start();
         require_once __DIR__ . '/../view/page/Home.php';
@@ -124,7 +137,8 @@ class homeController
         try {
             require_once __DIR__ . '/../model/article/articlesmodel.php';
             require_once __DIR__ . '/../model/MarketDataModel.php';
-            require_once __DIR__ . '/../model/commentmodel.php';
+          require_once __DIR__ . '/../model/CommentsModel.php';   // Đúng tên file
+
             require_once __DIR__ . '/../model/user/businessmenModel.php';
 
             $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
@@ -159,6 +173,38 @@ class homeController
             });
 
             $slice = array_slice($articles, $offset, $limit);
+
+            $normalized = [];
+            foreach ($slice as $art) {
+                if (!empty($art['is_rss'])) {
+                    // RSS giữ nguyên
+                    $normalized[] = [
+                        'title' => $art['title'],
+                        'summary' => $art['summary'] ?? '',
+                        'link' => $art['link'],
+                        'created_at' => $art['created_at'],
+                        'author_name' => $art['author_name'] ?? '',
+                        'avatar_url' => $art['avatar_url'] ?? '',
+                        'main_image_url' => $art['main_image_url'] ?? '',
+                        'is_rss' => true
+                    ];
+                } else {
+                    // Bài trong DB → thêm slug
+                    $normalized[] = [
+                        'id' => $art['id'],
+                        'slug' => $art['slug'], // 👈 thêm slug
+                        'title' => $art['title'],
+                        'summary' => $art['summary'] ?? '',
+                        'created_at' => $art['created_at'],
+                        'author_name' => $art['author_name'] ?? '',
+                        'avatar_url' => $art['avatar_url'] ?? '',
+                        'main_image_url' => $art['main_image_url'] ?? '',
+                        'comment_count' => $art['comment_count'] ?? 0,
+                        'upvotes' => $art['upvotes'] ?? 0,
+                        'is_rss' => false
+                    ];
+                }
+            }
 
             echo json_encode([
                 'success' => true,
@@ -233,6 +279,4 @@ class homeController
         $profile = true;
         require_once __DIR__ . '/../view/layout/main.php';
     }
-
-    
 }

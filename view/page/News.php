@@ -54,7 +54,12 @@
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                 <span class="name" title="">
-                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                 <a href="/DFF.VN/details_blog?id=<?= $article['id'] ?>" 
+   title="<?= htmlspecialchars($article['title']) ?>">
+   <?= htmlspecialchars($article['title']) ?>
+</a>
+
+
                                 </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                             </div>
                         </div>
@@ -148,11 +153,28 @@
     <!-- bài viết chính block end -->
 
     <div class="content-right">
-        <div class="d-flex" style="height: 1000px; border: 1px solid black;">
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post4.jpg" alt="Banner" />
+            </a>
+        </div>
 
-            <div class="p-3 flex-grow-1 gradient-animated text-white d-flex align-items-center justify-content-center" style="font-size: 2rem; font-weight: bold;">
-                Quảng cáo
-            </div>
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post3.jpg" alt="Banner" />
+            </a>
+        </div>
+
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post1.jpg" alt="Banner" />
+            </a>
+        </div>
+
+        <div class="adv-banner">
+            <a href="#" target="_blank" rel="nofollow">
+                <img src="<?= BASE_URL ?>/public/img/banner/Post2.jpg" alt="Banner" />
+            </a>
         </div>
     </div>
 

@@ -38,7 +38,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=2.1" />
+    <link rel="stylesheet" href="public/css/style.css?v=2.3" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -465,7 +465,6 @@
                 }
             }
         </style>
-       
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
@@ -592,7 +591,7 @@
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.0"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
 </body>
 

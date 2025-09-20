@@ -1,14 +1,223 @@
 a {
-    text-decoration: none;
+    text-decoratioline: none;
     color: #124889;
     vertical-align: baseline;
     cursor: pointer;
 }
+
 #createPostModal .modal-body {
-  max-height: 70vh; /* chiều cao tối đa chiếm 70% màn hình */
-  overflow-y: auto; /* thêm cuộn dọc */
+    max-height: 70vh;
+    /* chiều cao tối đa chiếm 70% màn hình */
+    overflow-y: auto;
+    /* thêm cuộn dọc */
+}
+.article-image {
+    width: 100%;
+    max-width: 450px;   /* 👈 chỉnh nhỏ lại, bạn thử 400–500px tùy ý */
+    margin: 0 auto 20px auto; /* căn giữa + cách dưới */
 }
 
+.article-image img {
+    width: 100%;
+    height: 300px;  /* 👈 giảm chiều cao cho cân đối */
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+
+
+.password-input-group {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+}
+        /* Khung bình luận */
+        .comment-section {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fefefe;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        /* Tiêu đề */
+        .comment-section-title {
+            margin-bottom: 15px;
+            font-size: 18px;
+            color: #198754;
+            font-weight: 600;
+        }
+
+        /* Form nhập bình luận */
+        .comment-form-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: flex-start;
+        }
+
+        .comment-form-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .comment-form-input {
+            flex: 1;
+            min-height: 50px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 14px;
+            resize: vertical;
+        }
+
+        .comment-form-btn {
+            background: #198754;
+            border: none;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .comment-form-btn:hover {
+            background: #157347;
+        }
+
+        /* Danh sách comment */
+        .comment-items {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* Mỗi comment */
+        .comment-card {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background: #f9f9f9;
+        }
+
+        /* Avatar */
+        .comment-card-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        /* Nội dung comment */
+        .comment-card-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Meta (avatar + tên + thời gian) */
+        .comment-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+
+        .comment-card-name {
+            font-weight: 600;
+            color: #198754;
+            font-size: 14px;
+        }
+
+        .comment-card-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Nội dung text */
+        .comment-card-content {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #333;
+            background: #fff;
+            padding: 8px 10px;
+            border-radius: 6px;
+            border: 1px solid #eee;
+        }
+
+        /* Hành động */
+        .comment-card-actions {
+            margin-top: 6px;
+        }
+
+        .comment-card-actions a {
+            font-size: 13px;
+            color: #198754;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        .comment-card-actions a:hover {
+            text-decoration: underline;
+        }
+
+        /* Khi chưa có comment */
+        .comment-empty {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+            text-align: center;
+        }
+
+.password-input-group .form-control {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-input-group .password-register {
+    width: 100%;
+    padding-right: 40px;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 5px;
+    transition: color 0.3s;
+}
+
+
+.popup-area-msg .alert-danger {
+    margin-top: 10px;
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.modal-dialog .modal-content {
+    margin-top: -25px;
+}
+
+/*Mobile*/
+@media (max-width: 480px) {
+    .modal-dialog .modal-content {
+        margin-top: 10px;
+    }
+}
 
 .adv-banner {
     margin-bottom: 20px;
@@ -1348,7 +1557,7 @@ textarea.form-control {
 .header-logo .box-search input {
     font-size: 10px;
     border-radius: 0 10px 10px 0 !important;
-    border-right: 1px solid #dee2e6 !important;
+    border-right: 1px solid #fafafa !important;
 }
 
 .header-logo .box-search button {
@@ -1359,7 +1568,7 @@ textarea.form-control {
 }
 
 .header-logo .box-search input::placeholder {
-    color: #ddd !important;
+    color: #7b7676 !important;
     font-weight: bold !important;
 }
 
@@ -2357,7 +2566,7 @@ a.disabled {
 }
 
 .left-menu .h-info li {
-    font-size: 11px;
+    font-size: 10;
     line-height: 18px;
     padding: 0px 3px;
     color: #76c8c2;
@@ -2430,6 +2639,7 @@ a.disabled {
 
 /**/
 .left-menu ul li img {
+
     width: 28px;
     height: 28px;
     border-radius: 50%;
@@ -2438,18 +2648,11 @@ a.disabled {
 }
 
 .left-menu ul li .icon-right {
-    margin-left: auto;
-    /* đẩy icon sang phải */
-    font-size: 14px;
-    /* size vừa phải */
-    color: #888;
-    /* màu nhạt nhẹ */
-    display: flex;
-    align-items: center;
-    /* căn giữa dọc */
-    justify-content: center;
-    min-width: 20px;
-
+    float: right;
+    padding-top: 4px;
+    cursor: pointer;
+    padding-left: 0px;
+    margin-top: 5px;
 }
 
 /*END*/
@@ -3085,7 +3288,7 @@ article p a {
 }
 
 .f-login {
-    padding: 30px 45px;
+    padding: 0 45px;
 }
 
 .f-register {
@@ -4376,7 +4579,7 @@ div[data-notify="container"] .close {
     width: 208px;
     padding: 10px 0 0 8px;
     font-size: 13px;
-    color: #7f7e7e;
+    color: #f1f1f1;
 }
 
 .header-info i {
@@ -4466,6 +4669,10 @@ div[data-notify="container"] .close {
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.box-alert .tab-content #content {
+    color: #2a14b8;
 }
 
 .box-alert .tab-content .label>span:last-child {
@@ -7180,4 +7387,17 @@ ul.timeline .left-arrow:after {
     .delete-post-btn:hover {
         color: #dc3545;
     }
+
+}
+
+/*Tiêu Đề Thông Báo*/
+.title-thongbao {
+    font-size: 22px;
+    font-weight: bold;
+    color: rebeccapurple;
+    padding: 10px 15px;
+    border-left: 5px solid #007bff;
+    background: #f9f9f9;
+    border-radius: 6px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
