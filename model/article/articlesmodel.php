@@ -311,6 +311,8 @@ class ArticlesModel
     public static function addArticleFromProfile(array $data)
     {
         $db = new connect();
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $created_at = date("Y-m-d H:i:s");
 
         // Đảm bảo các trường bắt buộc có dữ liệu
         if (empty($data['title']) || empty($data['content']) || empty($data['author_id'])) {
@@ -327,9 +329,10 @@ class ArticlesModel
         }
 
         $sql = "INSERT INTO articles 
-                (title, slug, summary, content, main_image_url, author_id, topic_id, status, published_at, is_hot, is_analysis) 
-                VALUES 
-                (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, NOW(), :is_hot, :is_analysis)";
+        (title, slug, summary, content, main_image_url, author_id, topic_id, status, created_at, is_hot, is_analysis) 
+        VALUES 
+        (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, :created_at, :is_hot, :is_analysis)";
+
 
         $stmt = $db->db->prepare($sql);
 
@@ -343,7 +346,8 @@ class ArticlesModel
             ':topic_id'       => $data['topic_id'] ?? null,
             ':status'         => $data['status'] ?? 'pending',
             ':is_hot'         => $data['is_hot'] ?? 0,
-            ':is_analysis'    => $data['is_analysis'] ?? 0
+            ':is_analysis'    => $data['is_analysis'] ?? 0,
+            ':created_at'     => $created_at
         ]);
 
         if ($success) {
