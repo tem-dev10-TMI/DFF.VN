@@ -101,9 +101,8 @@
                                     href="javascript:void(0)">
                                     <?php
                                     // Ưu tiên lấy avatar từ session sau khi đăng nhập thành công
-                                    $avatarUrl = $_SESSION['user_avatar_url']
-                                        ?? ($_SESSION['user']['avatar_url'] ?? null);
-                                    if (!$avatarUrl || trim((string) $avatarUrl) === '') {
+                                    $avatarUrl = $user['avatar_url'] ?? null;
+                                    if (!$avatarUrl || trim($avatarUrl) === '') {
                                         $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
                                     }
                                     ?>
