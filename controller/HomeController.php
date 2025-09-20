@@ -151,10 +151,10 @@ class homeController
                     $art2['author_id'] = 67;
                 } elseif (isset($art2['link']) && str_contains($art2['link'], 'vnexpress')) {
                     $art2['avatar_url'] = 'public/img/avatar/vnexpress.png';
-                    $art2['author_id'] = 68;
+                    $art2['author_id'] = 94;
                 } elseif (isset($art2['link']) && str_contains($art2['link'], 'tuoitre')) {
                     $art2['avatar_url'] = 'public/img/avatar/tuoitre.png';
-                    $art2['author_id'] = 69;
+                    $art2['author_id'] = 92;
                 } else {
                     $art2['avatar_url'] = 'public/img/avatar/baochinhphu.png';
                     $art2['author_id'] = 66;
