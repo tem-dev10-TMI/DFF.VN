@@ -134,13 +134,19 @@
 
 
 
-    require_once __DIR__ . '/../../model/event/Events.php';
-    if (!isset($pdo)) {
-        require_once __DIR__ . '/../../config/db.php';
+    // Tối ưu: Chỉ lấy sự kiện một lần. 
+    // Ưu tiên dùng biến $events từ controller (trang chủ), nếu không có thì layout tự lấy.
+    if (!isset($events)) {
+        require_once __DIR__ . '/../../model/event/Events.php';
+        if (!isset($pdo)) {
+            require_once __DIR__ . '/../../config/db.php';
+        }
+        global $pdo;
+        $eventModelHeader = new EventModels($pdo);
+        $headerEvents = $eventModelHeader->all(5);
+    } else {
+        $headerEvents = $events;
     }
-    global $pdo;
-    $eventModelHeader = new EventModels($pdo);
-    $headerEvents = $eventModelHeader->all(5);
 
     ?>
 
@@ -197,15 +203,6 @@
 
 
     <?php
-    if (!isset($headerEvents)) {
-        require_once __DIR__ . '/../../model/event/Events.php';
-        if (!isset($pdo)) {
-            require_once __DIR__ . '/../../config/db.php';
-        }
-        global $pdo;
-        $eventModelMobile = new EventModel($pdo);
-        $headerEvents = $eventModelMobile->all(5);
-    }
     $mobileNotifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
     ?>
     <div class="func-mobile">
