@@ -4632,7 +4632,7 @@ div[data-notify="container"] .close {
     right: 22px;
     background-color: #fff;
     border-radius: 8px;
-    padding: 10px 0;
+    /* padding: 10px 0; */
     border: 1px solid #ccc;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 6px;
     max-height: 600px;
@@ -7389,15 +7389,29 @@ ul.timeline .left-arrow:after {
     }
 
 }
+/* Chỉ cuộn dọc, tuyệt đối chặn ngang */
+.notice-list { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
 
-/*Tiêu Đề Thông Báo*/
-.title-thongbao {
-    font-size: 22px;
-    font-weight: bold;
-    color: rebeccapurple;
-    padding: 10px 15px;
-    border-left: 5px solid #007bff;
-    background: #f9f9f9;
-    border-radius: 6px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+/* Item gọn, không tràn */
+.notice-item { display: flex; align-items: center; gap: 12px; padding: .75rem 1rem; min-height: 56px; overflow: hidden; }
+
+/* Icon cố định kích thước */
+.notice-icon { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; }
+
+/* Vùng text co giãn, cho phép cắt/bẻ từ */
+.notice-text { flex: 1 1 auto; min-width: 0; }
+
+/* Tiêu đề: tối đa 2 dòng, không tràn ngang, bẻ từ cứng */
+.notice-title{
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;          /* bẻ từ nếu không có khoảng trắng */
+  overflow-wrap: anywhere;         /* ưu tiên bẻ bất cứ đâu để khỏi tạo scrollbar */
 }
+
+/* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
+.notice-time { font-size: .8125rem; }

@@ -91,111 +91,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             });
 
         </script>
-        <!-- Modal: Tạo bài viết mới -->
-        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
-
-
-
-                <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
-
-                    <!-- Header -->
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title fw-bold" id="createPostModalLabel">
-                            <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Đóng"></button>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="modal-body bg-light">
-                        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
-
-                            <!-- Avatar + tên -->
-                            <div class="d-flex align-items-center mb-3">
-                                <?php
-                                $avatarUrl = $user['avatar_url'] ?? null;
-                                if (!$avatarUrl || trim($avatarUrl) === '') {
-                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                }
-                                ?>
-                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
-                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                    style="width: 48px; height: 48px;">
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        <?php
-                                        if ($profile_category == 'businessmen') {
-                                            echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
-                                        } else {
-                                            echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
-                                        }
-                                        ?>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
-                                    </small>
-                                </div>
-                            </div>
-
-                            <!-- Tiêu đề -->
-                            <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
-                                placeholder="✏️ Nhập tiêu đề bài viết...">
-
-                            <!-- Tóm tắt -->
-                            <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
-                                placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
-
-                            <!-- Nội dung chính -->
-                            <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
-                                placeholder="💡 Nội dung chính của bài viết..."></textarea>
-
-                            <!-- Chọn chủ đề -->
-                            <div class="mb-3">
-                                <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
-                                <select class="form-select border-success" id="topicSelect" name="topic_id" required>
-                                    <option value="">-- Chọn chủ đề --</option>
-                                    <?php foreach ($allTopics as $topic): ?>
-                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- Thanh công cụ -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                                        <i class="fas fa-image me-1"></i> Hình ảnh
-                                    </label>
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                                        <i class="fas fa-video me-1"></i> Video
-                                    </label>
-                                    <button class="btn btn-outline-success btn-sm" type="button">
-                                        <i class="fas fa-link me-1"></i> Link
-                                    </button>
-                                </div>
-                               <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
-    <i class="fas fa-paper-plane me-1"></i> Đăng bài
-</button>
-
-                            </div>
-
-                            <!-- Input hidden -->
-                            <input type="file" id="postImage" class="d-none" accept="image/*"
-                                onchange="previewImage(event)">
-                            <input type="file" id="postVideo" class="d-none" accept="video/*"
-                                onchange="previewVideo(event)">
-                        </div>
-
-                        <!-- Preview ảnh / video -->
-                        <div id="imagePreview" class="mt-2 bt-4"></div>
-                        <div id="videoPreview" class="mt-2 bt-4"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
             <h5>
@@ -612,17 +508,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
     <div class="content-right">
-        <div class="block-k bs-coin">
-            <div class="search-container">
-                <div class="input-group imput-group-lg">
-                    <span class="input-group-text border-end-0"><i class="fas fa-search"></i></span>
-                    <input type="text" id="searchInput" class="form-control border-start-0"
-                        placeholder="Tra cứu crypto: BTC, ETH, SOL, BNB,...">
-                </div>
-                <ul id="coin_suggestions">
-                </ul>
-            </div>
-        </div>
 
 
         <div class="content-right">
@@ -1029,7 +914,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-            <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+         <!-- them -->
+             <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
                 <!-- Header -->
                 <div class="modal-header bg-success text-white">
@@ -1048,31 +934,27 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <!-- Avatar + tên -->
                         <div class="d-flex align-items-center mb-3">
                             <?php
-                            $avatarUrl = $user['avatar_url'] ?? null;
-                            if (!$avatarUrl || trim($avatarUrl) === '') {
-                                $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                            }
-                            ?>
-                            <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                if (!$avatarUrl || trim($avatarUrl) === '') {
+                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                }
+                                ?>
+                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                    style="width: 48px; height: 48px;">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">
+                                        <?php
+                                            echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                        ?>
+                                    </h6>
+                                    <small class="text-muted">
+                                        <?= htmlspecialchars( (($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân' ) ?>
 
-                                class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                style="width: 48px; height: 48px;">
-
-                            <div>
-                                <h6 class="mb-0 fw-bold text-dark">
-                                    <?php
-                                    if ($profile_category == 'businessmen') {
-                                        echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
-                                    } else {
-                                        echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
-                                    }
-                                    ?>
-                                </h6>
-                                <small class="text-muted">
-                                    <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
-                                </small>
+                                    </small>
+                                    
+                                </div>
                             </div>
-                        </div>
 
                         <!-- Tiêu đề -->
                         <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
@@ -1125,8 +1007,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <!-- Preview ảnh / video -->
                     <div id="imagePreview" class="mt-2 bt-4"></div>
                     <div id="videoPreview" class="mt-2 bt-4"></div>
-                </div>
-            </div>
+               
 
 
 
