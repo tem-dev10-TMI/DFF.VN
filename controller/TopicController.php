@@ -38,6 +38,30 @@ class TopicController
     {
         $topicModel = new TopicModel();
         $topic = $topicModel->getBySlug($slug);
+
+        if (!$topic) {
+            echo "Chủ đề không tồn tại!";
+            return;
+        }
+
+        // Bổ sung logic lấy thông tin theo dõi
+        require_once __DIR__ . '/../config/db.php';
+        $db = new connect();
+        $pdo = $db->db;
+
+        require_once __DIR__ . '/../model/topic/TopicFollowModel.php';
+        $topicFollowModel = new TopicFollowModel($pdo);
+
+        // Lấy số người theo dõi
+        $topic['follower_count'] = $topicFollowModel->countFollowers($topic['id']);
+
+        // Kiểm tra người dùng hiện tại có theo dõi không
+        $isFollowing = false;
+        if (isset($_SESSION['user']['id'])) {
+            $userId = $_SESSION['user']['id'];
+            $isFollowing = $topicFollowModel->isFollowing($userId, $topic['id']);
+        }
+
         require_once __DIR__ . '/../model/rss/RssModel.php';
         if ($slug == 'tai-chinh') {
             $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
@@ -84,11 +108,6 @@ class TopicController
         } else {
             // Với các slug khác (crypto, thao-luan), lấy bài từ database
             $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
-        }
-
-        if (!$topic) {
-            echo "Chủ đề không tồn tại!";
-            return;
         }
 
         // Sắp xếp lại tất cả bài viết theo thời gian mới nhất

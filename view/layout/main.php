@@ -703,7 +703,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             </div>
         </div>
 
-        <scrip>
+        <script>
             $(function () {
                 type = 3;
             });

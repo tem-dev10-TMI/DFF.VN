@@ -932,7 +932,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
     <!-- Modal for creating a new post -->
 
     <!-- Modal: Tạo bài viết mới -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+    
 
         <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
