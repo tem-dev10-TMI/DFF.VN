@@ -1,6 +1,8 @@
 <?php
 require_once __DIR__ . '/../model/TopicModel.php';
 require_once __DIR__ . '/../model/article/articlesmodel.php';
+require_once __DIR__ . '/../model/topic/TopicFollowModel.php';
+
 class TopicController
 {
     // Hiển thị danh sách tất cả chủ đề (ví dụ trang chính hoặc sidebar)
@@ -34,38 +36,52 @@ class TopicController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
-    public function details_topic($slug)
-    {
-        $topicModel = new TopicModel();
-        $topic = $topicModel->getBySlug($slug);
-        require_once __DIR__ . '/../model/rss/RssModel.php';
-        if ($slug == 'tai-chinh') {
-            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+   public function details_topic($slug)
+{
+    $topicModel = new TopicModel();
+    $topic = $topicModel->getBySlug($slug);
 
-            // RSS Thanh Niên
-            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        }else{
-            $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
-        }
-        //var_dump($articles);
-
-        // Gộp RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
-        
-        if (!$topic) {
-            echo "Chủ đề không tồn tại!";
-            return;
-        }
-
-        ob_start();
-        require_once __DIR__ . '/../view/page/DetailsTopic.php';
-        $content = ob_get_clean();
-
-        $profile = false;
-        require_once __DIR__ . '/../view/layout/main.php';
+    if (!$topic) {
+        echo "Chủ đề không tồn tại!";
+        return;
     }
+
+    // thêm đoạn này 👇
+    require_once __DIR__ . '/../model/topic/TopicFollowModel.php';
+    $topicFollowModel = new TopicFollowModel((new connect())->db);
+
+    // Lấy số follower
+    $followerCount = $topicFollowModel->countFollowers($topic['id']);
+    $topic['follower_count'] = $followerCount;
+
+    // Check user đã follow chưa
+    $isFollowing = false;
+    if (isset($_SESSION['user']['id'])) {
+        $isFollowing = $topicFollowModel->isFollowing($_SESSION['user']['id'], $topic['id']);
+    }
+    // hết đoạn thêm 👆
+
+    require_once __DIR__ . '/../model/rss/RssModel.php';
+    if ($slug == 'tai-chinh') {
+        $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
+        $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
+
+        $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
+        $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+
+        $articles = array_merge($rssArticles1, $rssArticles2);
+    } else {
+        $articles = ArticlesModel::getArticlesByTopicSlug($slug, 10);
+    }
+
+    ob_start();
+    require_once __DIR__ . '/../view/page/DetailsTopic.php';
+    $content = ob_get_clean();
+
+    $profile = false;
+    require_once __DIR__ . '/../view/layout/main.php';
+}
+
     // Chi tiết 1 chủ đề (ví dụ hiển thị bài viết theo topic)
     public static function details($id)
     {
