@@ -1,4 +1,10 @@
 <?php
+
+// ví dụ trong controller
+$isFollowing = $model->isFollowing($currentUserId, $businessId);
+
+include __DIR__ . '/../view/page/viewProfilebusiness.php';
+
 class businessmenController
 {
     // Danh sách tất cả doanh nhân
@@ -8,6 +14,7 @@ class businessmenController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
+        
         require_once __DIR__.'/../../model/user/userModel.php';
         require_once __DIR__.'/../../model/user/businessmenModel.php';
         require_once __DIR__.'/../../model/article/articlesmodel.php';

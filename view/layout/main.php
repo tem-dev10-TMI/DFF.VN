@@ -444,6 +444,41 @@
                 });
             });
         })();
+
+document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const userId = this.getAttribute("data-user");
+
+                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: "user_id=" + encodeURIComponent(userId),
+                            credentials: "include"
+                        })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // cập nhật text nút
+                                    this.querySelector(".follow-text").innerText =
+                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+
+                                    // cập nhật số follower
+                                    this.querySelector(".number").innerText = data.followers;
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Không thể kết nối đến server!");
+                            });
+                    });
+                });
+
+
+
+
+
     </script>
     <a module-load="boxIndex"></a>
 
