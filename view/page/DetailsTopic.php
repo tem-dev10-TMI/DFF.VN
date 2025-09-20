@@ -17,11 +17,12 @@
                             <a href="/topic-<?= $topic['slug'] ?>-t<?= $topic['slug'] ?>.html"><?= htmlspecialchars($topic['name']) ?></a>
                         </li>
                         <li class="f-folw">
-                            <a data-type="5" href="javascript:void(0)" data-ref="topic-<?= $topic['slug'] ?>">
-                                <val>Theo dõi</val>
+                            <a href="javascript:void(0)" class="follow-btn" data-topic-id="<?= (int)($topic['id'] ?? 0) ?>">
+                                <span class="val"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
                                 <span class="number"><?= number_format($topic['follower_count'] ?? 0) ?></span>
                             </a>
                         </li>
+
                     </ul>
                 </div>
             </div>
@@ -160,5 +161,25 @@
                 });
             });
         </script>
+
+        <script>
+$(document).on("click", ".follow-btn", function(e) {
+    e.preventDefault();
+    let btn = $(this);
+    let topicId = btn.data("topic-id");
+
+    $.post("<?= BASE_URL ?>/controller/topic/topic_follow.php", { topic_id: topicId }, function(data) {
+        if (data.success) {
+            btn.find(".val").text(data.following ? "Đang theo dõi" : "Theo dõi");
+            btn.find(".number").text(data.followers_count);
+        } else {
+            alert(data.message);
+        }
+    }, "json").fail(function(xhr) {
+        console.error("AJAX error:", xhr.responseText);
+    });
+});
+</script>
+
     </div>
 </main>
