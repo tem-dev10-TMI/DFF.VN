@@ -7214,22 +7214,28 @@ ul.timeline .left-arrow:after {
 .red {
     color: #ef0808;
 }
-
 @media (min-width:1024px) {
     .main>.left-sidebar {
         order: -1;
         width: 250px;
         border-right: 1px solid rgb(212 211 211);
+        max-width: 250px;
+        overflow-x: hidden;
     }
 
     .main>.main-content {
         width: calc(100% - 250px);
         padding: 30px 0 0 50px;
+        box-sizing: border-box;
+        max-width: 100vw;
+        overflow-x: hidden;
     }
 
     /* Desktop giữ nguyên */
     .left-sidebar {
         position: relative;
+        top: 0;
+        left: 0;     
     }
 }
 
@@ -7245,6 +7251,7 @@ ul.timeline .left-arrow:after {
         background: #fff;
         z-index: 2000;
         overflow-y: auto;
+        overflow-x: hidden;
         display: none;
         /* ẩn mặc định */
     }
@@ -7253,6 +7260,7 @@ ul.timeline .left-arrow:after {
         display: block;
         /* hiện khi bấm 3 gạch */
     }
+    
 
     .provider {
         position: relative;
@@ -7291,6 +7299,24 @@ text-box {
   white-space: normal;  /* Cho phép xuống dòng */
   word-wrap: break-word;/* Tự động xuống dòng nếu từ quá dài */
   overflow-wrap: break-word; /* Chuẩn mới thay cho word-wrap */
+}
+html, body {
+  overflow-x: hidden !important; /* ép ẩn thanh ngang */
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+.left-sidebar {
+  overflow-x: hidden;  /* ẩn thanh ngang */
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+
+.left-sidebar * {
+  max-width: 100%;          
+  box-sizing: border-box;
+  white-space: normal !important; /* cho phép xuống dòng */
+  word-break: break-word;         /* xuống dòng nếu từ quá dài */
 }
 
 
