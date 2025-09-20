@@ -11,8 +11,7 @@
     <meta http-equiv="REFRESH" content="1800" />
     <title>Mạng xã hội Kinh tế - MXH Trung Tâm </title>
     <base href="http://localhost/DFF.VN/">
-    <meta name="description"
-        content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
+    <meta name="description" content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
     <meta name="keywords"
         content="mxh, mxh.org.vn, Mạng xã hội TMI, Mạng xã hội kinh tế, Mạng xã hội đầu tư, doanh nghiệp, doanh nhân, cổ phiếu, chứng khoán, quản lý tài chính, kinh doanh,Cộng đồng nhà đầu tư, mạng lưới nhà đầu tư, diễn đàn tài chính, diễn đàn nhà đầu tư, phân tích tài chính, thông tin doanh nghiệp, phân tích doanh nghiệp" />
     <meta property="fb:app_id" content="" />
@@ -29,12 +28,14 @@
 
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
@@ -44,9 +45,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
@@ -114,20 +118,20 @@
 
 
 
-    require_once  __DIR__ . '/../../model/TopicModel.php';
+    require_once __DIR__ . '/../../model/TopicModel.php';
 
     $topicModel = new TopicModel();
     $allTopics = $topicModel->getAll(); // tất cả chủ đề
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
-    require_once  __DIR__ . '/../layout/sidebarMobile.php';
+    require_once __DIR__ . '/../layout/sidebarMobile.php';
 
 
 
 
 
     // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
-
+    
 
 
     require_once __DIR__ . '/../../model/event/Events.php';
@@ -146,14 +150,14 @@
     </div>
     <!-- header start -->
 
-    <?php require_once  __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
+    <?php require_once __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
     ?>
     <!-- cho cái thi trường chạy -->
 
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function() {
+        $(function () {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -164,7 +168,7 @@
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function() {
+                    marqueeInterval = setInterval(function () {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -194,7 +198,7 @@
 
     <?php
     if (!isset($headerEvents)) {
-        require_once  __DIR__ . '/../../model/event/Events.php';
+        require_once __DIR__ . '/../../model/event/Events.php';
         if (!isset($pdo)) {
             require_once __DIR__ . '/../../config/db.php';
         }
@@ -224,12 +228,14 @@
                     <span>Xu hướng</span>
                 </a>
             </li>
-            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i class="fas fa-bell"></i>
+            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i
+                        class="fas fa-bell"></i>
                     <span class="number"><?= $mobileNotifCount ?></span>
                     <span class="falert">Thông báo</span>
                 </a></li>
             <li>
-                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i class="fas fa-user-alt"></i>
+                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i
+                        class="fas fa-user-alt"></i>
                     <span>Tôi</span>
                 </a>
             </li>
@@ -237,14 +243,16 @@
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 1055;">
+    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
+        style="z-index: 1055;">
         <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+                <div class="modal-body" id="mobileModalBody"
+                    style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
@@ -308,7 +316,7 @@
     </style>
 
     <script>
-        (function() {
+        (function () {
             // Dữ liệu sự kiện từ PHP
             const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
@@ -378,23 +386,30 @@
     <div id="mobile-profile-template" class="d-none">
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                                                                            echo 'profile_user';
-                                                                        } else {
-                                                                            //echo 'profile_business';
-                                                                        } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
+                      echo 'profile_user';
+                  } else {
+                      //echo 'profile_business';
+                  } ?>"><i class="fas fa-user"></i> Trang cá
+                        nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
+                        khẩu</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng
+                        xuất</a></li>
             <?php else: ?>
-                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a></li>
-                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)"
+                        onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng
+                        nhập</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)"
+                        onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng
+                        ký</a></li>
             <?php endif; ?>
         </ul>
     </div>
 
     <script>
-        (function() {
+        (function () {
             var modalEl = document.getElementById('mobileModal');
             var modalBody = document.getElementById('mobileModalBody');
             var modalTitle = document.getElementById('mobileModalLabel');
@@ -421,12 +436,12 @@
             }
 
             // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
-            modalEl && modalEl.addEventListener('click', function(e) {
+            modalEl && modalEl.addEventListener('click', function (e) {
                 if (e.target === modalEl) closeMobileModal();
             });
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                a.addEventListener('click', function(e) {
+            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
+                a.addEventListener('click', function (e) {
                     var type = this.getAttribute('data-mobile-modal');
                     if (!type) return;
                     if (type === 'alerts') {
@@ -475,7 +490,7 @@
                 <!-- ?php require_once 'view/page/Home.php'; -->
                 <?= $content ?>
 
-                <?php require_once  __DIR__ . '/../layout/sidebarLeft.php'; ?>
+                <?php require_once __DIR__ . '/../layout/sidebarLeft.php'; ?>
                 <a href="crypton">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-coin mb-coins" viewBox="0 0 16 16">
@@ -492,7 +507,7 @@
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function() {
+            $(function () {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -532,14 +547,14 @@
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function() {
+                $('.mb-chat').click(function () {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function() {
+                $('.cover-chat .cclose').click(function () {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function(e) {
+                $('.cm-more').on('click', function (e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -549,13 +564,115 @@
             });
         </script>
 
+        <!-- Modal: Tạo bài viết mới -->
+        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
+
+
+                <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+
+                    <!-- Header -->
+                    <div class="modal-header bg-success text-white">
+                        <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                            <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Đóng"></button>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="modal-body bg-light p-10">
+                        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                            <!-- Avatar + tên -->
+                            <div class="d-flex align-items-center mb-3">
+                                <?php
+                                $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                if (!$avatarUrl || trim($avatarUrl) === '') {
+                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                }
+                                ?>
+                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                    style="width: 48px; height: 48px;">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">
+                                        <?php
+                                            echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                        ?>
+                                    </h6>
+                                    <small class="text-muted">
+                                        <?= htmlspecialchars( (($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân' ) ?>
+
+                                    </small>
+                                    
+                                </div>
+                            </div>
+
+                            <!-- Tiêu đề -->
+                            <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                                placeholder="Nhập tiêu đề bài viết...">
+
+                            <!-- Tóm tắt -->
+                            <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                                placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+
+                            <!-- Nội dung chính -->
+                            <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                                placeholder="Nội dung chính của bài viết..."></textarea>
+
+                            <!-- Chọn chủ đề -->
+                            <div class="mb-3">
+                                <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
+                                <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                    <option value="">-- Chọn chủ đề --</option>
+                                    <?php foreach ($allTopics as $topic): ?>
+                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <!-- Thanh công cụ -->
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex gap-2">
+                                    <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                        <i class="fas fa-image me-1"></i> Hình ảnh
+                                    </label>
+                                    <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                        <i class="fas fa-video me-1"></i> Video
+                                    </label>
+                                    <button class="btn btn-outline-success btn-sm" type="button">
+                                        <i class="fas fa-link me-1"></i> Link
+                                    </button>
+                                </div>
+                                <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+                                    <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                </button>
+
+                            </div>
+
+                            <!-- Input hidden -->
+                            <input type="file" id="postImage" class="d-none" accept="image/*"
+                                onchange="previewImage(event)">
+                            <input type="file" id="postVideo" class="d-none" accept="video/*"
+                                onchange="previewVideo(event)">
+                        </div>
+
+                        <!-- Preview ảnh / video -->
+                        <div id="imagePreview" class="mt-2 bt-4"></div>
+                        <div id="videoPreview" class="mt-2 bt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script>
-            $(function() {
+            $(function () {
                 type = 3;
             });
-        </script>
+        </scrip>
 
 
 
@@ -573,11 +690,11 @@
 
 
     <script>
-        $(function() {
+        $(function () {
             Page.registerModule(document);
 
 
-            $(window).scroll(function() {
+            $(window).scroll(function () {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");

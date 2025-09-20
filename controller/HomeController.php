@@ -38,7 +38,7 @@ class homeController
 
         $topBusinessmen = businessmenModel::getAllBusinessmen(6, $_SESSION['user']['id']);
         $marketData = MarketDataModel::getCachedMarketData();
-
+        
         // Lấy dữ liệu sự kiện
         $eventsModel = new Events();
         $events = $eventsModel->getAll();
