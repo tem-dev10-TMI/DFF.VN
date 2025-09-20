@@ -35,8 +35,8 @@ class homeController
         // 1. Lấy dữ liệu từ Database (giữ nguyên logic của bạn)
         $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
-
-        $topBusinessmen = businessmenModel::getAllBusinessmen(6, $_SESSION['user']['id']);
+        $iduser = $_SESSION['user']['id']?? null;
+        $topBusinessmen = businessmenModel::getAllBusinessmen(6, $iduser);
         $marketData = MarketDataModel::getCachedMarketData();
         
         // Lấy dữ liệu sự kiện
