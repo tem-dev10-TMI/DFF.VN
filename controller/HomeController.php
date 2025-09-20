@@ -36,7 +36,7 @@ class homeController
         $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
 
-        $topBusinessmen = businessmenModel::getAllBusinessmen();
+        $topBusinessmen = businessmenModel::getAllBusinessmen(6, $_SESSION['user']['id']);
         $marketData = MarketDataModel::getCachedMarketData();
 
         // Lấy dữ liệu sự kiện

@@ -12,7 +12,7 @@ class businessmenModel
                 WHERE u.id = :user_id
                 LIMIT 1";
         $stmt = $db->db->prepare($sql);
-$stmt->execute([':user_id' => $user_id]);
+        $stmt->execute([':user_id' => $user_id]);
 
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -69,7 +69,7 @@ $stmt->execute([':user_id' => $user_id]);
         $sql = "SELECT * FROM businessmen_careers WHERE businessmen_id = :businessmen_id ORDER BY start_year DESC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':businessmen_id' => $businessmen_id]);
-return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     // =============== Thêm quá trình công tác của doanh nhân ===============
@@ -134,31 +134,48 @@ return $stmt->fetchAll(PDO::FETCH_ASSOC);
         $stmt->execute([':user_id' => $user_id]);
         return (int) $stmt->fetchColumn();
     }
-   
 
-     public static function getAllBusinessmen($limit = 10) {
+
+    public static function getAllBusinessmen($limit = 10, $currentUserId = null)
+    {
         global $pdo;
 
-       $sql = "
-    SELECT 
-        b.id, 
-        u.id AS user_id, 
-        u.username, 
-        u.name, 
-        u.avatar_url,
-        b.position,
-        (SELECT COUNT(*) FROM user_follows f WHERE f.following_id = u.id) AS followers
-    FROM businessmen b
-    JOIN users u ON b.user_id = u.id
-    ORDER BY followers DESC
-    LIMIT :limit
-";
+        // 1. Xây dựng câu SQL cơ bản
+        $sql = "
+            SELECT 
+                b.id, 
+                u.id AS user_id, 
+                u.username, 
+                u.name, 
+                u.avatar_url,
+                b.position,
+                (SELECT COUNT(*) FROM user_follows f WHERE f.following_id = u.id) AS followers
+            FROM businessmen b
+            JOIN users u ON b.user_id = u.id
+        ";
 
-        
+        // 2. Thêm điều kiện WHERE nếu có currentUserId được truyền vào
+        if ($currentUserId !== null) {
+            $sql .= " WHERE u.id != :currentUserId ";
+        }
+
+        // 3. Thêm phần còn lại của câu lệnh
+        $sql .= "
+            ORDER BY followers DESC
+            LIMIT :limit
+        ";
+
+        // 4. Chuẩn bị và thực thi câu lệnh
         $stmt = $pdo->prepare($sql);
+
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        // Chỉ bind giá trị :currentUserId nếu nó tồn tại
+        if ($currentUserId !== null) {
+            $stmt->bindValue(':currentUserId', (int)$currentUserId, PDO::PARAM_INT);
+        }
+
         $stmt->execute();
-        
+
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     // Tạo dữ liệu mẫu cho businessmen
@@ -253,6 +270,4 @@ return $stmt->fetchAll(PDO::FETCH_ASSOC);
             'likes' => $likesCount
         ];
     }
-
-    
 }
