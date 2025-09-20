@@ -42,10 +42,10 @@ class TopicController {
     }
 
     // Chi tiết
-    public function details_topic($id = null) {
+    public function details_topic($slug = null) {
         $id = $id ?? ($_GET['id'] ?? 0);
-        $topic = $this->model->getTopicById($id);
-        $articles = articlesmodel::getArticlesByTopicId($id, 10);
+        $topic = $this->model->findBySlug($id);
+        $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
 
         if (!$topic) {
             echo "Chủ đề không tồn tại!";
