@@ -703,11 +703,11 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
             </div>
         </div>
 
-        <script>
+        <scrip>
             $(function () {
                 type = 3;
             });
-        </scrip>
+        </script>
 
 
 
@@ -747,6 +747,6 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
 </body>
 
-<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:53 GMT -->
+
 
 </html>
