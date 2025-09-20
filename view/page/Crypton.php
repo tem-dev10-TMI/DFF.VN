@@ -17,7 +17,7 @@
         <div class="header-content">
             <!-- Logo -->
             <div class="logo-section">
-                <div class="logo">DFF.VN</div>
+                <div class="logo">MXH.ORG.VN</div>
                 <div class="tagline">MẠNG XÃ HỘI KINH TẾ - TÀI CHÍNH</div>
             </div>
 

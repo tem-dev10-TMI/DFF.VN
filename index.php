@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 require_once __DIR__ . '/helpers.php';
 ini_set('session.cookie_path', '/');
 ini_set('session.cookie_domain', 'localhost'); // nếu chạy ở localhost
