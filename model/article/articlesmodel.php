@@ -109,16 +109,32 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getArticleBySlug($slug)
+    public static function getArticleBySlug($slug, $currentUserId = null)
     {
         $db = new connect();
+
+        // Bắt đầu câu SQL
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-                LEFT JOIN topics t ON a.topic_id = t.id
-                WHERE a.slug = :slug AND a.status = 'public'";
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id = t.id
+            WHERE a.slug = :slug";
+
+        // Mảng chứa các tham số để bind
+        $params = [':slug' => $slug];
+
+        // Nếu là khách (không có user id), chỉ cho xem bài viết public
+        if ($currentUserId === null) {
+            $sql .= " AND a.status = 'public'";
+        }
+        // Nếu đã đăng nhập, cho phép xem bài public HOẶC bài viết của chính họ
+        else {
+            $sql .= " AND (a.status = 'public' OR a.author_id = :currentUserId)";
+            $params[':currentUserId'] = $currentUserId;
+        }
+
         $stmt = $db->db->prepare($sql);
-        $stmt->execute([':slug' => $slug]);
+        $stmt->execute($params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
