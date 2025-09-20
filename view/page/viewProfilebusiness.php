@@ -21,7 +21,7 @@
             $businessman = [
                 'name' => 'Chưa có tên',
                 'user_id' => 0,
-                'avatar_url' => '/Upload/img_static/profile_default.png',
+                'avatar_url' => $user['avatar_url'],
                 'birth_year' => null,
                 'nationality' => null,
                 'education' => null,
@@ -42,8 +42,9 @@
         <div class="block-k box-company-label">
             <div class="block-t p-t-20" bis_skin_checked="1">
                 <div class="block-t-top" bis_skin_checked="1">
-                    <img alt="image" class="profile-img"
-                        src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
+                <img alt="image" class="profile-img"
+     src="<?= !empty($user['avatar_url']) ? $user['avatar_url'] : '/Upload/img_static/profile_default.png' ?>">
+
                 </div>
                 <div class="h-topic">
                     <ul>
@@ -137,88 +138,28 @@
                 </ul>
             </div>
         </div>
-<!-- ✅ KHUNG NHẬP BÌNH LUẬN -->
-<div class="comment-input-box"
-     style="border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:20px;background:#fafafa;">
-  <h5 style="margin-top:0;margin-bottom:10px;">
-    <i class="fas fa-comments"></i> Viết bình luận
-  </h5>
-  <div style="display:flex;align-items:flex-start;gap:10px;">
-    <img src="/Upload/img_static//profile_638930336755560936.png"
-         style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-    <textarea id="comment-text"
-              placeholder="Bạn nghĩ gì về nội dung này?"
-              style="flex:1;min-height:60px;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
-    <button id="send-comment"
-            style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">
-      Gửi
-    </button>
-  </div>
-  <div id="comment-message" style="display:none;color:green;margin-top:8px;">Đã thêm bình luận</div>
-</div>
-
-<!-- Khung hiển thị bình luận -->
-<div class="comment-display-box"
-     style="border:1px solid #ccc;border-radius:8px;padding:15px;background:#fff;display:none;">
-  <h5 style="margin:0 0 10px 0;">Bình luận đã đăng</h5>
-  <ul id="comment-list" style="list-style:none;margin:0;padding:0;"></ul>
-</div>
-                              
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-  const sendBtn     = document.getElementById('send-comment');
-  const textarea    = document.getElementById('comment-text');
-  const message     = document.getElementById('comment-message');
-  const displayBox  = document.querySelector('.comment-display-box');
-  const commentList = document.getElementById('comment-list');
-
-function createCommentItem(text) {
-  const li = document.createElement('li');
-  li.style.cssText = 'display:block;width:100%;margin-bottom:12px;'; // <- quan trọng
-  li.innerHTML = `
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-      <img src="/Upload/img_static//profile_638930336755560936.png"
-           style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-      <div style="background:#f1f1f1;padding:10px;border-radius:6px;flex:1;">
-        <span style="white-space:pre-wrap;">${text}</span>
-      </div>
-    </div>
-  `;
-  return li;
-}
 
 
-  // Lấy bình luận cũ từ localStorage, hiển thị cũ trước mới sau
-  const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
-  if (savedComments.length > 0) {
-    savedComments.forEach(text => commentList.prepend(createCommentItem(text)));
-    displayBox.style.display = 'block';
-  }
+        <div class="block-k" bis_skin_checked="1">
+            <h5 class="total-cm"><i class="fas fa-comments"></i>Bình luận <span></span></h5>
+            <div class="comment-box" bis_skin_checked="1">
+                <a href="javascript:void(0)" class="img-own"><img class="logo" alt=""
+                        src="/Upload/img_static//profile_638930336755560936.png"></a>
+                <textarea class="form-control autoresizing" placeholder=" Bạn nghĩ gì về nội dung này?"></textarea>
+                <i class="fas fa-paper-plane" data-id="2017" module-load="csend"></i>
+            </div>
 
-  sendBtn.addEventListener('click', function () {
-    const text = textarea.value.trim();
-    if (!text) return;
+            <div class="comment-cover" bis_skin_checked="1">
+                <ul class="list_comment col-md-12">
+                </ul>
+                <div class="cm-more" bis_skin_checked="1">Xem thêm</div>
+            </div>
 
-    // Lưu mới nhất lên đầu mảng để lần tải sau vẫn giữ thứ tự mới -> cũ
-    savedComments.unshift(text);
-    localStorage.setItem('comments', JSON.stringify(savedComments));
-
-    // Hiển thị mới nhất lên trên cùng
-    commentList.prepend(createCommentItem(text));
-    displayBox.style.display = 'block';
-
-    message.style.display = 'block';
-    setTimeout(() => { message.style.display = 'none'; }, 1500);
-    textarea.value = '';
-  });
-});
-</script>
-
-
-
-
-
+            <div class="first-comment" bis_skin_checked="1">
+                <i class="far fa-comments"></i>
+                <p>Trở thành người bình luận đầu tiên</p>
+            </div>
+        </div>
 
 
 
@@ -228,28 +169,335 @@ function createCommentItem(text) {
 
 
     <div class="content-right">
-        <div class="adv-banner">
-            <a href="#" target="_blank" rel="nofollow">
-                <img src="<?= BASE_URL ?>/public/img/banner/Post4.jpg" alt="Banner" />
-            </a>
+        <div class="block-k bs-coin">
+            <div class="search-container">
+                <div class="input-group imput-group-lg">
+                    <span class="input-group-text border-end-0"><i class="fas fa-search"></i></span>
+                    <input type="text" id="searchInput" class="form-control border-start-0"
+                        placeholder="Tra cứu crypto: BTC, ETH, SOL, BNB,...">
+                </div>
+                <ul id="coin_suggestions">
+                </ul>
+            </div>
+        </div>
+        <div class="block-k cover-chat">
+            <h5>
+                <a href="#" title=""> <i class="fas fa-comments"></i> Hi! DFF </a>
+            </h5>
+            <div class="comment-cover">
+                <div class="fr-content">
+                    <ul class="list_comment col-md-12">
+                    </ul>
+                    <div class="cm-more">Xem thêm</div>
+                </div>
+                <div class="h-comment">
+                    <a href="javascript:void(0)" class="img-own">
+                        <img src="vendor/dffvn/content/img/user.svg">
+                    </a>
+                    <textarea class="form-control autoresizing" placeholder="Viết bình luận"></textarea>
+                    <i class="fas fa-paper-plane" module-load="csend"></i>
+                </div>
+            </div>
+        </div>
+        <div class="adv block-k">
+            <div class="fb-page" data-href="https://www.facebook.com/dffvn.official" data-tabs="timeline" data-width=""
+                data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+                data-show-facepile="true">
+                <blockquote cite="https://www.facebook.com/dffvn.official" class="fb-xfbml-parse-ignore"><a
+                        href="../www.facebook.com/dffvn.html">DFF.VN - Mạng xã hội kinh tế tài chính </a>
+                </blockquote>
+            </div>
         </div>
 
-        <div class="adv-banner">
-            <a href="#" target="_blank" rel="nofollow">
-                <img src="<?= BASE_URL ?>/public/img/banner/Post3.jpg" alt="Banner" />
-            </a>
+
+
+
+        <div class="block-k bg-box-a">
+            <div class="tieu-diem">
+                <h2>
+
+                    <i class="fab fa-hotjar"></i> DFF <span>HOT</span>
+                </h2>
+                <ul>
+
+                    <li class="new-style">
+                        <a title="TPBank muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản lý nợ vốn 100 tỷ đồng"
+                            href="tpbank-muon-chi-3600-ty-dong-thau-tom-tps-lap-cong-ty-quanly-no-von-100-ty-dong-p20250827121341119.html">TPBank
+                            muốn chi 3.600 tỷ đồng thâu tóm TPS, lập công ty quản
+                            lý nợ vốn 100 tỷ đồng
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/tpbank638918936210729258.jpg"
+                            title="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quảnl&#253; nợ vốn 100 tỷ đồng"
+                            alt="TPBank muốn chi 3.600 tỷ đồng th&#226;u t&#243;m TPS, lập c&#244;ng ty quản l&#253; nợ vốn 100 tỷ đồng"
+                            border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến làm Chủ tịch, ông chủ Kita Nguyễn Duy Kiên làm Phó Chủ tịch"
+                            href="chuong-moi-o-rcc-cuu-ceo-shs-vu-duc-tien-lam-chu-tich-ong-chu-kita-nguyen-duy-kien-lam-pho-chu-tich-p2025082712131457.html">Chương
+                            mới ở RCC: Cựu CEO SHS Vũ Đức Tiến làm Chủ tịch, ông chủ Kita Nguyễn Duy Kiên
+                            làm Phó Chủ tịch
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/egm-2025-rcc638918935939949422.jpg"
+                            title="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến l&#224;m Chủ tịch, &#244;ng chủ Kita Nguyễn Duy Ki&#234;n l&#224;m Ph&#243; Chủ tịch"
+                            alt="Chương mới ở RCC: Cựu CEO SHS Vũ Đức Tiến l&#224;m Chủ tịch, &#244;ng chủ Kita Nguyễn Duy Ki&#234;n l&#224;m Ph&#243; Chủ tịch"
+                            border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="NHNN bơm ròng gần 3.000 tỷ đồng tuần qua, lãi suất liên ngân hàng tăng nhẹ"
+                            href="nhnn-bom-rong-gan-3000-ty-dong-tuan-qua-lai-suat-lien-ngan-hang-tang-nhe-p20250825074521390.html">NHNN
+                            bơm ròng gần 3.000 tỷ đồng tuần qua, lãi suất liên ngân hàng tăng nhẹ
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/tien638917047213072765.jpg"
+                            title="NHNN bơm r&#242;ng gần 3.000 tỷ đồng tuần qua, l&#227;i suất li&#234;n ng&#226;n h&#224;ng tăng nhẹ"
+                            alt="NHNN bơm r&#242;ng gần 3.000 tỷ đồng tuần qua, l&#227;i suất li&#234;n ng&#226;n h&#224;ng tăng nhẹ"
+                            border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="570.000 tỷ đồng tồn kho của loạt 'ông trùm' địa ốc"
+                            href="570000-ty-dong-ton-kho-cua-loat-ong-trum-dia-oc-p20250825093523869.html">570.000
+                            tỷ đồng tồn kho của loạt 'ông trùm' địa ốc
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/ton-kho-bat-dong-san638917113238077644.jpg"
+                            title="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc"
+                            alt="570.000 tỷ đồng tồn kho của loạt &#39;&#244;ng tr&#249;m&#39; địa ốc" border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="Con trai 'bầu' Đức đăng ký gom thêm 25 triệu cổ phiếu HAG"
+                            href="con-trai-bau-duc-dang-ky-gom-them-25-trieu-co-phieu-hag-p20250825110742354.html">Con
+                            trai 'bầu' Đức đăng ký gom thêm 25 triệu cổ phiếu HAG
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/bau-duc638917168623228185.jpg"
+                            title="Con trai &#39;bầu&#39; Đức đăng k&#253; gom th&#234;m 25 triệu cổ phiếu HAG"
+                            alt="Con trai &#39;bầu&#39; Đức đăng k&#253; gom th&#234;m 25 triệu cổ phiếu HAG"
+                            border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="Taseco Land muốn chào bán 48 triệu cổ phiếu, tăng vốn điều lệ lên 3.600 tỷ đồng"
+                            href="taseco-land-muon-chao-ban-48-trieu-co-phieu-tang-von-dieu-le-len-3600-ty-dong-p20250825120759448.html">Taseco
+                            Land muốn chào bán 48 triệu cổ phiếu, tăng vốn điều lệ lên 3.600 tỷ đồng
+
+                        </a>
+
+                        <img src="../media.dff.vn/web/image/2025/8/taseco-land-tal638917204793700058.jpg"
+                            title="Taseco Land muốn ch&#224;o b&#225;n 48 triệu cổ phiếu, tăng vốn điều lệ l&#234;n 3.600 tỷ đồng"
+                            alt="Taseco Land muốn ch&#224;o b&#225;n 48 triệu cổ phiếu, tăng vốn điều lệ l&#234;n 3.600 tỷ đồng"
+                            border="0" />
+                    </li>
+
+
+
+                </ul>
+            </div>
         </div>
 
-        <div class="adv-banner">
-            <a href="#" target="_blank" rel="nofollow">
-                <img src="<?= BASE_URL ?>/public/img/banner/Post1.jpg" alt="Banner" />
-            </a>
+
+
+
+        <div class="block-k bg-box-a">
+            <div class="view-right-a h-lsk">
+                <div class="title">
+                    <h3><a href="event.html">Lịch sự kiện</a> </h3>
+                </div>
+
+                <ol class="content-ol">
+
+                    <li class="card-list-item" key="0">
+                        <a title="D11: Ngày GDKHQ trả cổ tức năm 2021 bằng cổ phiếu (100:12)"
+                            href="d11-ngay-gdkhq-tra-co-tuc-nam-2021-bang-co-phieu-10012-e13975.html">D11:
+                            Ngày GDKHQ trả cổ tức năm 2021 bằng cổ phiếu (100:12)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="MSB: Ngày GDKHQ trả cổ tức năm 2024 bằng cổ phiếu (100:20)"
+                            href="msb-ngay-gdkhq-tra-co-tuc-nam-2024-bang-co-phieu-10020-e13976.html">MSB:
+                            Ngày GDKHQ trả cổ tức năm 2024 bằng cổ phiếu (100:20)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="VLW: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (14,33%)"
+                            href="vlw-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-1433-e13977.html">VLW: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (14,33%)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="HT1: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (1%)"
+                            href="ht1-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-1-e13978.html">HT1: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (1%)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="SVT: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (15%)"
+                            href="svt-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-15-e13979.html">SVT: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (15%)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="PJS: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (8,5%)"
+                            href="pjs-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-85-e13980.html">PJS: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (8,5%)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="NWT: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (7%)"
+                            href="nwt-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-7-e13981.html">NWT: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (7%)</a>
+                    </li>
+
+                    <li class="card-list-item" key="0">
+                        <a title="VGI: Ngày GDKHQ trả cổ tức năm 2024 bằng tiền (7,5%) "
+                            href="vgi-ngay-gdkhq-tra-co-tuc-nam-2024-bang-tien-75-e13982.html">VGI: Ngày
+                            GDKHQ trả cổ tức năm 2024 bằng tiền (7,5%) </a>
+                    </li>
+
+                </ol>
+            </div>
         </div>
 
-        <div class="adv-banner">
-            <a href="#" target="_blank" rel="nofollow">
-                <img src="<?= BASE_URL ?>/public/img/banner/Post2.jpg" alt="Banner" />
-            </a>
+
+
+
+
+        <div class="block-k bg-box-a">
+            <div class="tieu-diem t-analysis">
+                <h2>
+
+                    <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
+                </h2>
+                <ul>
+
+                    <li class="new-style">
+                        <a title="Vietcap nâng giá mục tiêu cổ phiếu HPG lên 35.300 đồng/cp, duy trì khuyến nghị MUA"
+                            href="vietcap-nang-gia-muc-tieu-co-phieu-hpg-len-35300-dongcp-duy-tri-khuyen-nghi-mua-p20250824182258588.html">Vietcap
+                            nâng giá mục tiêu cổ phiếu HPG lên 35.300 đồng/cp, duy trì khuyến nghị MUA
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/hoa-phat-1638916570313071160.jpg"
+                            title="Vietcap n&#226;ng gi&#225; mục ti&#234;u cổ phiếu HPG l&#234;n 35.300 đồng/cp, duy tr&#236; khuyến nghị MUA"
+                            alt="Vietcap n&#226;ng gi&#225; mục ti&#234;u cổ phiếu HPG l&#234;n 35.300 đồng/cp, duy tr&#236; khuyến nghị MUA"
+                            border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="Nếu sàn giao dịch tiền số triển khai blockchain riêng?"
+                            href="neu-san-giao-dich-tien-so-trien-khai-blockchain-rieng-p20250822165039104.html">Nếu
+                            sàn giao dịch tiền số triển khai blockchain riêng?
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/btc638914838374635395.jpg"
+                            title="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?"
+                            alt="Nếu s&#224;n giao dịch tiền số triển khai blockchain ri&#234;ng?" border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " href="le-thi-huyen-linh-8x-bi-an-thau-tom-sieu-thap-saigon-marina-ifc-p20250819192005571.html">
+
+
+
+
+                            Nữ đại gia 8x bí ẩn thâu tóm siêu tháp Saigon Marina IFC
+
+
+
+
+
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/saigon-marina-ifc638912280054461019.jpg" title="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " alt="
+                                     
+                                     
+                                     
+                                     
+                                     Nữ đại gia 8x b&#237; ẩn th&#226;u t&#243;m si&#234;u th&#225;p Saigon Marina IFC
+                                 
+                                 
+                                 
+                                 
+                                 " border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="VPS chuẩn bị IPO?" href="vps-chuan-bi-ipo-p20250820180003352.html">VPS
+                            chuẩn bị IPO?
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/vps638913096033366787.jpg" title="VPS chuẩn bị IPO?"
+                            alt="VPS chuẩn bị IPO?" border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="'Gió đông' đã về, ACBS có chịu IPO?"
+                            href="gio-dong-da-co-acbs-co-chiu-ipo-p20250821181224916.html">'Gió đông' đã về,
+                            ACBS có chịu IPO?
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/acbs638913967448542399.jpg"
+                            title="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?"
+                            alt="&#39;Gi&#243; đ&#244;ng&#39; đ&#227; về, ACBS c&#243; chịu IPO?" border="0" />
+                    </li>
+
+                    <li class="new-style">
+                        <a title="
+                                     
+                                     Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt khe?
+                                 
+                                 " href="chuyen-tien-so-tren-1000-usd-tai-trung-tam-tai-chinh-phai-bao-cao-lieu-co-khat-khe-p20250820183104493.html">
+
+                            Chuyển tiền số trên 1.000 USD tại Trung tâm tài chính phải báo cáo, liệu có khắt
+                            khe?
+
+
+
+                        </a>
+                        <img src="../media.dff.vn/web/image/2025/8/vn1638913114644334454.jpg" title="
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " alt="
+                                     
+                                     Chuyển tiền số tr&#234;n 1.000 USD tại Trung t&#226;m t&#224;i ch&#237;nh phải b&#225;o c&#225;o, liệu c&#243; khắt khe?
+                                 
+                                 " border="0" />
+                    </li>
+
+
+
+                </ul>
+            </div>
         </div>
 
 
