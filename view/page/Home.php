@@ -465,7 +465,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         <div class="provider">
             <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
             <div class="p-covers">
-                <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                <span class="name"><a href="view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
                 <span class="date">${timeAgo(article.created_at)}</span>
             </div>
         </div>
