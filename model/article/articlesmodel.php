@@ -242,7 +242,7 @@ class ArticlesModel
     }
 
     // Lấy bài viết theo topic (chỉ public)
-    public static function getArticlesByTopicSlug($topic_slug, $limit = 10)
+    public static function getArticlesByTopicSlug($topic_slug, $limit = 10, $offset = 0)
     {
         $db = new connect();
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, t.slug AS topic_slug
@@ -251,11 +251,12 @@ class ArticlesModel
             LEFT JOIN topics t ON a.topic_id = t.id
             WHERE t.slug = :topic_slug AND a.status = 'public'
             ORDER BY a.created_at DESC, a.id DESC
-            LIMIT :limit";
+            LIMIT :limit OFFSET :offset";
 
         $stmt = $db->db->prepare($sql);
         $stmt->bindValue(':topic_slug', $topic_slug, PDO::PARAM_STR);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

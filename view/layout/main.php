@@ -131,7 +131,7 @@
 
 
     // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
-    
+
 
 
     require_once __DIR__ . '/../../model/event/Events.php';
@@ -157,7 +157,7 @@
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function () {
+        $(function() {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -168,7 +168,7 @@
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function () {
+                    marqueeInterval = setInterval(function() {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -316,7 +316,7 @@
     </style>
 
     <script>
-        (function () {
+        (function() {
             // Dữ liệu sự kiện từ PHP
             const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
@@ -387,10 +387,10 @@
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                      echo 'profile_user';
-                  } else {
-                      //echo 'profile_business';
-                  } ?>"><i class="fas fa-user"></i> Trang cá
+                                                                            echo 'profile_user';
+                                                                        } else {
+                                                                            //echo 'profile_business';
+                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
                         nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
@@ -409,7 +409,7 @@
     </div>
 
     <script>
-        (function () {
+        (function() {
             var modalEl = document.getElementById('mobileModal');
             var modalBody = document.getElementById('mobileModalBody');
             var modalTitle = document.getElementById('mobileModalLabel');
@@ -436,12 +436,12 @@
             }
 
             // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
-            modalEl && modalEl.addEventListener('click', function (e) {
+            modalEl && modalEl.addEventListener('click', function(e) {
                 if (e.target === modalEl) closeMobileModal();
             });
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
-                a.addEventListener('click', function (e) {
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                a.addEventListener('click', function(e) {
                     var type = this.getAttribute('data-mobile-modal');
                     if (!type) return;
                     if (type === 'alerts') {
@@ -460,40 +460,37 @@
             });
         })();
 
-document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const userId = this.getAttribute("data-user");
+        document.querySelectorAll(".btn-follow").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const userId = this.getAttribute("data-user");
 
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: "user_id=" + encodeURIComponent(userId),
-                            credentials: "include"
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // cập nhật text nút
-                                    this.querySelector(".follow-text").innerText =
-                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "user_id=" + encodeURIComponent(userId),
+                        credentials: "include"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // cập nhật text nút
+                            this.querySelector(".follow-text").innerText =
+                                data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
 
-                                    // cập nhật số follower
-                                    this.querySelector(".number").innerText = data.followers;
-                                } else {
-                                    alert(data.message);
-                                }
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                alert("Không thể kết nối đến server!");
-                            });
+                            // cập nhật số follower
+                            this.querySelector(".number").innerText = data.followers;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Không thể kết nối đến server!");
                     });
-                });
-
-
-
-
-
+            });
+        });
     </script>
     <a module-load="boxIndex"></a>
 
@@ -535,14 +532,115 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                         <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
                     </svg>
                 </a>
+                <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
+
+
+                        <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+
+                            <!-- Header -->
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                                    <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Đóng"></button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="modal-body bg-light p-10">
+                                <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                                    <!-- Avatar + tên -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <?php
+                                        $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                        if (!$avatarUrl || trim($avatarUrl) === '') {
+                                            $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                        }
+                                        ?>
+                                        <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                            class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                            style="width: 48px; height: 48px;">
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">
+                                                <?php
+                                                echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                                ?>
+                                            </h6>
+                                            <small class="text-muted">
+                                                <?= htmlspecialchars((($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân') ?>
+
+                                            </small>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Tiêu đề -->
+                                    <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                                        placeholder="Nhập tiêu đề bài viết...">
+
+                                    <!-- Tóm tắt -->
+                                    <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                                        placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+
+                                    <!-- Nội dung chính -->
+                                    <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                                        placeholder="Nội dung chính của bài viết..."></textarea>
+
+                                    <!-- Chọn chủ đề -->
+                                    <div class="mb-3">
+                                        <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
+                                        <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                            <option value="">-- Chọn chủ đề --</option>
+                                            <?php foreach ($allTopics as $topic): ?>
+                                                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+
+                                    <!-- Thanh công cụ -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex gap-2">
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                                <i class="fas fa-image me-1"></i> Hình ảnh
+                                            </label>
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                                <i class="fas fa-video me-1"></i> Video
+                                            </label>
+                                            <button class="btn btn-outline-success btn-sm" type="button">
+                                                <i class="fas fa-link me-1"></i> Link
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+                                            <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                        </button>
+
+                                    </div>
+
+                                    <!-- Input hidden -->
+                                    <input type="file" id="postImage" class="d-none" accept="image/*"
+                                        onchange="previewImage(event)">
+                                    <input type="file" id="postVideo" class="d-none" accept="video/*"
+                                        onchange="previewVideo(event)">
+                                </div>
+
+                                <!-- Preview ảnh / video -->
+                                <div id="imagePreview" class="mt-2 bt-4"></div>
+                                <div id="videoPreview" class="mt-2 bt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
 
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function () {
+            $(function() {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -582,14 +680,14 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function () {
+                $('.mb-chat').click(function() {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function () {
+                $('.cover-chat .cclose').click(function() {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function (e) {
+                $('.cm-more').on('click', function(e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -600,111 +698,10 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
         </script>
 
         <!-- Modal: Tạo bài viết mới -->
-        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
-
-
-                <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
-
-                    <!-- Header -->
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title fw-bold" id="createPostModalLabel">
-                            <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Đóng"></button>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="modal-body bg-light p-10">
-                        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
-
-                            <!-- Avatar + tên -->
-                            <div class="d-flex align-items-center mb-3">
-                                <?php
-                                $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
-                                if (!$avatarUrl || trim($avatarUrl) === '') {
-                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                }
-                                ?>
-                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
-                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                    style="width: 48px; height: 48px;">
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        <?php
-                                            echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
-                                        ?>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <?= htmlspecialchars( (($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân' ) ?>
-
-                                    </small>
-                                    
-                                </div>
-                            </div>
-
-                            <!-- Tiêu đề -->
-                            <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
-                                placeholder="Nhập tiêu đề bài viết...">
-
-                            <!-- Tóm tắt -->
-                            <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
-                                placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
-
-                            <!-- Nội dung chính -->
-                            <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
-                                placeholder="Nội dung chính của bài viết..."></textarea>
-
-                            <!-- Chọn chủ đề -->
-                            <div class="mb-3">
-                                <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
-                                <select class="form-select border-success" id="topicSelect" name="topic_id" required>
-                                    <option value="">-- Chọn chủ đề --</option>
-                                    <?php foreach ($allTopics as $topic): ?>
-                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- Thanh công cụ -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                                        <i class="fas fa-image me-1"></i> Hình ảnh
-                                    </label>
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                                        <i class="fas fa-video me-1"></i> Video
-                                    </label>
-                                    <button class="btn btn-outline-success btn-sm" type="button">
-                                        <i class="fas fa-link me-1"></i> Link
-                                    </button>
-                                </div>
-                                <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
-                                    <i class="fas fa-paper-plane me-1"></i> Đăng bài
-                                </button>
-
-                            </div>
-
-                            <!-- Input hidden -->
-                            <input type="file" id="postImage" class="d-none" accept="image/*"
-                                onchange="previewImage(event)">
-                            <input type="file" id="postVideo" class="d-none" accept="video/*"
-                                onchange="previewVideo(event)">
-                        </div>
-
-                        <!-- Preview ảnh / video -->
-                        <div id="imagePreview" class="mt-2 bt-4"></div>
-                        <div id="videoPreview" class="mt-2 bt-4"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <script>
-            $(function () {
+            $(function() {
                 type = 3;
             });
         </script>
@@ -718,6 +715,7 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
         <script src="public/js/main1c07.js"></script>
         <script src="public/js/articleade1.js"></script>
         <script src="public/js/loadMore.js"></script>
+        <script src="public/js/infinite-scroll.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>
@@ -725,11 +723,11 @@ document.querySelectorAll(".btn-follow").forEach(btn => {
 
 
     <script>
-        $(function () {
+        $(function() {
             Page.registerModule(document);
 
 
-            $(window).scroll(function () {
+            $(window).scroll(function() {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");

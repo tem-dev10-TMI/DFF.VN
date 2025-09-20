@@ -18,7 +18,31 @@ class TopicController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
+    public function loadMoreArticlesBySlug()
+    {
+        header('Content-Type: application/json');
 
+        $slug = $_GET['slug'] ?? null;
+        $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+        $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 10;
+
+        if (!$slug) {
+            echo json_encode(['success' => false, 'message' => 'Thiếu slug chủ đề.']);
+            return;
+        }
+
+        // Lấy bài viết từ DB (tương tự như trong hàm details_topic)
+        $articles = articlesmodel::getArticlesByTopicSlug($slug, $limit, $offset);
+
+        // Trả về dữ liệu dưới dạng JSON
+        echo json_encode([
+            'success' => true,
+            'items' => $articles,
+            'count' => count($articles),
+            'nextOffset' => $offset + count($articles)
+        ]);
+        exit;
+    }
     // Lấy top N chủ đề (ví dụ sidebar menu)
     public static function top($limit = 5)
     {
@@ -44,18 +68,14 @@ class TopicController
             return;
         }
 
-        // Bổ sung logic lấy thông tin theo dõi
+        require_once __DIR__ . '/../model/topic/TopicFollowModel.php';
         require_once __DIR__ . '/../config/db.php';
         $db = new connect();
         $pdo = $db->db;
-
-        require_once __DIR__ . '/../model/topic/TopicFollowModel.php';
         $topicFollowModel = new TopicFollowModel($pdo);
 
-        // Lấy số người theo dõi
         $topic['follower_count'] = $topicFollowModel->countFollowers($topic['id']);
 
-        // Kiểm tra người dùng hiện tại có theo dõi không
         $isFollowing = false;
         if (isset($_SESSION['user']['id'])) {
             $userId = $_SESSION['user']['id'];
@@ -63,54 +83,48 @@ class TopicController
         }
 
         require_once __DIR__ . '/../model/rss/RssModel.php';
+        $initial_limit = 5; // Chỉ tải 5 bài cho mỗi nguồn RSS ban đầu
+
         if ($slug == 'tai-chinh') {
             $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'vi-mo') {
             $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'thi-truong') {
             $feedUrl1 = "https://bnews.vn/rss/thi-truong-4.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'quoc-te') {
             $feedUrl1 = "https://tuoitre.vn/rss/the-gioi.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://vnexpress.net/rss/the-gioi.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == 'nha-dat') {
             $feedUrl1 = "https://thanhnien.vn/rss/bat-dong-san.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://vnexpress.net/rss/bat-dong-san.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else if ($slug == '360-doanh-nghiep') {
             $feedUrl1 = "https://vnexpress.net/rss/kinh-doanh.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
-
+            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
             $feedUrl2 = "https://dantri.com.vn/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
+            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
             $articles = array_merge($rssArticles1, $rssArticles2);
         } else {
-            // Với các slug khác (crypto, thao-luan), lấy bài từ database
-            $articles = articlesmodel::getArticlesByTopicSlug($slug, 10);
+            $articles = articlesmodel::getArticlesByTopicSlug($slug, 5, 0); // Lấy 10 bài đầu tiên
         }
 
-        // Sắp xếp lại tất cả bài viết theo thời gian mới nhất
         usort($articles, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });

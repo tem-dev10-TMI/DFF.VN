@@ -304,21 +304,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
 
             <script>
-                (function () {
-                    let offset = 5; // đã render 5 bài đầu
-                    const limit = 5;
-                    let isLoading = false;
-                    const listEl = document.getElementById('articles-list');
-                    const loadingEl = document.getElementById('loading');
-                    const loadMoreContainer = document.getElementById('load-more-container');
-                    const loadMoreBtn = document.getElementById('load-more-btn');
+                document.addEventListener('DOMContentLoaded', function () {
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
-
-                    const isMobile = window.innerWidth < 768;
 
                     function timeAgo(datetime) {
                         if (!datetime) return '';
-                        const time = (new Date().getTime() / 1000) - (new Date(datetime).getTime() / 1000);
+                        const time = (new Date().getTime() / 1000) - (new Date(new Date(datetime)).getTime() / 1000);
                         if (time < 60) return 'vừa xong';
                         if (time < 3600) return Math.floor(time / 60) + ' phút trước';
                         if (time < 86400) return Math.floor(time / 3600) + ' giờ trước';
@@ -330,44 +321,31 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         return `${day}/${month}/${year}`;
                     }
 
-                    function renderItem(article) {
+                    function renderHomepageArticle(article) {
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
                         const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
                         let statusBadgeHtml = '';
-                        if (currentUserId && article.author_id == currentUserId) {
+                        if (currentUserId && article.author_id == currentUserId && article.status) {
                             let badgeClass = '';
                             let badgeText = '';
                             switch (article.status) {
-                                case 'pending':
-                                    badgeClass = 'bg-warning text-dark';
-                                    badgeText = 'Chờ duyệt';
-                                    break;
-                                case 'public':
-                                    badgeClass = 'bg-success';
-                                    badgeText = 'Công khai';
-                                    break;
-
-                                // Các trạng thái khác (ví dụ: 'rejected', 'draft') sẽ không có badge
-
+                                case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+                                case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
                             }
                             if (badgeText) {
-                                statusBadgeHtml = `
-                                <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
-                                    <span class="badge ${badgeClass}">${badgeText}</span>
-                                </div>`;
+                                statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
                             }
                         }
 
                         div.innerHTML = `
-
                         <div class="view-carde f-frame">
                             <div class="provider">
                                 <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
                                 <div class="p-covers">
-                                    <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                    <span class="name"><a href="/DFF.VN/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
                                     <span class="date">${timeAgo(article.created_at)}</span>
                                 </div>
                             </div>
@@ -400,109 +378,20 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 </div>
                             </div>
                         </div>`;
-
                         return div;
                     }
 
-                    function loadMore() {
-                        if (isLoading) return;
-                        isLoading = true;
-                        loadingEl.style.display = 'block';
-                        if (isMobile) {
-                            loadMoreContainer.style.display = 'none';
-                        }
-
-                        fetch('api/loadMoreArticles?offset=' + offset + '&limit=' + limit)
-                            .then(r => r.json())
-                            .then(data => {
-                                if (data.success && Array.isArray(data.items) && data.items.length > 0) {
-                                    data.items.forEach(item => listEl.appendChild(renderItem(item)));
-                                    offset += data.items.length;
-
-                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'));
-                                    dropdownElementList.map(function(dropdownToggleEl) {
-                                        return new bootstrap.Dropdown(dropdownToggleEl);
-
-                                    });
-                                } else {
-                                    if (!isMobile) {
-                                        window.removeEventListener('scroll', handleScroll);
-                                    }
-                                    loadMoreContainer.style.display = 'none';
-                                    loadingEl.innerHTML = '<em>Không còn bài viết nào.</em>';
-                                    loadingEl.style.display = 'block';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error loading more articles:', error);
-                                loadingEl.innerHTML = '<em>Đã có lỗi xảy ra.</em>';
-                                loadingEl.style.display = 'block';
-                            })
-                            .finally(() => {
-                                isLoading = false;
-                                if (loadingEl.innerHTML.includes('Đang tải thêm')) {
-                                    loadingEl.style.display = 'none';
-                                    if (isMobile) {
-                                        loadMoreContainer.style.display = 'block';
-                                    }
-                                }
-                            });
-                    }
-
-                    const handleScroll = function () {
-                        const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
-                        if (nearBottom) loadMore();
-                    }
-
-                    if (isMobile) {
-                        loadMoreContainer.style.display = 'block';
-                        loadMoreBtn.addEventListener('click', loadMore);
-                    } else {
-                        window.addEventListener('scroll', handleScroll);
-                    }
-                })();
-
-                //// Đừng có xóa dòng này mấy cha
-                document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const userId = this.getAttribute("data-user");
-
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: "user_id=" + encodeURIComponent(userId),
-                            credentials: "include"
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // cập nhật text nút
-                                    this.querySelector(".follow-text").innerText =
-                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-
-                                    // cập nhật số follower
-                                    this.querySelector(".number").innerText = data.followers;
-                                } else {
-                                    alert(data.message);
-                                }
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                alert("Không thể kết nối đến server!");
-                            });
+                    setupInfiniteScroll({
+                        listElementId: 'articles-list',
+                        loadingElementId: 'loading',
+                        loadMoreContainerId: 'load-more-container',
+                        loadMoreBtnId: 'load-more-btn',
+                        apiUrl: 'api/loadMoreArticles',
+                        initialOffset: 5,
+                        limit: 5,
+                        renderItemFunction: renderHomepageArticle
                     });
                 });
-
-
-
-
-
-
-
-
-
-
-
             </script>
         <?php else: ?>
             <div class="block-k ">

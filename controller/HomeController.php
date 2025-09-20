@@ -32,11 +32,22 @@ class homeController
 {
     public static function index()
     {
-        // 1. Lấy dữ liệu từ Database (giữ nguyên logic của bạn)
+        // 0. Include a
+        require_once __DIR__ . '/../helpers/cache_helper.php';
+
+        // 1. Lấy dữ liệu từ Database
         $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
-        $iduser = $_SESSION['user']['id']?? null;
-        $topBusinessmen = businessmenModel::getAllBusinessmen(6, $iduser);
+        $iduser = $_SESSION['user']['id'] ?? null;
+
+        // Áp dụng cache cho Top Businessmen (cache trong 10 phút)
+        $cache_key_businessmen = 'top_businessmen';
+        $topBusinessmen = get_cache($cache_key_businessmen, 600);
+        if ($topBusinessmen === false) {
+            $topBusinessmen = businessmenModel::getAllBusinessmen(6, $iduser);
+            set_cache($cache_key_businessmen, $topBusinessmen);
+        }
+
         $marketData = MarketDataModel::getCachedMarketData();
         
         // Lấy dữ liệu sự kiện

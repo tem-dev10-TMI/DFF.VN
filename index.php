@@ -152,6 +152,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->loadMoreArticles();
         exit;
+    case 'api/loadMoreForTopic':
+        require_once __DIR__ . '/controller/TopicController.php';
+        $controller = new TopicController();
+        $controller->loadMoreArticlesBySlug();
+        exit;
     case 'crypton':
         require_once __DIR__ . '/controller/CryptonController.php';
         $controller = new CryptonController();
@@ -204,8 +209,8 @@ switch ($url) {
         break;
 
     default:
-    //404 page
-    /*         require_once 'controller/error/404Controller.php';
+        //404 page
+        /*         require_once 'controller/error/404Controller.php';
     $controller = new NotFoundController;
     require_once 'controller/error/404Controller.php';
     //$controller = new NotFoundController;
