@@ -194,8 +194,6 @@ class homeController
         } else {
             $profile_category = "businessmen";
         }
-        $topicModel = new TopicModel();
-        $allTopics = $topicModel->getAll();
 
         // 4. Load view Home
         ob_start();

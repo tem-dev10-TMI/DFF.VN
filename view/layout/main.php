@@ -118,10 +118,12 @@
 
 
 
-    require_once __DIR__ . '/../../model/TopicModel.php';
-
-    $topicModel = new TopicModel();
-    $allTopics = $topicModel->getAll(); // tất cả chủ đề
+    // Tối ưu: Chỉ lấy danh sách chủ đề một lần, ưu tiên từ controller
+    if (!isset($allTopics)) {
+        require_once __DIR__ . '/../../model/TopicModel.php';
+        $topicModel = new TopicModel();
+        $allTopics = $topicModel->getAll(); 
+    }
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
     require_once __DIR__ . '/../layout/sidebarMobile.php';
