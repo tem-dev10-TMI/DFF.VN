@@ -382,31 +382,40 @@ class profileUserController
             // Cập nhật bảng `users`
             $successUser = $userModel->updateUser($userId, $name, $username, $email, $phone, $avatar_url, $cover_photo, $description);
 
+            // Kiểm tra có dữ liệu để lưu không
+            $hasProfileData = !empty($display_name) || !empty($birth_year) || !empty($workplace) || !empty($studied_at) || !empty($live_at);
+
             // Cập nhật bảng `profile_user` (giữ nguyên logic)
             $existingProfile = $profileModel->getProfileUserByUserId($userId);
-            $successProfile = false;
-            if ($existingProfile && isset($existingProfile['id'])) {
-                $successProfile = $profileModel->updateProfileUser(
-                    $userId,
-                    $display_name,
-                    $birth_year,
-                    $workplace,
-                    $studied_at,
-                    $live_at
-                );
-            } else {
-                $successProfile = $profileModel->addProfileUser(
-                    $userId,
-                    $display_name,
-                    $birth_year,
-                    $workplace,
-                    $studied_at,
-                    $live_at
-                );
+
+            $successProfile = true; // mặc định true để không chặn redirect
+
+            if ($hasProfileData) {
+                if ($existingProfile && isset($existingProfile['id'])) {
+                    // Update khi đã có profile
+                    $successProfile = $profileModel->updateProfileUser(
+                        $userId,
+                        $display_name,
+                        $birth_year,
+                        $workplace,
+                        $studied_at,
+                        $live_at
+                    );
+                } else {
+                    // Insert khi có dữ liệu nhập
+                    $successProfile = $profileModel->addProfileUser(
+                        $userId,
+                        $display_name,
+                        $birth_year,
+                        $workplace,
+                        $studied_at,
+                        $live_at
+                    );
+                }
             }
 
             // Chuyển hướng dựa trên kết quả
-            if ($successUser && $successProfile) {
+            if ($successUser || $successProfile) {
                 header('Location: ' . BASE_URL . '/profile_user?msg=profile_updated');
                 exit;
             } else {
