@@ -32,15 +32,42 @@ class homeController
 {
     public static function index()
     {
+        // --- START: Performance Measurement ---
+        $log_file = __DIR__ . '/../debug_log.txt';
+        if (file_exists($log_file)) {
+            unlink($log_file);
+        }
+        $start_total_time = microtime(true);
+        $last_checkpoint_time = $start_total_time;
+
+        function log_time($label, &$last_checkpoint, $log_file) {
+            $now = microtime(true);
+            $execution_time = round(($now - $last_checkpoint) * 1000);
+            file_put_contents($log_file, "[{$label}] Execution Time: {$execution_time}ms\n", FILE_APPEND);
+            $last_checkpoint = $now;
+        }
+        // --- END: Performance Measurement ---
+
         // 0. Include a
         require_once __DIR__ . '/../helpers/cache_helper.php';
 
         // 1. Lấy dữ liệu từ Database
-        $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
-        $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
+        $cache_key_slider = 'articles_slider';
+        $dbArticlesForSlider = get_cache($cache_key_slider, 15);
+        if ($dbArticlesForSlider === false) {
+            $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
+            set_cache($cache_key_slider, $dbArticlesForSlider);
+        }
+
+        $cache_key_initial = 'articles_initial';
+        $dbArticlesInitial = get_cache($cache_key_initial, 15);
+        if ($dbArticlesInitial === false) {
+            $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
+            set_cache($cache_key_initial, $dbArticlesInitial);
+        }
+
         $iduser = $_SESSION['user']['id'] ?? null;
 
-        // Áp dụng cache cho Top Businessmen (cache trong 10 phút)
         $cache_key_businessmen = 'top_businessmen';
         $topBusinessmen = get_cache($cache_key_businessmen, 600);
         if ($topBusinessmen === false) {
@@ -49,10 +76,10 @@ class homeController
         }
 
         $marketData = MarketDataModel::getCachedMarketData();
-        
-        // Lấy dữ liệu sự kiện
-        $eventsModel = new Events();
-        $events = $eventsModel->getAll();
+        // $eventsModel = new Events();
+        // $events = $eventsModel->getAll();
+
+        log_time('DB Queries', $last_checkpoint_time, $log_file);
 
         // 2. Lấy RSS (giữ nguyên 2 nguồn cũ và thêm 6 nguồn mới)
         require_once __DIR__ . '/../model/rss/RssModel.php';
