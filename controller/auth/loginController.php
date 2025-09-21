@@ -23,6 +23,10 @@ class loginController
                 $user = $loginModel->verifyUser($username, $password);
 
                 if ($user) {
+                    // Tạo và cập nhật session token
+                    $token = bin2hex(random_bytes(32));
+                    UserModel::updateSessionToken($user['id'], $token);
+
                     $_SESSION['user'] = [
                         'id' => $user['id'],
                         'name' => $user['name'],
@@ -32,6 +36,7 @@ class loginController
                         'phone' => $user['phone'],
                         'role' => $user['role'],
                         'avatar_url' => $user['avatar_url'] ?? null,
+                        'session_token' => $token // Lưu token vào session
                     ];
                     // Lưu session khi login thành công
                     $_SESSION['user_id']           = $user['id'];

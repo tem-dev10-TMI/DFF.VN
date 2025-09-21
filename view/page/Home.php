@@ -565,7 +565,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const content = textarea.value.trim();
                 if (!content) return;
 
-                fetch("comment_add.php", {
+                fetch("<?= BASE_URL ?>/comment_add.php", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded"
@@ -606,7 +606,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Load comment mới
             function loadNewComments() {
-                fetch("comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
+                fetch("<?= BASE_URL ?>/comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {

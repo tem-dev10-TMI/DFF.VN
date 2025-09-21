@@ -397,6 +397,7 @@ if ($profile_category == 'user' && $user_id) {
           </button>
         </div>
         <!-- Input hidden -->
+        <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
         <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
         <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
       </div>
@@ -535,6 +536,7 @@ if ($profile_category == 'user' && $user_id) {
 
       <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
+          <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label">Tên người dùng</label>
