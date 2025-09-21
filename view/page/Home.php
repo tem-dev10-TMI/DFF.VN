@@ -781,7 +781,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
 
-                Page.flSuggest();
+                //Page.flSuggest();
 
 
             });
