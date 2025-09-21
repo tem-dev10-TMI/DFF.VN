@@ -690,9 +690,6 @@
             });
         </script>
 
-        <!-- Modal: Tạo bài viết mới -->
-
-
         <script>
             $(function() {
                 type = 3;
