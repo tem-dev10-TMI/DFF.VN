@@ -6,7 +6,7 @@
                             class="fas fa-bars"></i></a></span>
             </div>
             <div class="header-logo">
-                <a href="home">
+                <a href="<?php echo BASE_URL; ?>">
                     <img alt="" title="" src="public/img/logo/logo.jpg" /></a>
                 <div class="box-search">
                     <div class="input-group" onkeypress="return OnEnter(event)">
@@ -48,15 +48,7 @@
 
             <div class="header-right">
                 <?php
-                if (!isset($headerEvents)) {
-                    require_once __DIR__ . '/../../model/event/Events.php';
-                    if (!isset($pdo)) {
-                        require_once __DIR__ . '/../../config/db.php';
-                    }
-                    global $pdo;
-                    $eventModelHeader = new EventModel($pdo);
-                    $headerEvents = $eventModelHeader->all(10);
-                }
+
                 $notifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
                 ?>
                 <ul>
@@ -124,10 +116,10 @@
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
 
                                     <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
-                                          echo 'profile_user';
-                                      } else {
-                                          echo 'profile_business';
-                                      } ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                                                                            echo 'profile_user';
+                                                                                        } else {
+                                                                                            echo 'profile_business';
+                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
@@ -190,20 +182,20 @@
                                     $id = (int) ($ev['id'] ?? 0);
                                     $href = BASE_URL . '?url=event&id=' . $id;
                                     $dateText = !empty($ev['event_date']) ? date('d/m/Y H:i', strtotime($ev['event_date'])) : '';
-                                    ?>
-                                 <a href="<?= $href ?>" class="list-group-item list-group-item-action notice-item">
-  <span class="btn btn-outline-success notice-icon p-0">
-    <i class="bi bi-calendar-event"></i>
-  </span>
+                                ?>
+                                    <a href="<?= $href ?>" class="list-group-item list-group-item-action notice-item">
+                                        <span class="btn btn-outline-success notice-icon p-0">
+                                            <i class="bi bi-calendar-event"></i>
+                                        </span>
 
-  <div class="notice-text">
-    <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
-    <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
-    <small class="text-muted notice-time" title="<?= $dateText ?>">
-      <?= $dateText ?>
-    </small>
-  </div>
-</a>
+                                        <div class="notice-text">
+                                            <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
+                                            <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
+                                            <small class="text-muted notice-time" title="<?= $dateText ?>">
+                                                <?= $dateText ?>
+                                            </small>
+                                        </div>
+                                    </a>
 
                                 <?php endforeach; ?>
                             </div>
@@ -547,7 +539,7 @@
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
-    $(function () {
+    $(function() {
         // Lấy modal login
         var loginElement = document.getElementById('div_modal');
         var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
@@ -568,21 +560,21 @@
         }
 
         // Hàm mở modal đăng nhập
-        window.showLoginModal = function () {
+        window.showLoginModal = function() {
             if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
-        window.showRegisterModal = function () {
+        window.showRegisterModal = function() {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };
 
         // Hàm mở modal quên mật khẩu
-        window.showForgotModal = function () {
+        window.showForgotModal = function() {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide();
             if (registerModal) registerModal.hide();
@@ -590,29 +582,29 @@
         };
 
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
-        window.switchToLogin = function () {
+        window.switchToLogin = function() {
             if (registerModal) registerModal.hide();
             if (loginModal) loginModal.show();
         };
 
         // Đóng modal khi click nút close hoặc thoát
-        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function () {
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
             if (loginModal) loginModal.hide();
         });
 
-        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function () {
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
             if (registerModal) registerModal.hide();
         });
 
 
-        $('#forgot_modal .sh-popup-close, #forgot_modal .cmd-cancel').on('click', function () {
+        $('#forgot_modal .sh-popup-close, #forgot_modal .cmd-cancel').on('click', function() {
             if (forgotModal) forgotModal.hide();
         });
     });
 </script>
 
 <script>
-    document.getElementById("forgot_step1").addEventListener("submit", function (e) {
+    document.getElementById("forgot_step1").addEventListener("submit", function(e) {
         e.preventDefault();
         let email = document.getElementById("forgot_email").value;
         let pass = document.getElementById("forgot_password").value;
@@ -624,15 +616,15 @@
         }
 
         fetch("send-otp.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: email,
-                pass: pass
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    pass: pass
+                })
             })
-        })
             .then(res => res.json())
             .then(data => {
                 if (data.status === "success") {
@@ -644,21 +636,21 @@
             });
     });
 
-    document.getElementById("forgot_step2").addEventListener("submit", function (e) {
+    document.getElementById("forgot_step2").addEventListener("submit", function(e) {
         e.preventDefault();
         let email = document.getElementById("forgot_email").value;
         let otp = document.getElementById("forgot_otp").value;
 
         fetch("verify-otp.php", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                email: email,
-                otp: otp
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    email: email,
+                    otp: otp
+                })
             })
-        })
             .then(res => res.json())
             .then(data => {
                 if (data.status === "success") {
