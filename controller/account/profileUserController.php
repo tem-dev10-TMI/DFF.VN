@@ -547,12 +547,7 @@ class profileUserController
             }
         }
         //Load view
-        ob_start();
-        require_once __DIR__ . '/../../view/layout/header.php';
-        $content = ob_get_clean();
-        $profile = false;
-        //Load layout;
-        require_once __DIR__ . '/../../view/layout/main.php';
+        header('Location: ' . BASE_URL . '');
     }
 
     // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========
