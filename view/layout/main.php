@@ -456,13 +456,14 @@
         document.querySelectorAll(".btn-follow").forEach(btn => {
             btn.addEventListener("click", function() {
                 const userId = this.getAttribute("data-user");
+                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
                 fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: "user_id=" + encodeURIComponent(userId),
+                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                         credentials: "include"
                     })
                     .then(res => res.json())

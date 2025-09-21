@@ -426,6 +426,7 @@
                 <?php endif; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/change_password" id="changePassForm">
+                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
                     <div class="mb-3">
                         <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
                         <input type="password" class="form-control" id="currentPassword" name="old_password" required>

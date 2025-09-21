@@ -513,6 +513,13 @@ class profileUserController
         $messageType = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $old_password = $_POST['old_password'] ?? '';
             $new_password = $_POST['new_password'] ?? '';
             $confirm_new_password = $_POST['confirm_new_password'] ?? '';
