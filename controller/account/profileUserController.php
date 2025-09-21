@@ -366,46 +366,56 @@ class profileUserController
             }
 
             // Lấy và làm sạch dữ liệu từ form
-            $name = htmlspecialchars($_POST['name'] ?? '');
-            $username = htmlspecialchars($_POST['user_name'] ?? '');
-            $email = htmlspecialchars($_POST['email'] ?? '');
-            $phone = htmlspecialchars($_POST['phone'] ?? '');
-            $description = htmlspecialchars($_POST['description'] ?? '');
+            $name = isset($_POST['name']) && $_POST['name'] !== '' ? htmlspecialchars($_POST['name']) : null;
+            $username = isset($_POST['user_name']) && $_POST['user_name'] !== '' ? htmlspecialchars($_POST['user_name']) : null;
+            $email = isset($_POST['email']) && $_POST['email'] !== '' ? htmlspecialchars($_POST['email']) : null;
+            $phone = isset($_POST['phone']) && $_POST['phone'] !== '' ? htmlspecialchars($_POST['phone']) : null;
+            $description = isset($_POST['description']) && $_POST['description'] !== '' ? htmlspecialchars($_POST['description']) : null;
 
-            $display_name = htmlspecialchars($_POST['display_name'] ?? '');
+            $display_name = isset($_POST['display_name']) && $_POST['display_name'] !== '' ? htmlspecialchars($_POST['display_name']) : null;
             $birth_year = isset($_POST['birth_year']) && is_numeric($_POST['birth_year']) ? (int)$_POST['birth_year'] : null;
-            $workplace = htmlspecialchars($_POST['workplace'] ?? '');
-            $studied_at = htmlspecialchars($_POST['studied_at'] ?? '');
-            $live_at = htmlspecialchars($_POST['live_at'] ?? '');
+            $workplace = isset($_POST['workplace']) && $_POST['workplace'] !== '' ? htmlspecialchars($_POST['workplace']) : null;
+            $studied_at = isset($_POST['studied_at']) && $_POST['studied_at'] !== '' ? htmlspecialchars($_POST['studied_at']) : null;
+            $live_at = isset($_POST['live_at']) && $_POST['live_at'] !== '' ? htmlspecialchars($_POST['live_at']) : null;
+
 
             // Cập nhật bảng `users`
             $successUser = $userModel->updateUser($userId, $name, $username, $email, $phone, $avatar_url, $cover_photo, $description);
 
+            // Kiểm tra có dữ liệu để lưu không
+            $hasProfileData = !empty($display_name) || !empty($birth_year) || !empty($workplace) || !empty($studied_at) || !empty($live_at);
+
             // Cập nhật bảng `profile_user` (giữ nguyên logic)
             $existingProfile = $profileModel->getProfileUserByUserId($userId);
-            $successProfile = false;
-            if ($existingProfile && isset($existingProfile['id'])) {
-                $successProfile = $profileModel->updateProfileUser(
-                    $userId,
-                    $display_name,
-                    $birth_year,
-                    $workplace,
-                    $studied_at,
-                    $live_at
-                );
-            } else {
-                $successProfile = $profileModel->addProfileUser(
-                    $userId,
-                    $display_name,
-                    $birth_year,
-                    $workplace,
-                    $studied_at,
-                    $live_at
-                );
+
+            $successProfile = true; // mặc định true để không chặn redirect
+
+            if ($hasProfileData) {
+                if ($existingProfile && isset($existingProfile['id'])) {
+                    // Update khi đã có profile
+                    $successProfile = $profileModel->updateProfileUser(
+                        $userId,
+                        $display_name,
+                        $birth_year,
+                        $workplace,
+                        $studied_at,
+                        $live_at
+                    );
+                } else {
+                    // Insert khi có dữ liệu nhập
+                    $successProfile = $profileModel->addProfileUser(
+                        $userId,
+                        $display_name,
+                        $birth_year,
+                        $workplace,
+                        $studied_at,
+                        $live_at
+                    );
+                }
             }
 
             // Chuyển hướng dựa trên kết quả
-            if ($successUser && $successProfile) {
+            if ($successUser || $successProfile) {
                 header('Location: ' . BASE_URL . '/profile_user?msg=profile_updated');
                 exit;
             } else {
@@ -644,7 +654,7 @@ class profileUserController
             $stmt_select->bindValue(':author_id', (int)$currentUserId, PDO::PARAM_INT);
             $stmt_select->execute();
             $article = $stmt_select->fetch(PDO::FETCH_ASSOC);
-            
+
             if (!$article) {
                 // Nếu không tìm thấy bài viết hoặc người dùng không phải tác giả
                 echo json_encode(['success' => false, 'message' => 'Không tìm thấy bài viết hoặc bạn không có quyền xóa.']);
@@ -676,7 +686,7 @@ class profileUserController
                 if (!empty($videoPath) && file_exists(__DIR__ . '/../../' . $videoPath)) {
                     unlink(__DIR__ . '/../../' . $videoPath);
                 }
-                
+
                 // (Tùy chọn) Xóa các media liên quan trong bảng media
                 //MediaModel::deleteMediaForArticle((int)$postId);
 
@@ -686,7 +696,6 @@ class profileUserController
                 // nhưng vẫn cần để phòng ngừa race condition.
                 echo json_encode(['success' => false, 'message' => 'Không thể xóa bài viết. Vui lòng thử lại.']);
             }
-
         } catch (PDOException $e) {
             // Ghi lỗi vào log thay vì hiển thị cho người dùng
             error_log("Delete article error: " . $e->getMessage());

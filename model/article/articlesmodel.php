@@ -109,16 +109,32 @@ class ArticlesModel
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function getArticleBySlug($slug)
+    public static function getArticleBySlug($slug, $currentUserId = null)
     {
         $db = new connect();
+
+        // Bắt đầu câu SQL
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-                LEFT JOIN topics t ON a.topic_id = t.id
-                WHERE a.slug = :slug AND a.status = 'public'";
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id = t.id
+            WHERE a.slug = :slug";
+
+        // Mảng chứa các tham số để bind
+        $params = [':slug' => $slug];
+
+        // Nếu là khách (không có user id), chỉ cho xem bài viết public
+        if ($currentUserId === null) {
+            $sql .= " AND a.status = 'public'";
+        }
+        // Nếu đã đăng nhập, cho phép xem bài public HOẶC bài viết của chính họ
+        else {
+            $sql .= " AND (a.status = 'public' OR a.author_id = :currentUserId)";
+            $params[':currentUserId'] = $currentUserId;
+        }
+
         $stmt = $db->db->prepare($sql);
-        $stmt->execute([':slug' => $slug]);
+        $stmt->execute($params);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
@@ -226,7 +242,7 @@ class ArticlesModel
     }
 
     // Lấy bài viết theo topic (chỉ public)
-    public static function getArticlesByTopicSlug($topic_slug, $limit = 10)
+    public static function getArticlesByTopicSlug($topic_slug, $limit = 10, $offset = 0)
     {
         $db = new connect();
         $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, t.slug AS topic_slug
@@ -235,11 +251,12 @@ class ArticlesModel
             LEFT JOIN topics t ON a.topic_id = t.id
             WHERE t.slug = :topic_slug AND a.status = 'public'
             ORDER BY a.created_at DESC, a.id DESC
-            LIMIT :limit";
+            LIMIT :limit OFFSET :offset";
 
         $stmt = $db->db->prepare($sql);
         $stmt->bindValue(':topic_slug', $topic_slug, PDO::PARAM_STR);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -311,6 +328,8 @@ class ArticlesModel
     public static function addArticleFromProfile(array $data)
     {
         $db = new connect();
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
+        $created_at = date("Y-m-d H:i:s");
 
         // Đảm bảo các trường bắt buộc có dữ liệu
         if (empty($data['title']) || empty($data['content']) || empty($data['author_id'])) {
@@ -327,9 +346,10 @@ class ArticlesModel
         }
 
         $sql = "INSERT INTO articles 
-                (title, slug, summary, content, main_image_url, author_id, topic_id, status, published_at, is_hot, is_analysis) 
-                VALUES 
-                (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, NOW(), :is_hot, :is_analysis)";
+        (title, slug, summary, content, main_image_url, author_id, topic_id, status, created_at, is_hot, is_analysis) 
+        VALUES 
+        (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, :created_at, :is_hot, :is_analysis)";
+
 
         $stmt = $db->db->prepare($sql);
 
@@ -343,7 +363,8 @@ class ArticlesModel
             ':topic_id'       => $data['topic_id'] ?? null,
             ':status'         => $data['status'] ?? 'pending',
             ':is_hot'         => $data['is_hot'] ?? 0,
-            ':is_analysis'    => $data['is_analysis'] ?? 0
+            ':is_analysis'    => $data['is_analysis'] ?? 0,
+            ':created_at'     => $created_at
         ]);
 
         if ($success) {

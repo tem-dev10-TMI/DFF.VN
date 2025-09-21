@@ -79,7 +79,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-            document.querySelector(".openModalcreatePost").addEventListener("click", function() {
+            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
@@ -89,112 +89,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     alert("Bạn cần đăng nhập để viết bài.");
                 <?php endif; ?>
             });
+
         </script>
-        <!-- Modal: Tạo bài viết mới -->
-        <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
-
-
-
-                <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
-
-                    <!-- Header -->
-                    <div class="modal-header bg-success text-white">
-                        <h5 class="modal-title fw-bold" id="createPostModalLabel">
-                            <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
-                            aria-label="Đóng"></button>
-                    </div>
-
-                    <!-- Body -->
-                    <div class="modal-body bg-light">
-                        <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
-
-                            <!-- Avatar + tên -->
-                            <div class="d-flex align-items-center mb-3">
-                                <?php
-                                $avatarUrl = $user['avatar_url'] ?? null;
-                                if (!$avatarUrl || trim($avatarUrl) === '') {
-                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                }
-                                ?>
-                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
-                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                    style="width: 48px; height: 48px;">
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        <?php
-                                        if ($profile_category == 'businessmen') {
-                                            echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
-                                        } else {
-                                            echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
-                                        }
-                                        ?>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
-                                    </small>
-                                </div>
-                            </div>
-
-                            <!-- Tiêu đề -->
-                            <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
-                                placeholder="✏️ Nhập tiêu đề bài viết...">
-
-                            <!-- Tóm tắt -->
-                            <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
-                                placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
-
-                            <!-- Nội dung chính -->
-                            <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
-                                placeholder="💡 Nội dung chính của bài viết..."></textarea>
-
-                            <!-- Chọn chủ đề -->
-                            <div class="mb-3">
-                                <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
-                                <select class="form-select border-success" id="topicSelect" name="topic_id" required>
-                                    <option value="">-- Chọn chủ đề --</option>
-                                    <?php foreach ($allTopics as $topic): ?>
-                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </div>
-
-                            <!-- Thanh công cụ -->
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="d-flex gap-2">
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                                        <i class="fas fa-image me-1"></i> Hình ảnh
-                                    </label>
-                                    <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                                        <i class="fas fa-video me-1"></i> Video
-                                    </label>
-                                    <button class="btn btn-outline-success btn-sm" type="button">
-                                        <i class="fas fa-link me-1"></i> Link
-                                    </button>
-                                </div>
-                                <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
-                                    <i class="fas fa-paper-plane me-1"></i> Đăng bài
-                                </button>
-
-                            </div>
-
-                            <!-- Input hidden -->
-                            <input type="file" id="postImage" class="d-none" accept="image/*"
-                                onchange="previewImage(event)">
-                            <input type="file" id="postVideo" class="d-none" accept="video/*"
-                                onchange="previewVideo(event)">
-                        </div>
-
-                        <!-- Preview ảnh / video -->
-                        <div id="imagePreview" class="mt-2 bt-4"></div>
-                        <div id="videoPreview" class="mt-2 bt-4"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
             <h5>
@@ -213,7 +110,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
                                 <?php //var_dump($topBusinessmen);
-                                ?>
+                                    ?>
 
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <?php
@@ -249,7 +146,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                             class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
-
+                                                    
 
                                                 </li>
 
@@ -337,7 +234,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
-                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
+                                    // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
 
                                 if ($badgeText) {
@@ -407,21 +304,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
 
             <script>
-                (function() {
-                    let offset = 5; // đã render 5 bài đầu
-                    const limit = 5;
-                    let isLoading = false;
-                    const listEl = document.getElementById('articles-list');
-                    const loadingEl = document.getElementById('loading');
-                    const loadMoreContainer = document.getElementById('load-more-container');
-                    const loadMoreBtn = document.getElementById('load-more-btn');
+                document.addEventListener('DOMContentLoaded', function () {
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
-
-                    const isMobile = window.innerWidth < 768;
 
                     function timeAgo(datetime) {
                         if (!datetime) return '';
-                        const time = (new Date().getTime() / 1000) - (new Date(datetime).getTime() / 1000);
+                        const time = (new Date().getTime() / 1000) - (new Date(new Date(datetime)).getTime() / 1000);
                         if (time < 60) return 'vừa xong';
                         if (time < 3600) return Math.floor(time / 60) + ' phút trước';
                         if (time < 86400) return Math.floor(time / 3600) + ' giờ trước';
@@ -433,31 +321,22 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         return `${day}/${month}/${year}`;
                     }
 
-                    function renderItem(article) {
+                    function renderHomepageArticle(article) {
                         const div = document.createElement('div');
                         div.className = 'block-k article-item';
                         const articleLink = article.is_rss ? article.link : `details_blog/${article.slug}`;
                         const target = article.is_rss ? '_blank' : '_self';
 
                         let statusBadgeHtml = '';
-                        if (currentUserId && article.author_id == currentUserId) {
+                        if (currentUserId && article.author_id == currentUserId && article.status) {
                             let badgeClass = '';
                             let badgeText = '';
                             switch (article.status) {
-                                case 'pending':
-                                    badgeClass = 'bg-warning text-dark';
-                                    badgeText = 'Chờ duyệt';
-                                    break;
-                                case 'public':
-                                    badgeClass = 'bg-success';
-                                    badgeText = 'Công khai';
-                                    break;
+                                case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+                                case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
                             }
                             if (badgeText) {
-                                statusBadgeHtml = `
-                                <div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">
-                                    <span class="badge ${badgeClass}">${badgeText}</span>
-                                </div>`;
+                                statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
                             }
                         }
 
@@ -466,7 +345,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <div class="provider">
                                 <img class="logo" alt="Avatar" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
                                 <div class="p-covers">
-                                    <span class="name"><a href="/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
+                                    <span class="name"><a href="/DFF.VN/view_profile?id=${article.author_id}">${article.author_name || ''}</a></span>
                                     <span class="date">${timeAgo(article.created_at)}</span>
                                 </div>
                             </div>
@@ -502,92 +381,15 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         return div;
                     }
 
-                    function loadMore() {
-                        if (isLoading) return;
-                        isLoading = true;
-                        loadingEl.style.display = 'block';
-                        if (isMobile) {
-                            loadMoreContainer.style.display = 'none';
-                        }
-
-                        fetch('api/loadMoreArticles?offset=' + offset + '&limit=' + limit)
-                            .then(r => r.json())
-                            .then(data => {
-                                if (data.success && Array.isArray(data.items) && data.items.length > 0) {
-                                    data.items.forEach(item => listEl.appendChild(renderItem(item)));
-                                    offset += data.items.length;
-                                    var dropdownElementList = [].slice.call(listEl.querySelectorAll('.dropdown-toggle'));
-                                    dropdownElementList.map(function(dropdownToggleEl) {
-                                        return new bootstrap.Dropdown(dropdownToggleEl);
-                                    });
-                                } else {
-                                    if (!isMobile) {
-                                        window.removeEventListener('scroll', handleScroll);
-                                    }
-                                    loadMoreContainer.style.display = 'none';
-                                    loadingEl.innerHTML = '<em>Không còn bài viết nào.</em>';
-                                    loadingEl.style.display = 'block';
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error loading more articles:', error);
-                                loadingEl.innerHTML = '<em>Đã có lỗi xảy ra.</em>';
-                                loadingEl.style.display = 'block';
-                            })
-                            .finally(() => {
-                                isLoading = false;
-                                if (loadingEl.innerHTML.includes('Đang tải thêm')) {
-                                    loadingEl.style.display = 'none';
-                                    if (isMobile) {
-                                        loadMoreContainer.style.display = 'block';
-                                    }
-                                }
-                            });
-                    }
-
-                    const handleScroll = function() {
-                        const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 300;
-                        if (nearBottom) loadMore();
-                    }
-
-                    if (isMobile) {
-                        loadMoreContainer.style.display = 'block';
-                        loadMoreBtn.addEventListener('click', loadMore);
-                    } else {
-                        window.addEventListener('scroll', handleScroll);
-                    }
-                })();
-
-                //// Đừng có xóa dòng này mấy cha
-                document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function() {
-                        const userId = this.getAttribute("data-user");
-
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: "user_id=" + encodeURIComponent(userId),
-                                credentials: "include"
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // cập nhật text nút
-                                    this.querySelector(".follow-text").innerText =
-                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-
-                                    // cập nhật số follower
-                                    this.querySelector(".number").innerText = data.followers;
-                                } else {
-                                    alert(data.message);
-                                }
-                            })
-                            .catch(err => {
-                                console.error(err);
-                                alert("Không thể kết nối đến server!");
-                            });
+                    setupInfiniteScroll({
+                        listElementId: 'articles-list',
+                        loadingElementId: 'loading',
+                        loadMoreContainerId: 'load-more-container',
+                        loadMoreBtnId: 'load-more-btn',
+                        apiUrl: 'api/loadMoreArticles',
+                        initialOffset: 5,
+                        limit: 5,
+                        renderItemFunction: renderHomepageArticle
                     });
                 });
             </script>
@@ -616,17 +418,6 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
     <div class="content-right">
-        <div class="block-k bs-coin">
-            <div class="search-container">
-                <div class="input-group imput-group-lg">
-                    <span class="input-group-text border-end-0"><i class="fas fa-search"></i></span>
-                    <input type="text" id="searchInput" class="form-control border-start-0"
-                        placeholder="Tra cứu crypto: BTC, ETH, SOL, BNB,...">
-                </div>
-                <ul id="coin_suggestions">
-                </ul>
-            </div>
-        </div>
 
 
         <div class="content-right">
@@ -662,7 +453,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -673,10 +464,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         // Gán id comment cha
                                         document.getElementById('parent_id').value = parentId;
 
-                                        // Chèn @username
+                                        // Chèn @username (nếu muốn)
                                         const textarea = document.getElementById('comment-content');
-
-                                        // Sửa lỗi: Loại bỏ tất cả khoảng trống khỏi username
                                         const formattedUsername = username.replace(/\s/g, '');
 
                                         if (!textarea.value.startsWith('@' + formattedUsername)) {
@@ -702,7 +491,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -777,12 +566,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 if (!content) return;
 
                 fetch("comment_add.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: "content=" + encodeURIComponent(content)
-                    })
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "content=" + encodeURIComponent(content)
+                })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
@@ -808,7 +597,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // nhấn enter 
             const textarea = document.getElementById("comment-content");
 
-            textarea.addEventListener("keydown", function(e) {
+            textarea.addEventListener("keydown", function (e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); // chặn xuống dòng
                     document.getElementById("send-comment").click(); // gọi nút gửi
@@ -871,8 +660,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles3 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -939,8 +728,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -981,9 +770,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <script>
-            $(function() {
+            $(function () {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function() {
+                $(window).scroll(function () {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -998,7 +787,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             });
         </script>
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,
@@ -1032,13 +821,14 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
     <!-- Modal for creating a new post -->
 
     <!-- Modal: Tạo bài viết mới -->
-    <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel" aria-hidden="true">
+    
 
         <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
 
 
-            <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+         <!-- them -->
+             <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
                 <!-- Header -->
                 <div class="modal-header bg-success text-white">
@@ -1057,31 +847,27 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <!-- Avatar + tên -->
                         <div class="d-flex align-items-center mb-3">
                             <?php
-                            $avatarUrl = $user['avatar_url'] ?? null;
-                            if (!$avatarUrl || trim($avatarUrl) === '') {
-                                $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                            }
-                            ?>
-                            <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                if (!$avatarUrl || trim($avatarUrl) === '') {
+                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                }
+                                ?>
+                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                    style="width: 48px; height: 48px;">
+                                <div>
+                                    <h6 class="mb-0 fw-bold text-dark">
+                                        <?php
+                                            echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                        ?>
+                                    </h6>
+                                    <small class="text-muted">
+                                        <?= htmlspecialchars( (($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân' ) ?>
 
-                                class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                style="width: 48px; height: 48px;">
-
-                            <div>
-                                <h6 class="mb-0 fw-bold text-dark">
-                                    <?php
-                                    if ($profile_category == 'businessmen') {
-                                        echo htmlspecialchars($business['name'] ?? 'Doanh nhân');
-                                    } else {
-                                        echo htmlspecialchars($profileUser['name'] ?? 'Người dùng');
-                                    }
-                                    ?>
-                                </h6>
-                                <small class="text-muted">
-                                    <?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?>
-                                </small>
+                                    </small>
+                                    
+                                </div>
                             </div>
-                        </div>
 
                         <!-- Tiêu đề -->
                         <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
@@ -1134,8 +920,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <!-- Preview ảnh / video -->
                     <div id="imagePreview" class="mt-2 bt-4"></div>
                     <div id="videoPreview" class="mt-2 bt-4"></div>
-                </div>
-            </div>
+               
 
 
 

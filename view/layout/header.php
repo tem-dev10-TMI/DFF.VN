@@ -13,17 +13,12 @@
                         <span class="input-group-append">
                             <button
                                 class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
-
-                                type="button"
-                                onclick="doSearch()">
+                                type="button" onclick="doSearch()">
                                 <i class="fa fa-search"></i>
                             </button>
                         </span>
-                        <input
-                            id="searchInput"
-                            class="form-control border-end-0 border rounded-pill"
-                            placeholder="Tìm kiếm"
-                            type="search" />
+                        <input id="searchInput" class="form-control border-end-0 border rounded-pill"
+                            placeholder="Tìm kiếm" type="search" />
 
                     </div>
 
@@ -106,9 +101,8 @@
                                     href="javascript:void(0)">
                                     <?php
                                     // Ưu tiên lấy avatar từ session sau khi đăng nhập thành công
-                                    $avatarUrl = $_SESSION['user_avatar_url']
-                                        ?? ($_SESSION['user']['avatar_url'] ?? null);
-                                    if (!$avatarUrl || trim((string) $avatarUrl) === '') {
+                                    $avatarUrl = $user['avatar_url'] ?? null;
+                                    if (!$avatarUrl || trim($avatarUrl) === '') {
                                         $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
                                     }
                                     ?>
@@ -129,13 +123,11 @@
                                             Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
 
-                                    <li><a class="dropdown-item"
-                                            href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
-                                                                        echo 'profile_user';
-                                                                    } else {
-                                                                        echo 'profile_business';
-                                                                    } ?>"><i
-                                                class="fas fa-user"></i> Profile</a></li>
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
+                                          echo 'profile_user';
+                                      } else {
+                                          echo 'profile_business';
+                                      } ?>"><i class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
@@ -171,30 +163,57 @@
                 </ul>
                 <div class="tab-content" id="pills-tabContent">
 
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel"
-                        aria-labelledby="pills-home-tab">
-                        <div class="add" id="conte">
-                            <h4 class="title-thongbao">Thông Báo</h4>
+                    <?php
+                    // helper nhỏ: gắn badge "Mới" nếu trong 3 ngày gần đây
+                    function isRecent($dateStr, $days = 3)
+                    {
+                        if (empty($dateStr))
+                            return false;
+                        return (time() - strtotime($dateStr)) <= ($days * 86400);
+                    }
+                    ?>
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="bi bi-bell-fill"></i>
+                                <h5 class="mb-0">Thông báo</h5>
+                            </div>
+                            <?php if (!empty($headerEvents)): ?>
+                                <span class="badge bg-success-subtle text-success"><?= count($headerEvents) ?> mục</span>
+                            <?php endif; ?>
                         </div>
- 
+
                         <?php if (!empty($headerEvents)): ?>
-                            <ul class="list-unstyled" style="margin:10px 0;">
-                                <?php foreach ($headerEvents as $ev): ?>
-                                    <li style="margin-bottom:8px;">
-                                        <a title="<?= htmlspecialchars($ev['title']) ?>"
-                                            href="<?= BASE_URL ?>?url=event&id=<?= $ev['id'] ?>">
-                                            <?= htmlspecialchars($ev['title']) ?>
-                                        </a>
-                                        <small class="text-muted" style="margin-left:6px;">
-                                            <?= isset($ev['event_date']) ? date('d/m/Y H:i', strtotime($ev['event_date'])) : '' ?>
-                                        </small>
-                                    </li>
+                            <div class="list-group list-group-flush notice-list">
+                                <?php foreach ($headerEvents as $ev):
+                                    $title = htmlspecialchars($ev['title'] ?? '');
+                                    $id = (int) ($ev['id'] ?? 0);
+                                    $href = BASE_URL . '?url=event&id=' . $id;
+                                    $dateText = !empty($ev['event_date']) ? date('d/m/Y H:i', strtotime($ev['event_date'])) : '';
+                                    ?>
+                                 <a href="<?= $href ?>" class="list-group-item list-group-item-action notice-item">
+  <span class="btn btn-outline-success notice-icon p-0">
+    <i class="bi bi-calendar-event"></i>
+  </span>
+
+  <div class="notice-text">
+    <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
+    <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
+    <small class="text-muted notice-time" title="<?= $dateText ?>">
+      <?= $dateText ?>
+    </small>
+  </div>
+</a>
+
                                 <?php endforeach; ?>
-                            </ul>
+                            </div>
                         <?php else: ?>
-                            <div class="p-3 text-muted">Chưa có sự kiện nào.</div>
+                            <div class="card-body text-muted">
+                                <i class="bi bi-inbox me-1"></i> Chưa có sự kiện nào.
+                            </div>
                         <?php endif; ?>
                     </div>
+
                 </div>
             </div>
             <div class="m-search"><span><a href="javascript:void(0)"><i class="fas fa-search"></i></a></span></div>
@@ -234,7 +253,8 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-lock"></i></div>
                                 <div class="password-input-group">
-                                    <input id="password" name="password" type="password" class="form-control password-input" placeholder="Nhập mật khẩu">
+                                    <input id="password" name="password" type="password"
+                                        class="form-control password-input" placeholder="Nhập mật khẩu">
                                     <button type="button" class="password-toggle">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -244,7 +264,9 @@
 
                         <div class="col-12 text-right">
 
-                            <a class="color-logo" id="boxforgot" href="javascript:void(0)" onclick="showForgotModal()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister" href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
+                            <a class="color-logo" id="boxforgot" href="javascript:void(0)"
+                                onclick="showForgotModal()">Quên mật khẩu?</a> | <a class="color-logo" id="boxregister"
+                                href="javascript:void(0)" onclick="showRegisterModal()">Tạo tài khoản</a>
 
                         </div>
                         <div class="col-12">
@@ -345,7 +367,9 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
                                 <div class="password-input-group">
-                                    <input id="password" name="password" type="password" class="form-control password-input password-register" placeholder="Nhập mật khẩu">
+                                    <input id="password" name="password" type="password"
+                                        class="form-control password-input password-register"
+                                        placeholder="Nhập mật khẩu">
                                     <button type="button" class="password-toggle">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -356,7 +380,9 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
                                 <div class="password-input-group">
-                                    <input id="password_confirm" name="password_confirm" type="password" class="form-control password-input password-register" placeholder="Xác nhận mật khẩu">
+                                    <input id="password_confirm" name="password_confirm" type="password"
+                                        class="form-control password-input password-register"
+                                        placeholder="Xác nhận mật khẩu">
                                     <button type="button" class="password-toggle">
                                         <i class="fas fa-eye"></i>
                                     </button>
@@ -433,7 +459,8 @@
 </div>
 
 <!-- Modal Quên mật khẩu -->
-<div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true" aria-modal="true" tabindex="-1">
+<div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true"
+    aria-modal="true" tabindex="-1">
     <div class="modal-dialog modal-lg" style="width:450px">
         <div class="modal-content">
             <div class="modal-header">
@@ -452,19 +479,22 @@
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-at"></i></div>
-                                <input name="email" id="forgot_email" type="email" class="form-control" placeholder="Email">
+                                <input name="email" id="forgot_email" type="email" class="form-control"
+                                    placeholder="Email">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="forgot_password" type="password" class="form-control" placeholder="Mật khẩu mới">
+                                <input id="forgot_password" type="password" class="form-control"
+                                    placeholder="Mật khẩu mới">
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
-                                <input id="forgot_password_confirm" type="password" class="form-control" placeholder="Xác nhận mật khẩu">
+                                <input id="forgot_password_confirm" type="password" class="form-control"
+                                    placeholder="Xác nhận mật khẩu">
                             </div>
                         </div>
                         <div class="col-12">
@@ -517,7 +547,7 @@
 
 <!-- Xử lý ẩn hiện modal -->
 <script>
-    $(function() {
+    $(function () {
         // Lấy modal login
         var loginElement = document.getElementById('div_modal');
         var loginModal = loginElement ? new bootstrap.Modal(loginElement) : null;
@@ -538,21 +568,21 @@
         }
 
         // Hàm mở modal đăng nhập
-        window.showLoginModal = function() {
+        window.showLoginModal = function () {
             if (mobileModal) mobileModal.hide();
             if (registerModal) registerModal.hide(); // ẩn modal đăng ký nếu đang mở
             if (loginModal) loginModal.show(); // mở modal đăng nhập
         };
 
         // Hàm mở modal đăng ký
-        window.showRegisterModal = function() {
+        window.showRegisterModal = function () {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide(); // ẩn modal đăng nhập nếu đang mở
             if (registerModal) registerModal.show(); // mở modal đăng ký
         };
 
         // Hàm mở modal quên mật khẩu
-        window.showForgotModal = function() {
+        window.showForgotModal = function () {
             if (mobileModal) mobileModal.hide();
             if (loginModal) loginModal.hide();
             if (registerModal) registerModal.hide();
@@ -560,29 +590,29 @@
         };
 
         // Hàm chuyển ngược từ đăng ký sang đăng nhập
-        window.switchToLogin = function() {
+        window.switchToLogin = function () {
             if (registerModal) registerModal.hide();
             if (loginModal) loginModal.show();
         };
 
         // Đóng modal khi click nút close hoặc thoát
-        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function() {
+        $('#div_modal .sh-popup-close, #div_modal .cmd-cancel').on('click', function () {
             if (loginModal) loginModal.hide();
         });
 
-        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function() {
+        $('#register_modal .sh-popup-close, #register_modal .cmd-cancel').on('click', function () {
             if (registerModal) registerModal.hide();
         });
 
 
-        $('#forgot_modal .sh-popup-close, #forgot_modal .cmd-cancel').on('click', function() {
+        $('#forgot_modal .sh-popup-close, #forgot_modal .cmd-cancel').on('click', function () {
             if (forgotModal) forgotModal.hide();
         });
     });
 </script>
 
 <script>
-    document.getElementById("forgot_step1").addEventListener("submit", function(e) {
+    document.getElementById("forgot_step1").addEventListener("submit", function (e) {
         e.preventDefault();
         let email = document.getElementById("forgot_email").value;
         let pass = document.getElementById("forgot_password").value;
@@ -594,15 +624,15 @@
         }
 
         fetch("send-otp.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    pass: pass
-                })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                pass: pass
             })
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.status === "success") {
@@ -614,21 +644,21 @@
             });
     });
 
-    document.getElementById("forgot_step2").addEventListener("submit", function(e) {
+    document.getElementById("forgot_step2").addEventListener("submit", function (e) {
         e.preventDefault();
         let email = document.getElementById("forgot_email").value;
         let otp = document.getElementById("forgot_otp").value;
 
         fetch("verify-otp.php", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    email: email,
-                    otp: otp
-                })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                otp: otp
             })
+        })
             .then(res => res.json())
             .then(data => {
                 if (data.status === "success") {

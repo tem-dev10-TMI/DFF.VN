@@ -1,5 +1,5 @@
 a {
-    text-decoratioline: none;
+    text-decoration: none;
     color: #124889;
     vertical-align: baseline;
     cursor: pointer;
@@ -12,38 +12,185 @@ a {
     /* thêm cuộn dọc */
 }
 
+.article-image {
+    width: 100%;
+    max-width: 450px;
+    /* 👈 chỉnh nhỏ lại, bạn thử 400–500px tùy ý */
+    margin: 0 auto 20px auto;
+    /* căn giữa + cách dưới */
+}
+
+.article-image img {
+    width: 100%;
+    height: 300px;
+    /* 👈 giảm chiều cao cho cân đối */
+    object-fit: cover;
+    border-radius: 10px;
+    display: block;
+}
+
+
 .password-input-group {
     position: relative;
     display: flex;
+    flex: 1;
     align-items: center;
 }
 
+/* Khung bình luận */
+.comment-section {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fefefe;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+}
+
+/* Tiêu đề */
+.comment-section-title {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #198754;
+    font-weight: 600;
+}
+
+/* Form nhập bình luận */
+.comment-form-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: flex-start;
+}
+
+.comment-form-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-form-input {
+    flex: 1;
+    min-height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    font-size: 14px;
+    resize: vertical;
+}
+
+.comment-form-btn {
+    background: #198754;
+    border: none;
+    color: #fff;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.comment-form-btn:hover {
+    background: #157347;
+}
+
+/* Danh sách comment */
+.comment-items {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Mỗi comment */
+.comment-card {
+    display: flex;
+    gap: 12px;
+    padding: 12px;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+/* Avatar */
+.comment-card-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+/* Nội dung comment */
+.comment-card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Meta (avatar + tên + thời gian) */
+.comment-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.comment-card-name {
+    font-weight: 600;
+    color: #198754;
+    font-size: 14px;
+}
+
+.comment-card-time {
+    font-size: 12px;
+    color: #999;
+}
+
+/* Nội dung text */
+.comment-card-content {
+    font-size: 14px;
+    line-height: 1.5;
+    color: #333;
+    background: #fff;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #eee;
+}
+
+/* Hành động */
+.comment-card-actions {
+    margin-top: 6px;
+}
+
+.comment-card-actions a {
+    font-size: 13px;
+    color: #198754;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.comment-card-actions a:hover {
+    text-decoration: underline;
+}
+
+/* Khi chưa có comment */
+.comment-empty {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+}
+
 .password-input-group .form-control {
-    padding-right: 94px;
+    width: 100%;
+    padding-right: 40px;
 }
 
 .password-input-group .password-register {
-    padding-right: 92px;
-}
-
-@media (max-width: 767px) {
-    .password-input-group .form-control {
-        padding-right: 55px;
-    }
-
-    .password-input-group .password-register {
-        padding-right: 52px;
-    }
-}
-
-@media (max-width: 480px) {
-    .password-input-group .form-control {
-        padding-right: 18px;
-    }
-
-    .password-input-group .password-register {
-        padding-right: 15px;
-    }
+    width: 100%;
+    padding-right: 40px;
 }
 
 .password-toggle {
@@ -68,6 +215,13 @@ a {
 
 .modal-dialog .modal-content {
     margin-top: -25px;
+}
+
+/*Mobile*/
+@media (max-width: 480px) {
+    .modal-dialog .modal-content {
+        margin-top: 10px;
+    }
 }
 
 .adv-banner {
@@ -2491,18 +2645,19 @@ a.disabled {
 /**/
 .left-menu ul li img {
 
-  width: 28px;             
-  height: 28px;
-  border-radius: 50%;      
-  object-fit: cover;        
-  flex-shrink: 0;  
-}  
-  .left-menu ul li .icon-right {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.left-menu ul li .icon-right {
     float: right;
-    padding-top: 4px ;
+    padding-top: 4px;
     cursor: pointer;
     padding-left: 0px;
-    margin-top: 5px;    
+    margin-top: 5px;
 }
 
 /*END*/
@@ -4482,7 +4637,7 @@ div[data-notify="container"] .close {
     right: 22px;
     background-color: #fff;
     border-radius: 8px;
-    padding: 10px 0;
+    /* padding: 10px 0; */
     border: 1px solid #ccc;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 6px;
     max-height: 600px;
@@ -4520,7 +4675,8 @@ div[data-notify="container"] .close {
     justify-content: space-between;
     width: 100%;
 }
-.box-alert .tab-content #content{
+
+.box-alert .tab-content #content {
     color: #2a14b8;
 }
 
@@ -7238,18 +7394,29 @@ ul.timeline .left-arrow:after {
     }
 
 }
-/*Tiêu Đề Thông Báo*/
-.title-thongbao {
-  font-size: 22px;
-  font-weight: bold;
-  color: rebeccapurple;
-  padding: 10px 15px;
-  border-left: 5px solid #007bff;
-  background: #f9f9f9;
-  border-radius: 6px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
-}
-a{
-    text-decoration: none;
+/* Chỉ cuộn dọc, tuyệt đối chặn ngang */
+.notice-list { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
+
+/* Item gọn, không tràn */
+.notice-item { display: flex; align-items: center; gap: 12px; padding: .75rem 1rem; min-height: 56px; overflow: hidden; }
+
+/* Icon cố định kích thước */
+.notice-icon { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; }
+
+/* Vùng text co giãn, cho phép cắt/bẻ từ */
+.notice-text { flex: 1 1 auto; min-width: 0; }
+
+/* Tiêu đề: tối đa 2 dòng, không tràn ngang, bẻ từ cứng */
+.notice-title{
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;          /* bẻ từ nếu không có khoảng trắng */
+  overflow-wrap: anywhere;         /* ưu tiên bẻ bất cứ đâu để khỏi tạo scrollbar */
 }
 
+/* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
+.notice-time { font-size: .8125rem; }

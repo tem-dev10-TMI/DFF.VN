@@ -64,26 +64,26 @@ class profileUserModel
     {
         $db = new connect();
         $sql = "UPDATE profile_user 
-    SET 
-        display_name = :display_name, 
-        birth_year   = :birth_year, 
-        workplace    = :workplace, 
-        studied_at   = :studied_at, 
-        live_at      = :live_at
-    WHERE user_id = :user_id";
+            SET 
+                display_name = :display_name, 
+                birth_year   = :birth_year, 
+                workplace    = :workplace, 
+                studied_at   = :studied_at, 
+                live_at      = :live_at
+            WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
 
-        $success = $stmt->execute([
-            ':user_id'      => $user_id,
-            ':display_name' => $display_name,
-            ':birth_year'   => $birth_year,
-            ':workplace'    => $workplace,
-            ':studied_at'   => $studied_at,
-            ':live_at'      => $live_at,
-        ]);
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
 
-        return $success; // chỉ cần trả về true/false
+        $stmt->bindValue(':display_name', $display_name, $display_name === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':birth_year', $birth_year, $birth_year === null ? PDO::PARAM_NULL : PDO::PARAM_INT);
+        $stmt->bindValue(':workplace', $workplace, $workplace === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':studied_at', $studied_at, $studied_at === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':live_at', $live_at, $live_at === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
+
 
     // =============== Xóa thông tin user ===============
     public static function deleteProfileUser($user_id)

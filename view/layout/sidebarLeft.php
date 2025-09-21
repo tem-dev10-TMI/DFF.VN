@@ -1,26 +1,20 @@
 <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
-    </style>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
-           <li class="item active">
-               
-                <i id="icon-home" class="fa-solid fa-house home-icon" style="font-size:20px;"></i>
-
-              
-                <a href="home" title="Trang chủ">Trang chủ</a>
+            <li class="item">
+                <i class="fa-solid fa-house home-icon" style="font-size:20px;"></i>
+                <a href="<?= BASE_URL ?>/home" title="Trang chủ">Trang chủ</a>
             </li>
-
-            <li class="item" data-ref="d">
+            <li class="item">
                 <i class="bi bi-book-half idiscuss"></i>
-                <a href="news" title="Trang chủ">Mới nhất</a>
+                <a href="<?= BASE_URL ?>/news" title="Mới nhất">Mới nhất</a>
             </li>
             <li class="item">
                 <i class="bi bi-currency-exchange trend-icon"></i>
-                <a href="trends" title="Trang chủ">Xu hướng</a>
+                <a href="<?= BASE_URL ?>/trends" title="Xu hướng">Xu hướng</a>
             </li>
-
-
         </ul>
         <div class="line"></div>
 

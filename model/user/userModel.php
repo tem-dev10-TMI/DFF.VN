@@ -62,18 +62,21 @@ class UserModel
                 avatar_url = :avatar_url,
                 cover_photo = :cover_photo,
                 description = :description
-                WHERE id = :user_id";
+            WHERE id = :user_id";
         $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':user_id' => $user_id,
-            ':name' => $name,
-            ':username' => $username,
-            ':email' => $email,
-            ':phone' => $phone,
-            ':avatar_url' => $avatar_url,
-            ':cover_photo' => $cover_photo,
-            ':description' => $description
-        ]);
+
+        // Bind thủ công để hỗ trợ NULL
+        $stmt->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+
+        $stmt->bindValue(':name', $name, $name === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':username', $username, $username === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':email', $email, $email === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':phone', $phone, $phone === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':avatar_url', $avatar_url, $avatar_url === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':cover_photo', $cover_photo, $cover_photo === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+        $stmt->bindValue(':description', $description, $description === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
+
+        return $stmt->execute();
     }
 
     // Lấy thông tin user theo username/email (phục vụ login)
@@ -238,16 +241,15 @@ class UserModel
         return self::getUserById($id);
     }
     public static function searchUsers($q)
-{
-    $db = new connect();
-    $sql = "SELECT id, name, username, email, avatar_url 
+    {
+        $db = new connect();
+        $sql = "SELECT id, name, username, email, avatar_url 
             FROM users 
             WHERE name COLLATE utf8mb4_general_ci LIKE :q 
                OR username COLLATE utf8mb4_general_ci LIKE :q 
             ORDER BY name ASC";
-    $stmt = $db->db->prepare($sql);
-    $stmt->execute([':q' => "%$q%"]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':q' => "%$q%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

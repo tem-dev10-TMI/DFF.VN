@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Asia/Ho_Chi_Minh');
 require_once __DIR__ . '/helpers.php';
 ini_set('session.cookie_path', '/');
 ini_set('session.cookie_domain', 'localhost'); // nếu chạy ở localhost
@@ -23,7 +23,9 @@ spl_autoload_register(function ($class) {
 
     ];
 
-    foreach ($paths as $p) if (file_exists($p)) require_once $p;
+    foreach ($paths as $p)
+        if (file_exists($p))
+            require_once $p;
 });
 
 
@@ -150,6 +152,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->loadMoreArticles();
         exit;
+    case 'api/loadMoreForTopic':
+        require_once __DIR__ . '/controller/TopicController.php';
+        $controller = new TopicController();
+        $controller->loadMoreArticlesBySlug();
+        exit;
     case 'crypton':
         require_once __DIR__ . '/controller/CryptonController.php';
         $controller = new CryptonController();
@@ -168,6 +175,16 @@ switch ($url) {
         $controller->details($id);
         break;
 
+    case 'comment':
+        require_once __DIR__ . '/controller/CommentsController.php';
+        break;
+
+    case 'details_blog':
+        $id = $_GET['id'] ?? 0;
+        require_once __DIR__ . '/controller/BlogController.php';
+        $controller = new BlogController();
+        $controller->show($id);
+        break;
 
 
     // ========== API ROUTES ==========
@@ -194,9 +211,9 @@ switch ($url) {
     default:
         //404 page
         /*         require_once 'controller/error/404Controller.php';
-        $controller = new NotFoundController;
-        require_once 'controller/error/404Controller.php';
-        //$controller = new NotFoundController;
-        $controller->index();
-        break; */
+    $controller = new NotFoundController;
+    require_once 'controller/error/404Controller.php';
+    //$controller = new NotFoundController;
+    $controller->index();
+    break; */
 }

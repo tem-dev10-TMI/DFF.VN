@@ -15,15 +15,30 @@
 
     <!-- bài viết chính block start -->
     <div class="content-left cover-page">
-        <div class="block-k box-write">
-            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg"> </a>
+       <div class="block-k box-write openModalcreatePost">
+            <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
+            </a>
             <div class="input-group box-search">
-                <div class="post-input"><a href="javascript:void(0)" module-load="loadwrite"><span>Viết bài,
-                            chia sẻ, đặt câu hỏi…</span></a></div>
+                <div data-bs-toggle="modal"><span>Viết
+                        bài, chia sẻ, đặt câu hỏi…</span></div>
+
             </div>
             <img alt="Viết bài, chia sẻ, đặt câu hỏi" module-load="loadwrite"
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
+        <script>
+            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    // Nếu đã đăng nhập thì mở modal
+                    var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
+                    myModal.show();
+                <?php else: ?>
+                    // Nếu chưa đăng nhập thì chuyển sang login hoặc cảnh báo
+                    alert("Bạn cần đăng nhập để viết bài.");
+                <?php endif; ?>
+            });
+
+        </script>
 
 
 
@@ -54,7 +69,12 @@
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                 <span class="name" title="">
-                                    <a href="/DFF.VN/view_profile_user?id=<?= $article['author_id'] ?>" title="<?= htmlspecialchars($article['author_name']) ?>"><?= htmlspecialchars($article['author_name']) ?></a>
+                                 <a href="/DFF.VN/details_blog?id=<?= $article['id'] ?>" 
+   title="<?= htmlspecialchars($article['title']) ?>">
+   <?= htmlspecialchars($article['title']) ?>
+</a>
+
+
                                 </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                             </div>
                         </div>

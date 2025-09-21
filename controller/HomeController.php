@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/article/articlesmodel.php';
-require_once __DIR__ . '/../model/commentmodel.php';
+
 require_once __DIR__ . '/../model/user/businessmenModel.php';
 require_once __DIR__ . '/../model/MarketDataModel.php';
 require_once __DIR__ . '/../model/event/Events.php';
@@ -32,39 +32,92 @@ class homeController
 {
     public static function index()
     {
-        // 1. Lấy dữ liệu từ Database (giảm tải: chỉ lấy 8 cho slider và 5 cho danh sách ban đầu)
+        // 0. Include a
+        require_once __DIR__ . '/../helpers/cache_helper.php';
+
+        // 1. Lấy dữ liệu từ Database
         $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
         $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
+        $iduser = $_SESSION['user']['id'] ?? null;
 
-        $comments = CommentsModel::getComments();
-        $topBusinessmen = businessmenModel::getAllBusinessmen();
+        // Áp dụng cache cho Top Businessmen (cache trong 10 phút)
+        $cache_key_businessmen = 'top_businessmen';
+        $topBusinessmen = get_cache($cache_key_businessmen, 600);
+        if ($topBusinessmen === false) {
+            $topBusinessmen = businessmenModel::getAllBusinessmen(6, $iduser);
+            set_cache($cache_key_businessmen, $topBusinessmen);
+        }
+
         $marketData = MarketDataModel::getCachedMarketData();
-
+        
         // Lấy dữ liệu sự kiện
         $eventsModel = new Events();
         $events = $eventsModel->getAll();
 
-        // 2. Lấy RSS (giới hạn ngay từ nguồn)
+        // 2. Lấy RSS (giữ nguyên 2 nguồn cũ và thêm 6 nguồn mới)
         require_once __DIR__ . '/../model/rss/RssModel.php';
 
-        // RSS Báo Chính phủ
+        // RSS Báo Chính phủ (cũ)
         $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
         $rssArticles1 = RssModel::getFeedItems($feedUrl1, 12, 15);
 
-        // RSS Thanh Niên
+        // RSS Thanh Niên (cũ)
         $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
         $rssArticles2 = RssModel::getFeedItems($feedUrl2, 12, 15);
 
-        // Gộp RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
-        $allForSlider = array_merge($rssArticles1, $rssArticles2, $dbArticlesForSlider);
+        // --- BẮT ĐẦU THÊM 6 NGUỒN MỚI ---
+        $feedUrl3 = "https://vnexpress.net/rss/kinh-doanh.rss";
+        $rssArticles3 = RssModel::getFeedItems($feedUrl3, 12, 15);
 
-        // Thiết lập avatar riêng theo nguồn RSS
+        $feedUrl4 = "https://tuoitre.vn/rss/kinh-doanh.rss";
+        $rssArticles4 = RssModel::getFeedItems($feedUrl4, 12, 15);
+
+        $feedUrl5 = "https://cafef.vn/trang-chu.rss";
+        $rssArticles5 = RssModel::getFeedItems($feedUrl5, 12, 15);
+
+        $feedUrl6 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
+        $rssArticles6 = RssModel::getFeedItems($feedUrl6, 12, 15);
+
+        $feedUrl7 = "https://dantri.com.vn/kinh-doanh.rss";
+        $rssArticles7 = RssModel::getFeedItems($feedUrl7, 12, 15);
+
+        $feedUrl8 = "https://znews.vn/kinh-doanh-tai-chinh.rss";
+        $rssArticles8 = RssModel::getFeedItems($feedUrl8, 12, 15);
+        // --- KẾT THÚC THÊM 6 NGUỒN MỚI ---
+
+        // Gộp TẤT CẢ RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
+        $allForSlider = array_merge(
+            $rssArticles1, $rssArticles2, $rssArticles3, $rssArticles4,
+            $rssArticles5, $rssArticles6, $rssArticles7, $rssArticles8,
+            $dbArticlesForSlider
+        );
+
+        // Thiết lập avatar riêng theo nguồn RSS (thêm logic cho các nguồn mới)
         foreach ($allForSlider as &$art) {
             if (!empty($art['is_rss'])) {
                 if (isset($art['link']) && str_contains($art['link'], 'thanhnien')) {
                     $art['avatar_url'] = 'public/img/avatar/thanhnien.png';
                     $art['author_id'] = 67; // id cho RSS Thanh Niên
+                } elseif (isset($art['link']) && str_contains($art['link'], 'vnexpress')) {
+                    $art['avatar_url'] = 'public/img/avatar/vnexpress.png';
+                    $art['author_id'] = 68; // id cho RSS VnExpress
+                } elseif (isset($art['link']) && str_contains($art['link'], 'tuoitre')) {
+                    $art['avatar_url'] = 'public/img/avatar/tuoitre.png';
+                    $art['author_id'] = 69; // id cho RSS Tuổi Trẻ
+                } elseif (isset($art['link']) && str_contains($art['link'], 'cafef')) {
+                    $art['avatar_url'] = 'public/img/avatar/cafef.png';
+                    $art['author_id'] = 70; // id cho RSS CafeF
+                } elseif (isset($art['link']) && str_contains($art['link'], 'vietnamnet')) {
+                    $art['avatar_url'] = 'public/img/avatar/vietnamnet.png';
+                    $art['author_id'] = 71; // id cho RSS Vietnamnet
+                } elseif (isset($art['link']) && str_contains($art['link'], 'dantri')) {
+                    $art['avatar_url'] = 'public/img/avatar/dantri.png';
+                    $art['author_id'] = 72; // id cho RSS Dân trí
+                } elseif (isset($art['link']) && str_contains($art['link'], 'znews')) {
+                    $art['avatar_url'] = 'public/img/avatar/znews.png';
+                    $art['author_id'] = 73; // id cho RSS Znews
                 } else {
+                    // Mặc định là Báo Chính phủ
                     $art['avatar_url'] = 'public/img/avatar/baochinhphu.png';
                     $art['author_id'] = 66; // id cho RSS Báo Chính phủ
                 }
@@ -72,31 +125,50 @@ class homeController
         }
         unset($art);
 
+
         // 3. Sắp xếp theo created_at giảm dần
         usort($allForSlider, function ($a, $b) {
             return strtotime($b['created_at']) - strtotime($a['created_at']);
         });
+
+        // Điều chỉnh lại logic lấy 8 bài nổi bật: lấy 1 bài từ mỗi nguồn RSS
         $article_nb = array_merge(
-            array_slice($rssArticles1, 0, 4),
-            array_slice($rssArticles2, 0, 4)
+            array_slice($rssArticles1, 0, 1),
+            array_slice($rssArticles2, 0, 1),
+            array_slice($rssArticles3, 0, 1),
+            array_slice($rssArticles4, 0, 1),
+            array_slice($rssArticles5, 0, 1),
+            array_slice($rssArticles6, 0, 1),
+            array_slice($rssArticles7, 0, 1),
+            array_slice($rssArticles8, 0, 1)
         );
         // Giới hạn: 8 bài nổi bật cho slider
         $featuredArticles = array_slice($article_nb, 0, 8);
 
-        // Danh sách khởi tạo 5 bài: trộn RSS ít + DB 5 bài
+
+        // Danh sách khởi tạo 5 bài: trộn RSS ít + DB 5 bài (lấy 1 bài từ 4 nguồn đầu)
         $rssForInitial = array_merge(
-            array_slice($rssArticles1, 0, 4),
-            array_slice($rssArticles2, 0, 4)
+             array_slice($rssArticles1, 0, 1),
+             array_slice($rssArticles2, 0, 1),
+             array_slice($rssArticles3, 0, 1),
+             array_slice($rssArticles4, 0, 1)
         );
         $articlesInitialCombined = array_merge($rssForInitial, $dbArticlesInitial);
+        // Logic gán avatar cho danh sách này (thêm các nguồn mới)
         foreach ($articlesInitialCombined as &$art2) {
             if (!empty($art2['is_rss'])) {
-                if (isset($art2['link']) && str_contains($art2['link'], 'thanhnien')) {
+                 if (isset($art2['link']) && str_contains($art2['link'], 'thanhnien')) {
                     $art2['avatar_url'] = 'public/img/avatar/thanhnien.png';
-                    $art2['author_id'] = 67; // id cho RSS Thanh Niên
+                    $art2['author_id'] = 67;
+                } elseif (isset($art2['link']) && str_contains($art2['link'], 'vnexpress')) {
+                    $art2['avatar_url'] = 'public/img/avatar/vnexpress.png';
+                    $art2['author_id'] = 94;
+                } elseif (isset($art2['link']) && str_contains($art2['link'], 'tuoitre')) {
+                    $art2['avatar_url'] = 'public/img/avatar/tuoitre.png';
+                    $art2['author_id'] = 92;
                 } else {
                     $art2['avatar_url'] = 'public/img/avatar/baochinhphu.png';
-                    $art2['author_id'] = 66; // id cho RSS Báo Chính phủ
+                    $art2['author_id'] = 66;
                 }
             }
         }
@@ -106,23 +178,28 @@ class homeController
         });
         $articlesInitial = array_slice($articlesInitialCombined, 0, 5);
 
-        // Tạo nhóm RSS cho các box HOT và ANALYSIS (từ nguồn RSS trong mảng tổng)
-        $onlyRss = array_values(array_filter(array_merge($rssArticles1, $rssArticles2), function ($it) {
+        // Tạo nhóm RSS cho các box HOT và ANALYSIS (gộp tất cả các nguồn RSS)
+        $allRssArticles = array_merge(
+            $rssArticles1, $rssArticles2, $rssArticles3, $rssArticles4,
+            $rssArticles5, $rssArticles6, $rssArticles7, $rssArticles8
+        );
+        $onlyRss = array_values(array_filter($allRssArticles, function ($it) {
             return !empty($it['is_rss']);
         }));
-        $rssArticles3 = array_slice($onlyRss, 0, 6);
-        $rssArticles4 = array_slice($onlyRss, 6, 6);
+        $rssArticlesForBox1 = array_slice($onlyRss, 0, 6);
+        $rssArticlesForBox2 = array_slice($onlyRss, 6, 6);
 
         if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == 'user') {
             $profile_category = "user";
         } else {
             $profile_category = "businessmen";
         }
-        $topicModel = new TopicModel();
-        $allTopics = $topicModel->getAll();
 
         // 4. Load view Home
         ob_start();
+        // Đổi tên biến để view dễ hiểu hơn
+        $rssArticles3 = $rssArticlesForBox1;
+        $rssArticles4 = $rssArticlesForBox2;
         require_once __DIR__ . '/../view/page/Home.php';
         $content = ob_get_clean();
 
@@ -130,6 +207,7 @@ class homeController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
+    
 
     // API: Load thêm bài viết (lazy load)
     public function loadMoreArticles()
@@ -138,7 +216,8 @@ class homeController
         try {
             require_once __DIR__ . '/../model/article/articlesmodel.php';
             require_once __DIR__ . '/../model/MarketDataModel.php';
-            require_once __DIR__ . '/../model/commentmodel.php';
+          require_once __DIR__ . '/../model/CommentsModel.php';   // Đúng tên file
+
             require_once __DIR__ . '/../model/user/businessmenModel.php';
 
             $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;

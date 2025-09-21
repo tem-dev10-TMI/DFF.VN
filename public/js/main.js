@@ -1,3 +1,22 @@
+document.addEventListener("DOMContentLoaded", function () {
+    let path = window.location.pathname; // ví dụ: /DFF.VN/news
+    let menuItems = document.querySelectorAll('.nav .item');
+
+    menuItems.forEach(item => {
+        let link = item.querySelector("a");
+        if (link) {
+            // Lấy href nhưng chỉ phần path (bỏ BASE_URL domain)
+            let href = new URL(link.href, window.location.origin).pathname;
+
+            if (path === href) {
+                item.classList.add("active");
+            } else {
+                item.classList.remove("active");
+            }
+        }
+    });
+});
+
 document.addEventListener('DOMContentLoaded', function () {
     // Password visibility toggle
     const passwordInputs = document.querySelectorAll('.password-input');
@@ -187,8 +206,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 const menuBtn = document.querySelector('.menu-toggle');
-const sidebar = document.querySelector('.left-sidebar');
+const leftSidebar = document.querySelector('.left-sidebar');
 
 menuBtn.addEventListener('click', () => {
-  sidebar.classList.toggle('open');
+    leftSidebar.classList.toggle('open');
 });

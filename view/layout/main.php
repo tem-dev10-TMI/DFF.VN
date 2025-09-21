@@ -11,8 +11,7 @@
     <meta http-equiv="REFRESH" content="1800" />
     <title>Mạng xã hội Kinh tế - MXH Trung Tâm </title>
     <base href="http://localhost/DFF.VN/">
-    <meta name="description"
-        content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
+    <meta name="description" content="MXHTT - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường" />
     <meta name="keywords"
         content="mxh, mxh.org.vn, Mạng xã hội TMI, Mạng xã hội kinh tế, Mạng xã hội đầu tư, doanh nghiệp, doanh nhân, cổ phiếu, chứng khoán, quản lý tài chính, kinh doanh,Cộng đồng nhà đầu tư, mạng lưới nhà đầu tư, diễn đàn tài chính, diễn đàn nhà đầu tư, phân tích tài chính, thông tin doanh nghiệp, phân tích doanh nghiệp" />
     <meta property="fb:app_id" content="" />
@@ -29,12 +28,14 @@
 
 
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
@@ -44,9 +45,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script
+        src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
@@ -114,13 +118,15 @@
 
 
 
-    require_once  __DIR__ . '/../../model/TopicModel.php';
-
-    $topicModel = new TopicModel();
-    $allTopics = $topicModel->getAll(); // tất cả chủ đề
+    // Tối ưu: Chỉ lấy danh sách chủ đề một lần, ưu tiên từ controller
+    if (!isset($allTopics)) {
+        require_once __DIR__ . '/../../model/TopicModel.php';
+        $topicModel = new TopicModel();
+        $allTopics = $topicModel->getAll(); 
+    }
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
-    require_once  __DIR__ . '/../layout/sidebarMobile.php';
+    require_once __DIR__ . '/../layout/sidebarMobile.php';
 
 
 
@@ -130,13 +136,19 @@
 
 
 
-    require_once __DIR__ . '/../../model/event/Events.php';
-    if (!isset($pdo)) {
-        require_once __DIR__ . '/../../config/db.php';
+    // Tối ưu: Chỉ lấy sự kiện một lần. 
+    // Ưu tiên dùng biến $events từ controller (trang chủ), nếu không có thì layout tự lấy.
+    if (!isset($events)) {
+        require_once __DIR__ . '/../../model/event/Events.php';
+        if (!isset($pdo)) {
+            require_once __DIR__ . '/../../config/db.php';
+        }
+        global $pdo;
+        $eventModelHeader = new EventModels($pdo);
+        $headerEvents = $eventModelHeader->all(5);
+    } else {
+        $headerEvents = $events;
     }
-    global $pdo;
-    $eventModelHeader = new EventModels($pdo);
-    $headerEvents = $eventModelHeader->all(5);
 
     ?>
 
@@ -146,7 +158,7 @@
     </div>
     <!-- header start -->
 
-    <?php require_once  __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
+    <?php require_once __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
     ?>
     <!-- cho cái thi trường chạy -->
 
@@ -193,15 +205,6 @@
 
 
     <?php
-    if (!isset($headerEvents)) {
-        require_once  __DIR__ . '/../../model/event/Events.php';
-        if (!isset($pdo)) {
-            require_once __DIR__ . '/../../config/db.php';
-        }
-        global $pdo;
-        $eventModelMobile = new EventModel($pdo);
-        $headerEvents = $eventModelMobile->all(5);
-    }
     $mobileNotifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
     ?>
     <div class="func-mobile">
@@ -224,12 +227,14 @@
                     <span>Xu hướng</span>
                 </a>
             </li>
-            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i class="fas fa-bell"></i>
+            <li><a href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="alerts"><i
+                        class="fas fa-bell"></i>
                     <span class="number"><?= $mobileNotifCount ?></span>
                     <span class="falert">Thông báo</span>
                 </a></li>
             <li>
-                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i class="fas fa-user-alt"></i>
+                <a module-load="signin" href="javascript:void(0)" class="js-mobile-modal" data-mobile-modal="profile"><i
+                        class="fas fa-user-alt"></i>
                     <span>Tôi</span>
                 </a>
             </li>
@@ -237,14 +242,16 @@
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 1055;">
+    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
+        style="z-index: 1055;">
         <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+                <div class="modal-body" id="mobileModalBody"
+                    style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
@@ -378,17 +385,24 @@
     <div id="mobile-profile-template" class="d-none">
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role']  == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
                                                                             echo 'profile_user';
                                                                         } else {
                                                                             //echo 'profile_business';
-                                                                        } ?>"><i class="fas fa-user"></i> Trang cá nhân</a></li>
+                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
+                        nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật khẩu</a></li>
-                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
+                        khẩu</a></li>
+                <li class="list-group-item"><a href="<?= BASE_URL ?>/logout"><i class="fas fa-sign-out-alt"></i> Đăng
+                        xuất</a></li>
             <?php else: ?>
-                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng nhập</a></li>
-                <li class="list-group-item"><a href="javascript:void(0)" onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng ký</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)"
+                        onclick="if(window.showLoginModal) showLoginModal();"><i class="fas fa-sign-in-alt"></i> Đăng
+                        nhập</a></li>
+                <li class="list-group-item"><a href="javascript:void(0)"
+                        onclick="if(window.showRegisterModal) showRegisterModal();"><i class="fas fa-user-plus"></i> Đăng
+                        ký</a></li>
             <?php endif; ?>
         </ul>
     </div>
@@ -444,6 +458,38 @@
                 });
             });
         })();
+
+        document.querySelectorAll(".btn-follow").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const userId = this.getAttribute("data-user");
+
+                fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "user_id=" + encodeURIComponent(userId),
+                        credentials: "include"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // cập nhật text nút
+                            this.querySelector(".follow-text").innerText =
+                                data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+
+                            // cập nhật số follower
+                            this.querySelector(".number").innerText = data.followers;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Không thể kết nối đến server!");
+                    });
+            });
+        });
     </script>
     <a module-load="boxIndex"></a>
 
@@ -465,7 +511,6 @@
                 }
             }
         </style>
-        ...
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
         <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
@@ -476,7 +521,7 @@
                 <!-- ?php require_once 'view/page/Home.php'; -->
                 <?= $content ?>
 
-                <?php require_once  __DIR__ . '/../layout/sidebarLeft.php'; ?>
+                <?php require_once __DIR__ . '/../layout/sidebarLeft.php'; ?>
                 <a href="crypton">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                         class="bi bi-coin mb-coins" viewBox="0 0 16 16">
@@ -486,7 +531,108 @@
                         <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
                     </svg>
                 </a>
+                <div class="modal fade" id="createPostModal" tabindex="-1" aria-labelledby="createPostModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
+
+
+                        <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
+
+                            <!-- Header -->
+                            <div class="modal-header bg-success text-white">
+                                <h5 class="modal-title fw-bold" id="createPostModalLabel">
+                                    <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                    aria-label="Đóng"></button>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="modal-body bg-light p-10">
+                                <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+                                    <!-- Avatar + tên -->
+                                    <div class="d-flex align-items-center mb-3">
+                                        <?php
+                                        $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                        if (!$avatarUrl || trim($avatarUrl) === '') {
+                                            $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                        }
+                                        ?>
+                                        <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                            class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                            style="width: 48px; height: 48px;">
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">
+                                                <?php
+                                                echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                                ?>
+                                            </h6>
+                                            <small class="text-muted">
+                                                <?= htmlspecialchars((($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân') ?>
+
+                                            </small>
+
+                                        </div>
+                                    </div>
+
+                                    <!-- Tiêu đề -->
+                                    <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+                                        placeholder="Nhập tiêu đề bài viết...">
+
+                                    <!-- Tóm tắt -->
+                                    <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                                        placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+
+                                    <!-- Nội dung chính -->
+                                    <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                                        placeholder="Nội dung chính của bài viết..."></textarea>
+
+                                    <!-- Chọn chủ đề -->
+                                    <div class="mb-3">
+                                        <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
+                                        <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+                                            <option value="">-- Chọn chủ đề --</option>
+                                            <?php foreach ($allTopics as $topic): ?>
+                                                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+
+                                    <!-- Thanh công cụ -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex gap-2">
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                                <i class="fas fa-image me-1"></i> Hình ảnh
+                                            </label>
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                                <i class="fas fa-video me-1"></i> Video
+                                            </label>
+                                            <button class="btn btn-outline-success btn-sm" type="button">
+                                                <i class="fas fa-link me-1"></i> Link
+                                            </button>
+                                        </div>
+                                        <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+                                            <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                        </button>
+
+                                    </div>
+
+                                    <!-- Input hidden -->
+                                    <input type="file" id="postImage" class="d-none" accept="image/*"
+                                        onchange="previewImage(event)">
+                                    <input type="file" id="postVideo" class="d-none" accept="video/*"
+                                        onchange="previewVideo(event)">
+                                </div>
+
+                                <!-- Preview ảnh / video -->
+                                <div id="imagePreview" class="mt-2 bt-4"></div>
+                                <div id="videoPreview" class="mt-2 bt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         <?php endif; ?>
 
@@ -550,6 +696,7 @@
             });
         </script>
 
+        <!-- Modal: Tạo bài viết mới -->
 
 
         <script>
@@ -567,6 +714,7 @@
         <script src="public/js/main1c07.js"></script>
         <script src="public/js/articleade1.js"></script>
         <script src="public/js/loadMore.js"></script>
+        <script src="public/js/infinite-scroll.js"></script>
 
         <div id="fb-root"></div>
         <span id="back-top"><i class="fas fa-arrow-up"></i></span>
@@ -592,10 +740,10 @@
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.0"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
 </body>
 
-<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:53 GMT -->
+
 
 </html>
