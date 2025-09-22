@@ -69,7 +69,7 @@
                             <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                             <div class="p-covers">
                                 <span class="name" title="">
-                                 <a href="/DFF.VN/details_blog?id=<?= $article['id'] ?>" 
+                                 <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" 
    title="<?= htmlspecialchars($article['title']) ?>">
    <?= htmlspecialchars($article['title']) ?>
 </a>
@@ -81,13 +81,13 @@
 
                         <div class="title">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="details_blog?id=<?= $article['id'] ?>">
+                                href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
                                 <?= htmlspecialchars($article['title']) ?>
                             </a>
                         </div>
                         <div class="sapo">
                             <?= htmlspecialchars($article['summary']) ?>
-                            <a href="details_blog?id=<?= $article['id'] ?>" class="d-more">Xem thêm</a>
+                            <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" class="d-more">Xem thêm</a>
                         </div>
 
 
