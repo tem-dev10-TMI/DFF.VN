@@ -4526,7 +4526,7 @@ div[data-notify="container"] .close {
 }
 
 .top-stock {
-   width: 100%;
+    width: 100%;
     background: #fefefe;
     overflow: hidden;
     box-sizing: border-box;
@@ -4535,8 +4535,8 @@ div[data-notify="container"] .close {
     border-bottom: 1px solid #e4e0e0;
 
     border-top: 1px solid #40a92b;
-    display: flex;
-
+    display: inline-table;
+    z-index: 9998;
     position: fixed;
 
     top: 66px;
