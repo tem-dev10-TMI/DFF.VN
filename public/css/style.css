@@ -2945,6 +2945,21 @@ article .accordion-button {
   outline: none !important;
   box-shadow: none !important;
 }
+@media (max-width: 768px) {
+  .accordion-button {
+    background: none !important;
+    border: none !important;
+    padding: 0 !important;
+    min-height: auto !important;
+
+    caret-color: transparent !important;   /* ẩn dấu nhấp nháy caret */
+    user-select: none !important;          /* không cho chọn text */
+    -webkit-tap-highlight-color: transparent !important; /* bỏ khung xanh mobile */
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
 
 
 article .accordion-button i {
