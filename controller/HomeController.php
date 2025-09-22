@@ -369,7 +369,7 @@ class homeController
         }
 
         ob_start();
-        require_once __DIR__ . '/../view/page/trends.php';
+        require_once __DIR__ . '/../view/page/Trends.php';
         $content = ob_get_clean();
 
         $profile = false;

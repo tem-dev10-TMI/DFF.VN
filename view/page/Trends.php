@@ -1,4 +1,4 @@
-@ -1,136 +0,0 @@
+
 <?php
 require_once __DIR__ . '/../../config/db.php';
 $db = new connect();
@@ -89,7 +89,7 @@ foreach ($topics as $tp) {
               <?php if (!empty($list)): ?>
                 <?php foreach ($list as $a): ?>
                   <li>
-                    <a href="details_blog?id=<?= $a['id'] ?>"><?= htmlspecialchars($a['title']) ?></a>
+                    <a href="<?= BASE_URL ?>/details_blog/<?= $a['slug'] ?>"><?= htmlspecialchars($a['title']) ?></a>
                     <span class="date"><i class="far fa-calendar-alt"></i> <?= htmlspecialchars(date('d/m/Y H:i', strtotime($a['created_at'] ?? 'now'))) ?></span>
                     <span class="name"><i class="far fa-user"></i> <?= htmlspecialchars($a['author_name'] ?? '') ?></span>
                   </li>
