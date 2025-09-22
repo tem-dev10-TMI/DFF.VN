@@ -44,7 +44,6 @@ foreach ($topics as $tp) {
     .top-stock {
         position: fixed !important;
         top: 66px !important;
-        z-index: 10001 !important;
         width: 100% !important;
         height: 50px !important;
     }

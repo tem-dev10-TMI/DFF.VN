@@ -1053,6 +1053,7 @@ a:hover {
     padding: 5px 0 5px 0;
     background: #40b029;
     z-index: 9999;
+    height: 50px;
     position: fixed;
     top: 0px;
     width: 1260px !important;
@@ -2945,21 +2946,6 @@ article .accordion-button {
   outline: none !important;
   box-shadow: none !important;
 }
-@media (max-width: 768px) {
-  .accordion-button {
-    background: none !important;
-    border: none !important;
-    padding: 0 !important;
-    min-height: auto !important;
-
-    caret-color: transparent !important;   /* ẩn dấu nhấp nháy caret */
-    user-select: none !important;          /* không cho chọn text */
-    -webkit-tap-highlight-color: transparent !important; /* bỏ khung xanh mobile */
-    box-shadow: none !important;
-    outline: none !important;
-  }
-}
-
 
 
 article .accordion-button i {
@@ -4523,7 +4509,7 @@ div[data-notify="container"] .close {
     border-top: 1px solid #40a92b;
     display: flex;
     position: fixed;
-    z-index: -1;
+    z-index: 10;
     top: 66px;
 }
 
