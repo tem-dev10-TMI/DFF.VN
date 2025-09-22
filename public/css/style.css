@@ -1052,12 +1052,17 @@ a:hover {
 .header-top {
     padding: 5px 0 5px 0;
     background: #40b029;
+
     height: 50px;
+
     z-index: 9999;
+    height: 50px;
     position: fixed;
     top: 0px;
     width: 1260px !important;
+
     border-bottom: 1px solid #40b029;
+
     display: flex;
     grid-column: 1;
     gap: 10px;
@@ -2941,9 +2946,13 @@ article .accordion-button {
     padding: 8px;
 }
 
-article .accordion-button:focus {
-    box-shadow: 0 0;
+.accordion-button:focus,
+.accordion-button:active,
+.accordion-button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
+
 
 article .accordion-button i {
     padding: 2px 6px 0;
@@ -4517,19 +4526,23 @@ div[data-notify="container"] .close {
 }
 
 .top-stock {
-    width: 100%;
+   width: 100%;
     background: #fefefe;
     overflow: hidden;
     box-sizing: border-box;
     height: 50px;
     position: relative;
     border-bottom: 1px solid #e4e0e0;
+
     border-top: 1px solid #40a92b;
     display: flex;
+
     position: fixed;
     z-index: -1;
     top: 66px;
 }
+
+
 
 .marquee,
 *[class^="marquee"] {
@@ -7006,7 +7019,7 @@ ul.timeline .left-arrow:after {
     }
 
     .top-stock {
-        top: 75px;
+        top: 66px;
     }
 
     .search-list .sea-user,
@@ -7364,7 +7377,7 @@ ul.timeline .left-arrow:after {
     .main>.left-sidebar {
         order: -1;
         width: 250px;
-        border-right: 1px solid rgb(212 211 211);
+        border-right: none
     }
 
     .main>.main-content {
@@ -7392,6 +7405,7 @@ ul.timeline .left-arrow:after {
         background: #fff;
         z-index: 2000;
         overflow-y: auto;
+        overflow-x: hidden;
         display: none;
         /* ẩn mặc định */
     }
@@ -7448,4 +7462,11 @@ ul.timeline .left-arrow:after {
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
 .notice-time { font-size: .8125rem; }
-@media (max-width: 768px){}
+
+
+/* Bảo đảm con không tràn ra ngoài */
+.left-sidebar * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
