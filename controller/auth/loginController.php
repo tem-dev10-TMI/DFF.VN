@@ -6,6 +6,15 @@ class loginController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
+
+        // Lưu lại URL trang trước đó để quay lại sau khi đăng nhập thành công
+        if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_SERVER['HTTP_REFERER'])) {
+            $referer = $_SERVER['HTTP_REFERER'];
+            // Chỉ lưu nếu trang trước đó không phải là trang login/register để tránh vòng lặp
+            if (strpos($referer, 'login') === false && strpos($referer, 'register') === false) {
+                $_SESSION['redirect_url'] = $referer;
+            }
+        }
         // Load model
         require_once __DIR__ . '/../../model/user/userModel.php';
         $error = null;
@@ -47,8 +56,10 @@ class loginController
                     $_SESSION['user_role']         = $user['role'];
                     $_SESSION['user_avatar_url']   = $user['avatar_url'] ?? null;
 
-                    // Điều hướng về trang main
-                    header('Location: ' . BASE_URL . '/');
+                    // Điều hướng về trang đã lưu hoặc trang chủ
+                    $redirectUrl = $_SESSION['redirect_url'] ?? BASE_URL . '/';
+                    unset($_SESSION['redirect_url']); // Xóa URL đã lưu khỏi session
+                    header('Location: ' . $redirectUrl);
                     exit;
                 } else {
                     // Sai mật khẩu hoặc không tồn tại user
@@ -69,7 +80,7 @@ class loginController
     {
         // Xóa session và logout
         session_destroy();
-        header('Location: ' . BASE_URL . '/login');
+        header('Location: ' . BASE_URL . '');
         exit;
     }
 }

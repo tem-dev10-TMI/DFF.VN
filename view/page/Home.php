@@ -245,7 +245,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             ?>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
+                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : BASE_URL .'/details_blog/' . $article['slug'] ?>"
                                     target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -391,7 +391,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         loadingElementId: 'loading',
                         loadMoreContainerId: 'load-more-container',
                         loadMoreBtnId: 'load-more-btn',
-                        apiUrl: 'api/loadMoreArticles',
+                        apiUrl: '<?= BASE_URL ?>/api/loadMoreArticles',
                         initialOffset: 5,
                         limit: 5,
                         renderItemFunction: renderHomepageArticle
