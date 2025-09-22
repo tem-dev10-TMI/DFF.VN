@@ -187,6 +187,26 @@ switch ($url) {
         $controller->show($id);
         break;
 
+        case 'like':
+            require_once __DIR__ . '/controller/ArticleLikeController.php';
+            $controller = new ArticleLikeController();
+        
+            $action = $_GET['action'] ?? '';
+        
+            switch ($action) {
+                case 'toggle':
+                    $controller->toggle();
+                    break;
+                case 'get':
+                    $controller->get(); // bạn cần thêm hàm này nếu chưa có (mình hướng dẫn bên dưới)
+                    break;
+                default:
+                    echo json_encode(['status' => 'error', 'msg' => 'Hành động không hợp lệ']);
+                    break;
+            }
+            break;
+        
+
 
     // ========== API ROUTES ==========
     case 'api/addPost':

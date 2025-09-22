@@ -1,63 +1,84 @@
 <?php
-class ArticleLikesModel {
+require_once __DIR__ . '/../config/db.php';
 
-    // Thêm 1 lượt like cho bài viết
-    public static function addLike($article_id, $user_id) {
+class ArticleLikesModel
+{
+    private static function getPDO()
+    {
         $db = new connect();
-        $sql = "INSERT INTO article_likes (article_id, user_id)
-                VALUES (:article_id, :user_id)";
-        $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':article_id' => $article_id,
-            ':user_id'    => $user_id
-        ]);
+        return $db->db;
     }
 
-    // Xóa 1 lượt like của user khỏi bài viết
-    public static function removeLike($article_id, $user_id) {
-        $db = new connect();
-        $sql = "DELETE FROM article_likes
-                WHERE article_id = :article_id AND user_id = :user_id";
-        $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':article_id' => $article_id,
-            ':user_id'    => $user_id
-        ]);
+    /**
+     * Kiểm tra user đã like bài viết chưa
+     */
+    public static function getUserLike($articleId, $userId)
+    {
+        $pdo = self::getPDO();
+        $stmt = $pdo->prepare("SELECT * FROM article_likes WHERE article_id = ? AND user_id = ?");
+        $stmt->execute([$articleId, $userId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
-    // Kiểm tra user đã like bài viết chưa
-    public static function hasLiked($article_id, $user_id) {
-        $db = new connect();
-        $sql = "SELECT 1 FROM article_likes
-                WHERE article_id = :article_id AND user_id = :user_id
-                LIMIT 1";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([
-            ':article_id' => $article_id,
-            ':user_id'    => $user_id
-        ]);
-        return $stmt->fetchColumn() !== false;
+    /**
+     * Thêm like
+     */
+    public static function addLike($articleId, $userId)
+    {
+        $pdo = self::getPDO();
+        $stmt = $pdo->prepare("INSERT INTO article_likes (article_id, user_id, created_at) VALUES (?, ?, NOW())");
+        return $stmt->execute([$articleId, $userId]);
     }
 
-    // Đếm tổng lượt like của 1 bài viết
-    public static function countLikes($article_id) {
-        $db = new connect();
-        $sql = "SELECT COUNT(*) FROM article_likes
-                WHERE article_id = :article_id";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':article_id' => $article_id]);
-        return (int) $stmt->fetchColumn();
+    /**
+     * Xóa like
+     */
+    public static function removeLike($articleId, $userId)
+    {
+        $pdo = self::getPDO();
+        $stmt = $pdo->prepare("DELETE FROM article_likes WHERE article_id = ? AND user_id = ?");
+        return $stmt->execute([$articleId, $userId]);
     }
 
-    // Lấy danh sách user đã like 1 bài viết
-    public static function getUsersLikedArticle($article_id) {
-        $db = new connect();
-        $sql = "SELECT u.* FROM users u
-                INNER JOIN article_likes al ON u.id = al.user_id
-                WHERE al.article_id = :article_id
-                ORDER BY al.created_at DESC";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':article_id' => $article_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    /**
+     * Toggle like / unlike
+     * Nếu chưa like thì thêm, nếu đã like thì xóa
+     */
+    public static function toggleLike($articleId, $userId, $type)
+    {
+        // type chỉ hỗ trợ 'like' hoặc 'dislike' (dislike sẽ thành xóa like)
+
+        $existing = self::getUserLike($articleId, $userId);
+
+        if ($type === 'like') {
+            if (!$existing) {
+                self::addLike($articleId, $userId);
+                return 'liked';
+            } else {
+                // đã like rồi, bỏ like
+                self::removeLike($articleId, $userId);
+                return 'removed';
+            }
+        } elseif ($type === 'dislike') {
+            // dislike = bỏ like
+            if ($existing) {
+                self::removeLike($articleId, $userId);
+                return 'removed';
+            }
+            // nếu chưa like thì không làm gì
+            return 'none';
+        }
+    }
+
+    /**
+     * Đếm số like của 1 bài viết
+     */
+    public static function getCounts($articleId)
+    {
+        $pdo = self::getPDO();
+        $stmt = $pdo->prepare("SELECT COUNT(*) as like_count FROM article_likes WHERE article_id = ?");
+        $stmt->execute([$articleId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return intval($result['like_count'] ?? 0);
     }
 }
