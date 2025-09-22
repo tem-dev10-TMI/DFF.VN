@@ -4538,7 +4538,7 @@ div[data-notify="container"] .close {
     display: flex;
 
     position: fixed;
-    z-index: -1;
+
     top: 66px;
 }
 
