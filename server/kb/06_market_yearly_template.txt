@@ -1,4 +1,3 @@
-# 06_market_yearly_template — Gợi ý Phân tích Thị trường Crypto Hàng Năm (KB cho Chatbot & Báo cáo)
 ================================================================================
 A. KẾT QUẢ MONG MUỐN (Output)
 - Một đoạn tóm tắt 3–5 câu (bull / bear / sideways + driver chính).

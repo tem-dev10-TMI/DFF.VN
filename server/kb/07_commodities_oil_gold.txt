@@ -1,6 +1,4 @@
-# 07_commodities_oil_gold — Dầu & Vàng (Global + Vietnam) — KB chi tiết cho Chatbot / Ops
-
--------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 PHẦN A — TỔNG QUAN NGẮN
 
 - Dầu: hàng hóa năng lượng tiêu biểu, giá tham chiếu (benchmarks) dùng để định giá hầu hết dầu thô và sản phẩm lọc (xăng, diesel, jet fuel). Thị trường dầu gồm spot, futures, swaps; biến động do cung-cầu, OPEC+, kho dự trữ, địa chính trị, và hoạt động tinh luyện/refinery margins. (Xem phần chi tiết bên dưới). :contentReference[oaicite:0]{index=0}

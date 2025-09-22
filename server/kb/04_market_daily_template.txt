@@ -1,4 +1,3 @@
-# 04_market_daily_template — Daily Market Analysis Template (Crypto & E-commerce)
 =====================================================================================
 1) Kết quả mong muốn (output)
 - Một câu tóm tắt ngắn (1–2 câu) về xu hướng 24h.
