@@ -1,3 +1,4 @@
+========================================================================================================================
 1. Khái niệm & phân loại cơ bản
 
 Coin (tiền “gốc” của blockchain): native currency của một blockchain (ví dụ Bitcoin — BTC, Ethereum — ETH, BNB trên BNB Chain). Dùng để trả phí giao dịch, staking (nếu PoS), và làm unit of account nội bộ.

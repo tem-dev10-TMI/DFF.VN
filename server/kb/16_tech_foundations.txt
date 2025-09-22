@@ -1,3 +1,5 @@
+Công nghệ nền tảng blockchain
+===================================================================================================================
 1. Tổng quan ngắn
 
 Blockchain = hệ phân tán lưu chuỗi khối (ledger) bất biến. Các thành phần quan trọng:

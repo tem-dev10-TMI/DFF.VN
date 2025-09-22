@@ -1,3 +1,4 @@
+CEX, DEX, OTC/P2P
 ===============================================================================
 1) Tổng quan ngắn
 - **CEX (Centralized Exchange):** sàn do một tổ chức điều hành, giữ custody tài sản người dùng, cung cấp order book, khớp lệnh, fiat on/off-ramps, margin, futures. Ví dụ lớn: Binance, Coinbase, Kraken, OKX, Bybit, KuCoin.
