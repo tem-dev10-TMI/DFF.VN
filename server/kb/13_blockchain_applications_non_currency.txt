@@ -1,4 +1,3 @@
-# 13_blockchain_applications_non_currency
 ================================================================================
 TỔNG QUAN NGẮN
 Blockchain là lớp hạ tầng cho phép lưu trữ bản ghi không thay đổi, minh bạch và có thể đồng thuận giữa nhiều bên không hoàn toàn tin tưởng nhau. Ngoài vai trò tiền tệ, blockchain hữu ích cho: chứng thực tài sản (NFT), game & tài sản số (GameFi), tài chính phi tập trung (DeFi), quản trị tổ chức (DAO), truy xuất nguồn gốc supply-chain, dịch vụ công (e-Government/DID) và nhiều ứng dụng token hóa tài sản thế giới thực (RWA).

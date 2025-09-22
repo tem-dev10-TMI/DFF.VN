@@ -1,4 +1,3 @@
-# 17_investor_psychology_and_behavior — Tâm lý & Hành vi Nhà Đầu TƯ
 ================================================================================
 1) TÓM TẮT NGẮN
 - Tâm lý/nhận thức cá nhân (FOMO, FUD, loss aversion, herd behaviour) là động lực chính đẩy biến động giá ngắn hạn.  

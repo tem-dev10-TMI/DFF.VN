@@ -1,5 +1,3 @@
-19_future_trends — Xu hướng mới nổi (AI + Blockchain, RWA, CBDC, SocialFi, Web3 ID/DID, v.v.)
-
 Tóm tắt nhanh
 
 AI + Blockchain: kết hợp để tạo marketplace dữ liệu minh bạch, provenance cho mô hình, tính toán phi tập trung và privacy-preserving ML.
