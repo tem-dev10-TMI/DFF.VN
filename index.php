@@ -205,7 +205,11 @@ switch ($url) {
                     break;
             }
             break;
-        
+            case 'ArticleSave':
+                require_once __DIR__ . '/controller/ArticleSaveController.php';
+                $controller = new ArticleSaveController();
+                $controller->toggle();
+                exit;
 
 
     // ========== API ROUTES ==========

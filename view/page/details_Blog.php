@@ -114,7 +114,34 @@
                         <div class="button-ar fc-saved">
                             <i title="copy link bài viết" class="fas fa-link copylink"
                                 data-url="/post-<?= htmlspecialchars($article['id'] ?? '') ?>.html"></i>
-                            <i module-load="savenews" title="lưu bài viết" class="far fa-bookmark"></i>
+                            <i save-article="savenews" title="lưu bài viết" class="far fa-bookmark" data-id="<?= $article['id'] ?>"></i>
+
+                            <script>
+                                document.querySelectorAll('[save-article="savenews"]').forEach(btn => {
+                                    btn.addEventListener('click', function() {
+                                        const articleId = this.dataset.id;
+
+                                        fetch(`index.php?url=ArticleSave`, {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/x-www-form-urlencoded'
+                                                },
+                                                body: `article_id=${articleId}`
+                                            })
+                                            .then(res => res.json())
+                                            .then(res => {
+                                                alert(res.msg);
+                                                if (res.status === 'success') {
+                                                    btn.classList.toggle('fas'); // fas = đã lưu
+                                                    btn.classList.toggle('far'); // far = chưa lưu
+                                                }
+                                            })
+                                            .catch(err => console.error(err));
+                                    });
+                                });
+                            </script>
+
+
                         </div>
                         <div class="button-ar">
                             <i class="fas fa-exclamation-triangle"></i><span module-load="report">Báo cáo</span>
@@ -281,75 +308,74 @@
                 };
             })();
             //Like/Dislike
-            document.addEventListener("DOMContentLoaded", function () {
-    const comLike = document.querySelector(".com-like");
-    if (!comLike) return;
+            document.addEventListener("DOMContentLoaded", function() {
+                const comLike = document.querySelector(".com-like");
+                if (!comLike) return;
 
-    const articleId = comLike.dataset.id;
-    const btnUp = comLike.querySelector(".for-up");
-    const btnDown = comLike.querySelector(".for-down");
-    const valueSpan = comLike.querySelector(".value");
+                const articleId = comLike.dataset.id;
+                const btnUp = comLike.querySelector(".for-up");
+                const btnDown = comLike.querySelector(".for-down");
+                const valueSpan = comLike.querySelector(".value");
 
-    let isVoting = false;
+                let isVoting = false;
 
-    function updateLikeUI(likeCount, userLiked) {
-        valueSpan.textContent = likeCount;
-        btnUp.classList.toggle("active", userLiked === true);
-        // btnDown chỉ để hủy like nên active khi user đã like
-        btnDown.classList.toggle("active", userLiked === true);
-    }
+                function updateLikeUI(likeCount, userLiked) {
+                    valueSpan.textContent = likeCount;
+                    btnUp.classList.toggle("active", userLiked === true);
+                    // btnDown chỉ để hủy like nên active khi user đã like
+                    btnDown.classList.toggle("active", userLiked === true);
+                }
 
-    async function loadLikeStatus() {
-        try {
-            const res = await fetch(`<?= BASE_URL ?>/?url=like&action=get&article_id=${articleId}`);
-            const data = await res.json();
-            if (data.status === "success") {
-                // data.like = số like
-                // data.user_vote = "like" hoặc ""
-                updateLikeUI(data.like, data.user_vote === "like");
-            }
-        } catch (err) {
-            console.error("Lỗi load like:", err);
-        }
-    }
+                async function loadLikeStatus() {
+                    try {
+                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=get&article_id=${articleId}`);
+                        const data = await res.json();
+                        if (data.status === "success") {
+                            // data.like = số like
+                            // data.user_vote = "like" hoặc ""
+                            updateLikeUI(data.like, data.user_vote === "like");
+                        }
+                    } catch (err) {
+                        console.error("Lỗi load like:", err);
+                    }
+                }
 
-    async function handleVote(type) {
-        const userId = <?= $_SESSION['user']['id'] ?? 0 ?>;
-        if (!userId) return alert("Bạn cần đăng nhập để thực hiện thao tác này!");
-        if (isVoting) return;
+                async function handleVote(type) {
+                    const userId = <?= $_SESSION['user']['id'] ?? 0 ?>;
+                    if (!userId) return alert("Bạn cần đăng nhập để thực hiện thao tác này!");
+                    if (isVoting) return;
 
-        isVoting = true;
+                    isVoting = true;
 
-        try {
-            const res = await fetch(`<?= BASE_URL ?>/?url=like&action=toggle`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: `article_id=${encodeURIComponent(articleId)}&type=${encodeURIComponent(type)}&user_id=${encodeURIComponent(userId)}`
+                    try {
+                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=toggle`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: `article_id=${encodeURIComponent(articleId)}&type=${encodeURIComponent(type)}&user_id=${encodeURIComponent(userId)}`
+                        });
+
+                        const data = await res.json();
+
+                        if (data.status === "success") {
+                            // data.like = số like mới
+                            // data.user_vote = 'like' hoặc ''
+                            updateLikeUI(data.like, data.user_vote === "like");
+                        } else {
+                            alert(data.msg || "Có lỗi xảy ra khi gửi vote.");
+                        }
+                    } catch (err) {
+                        console.error("Lỗi khi gửi vote:", err);
+                    } finally {
+                        isVoting = false;
+                    }
+                }
+
+                btnUp.addEventListener("click", () => handleVote("like"));
+                btnDown.addEventListener("click", () => handleVote("dislike"));
+
+                loadLikeStatus();
             });
-
-            const data = await res.json();
-
-            if (data.status === "success") {
-                // data.like = số like mới
-                // data.user_vote = 'like' hoặc ''
-                updateLikeUI(data.like, data.user_vote === "like");
-            } else {
-                alert(data.msg || "Có lỗi xảy ra khi gửi vote.");
-            }
-        } catch (err) {
-            console.error("Lỗi khi gửi vote:", err);
-        } finally {
-            isVoting = false;
-        }
-    }
-
-    btnUp.addEventListener("click", () => handleVote("like"));
-    btnDown.addEventListener("click", () => handleVote("dislike"));
-
-    loadLikeStatus();
-});
-
         </script>
     </main>

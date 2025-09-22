@@ -97,39 +97,8 @@
                         <?php endif; ?>
 
                         <div class="item-bottom">
-                            <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
-                                <span class="for-up">
-                                    <svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16"
-                                        icon-name="upvote-fill" viewBox="0 0 20 20" width="16"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z">
-                                        </path>
-                                    </svg>
-                                </span>
-                                <span class="value" data-old="<?= $article['upvotes'] ?? 0 ?>"><?= $article['upvotes'] ?? 0 ?></span>
-                                <span class="for-down">
-                                    <svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16"
-                                        icon-name="downvote-fill" viewBox="0 0 20 20" width="16"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z">
-                                        </path>
-                                    </svg>
-                                </span>
-                            </div>
-                            <div class="button-ar">
-                                <a href="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html#anc_comment">
-                                    <svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor"
-                                        height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z">
-                                        </path>
-                                    </svg>
-                                    <span><?= $article['comment_count'] ?? 0 ?></span>
-                                </a>
-                            </div>
+   
+
                             <div class="button-ar">
                                 <div class="dropdown home-item">
                                     <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
