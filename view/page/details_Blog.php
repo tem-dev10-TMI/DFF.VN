@@ -156,141 +156,129 @@ $mainImage = $article['main_image_url'] ?? '';
   
 
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const articleId = document.getElementById("submit-comment").dataset.id;
-            const btnSend = document.getElementById("submit-comment");
-            const textarea = document.getElementById("new-comment");
+  <script>
+(function () {
+  // Tránh khởi tạo trùng nếu script bị load 2 lần
+  const section = document.querySelector(".comment-section");
+  if (!section || section.dataset.inited === "1") return;
+  section.dataset.inited = "1";
 
-            // Load comment ban đầu
-            loadComments(articleId);
+  document.addEventListener("DOMContentLoaded", function () {
+    const articleId = document.getElementById("submit-comment").dataset.id;
+    const btnSend    = document.getElementById("submit-comment");
+    const textarea   = document.getElementById("new-comment");
 
-            // Hàm gửi comment
-            function sendComment() {
-                const content = textarea.value.trim();
-                if (!content) {
-                    alert("Vui lòng nhập nội dung bình luận!");
-                    return;
-                }
+    let isSubmitting = false; // chặn gửi trùng
 
-                fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: "article_id=" + encodeURIComponent(articleId) +
-                        "&content=" + encodeURIComponent(content) +
-                        "&user_id=" + encodeURIComponent(<?= $_SESSION['user']['id'] ?? '0' ?>)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === "success") {
-                            textarea.value = "";
-                            loadComments(articleId);
-                        } else {
-                            alert(data.message || "Lỗi khi gửi bình luận!");
-                        }
-                    })
-                    .catch(err => console.error("Fetch lỗi:", err));
-            }
+    // ---- Load list ban đầu
+    loadComments(articleId);
 
-            // Click nút Gửi
-            btnSend.addEventListener("click", sendComment);
+    // ---- Gửi comment
+    async function sendComment() {
+      const content = textarea.value.trim();
+      if (!content) {
+        alert("Vui lòng nhập nội dung bình luận!");
+        return;
+      }
+      if (isSubmitting) return;           // chặn double-click
+      isSubmitting = true;
+      btnSend.disabled = true;
 
-            // Nhấn Enter để gửi, Shift+Enter xuống dòng
-            textarea.addEventListener("keydown", function (e) {
-                if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault(); // chặn xuống dòng
-                    sendComment();
-                }
-            });
+      try {
+        const res = await fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body:
+            "article_id=" + encodeURIComponent(articleId) +
+            "&content=" + encodeURIComponent(content) +
+            "&user_id=" + encodeURIComponent(<?= $_SESSION['user']['id'] ?? '0' ?>)
         });
+        const data = await res.json();
 
-        function renderComments(comments) {
-            const list = document.getElementById("comment-items");
-            const empty = document.getElementById("comment-empty");
-            const countSpan = document.getElementById("comments-count");
-
-            list.innerHTML = "";
-
-            if (!comments || comments.length === 0) {
-                empty.style.display = "block";
-                countSpan.textContent = "(0)";
-                return;
-            }
-
-            empty.style.display = "none";
-            countSpan.textContent = "(" + comments.length + ")";
-
-            comments.forEach(c => {
-                const li = document.createElement("li");
-                li.classList.add("comment-card");
-                li.innerHTML = `
-            <img src="${c.avatar_url}" class="comment-card-avatar">
-            <div class="comment-card-body">
-                <div class="comment-card-meta">
-                    <span class="comment-card-name">${c.name || "Ẩn danh"}</span>
-                    <span class="comment-card-time">${new Date(c.created_at).toLocaleString("vi-VN")}</span>
-                </div>
-                <div class="comment-card-content">${c.content}</div>
-                <div class="comment-card-actions">
-                    <a href="javascript:void(0)" onclick="replyComment('${c.name}')">Trả lời</a>
-                </div>
-            </div>
-        `;
-                list.appendChild(li);
-            });
+        if (data.status === "success") {
+          textarea.value = "";
+          await loadComments(articleId);
+        } else {
+          alert(data.message || "Lỗi khi gửi bình luận!");
         }
+      } catch (err) {
+        console.error("Fetch lỗi:", err);
+        alert("Không thể gửi bình luận. Vui lòng thử lại.");
+      } finally {
+        isSubmitting = false;
+        btnSend.disabled = false;
+      }
+    }
 
-        function replyComment(name) {
-            const input = document.getElementById("new-comment");
-            input.value = "@" + name + " " + input.value;
-            input.focus();
-        }
+    // ---- Gắn sự kiện 1 lần
+    btnSend.addEventListener("click", sendComment, { once: false });
 
-        function loadComments(articleId) {
-            fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + articleId)
-                .then(res => res.json())
-                .then(data => {
-                    if (data.status === "success") {
-                        renderComments(data.comments);
-                    }
-                })
-                .catch(err => console.error("Lỗi fetch:", err));
-        }
+    // Enter để gửi, Shift+Enter xuống dòng
+    textarea.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        sendComment();
+      }
+    });
+  });
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const articleId = document.getElementById("submit-comment").dataset.id;
-            const btnSend = document.getElementById("submit-comment");
-            const textarea = document.getElementById("new-comment");
+  // ====== Helpers ======
+  function renderComments(comments) {
+    const list = document.getElementById("comment-items");
+    const empty = document.getElementById("comment-empty");
+    const countSpan = document.getElementById("comments-count");
 
-            loadComments(articleId);
+    list.innerHTML = "";
 
-            btnSend.addEventListener("click", function () {
-                const content = textarea.value.trim();
-                if (!content) {
-                    alert("Vui lòng nhập nội dung bình luận!");
-                    return;
-                }
+    if (!comments || comments.length === 0) {
+      empty.style.display = "block";
+      countSpan.textContent = "(0)";
+      return;
+    }
 
-                fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                    body: "article_id=" + encodeURIComponent(articleId) +
-                        "&content=" + encodeURIComponent(content) +
-                        "&user_id=" + encodeURIComponent(<?= $_SESSION['user']['id'] ?? '0' ?>)
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.status === "success") {
-                            textarea.value = "";
-                            loadComments(articleId);
-                        } else {
-                            alert(data.message || "Lỗi khi gửi bình luận!");
-                        }
-                    })
-                    .catch(err => console.error("Fetch lỗi:", err));
-            });
-        });
-    </script>
+    empty.style.display = "none";
+    countSpan.textContent = "(" + comments.length + ")";
+
+    comments.forEach(c => {
+      const li = document.createElement("li");
+      li.classList.add("comment-card");
+      li.innerHTML = `
+        <img src="${c.avatar_url}" class="comment-card-avatar">
+        <div class="comment-card-body">
+          <div class="comment-card-meta">
+            <span class="comment-card-name">${c.name || "Ẩn danh"}</span>
+            <span class="comment-card-time">${new Date(c.created_at).toLocaleString("vi-VN")}</span>
+          </div>
+          <div class="comment-card-content">${c.content}</div>
+          <div class="comment-card-actions">
+            <a href="javascript:void(0)" onclick="replyComment('${c.name || ""}')">Trả lời</a>
+          </div>
+        </div>`;
+      list.appendChild(li);
+    });
+  }
+
+  async function loadComments(articleId) {
+    try {
+      const res = await fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + articleId);
+      const data = await res.json();
+      if (data.status === "success") {
+        renderComments(data.comments);
+      }
+    } catch (err) {
+      console.error("Lỗi fetch:", err);
+    }
+  }
+
+  // đặt replyComment lên window để onclick dùng được
+  window.replyComment = function (name) {
+    const input = document.getElementById("new-comment");
+    input.value = (name ? "@" + name + " " : "") + input.value;
+    input.focus();
+  };
+})();
+</script>
+
 
 
 </main>
