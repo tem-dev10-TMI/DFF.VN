@@ -1,3 +1,4 @@
+@ -1,136 +0,0 @@
 <?php
 require_once __DIR__ . '/../../config/db.php';
 $db = new connect();
@@ -15,7 +16,7 @@ foreach ($topics as $tp) {
     $tid = (int)$tp['id'];
     if ($q !== '') {
         $stmt = $db->pdo->prepare("
-            SELECT a.id, a.title, a.created_at, u.name as author_name 
+            SELECT a.id, a.title ,a.slug, a.created_at, u.name as author_name 
             FROM articles a
             JOIN users u ON a.author_id = u.id
             WHERE a.topic_id = ? 
@@ -26,7 +27,7 @@ foreach ($topics as $tp) {
         $stmt->execute([$tid, "%$q%", "%$q%"]);
     } else {
         $stmt = $db->pdo->prepare("
-            SELECT a.id, a.title, a.created_at, u.name as author_name 
+            SELECT a.id, a.title, a.slug,  a.created_at, u.name as author_name 
             FROM articles a
             JOIN users u ON a.author_id = u.id
             WHERE a.topic_id = ?
