@@ -132,7 +132,7 @@
     require_once __DIR__ . '/../layout/sidebarMobile.php';
 
     // Cache events for 30 minutes
-    $headerEvents = get_cache('header_events', 1800);
+    $headerEvents = get_cache('header_events', 300);
     if ($headerEvents === false) {
         require_once __DIR__ . '/../../model/event/Events.php';
         if (!isset($pdo)) {
@@ -140,7 +140,7 @@
         }
         global $pdo;
         $eventModelHeader = new EventModels($pdo);
-        $headerEvents = $eventModelHeader->all(5);
+        $headerEvents = $eventModelHeader->all(8);
         set_cache('header_events', $headerEvents);
     }
 
@@ -456,13 +456,14 @@
         document.querySelectorAll(".btn-follow").forEach(btn => {
             btn.addEventListener("click", function() {
                 const userId = this.getAttribute("data-user");
+                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
                 fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: "user_id=" + encodeURIComponent(userId),
+                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                         credentials: "include"
                     })
                     .then(res => res.json())
@@ -689,9 +690,6 @@
 
             });
         </script>
-
-        <!-- Modal: Tạo bài viết mới -->
-
 
         <script>
             $(function() {

@@ -1,7 +1,7 @@
 <?php
 
 // ví dụ trong controller
-$isFollowing = $model->isFollowing($currentUserId, $businessId);
+//$isFollowing = $model->isFollowing($currentUserId, $businessId);
 
 include __DIR__ . '/../view/page/viewProfilebusiness.php';
 
