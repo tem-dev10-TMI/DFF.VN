@@ -3880,7 +3880,20 @@ div[data-notify="container"] .close {
 
 .list_comment {
     padding: 0;
+
 }
+/* Thay thế .your-element bằng class hoặc ID của khu vực chat của bạn */
+
+/* Dành cho các trình duyệt WebKit (Chrome, Safari, Edge, Opera) */
+.list_comment::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Dành cho Firefox */
+  .list_comment {
+    -ms-overflow-style: none;  /* IE và Edge cũ */
+    scrollbar-width: none;  /* Firefox */
+  }
 
 .cm-more {
     width: 100%;
@@ -5207,7 +5220,7 @@ div[data-notify="container"] .close {
 
 /* Header */
 .cover-chat h5 {
-    background: #0d47a1;
+    
     color: #fff;
     margin: 0;
     padding: 10px 15px;
@@ -5910,7 +5923,7 @@ span.mncolor13,
 
 .cover-chat h5 {
     padding: 10px 0 10px 15px;
-    background: #124889;
+    
     border-radius: 10px 10px 0 0;
 }
 
@@ -7361,7 +7374,9 @@ ul.timeline .left-arrow:after {
 
     /* Desktop giữ nguyên */
     .left-sidebar {
-        position: relative;
+        position: sticky;
+        top: 60px;
+        
     }
 }
 

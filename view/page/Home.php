@@ -445,8 +445,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <div class="content-right">
-            <div class="block-k cover-chat">
-                <h5><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
+            <div class="block-k cover-chat ">
+                <h5 class="bg-success"><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
                 <ul class="list_comment">
                     <?php foreach ($comments as $c): ?>
                         <li class="chat-item" data-id="<?= $c['id'] ?>">
