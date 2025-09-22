@@ -1,5 +1,5 @@
 <section class="left-sidebar sticky-top sticky-offset  vh-100 overflow-auto">
-    
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <div class="block-k left-menu bg-transparent border0 p-l-0">
         <ul class="nav nav-second-level">
@@ -14,6 +14,11 @@
             <li class="item">
                 <i class="bi bi-currency-exchange trend-icon"></i>
                 <a href="<?= BASE_URL ?>/trends" title="Xu hướng">Xu hướng</a>
+            </li>
+
+            <li class="item">
+                <i class="fa-solid fa-film" style="font-size:20px;"></i>
+                <a href="<?= BASE_URL ?>/video" title="Video">Video</a>
             </li>
         </ul>
         <div class="line"></div>
