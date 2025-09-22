@@ -283,6 +283,13 @@ class profileUserController
         $modelArticle = new ArticlesModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $title = $_POST['title'];
             $summary = $_POST['summary'];
             $content = $_POST['content'];
@@ -305,6 +312,13 @@ class profileUserController
         $modelProfile = new profileUserModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $user_id = $_SESSION['user_id'];
             $display_name = $_POST['display_name'];
             $birth_year = $_POST['birth_year'];
@@ -473,6 +487,13 @@ class profileUserController
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $user_id     = $_SESSION['user']['id'];
             $birth_year  = $_POST['birth_year'] ?? null;
             $nationality = $_POST['nationality'] ?? null;
@@ -665,9 +686,17 @@ class profileUserController
             exit;
         }
 
-        // 2. Kiểm tra đăng nhập
+        // 2. Kiểm tra đăng nhập và token
         if (!isset($_SESSION['user']['id'])) {
+            http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để thực hiện hành động này.']);
+            exit;
+        }
+
+        $submittedToken = $_POST['session_token'] ?? '';
+        if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ.']);
             exit;
         }
 
