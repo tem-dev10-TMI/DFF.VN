@@ -1,3 +1,8 @@
+<script>
+  // Pass the session token from PHP to a global JavaScript variable
+  window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+</script>
+
 <style>
   .cover {
     height: 200px;
@@ -480,6 +485,7 @@ if ($profile_category == 'user' && $user_id) {
 
         <!-- Form đăng ký doanh nhân -->
         <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business">
+          <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
           <div class="row">
             <div class="col-md-6 mb-2">
               <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>

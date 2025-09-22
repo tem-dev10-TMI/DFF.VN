@@ -186,12 +186,15 @@ function deletePost(postId, buttonElement) {
   // Tìm phần tử cha để xóa khỏi giao diện
   const postElement = buttonElement.closest('.block-k');
 
+  // Lấy token từ biến global đã được tạo trong view
+  const token = window.userSessionToken || '';
+
   fetch('api/deletePost', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `post_id=${postId}`
+    body: `post_id=${postId}&session_token=${token}`
   })
     .then(response => response.json())
     .then(data => {
@@ -366,6 +369,7 @@ function addPost() {
   submitBtn.disabled = true;
 
   var formData = new FormData();
+  formData.append('session_token', window.userSessionToken || '');
   formData.append('title', postTitle);
   formData.append('summary', postSummary);
   formData.append('content', postContent);

@@ -39,7 +39,8 @@ if (empty($url)) {
     $controller = new homeController();
     $controller->index();
     exit;
-}var_dump($_SESSION['user']);
+}
+//var_dump($_SESSION['user']);
 switch ($url) {
 
     case 'home':

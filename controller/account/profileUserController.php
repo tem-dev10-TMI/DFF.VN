@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../model/user/userModel.php';
 class profileUserController
 {
     // Trang hồ sơ người dùng
@@ -116,6 +117,7 @@ class profileUserController
     public static function addArticle()
     {
         header('Content-Type: application/json');
+        require_once __DIR__ . '/../../model/user/userModel.php';
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
 
@@ -137,9 +139,9 @@ class profileUserController
             ]);
             exit;
         }
-
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $submittedToken = $_POST['session_token'] ?? '';
-        if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+        if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
             http_response_code(401);
             echo json_encode([
                 'success' => false,
@@ -489,7 +491,7 @@ class profileUserController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Bảo mật: Kiểm tra session token
             $submittedToken = $_POST['session_token'] ?? '';
-            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+            if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
                 header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
                 exit;
             }
@@ -531,12 +533,10 @@ class profileUserController
 
         // Khởi tạo các biến thông báo
         $changePasswordMessage = '';
-        $messageType = '';
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Bảo mật: Kiểm tra session token
             $submittedToken = $_POST['session_token'] ?? '';
-            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+            if (!UserModel::isTokenValid($userId, $submittedToken)) {
                 header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
                 exit;
             }
@@ -680,6 +680,7 @@ class profileUserController
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
         //require_once __DIR__ . '/../../model/connect.php';
+        
 
         // 1. Chỉ chấp nhận phương thức POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -694,21 +695,23 @@ class profileUserController
             exit;
         }
 
-        $submittedToken = $_POST['session_token'] ?? '';
-        if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
-            http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ.']);
-            exit;
-        }
+        
 
         // 3. Lấy và xác thực dữ liệu đầu vào
         $postId = $_POST['post_id'] ?? null;
+        $token = $_POST['session_token'] ?? null;
+        $currentUserId = $_SESSION['user']['id'];
+
+        // Bảo mật: Xác thực token
+        if (!UserModel::isTokenValid($currentUserId, $token)) {
+            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng đăng nhập lại.']);
+            exit;
+        }
+
         if (empty($postId) || !is_numeric($postId)) {
             echo json_encode(['success' => false, 'message' => 'ID bài viết không hợp lệ.']);
             exit;
         }
-
-        $currentUserId = $_SESSION['user']['id'];
         $db = new connect();
 
         try {
