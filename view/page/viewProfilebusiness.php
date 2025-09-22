@@ -3,17 +3,17 @@
 
 
         <?php
-       $isFollowing = false; // mặc định chưa theo dõi
-$followersCount = $stats['followers'] ?? 0;
+        $isFollowing = false; // mặc định chưa theo dõi
+        $followersCount = $stats['followers'] ?? 0;
 
-if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
-    require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-    $db = new connect();
-    $pdo = $db->db;
-    $followModel = new UserFollowModel($pdo);
+        if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
+            require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+            $db = new connect();
+            $pdo = $db->db;
+            $followModel = new UserFollowModel($pdo);
 
-    $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $businessman['user_id']);
-}
+            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $businessman['user_id']);
+        }
         if (!isset($businessman) || !is_array($businessman)) {
             // Nếu có id trên URL thì cố load dữ liệu (quick-fix)
             if (isset($_GET['id']) && is_numeric($_GET['id'])) {
@@ -52,7 +52,7 @@ if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
                 <div class="block-t p-t-20" bis_skin_checked="1">
                     <div class="block-t-top" bis_skin_checked="1">
                         <img alt="image" class="profile-img"
-                            src="https://img.dff.vn/Image/business/638579368391117495_6.jpg">
+                            src="<?= $businessman['avatar_url'] ?>">
                     </div>
                     <div class="h-topic">
                         <ul>
@@ -63,16 +63,16 @@ if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
 
                             </a>
                             </li>
-                           <div class="profile-actions" style="margin-top:15px;">
-    <a class="btn-follow" href="javascript:void(0)"
-       data-user="<?= $businessman['user_id'] ?>"
-       style="display:inline-block;padding:8px 16px;border-radius:6px;
+                            <div class="profile-actions" style="margin-top:15px;">
+                                <a class="btn-follow" href="javascript:void(0)"
+                                    data-user="<?= $businessman['user_id'] ?>"
+                                    style="display:inline-block;padding:8px 16px;border-radius:6px;
               background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
               color:#fff;font-weight:600;text-decoration:none;">
-        <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-        (<span class="number"><?= intval($followersCount) ?></span>)
-    </a>
-</div>
+                                    <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                    (<span class="number"><?= intval($followersCount) ?></span>)
+                                </a>
+                            </div>
 
 
                         </ul>
@@ -152,46 +152,46 @@ if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
                     </ul>
                 </div>
             </div>
-    <!-- ✅ KHUNG NHẬP BÌNH LUẬN -->
-    <div class="comment-input-box"
-        style="border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:20px;background:#fafafa;">
-    <h5 style="margin-top:0;margin-bottom:10px;">
-        <i class="fas fa-comments"></i> Viết bình luận
-    </h5>
-    <div style="display:flex;align-items:flex-start;gap:10px;">
-        <img src="/Upload/img_static//profile_638930336755560936.png"
-            style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-        <textarea id="comment-text"
-                placeholder="Bạn nghĩ gì về nội dung này?"
-                style="flex:1;min-height:60px;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
-        <button id="send-comment"
-                style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">
-        Gửi
-        </button>
-    </div>
-    <div id="comment-message" style="display:none;color:green;margin-top:8px;">Đã thêm bình luận</div>
-    </div>
+            <!-- ✅ KHUNG NHẬP BÌNH LUẬN -->
+            <div class="comment-input-box"
+                style="border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:20px;background:#fafafa;">
+                <h5 style="margin-top:0;margin-bottom:10px;">
+                    <i class="fas fa-comments"></i> Viết bình luận
+                </h5>
+                <div style="display:flex;align-items:flex-start;gap:10px;">
+                    <img src="/Upload/img_static//profile_638930336755560936.png"
+                        style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
+                    <textarea id="comment-text"
+                        placeholder="Bạn nghĩ gì về nội dung này?"
+                        style="flex:1;min-height:60px;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
+                    <button id="send-comment"
+                        style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">
+                        Gửi
+                    </button>
+                </div>
+                <div id="comment-message" style="display:none;color:green;margin-top:8px;">Đã thêm bình luận</div>
+            </div>
 
-    <!-- Khung hiển thị bình luận -->
-    <div class="comment-display-box"
-        style="border:1px solid #ccc;border-radius:8px;padding:15px;background:#fff;display:none;">
-    <h5 style="margin:0 0 10px 0;">Bình luận đã đăng</h5>
-    <ul id="comment-list" style="list-style:none;margin:0;padding:0;"></ul>
-    </div>
-                                
+            <!-- Khung hiển thị bình luận -->
+            <div class="comment-display-box"
+                style="border:1px solid #ccc;border-radius:8px;padding:15px;background:#fff;display:none;">
+                <h5 style="margin:0 0 10px 0;">Bình luận đã đăng</h5>
+                <ul id="comment-list" style="list-style:none;margin:0;padding:0;"></ul>
+            </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    const sendBtn     = document.getElementById('send-comment');
-    const textarea    = document.getElementById('comment-text');
-    const message     = document.getElementById('comment-message');
-    const displayBox  = document.querySelector('.comment-display-box');
-    const commentList = document.getElementById('comment-list');
 
-    function createCommentItem(text) {
-    const li = document.createElement('li');
-    li.style.cssText = 'display:block;width:100%;margin-bottom:12px;'; // <- quan trọng
-    li.innerHTML = `
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const sendBtn = document.getElementById('send-comment');
+                    const textarea = document.getElementById('comment-text');
+                    const message = document.getElementById('comment-message');
+                    const displayBox = document.querySelector('.comment-display-box');
+                    const commentList = document.getElementById('comment-list');
+
+                    function createCommentItem(text) {
+                        const li = document.createElement('li');
+                        li.style.cssText = 'display:block;width:100%;margin-bottom:12px;'; // <- quan trọng
+                        li.innerHTML = `
         <div style="display:flex;align-items:flex-start;gap:10px;">
         <img src="/Upload/img_static//profile_638930336755560936.png"
             style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
@@ -200,35 +200,37 @@ if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
         </div>
         </div>
     `;
-    return li;
-    }
+                        return li;
+                    }
 
 
-    // Lấy bình luận cũ từ localStorage, hiển thị cũ trước mới sau
-    const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
-    if (savedComments.length > 0) {
-        savedComments.forEach(text => commentList.prepend(createCommentItem(text)));
-        displayBox.style.display = 'block';
-    }
+                    // Lấy bình luận cũ từ localStorage, hiển thị cũ trước mới sau
+                    const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
+                    if (savedComments.length > 0) {
+                        savedComments.forEach(text => commentList.prepend(createCommentItem(text)));
+                        displayBox.style.display = 'block';
+                    }
 
-    sendBtn.addEventListener('click', function () {
-        const text = textarea.value.trim();
-        if (!text) return;
+                    sendBtn.addEventListener('click', function() {
+                        const text = textarea.value.trim();
+                        if (!text) return;
 
-        // Lưu mới nhất lên đầu mảng để lần tải sau vẫn giữ thứ tự mới -> cũ
-        savedComments.unshift(text);
-        localStorage.setItem('comments', JSON.stringify(savedComments));
+                        // Lưu mới nhất lên đầu mảng để lần tải sau vẫn giữ thứ tự mới -> cũ
+                        savedComments.unshift(text);
+                        localStorage.setItem('comments', JSON.stringify(savedComments));
 
-        // Hiển thị mới nhất lên trên cùng
-        commentList.prepend(createCommentItem(text));
-        displayBox.style.display = 'block';
+                        // Hiển thị mới nhất lên trên cùng
+                        commentList.prepend(createCommentItem(text));
+                        displayBox.style.display = 'block';
 
-        message.style.display = 'block';
-        setTimeout(() => { message.style.display = 'none'; }, 1500);
-        textarea.value = '';
-    });
-    });
-    </script>
+                        message.style.display = 'block';
+                        setTimeout(() => {
+                            message.style.display = 'none';
+                        }, 1500);
+                        textarea.value = '';
+                    });
+                });
+            </script>
 
 
 
@@ -326,43 +328,45 @@ if (isset($_SESSION['user']['id']) && !empty($businessman['user_id'])) {
         </div>
 
         <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const btn = document.querySelector(".btn-follow");
-    if (!btn) return;
+            document.addEventListener("DOMContentLoaded", function() {
+                const btn = document.querySelector(".btn-follow");
+                if (!btn) return;
 
-    btn.addEventListener("click", function () {
-        const userId = this.getAttribute("data-user");
+                btn.addEventListener("click", function() {
+                    const userId = this.getAttribute("data-user");
 
-        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body: "user_id=" + encodeURIComponent(userId),
-            credentials: "include"
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                this.querySelector(".follow-text").innerText =
-                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-                this.querySelector(".number").innerText = data.followers;
-                
-                // đổi màu nút
-                if (data.action === "follow") {
-                    this.style.background = "#6c757d"; // xám
-                } else {
-                    this.style.background = "#28a745"; // xanh
-                }
-            } else {
-                alert(data.message || "Có lỗi xảy ra!");
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Không thể kết nối đến server!");
-        });
-    });
-});
-</script>
+                    fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: "user_id=" + encodeURIComponent(userId),
+                            credentials: "include"
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                this.querySelector(".follow-text").innerText =
+                                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                                this.querySelector(".number").innerText = data.followers;
+
+                                // đổi màu nút
+                                if (data.action === "follow") {
+                                    this.style.background = "#6c757d"; // xám
+                                } else {
+                                    this.style.background = "#28a745"; // xanh
+                                }
+                            } else {
+                                alert(data.message || "Có lỗi xảy ra!");
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Không thể kết nối đến server!");
+                        });
+                });
+            });
+        </script>
 
 
     </main>

@@ -128,11 +128,22 @@ class profileUserController
             exit;
         }
 
-        // Kiểm tra đăng nhập
+        // Kiểm tra đăng nhập và session token
         if (!isset($_SESSION['user']['id'])) {
+            http_response_code(401);
             echo json_encode([
                 'success' => false,
                 'message' => 'Bạn cần đăng nhập để đăng bài!'
+            ]);
+            exit;
+        }
+
+        $submittedToken = $_POST['session_token'] ?? '';
+        if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+            http_response_code(401);
+            echo json_encode([
+                'success' => false,
+                'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.'
             ]);
             exit;
         }
@@ -330,6 +341,13 @@ class profileUserController
         $userModel = new userModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $currentUser = $userModel->getUserById($userId);
 
             // --- Xử lý upload file ---
@@ -416,6 +434,22 @@ class profileUserController
 
             // Chuyển hướng dựa trên kết quả
             if ($successUser || $successProfile) {
+                // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
+                $updatedUser = $userModel->getUserById($userId);
+                if ($updatedUser) {
+                    $_SESSION['user'] = [
+                        'id' => $updatedUser['id'],
+                        'name' => $updatedUser['name'],
+                        'username' => $updatedUser['username'],
+                        'password_hash' => $updatedUser['password_hash'],
+                        'email' => $updatedUser['email'],
+                        'phone' => $updatedUser['phone'],
+                        'role' => $updatedUser['role'],
+                        'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                    ];
+                }
+                // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
+
                 header('Location: ' . BASE_URL . '/profile_user?msg=profile_updated');
                 exit;
             } else {
@@ -479,6 +513,13 @@ class profileUserController
         $messageType = '';
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $old_password = $_POST['old_password'] ?? '';
             $new_password = $_POST['new_password'] ?? '';
             $confirm_new_password = $_POST['confirm_new_password'] ?? '';
@@ -506,12 +547,7 @@ class profileUserController
             }
         }
         //Load view
-        ob_start();
-        require_once __DIR__ . '/../../view/layout/header.php';
-        $content = ob_get_clean();
-        $profile = false;
-        //Load layout;
-        require_once __DIR__ . '/../../view/layout/main.php';
+        header('Location: ' . BASE_URL . '');
     }
 
     // ========== API: Load bài viết theo user, trả về cấu trúc như loadPosts.php ==========

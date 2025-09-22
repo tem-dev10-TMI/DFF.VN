@@ -5,9 +5,17 @@ if (session_status() === PHP_SESSION_NONE) {
 
 header('Content-Type: application/json');
 
-// Kiểm tra đăng nhập
+// Kiểm tra đăng nhập và session token
 if (!isset($_SESSION['user']['id'])) {
+    http_response_code(401);
     echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để theo dõi']);
+    exit;
+}
+
+$submittedToken = $_POST['session_token'] ?? '';
+if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+    http_response_code(401);
+    echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ.']);
     exit;
 }
 

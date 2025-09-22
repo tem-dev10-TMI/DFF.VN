@@ -252,4 +252,32 @@ class UserModel
         $stmt->execute([':q' => "%$q%"]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function clearSessionToken($userId)
+    {
+        $db = new connect();
+        $sql = "UPDATE users SET session_token = NULL WHERE id = :id";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([':id' => $userId]);
+    }
+
+    public static function updateSessionToken($userId, $token)
+    {
+        $db = new connect();
+        $sql = "UPDATE users SET session_token = :token WHERE id = :id";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([':id' => $userId, ':token' => $token]);
+    }
+
+    public static function isTokenValid($userId, $token)
+    {
+        if (empty($userId) || empty($token)) {
+            return false;
+        }
+        $db = new connect();
+        $sql = "SELECT COUNT(*) FROM users WHERE id = :id AND session_token = :token";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':id' => $userId, ':token' => $token]);
+        return $stmt->fetchColumn() > 0;
+    }
 }

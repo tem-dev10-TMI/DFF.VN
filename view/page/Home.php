@@ -79,7 +79,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+            document.querySelector(".openModalcreatePost").addEventListener("click", function() {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
@@ -89,9 +89,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     alert("Bạn cần đăng nhập để viết bài.");
                 <?php endif; ?>
             });
-
         </script>
-      
+
         <!-- ////////////////////// -->
         <div class="block-k box-company-label">
             <h5>
@@ -110,7 +109,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
                                 <?php //var_dump($topBusinessmen);
-                                    ?>
+                                ?>
 
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <?php
@@ -146,7 +145,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                             class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
                                                         <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
                                                     </a>
-                                                    
+
 
                                                 </li>
 
@@ -234,7 +233,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
-                                    // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
+                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
 
                                 if ($badgeText) {
@@ -304,7 +303,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function () {
+                document.addEventListener('DOMContentLoaded', function() {
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
                     function timeAgo(datetime) {
@@ -332,8 +331,14 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             let badgeClass = '';
                             let badgeText = '';
                             switch (article.status) {
-                                case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
-                                case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+                                case 'pending':
+                                    badgeClass = 'bg-warning text-dark';
+                                    badgeText = 'Chờ duyệt';
+                                    break;
+                                case 'public':
+                                    badgeClass = 'bg-success';
+                                    badgeText = 'Công khai';
+                                    break;
                             }
                             if (badgeText) {
                                 statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
@@ -408,7 +413,39 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
+        <script>
+                //// Đừng có xóa dòng này mấy cha
+                document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const userId = this.getAttribute("data-user");
+                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
+                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                            credentials: "include"
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                // cập nhật text nút
+                                this.querySelector(".follow-text").innerText =
+                                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+
+                                // cập nhật số follower
+                                this.querySelector(".number").innerText = data.followers;
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Không thể kết nối đến server!");
+                        });
+                });
+            });
+        </script>
 
 
 
@@ -453,7 +490,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
                             <script>
-                                document.addEventListener('click', function (e) {
+                                document.addEventListener('click', function(e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -491,7 +528,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
                             <script>
-                                document.addEventListener('click', function (e) {
+                                document.addEventListener('click', function(e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -565,13 +602,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const content = textarea.value.trim();
                 if (!content) return;
 
-                fetch("comment_add.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "content=" + encodeURIComponent(content)
-                })
+                fetch("<?= BASE_URL ?>/comment_add.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "content=" + encodeURIComponent(content)
+                    })
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
@@ -597,7 +634,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // nhấn enter 
             const textarea = document.getElementById("comment-content");
 
-            textarea.addEventListener("keydown", function (e) {
+            textarea.addEventListener("keydown", function(e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); // chặn xuống dòng
                     document.getElementById("send-comment").click(); // gọi nút gửi
@@ -606,7 +643,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Load comment mới
             function loadNewComments() {
-                fetch("comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
+                fetch("<?= BASE_URL ?>/comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
@@ -660,8 +697,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles3 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                      ? htmlspecialchars($article['link'])
-                                      : 'details_blog/' . urlencode($article['slug']) ?>">
+                                                                                                ? htmlspecialchars($article['link'])
+                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -728,8 +765,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                      ? htmlspecialchars($article['link'])
-                                      : 'details_blog/' . urlencode($article['slug']) ?>">
+                                                                                                ? htmlspecialchars($article['link'])
+                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -770,9 +807,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <script>
-            $(function () {
+            $(function() {
                 var height = $(".content-right").outerHeight() + 600;
-                $(window).scroll(function () {
+                $(window).scroll(function() {
                     var rangeToTop = $(this).scrollTop();
                     if (rangeToTop > height) {
                         $(".cover-chat").css("position", "fixed").css("top", "118px");
@@ -781,13 +818,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
 
-                Page.flSuggest();
+                //Page.flSuggest();
 
 
             });
         </script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,
@@ -819,114 +856,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
     <!-- Modal for creating a new post -->
+    <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
 
-    <!-- Modal: Tạo bài viết mới -->
-    
-
-        <div class="modal-dialog modal-lg modal-dialog-scrollable" style="margin:10px auto;">
-
-
-
-         <!-- them -->
-             <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
-
-                <!-- Header -->
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold" id="createPostModalLabel">
-                        <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
-                    </h5>
-
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
-
-                </div>
-
-                <!-- Body -->
-                <div class="modal-body bg-light">
-                    <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
-
-                        <!-- Avatar + tên -->
-                        <div class="d-flex align-items-center mb-3">
-                            <?php
-                                $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
-                                if (!$avatarUrl || trim($avatarUrl) === '') {
-                                    $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                                }
-                                ?>
-                                <img src="<?= htmlspecialchars($avatarUrl) ?>"
-                                    class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                    style="width: 48px; height: 48px;">
-                                <div>
-                                    <h6 class="mb-0 fw-bold text-dark">
-                                        <?php
-                                            echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
-                                        ?>
-                                    </h6>
-                                    <small class="text-muted">
-                                        <?= htmlspecialchars( (($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân' ) ?>
-
-                                    </small>
-                                    
-                                </div>
-                            </div>
-
-                        <!-- Tiêu đề -->
-                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
-                            placeholder="✏️ Nhập tiêu đề bài viết...">
-
-                        <!-- Tóm tắt -->
-                        <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
-                            placeholder="📝 Tóm tắt ngắn gọn nội dung..."></textarea>
-
-                        <!-- Nội dung chính -->
-                        <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
-                            placeholder="💡 Nội dung chính của bài viết..."></textarea>
-
-                        <!-- Chọn chủ đề -->
-                        <div class="mb-3">
-                            <label for="topicSelect" class="form-label fw-bold text-success">🌿 Chọn chủ đề:</label>
-                            <select class="form-select border-success" id="topicSelect" name="topic_id" required>
-                                <option value="">-- Chọn chủ đề --</option>
-                                <?php foreach ($allTopics as $topic): ?>
-                                    <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <!-- Thanh công cụ -->
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex gap-2">
-                                <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                                    <i class="fas fa-image me-1"></i> Hình ảnh
-                                </label>
-                                <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                                    <i class="fas fa-video me-1"></i> Video
-                                </label>
-                                <button class="btn btn-outline-success btn-sm" type="button">
-                                    <i class="fas fa-link me-1"></i> Link
-                                </button>
-                            </div>
-                            <button class="btn btn-success px-4 rounded-pill" onclick="addPost()">
-                                <i class="fas fa-paper-plane me-1"></i> Đăng bài
-                            </button>
-                        </div>
-
-                        <!-- Input hidden -->
-
-                        <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
-                        <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
-
-                    </div>
-
-                    <!-- Preview ảnh / video -->
-                    <div id="imagePreview" class="mt-2 bt-4"></div>
-                    <div id="videoPreview" class="mt-2 bt-4"></div>
-               
-
-
-
-        </div>
-
-
+        <!-- them -->
+        <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
 
 </main>

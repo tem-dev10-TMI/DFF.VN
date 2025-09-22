@@ -116,38 +116,32 @@
 
     <?php
 
+    require_once __DIR__ . '/../../helpers/cache_helper.php';
 
-
-    // Tối ưu: Chỉ lấy danh sách chủ đề một lần, ưu tiên từ controller
-    if (!isset($allTopics)) {
+    // Cache topics for 3 hours
+    $allTopics = get_cache('all_topics', 10800);
+    if ($allTopics === false) {
         require_once __DIR__ . '/../../model/TopicModel.php';
         $topicModel = new TopicModel();
-        $allTopics = $topicModel->getAll(); 
+        $allTopics = $topicModel->getAll();
+        set_cache('all_topics', $allTopics);
     }
+
     $topTopics = array_slice($allTopics, 0, 5); // 5 chủ đề đầu
     $moreTopics = array_slice($allTopics, 5);
     require_once __DIR__ . '/../layout/sidebarMobile.php';
 
-
-
-
-
-    // vị trí sidebar nha cái này để hiện thị sidebar ở phía bên trái  
-
-
-
-    // Tối ưu: Chỉ lấy sự kiện một lần. 
-    // Ưu tiên dùng biến $events từ controller (trang chủ), nếu không có thì layout tự lấy.
-    if (!isset($events)) {
+    // Cache events for 30 minutes
+    $headerEvents = get_cache('header_events', 300);
+    if ($headerEvents === false) {
         require_once __DIR__ . '/../../model/event/Events.php';
         if (!isset($pdo)) {
             require_once __DIR__ . '/../../config/db.php';
         }
         global $pdo;
         $eventModelHeader = new EventModels($pdo);
-        $headerEvents = $eventModelHeader->all(5);
-    } else {
-        $headerEvents = $events;
+        $headerEvents = $eventModelHeader->all(8);
+        set_cache('header_events', $headerEvents);
     }
 
     ?>
@@ -462,13 +456,14 @@
         document.querySelectorAll(".btn-follow").forEach(btn => {
             btn.addEventListener("click", function() {
                 const userId = this.getAttribute("data-user");
+                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
                 fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: "user_id=" + encodeURIComponent(userId),
+                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                         credentials: "include"
                     })
                     .then(res => res.json())
@@ -695,9 +690,6 @@
 
             });
         </script>
-
-        <!-- Modal: Tạo bài viết mới -->
-
 
         <script>
             $(function() {

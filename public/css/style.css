@@ -1051,7 +1051,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background-color: #40a92b;
+    
     z-index: 9999;
     position: fixed;
     top: 0px;

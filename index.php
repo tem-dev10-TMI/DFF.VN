@@ -65,8 +65,9 @@ switch ($url) {
         $controller->index();
         break;
     case 'logout':
-        session_destroy();
-        header("Location: " . BASE_URL . "");
+        require_once __DIR__ . '/controller/auth/logoutController.php';
+        $controller = new logoutController();
+        $controller->logout();
         break;
     case 'change_password':
         require_once __DIR__ . '/controller/account/profileUserController.php';
