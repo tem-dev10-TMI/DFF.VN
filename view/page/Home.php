@@ -266,14 +266,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <!-- Giữ nguyên phần like, comment, share -->
                             <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
-                                    <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="details_blog?id<?= $article['id'] ?>#anc_comment">
-                                        <span><?= $article['comment_count'] ?? 0 ?></span>
-                                    </a>
-                                </div>
+
+
                                 <div class="button-ar">
                                     <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
@@ -364,14 +358,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             </div>
                             ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
                             <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="${article.id}">
-                                    <span class="value">${article.upvotes || 0}</span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="details_blog/${article.slug}#anc_comment">
-                                        <span>${article.comment_count || 0}</span>
-                                    </a>
-                                </div>
+
                                 <div class="button-ar">
                                     <div class="dropdown home-item">
                                         <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
