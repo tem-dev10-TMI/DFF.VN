@@ -4514,7 +4514,7 @@ div[data-notify="container"] .close {
     border-top: 1px solid #40a92b;
     display: flex;
     position: fixed;
-    z-index: -1;
+
     top: 66px;
 }
 
