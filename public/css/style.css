@@ -1052,7 +1052,7 @@ a:hover {
 .header-top {
     padding: 5px 0 5px 0;
     background: #40b029;
-    height: 51px;
+    height: 50px;
     z-index: 9999;
     position: fixed;
     top: 0px;
@@ -1593,7 +1593,7 @@ textarea.form-control {
 }
 
 .view-card .home-item ul li,
-.view-carde .item-bottom ul.dropdown-menu li {
+.view-card .item-bottom ul.dropdown-menu li {
     width: 100%;
     display: inline-flex;
     padding: 8px 12px;
@@ -4236,20 +4236,28 @@ div[data-notify="container"] .close {
     position: relative;
     font-size: 16px;
     margin-left: 10px;
+    display: flex;               /* đổi từ inline-block -> flex */
+    align-items: center;         /* căn giữa dọc */
+    justify-content: center;
+     flex-shrink: 0; 
 }
 
 .header-right>ul>li>span>a,
 .m-menu>span>a,
 .m-search>span>a {
-    position: absolute;
-    left: 10px;
-    top: 8px;
+      display: flex;
+    align-items: center;
+    justify-content: center;
     color: #2e2e2e;
     font-size: 20px;
+      width: 100%;
+    height: 100%;
+    line-height: 1;  
 }
 
 .header-right>ul li.top-pro>span>a {
     left: 0;
+    align-items: center
     top: 0;
 }
 
@@ -4503,10 +4511,10 @@ div[data-notify="container"] .close {
     height: 50px;
     position: relative;
     border-bottom: 1px solid #e4e0e0;
-    border-top: 1px solid #e4e0e0;
-    display: inline-table;
+    border-top: 1px solid #40a92b;
+    display: flex;
     position: fixed;
-    z-index: 9998;
+    z-index: -1;
     top: 66px;
 }
 
@@ -4643,6 +4651,10 @@ div[data-notify="container"] .close {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 6px;
     max-height: 600px;
     overflow: auto;
+
+}
+.price-ticker, .marquee {
+    z-index: 100 !important; /* nhỏ hơn box-alert */
 }
 
 .box-alert .nav .nav-item button.active {
@@ -7170,7 +7182,7 @@ ul.timeline .left-arrow:after {
     .editor,
     .step2-col1,
     .step2-col2 {
-        width: 100% !important;
+        width: 100% ;
     }
 
     .editor {

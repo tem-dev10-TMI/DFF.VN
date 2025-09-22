@@ -119,7 +119,8 @@
                                                                                             echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
-                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                                                                        } ?>"><i
+                                                class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
@@ -426,7 +427,8 @@
                 <?php endif; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/change_password" id="changePassForm">
-                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+                    <input type="hidden" name="session_token"
+                        value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
                     <div class="mb-3">
                         <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
                         <input type="password" class="form-control" id="currentPassword" name="old_password" required>
