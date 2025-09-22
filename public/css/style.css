@@ -1051,12 +1051,13 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    
+    background: #40b029;
+    height: 51px;
     z-index: 9999;
     position: fixed;
     top: 0px;
     width: 1260px !important;
-    border-bottom: 1px solid rgb(212 211 211);
+    border-bottom: 1px solid #40b029;
     display: flex;
     grid-column: 1;
     gap: 10px;
@@ -1089,12 +1090,12 @@ a:hover {
     border-radius: 10px;
     background: #fff;
     padding: 3px;
-    border: 2px solid #4CAF50;
+    border: 2px solid #40b029;
     transition: all 0.3s ease;
 }
 
 .header-logo img:hover {
-    box-shadow: 0 0 10px #4CAF50;
+    box-shadow: 0 0 10px #40b029;
     transform: scale(1.05);
 }
 
@@ -7420,3 +7421,4 @@ ul.timeline .left-arrow:after {
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
 .notice-time { font-size: .8125rem; }
+@media (max-width: 768px)
