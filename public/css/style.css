@@ -1051,12 +1051,11 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    
+    background: #40b029;
     z-index: 9999;
     position: fixed;
     top: 0px;
     width: 1260px !important;
-    border-bottom: 1px solid rgb(212 211 211);
     display: flex;
     grid-column: 1;
     gap: 10px;
@@ -7338,7 +7337,7 @@ ul.timeline .left-arrow:after {
     .main>.left-sidebar {
         order: -1;
         width: 250px;
-        border-right: 1px solid rgb(212 211 211);
+        border-right: none
     }
 
     .main>.main-content {
@@ -7420,3 +7419,17 @@ ul.timeline .left-arrow:after {
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
 .notice-time { font-size: .8125rem; }
+.left-sidebar {
+  width: 250px;              /* Desktop */
+  max-width: 100%;           /* Mobile không vượt màn hình */
+  height: 100vh;             /* Cao full màn hình */
+  overflow-y: auto;          /* Cho cuộn dọc */
+  overflow-x: hidden;        /* Chặn cuộn ngang */
+  box-sizing: border-box;
+  border-right: 1px solid rgb(212, 211, 211);
+}
+/* Bảo đảm con không tràn ra ngoài */
+.left-sidebar * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
