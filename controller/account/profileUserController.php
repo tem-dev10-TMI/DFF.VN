@@ -673,12 +673,13 @@ class profileUserController
     }
     public static function deleteArticle()
     {
+        
         header('Content-Type: application/json');
 
         // Giả sử các file này đã được autoload hoặc require ở một nơi khác
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
-        require_once __DIR__ . '/../../model/connect.php';
+        //require_once __DIR__ . '/../../model/connect.php';
 
         // 1. Chỉ chấp nhận phương thức POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {

@@ -186,7 +186,7 @@ function deletePost(postId, buttonElement) {
   // Tìm phần tử cha để xóa khỏi giao diện
   const postElement = buttonElement.closest('.block-k');
 
-  fetch('/api/delete_post.php', {
+  fetch('api/deletePost', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',

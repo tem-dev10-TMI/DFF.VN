@@ -39,8 +39,7 @@ if (empty($url)) {
     $controller = new homeController();
     $controller->index();
     exit;
-}
-
+}var_dump($_SESSION['user']);
 switch ($url) {
 
     case 'home':
@@ -216,7 +215,6 @@ switch ($url) {
                 $controller->toggle();
                 exit;
 
-
     // ========== API ROUTES ==========
     case 'api/addPost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
@@ -226,6 +224,7 @@ switch ($url) {
     case 'api/deletePost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         $controller = new profileUserController();
+        
         $controller->deleteArticle();
         exit;
     case 'api/loadPost':
