@@ -4257,7 +4257,7 @@ div[data-notify="container"] .close {
 
 .header-right>ul li.top-pro>span>a {
     left: 0;
-    align-items: center
+    align-items: center;
     top: 0;
 }
 
@@ -7433,4 +7433,4 @@ ul.timeline .left-arrow:after {
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
 .notice-time { font-size: .8125rem; }
-@media (max-width: 768px)
+@media (max-width: 768px){}
