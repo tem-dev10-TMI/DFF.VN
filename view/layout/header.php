@@ -965,7 +965,7 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
         };
 
         try {
-            const res = await fetch('__DIR__/../../server/chat.php', {
+            const res = await fetch('server/chat.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

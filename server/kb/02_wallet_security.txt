@@ -1,3 +1,4 @@
+Bảo mật ví Crypto cho cửa hàng & khách hàng
 ========================================================================
 0. Ghi chú chung
 - File này bao gồm: nguyên tắc bảo mật, phân loại gian lận, mô tả cách thực hiện gian lận phổ biến, dấu hiệu cảnh báo, biện pháp phòng ngừa (kỹ thuật & quy trình), checklist vận hành, playbook xử lý sự cố, mẫu trả lời chatbot, và đề xuất công cụ giám sát.

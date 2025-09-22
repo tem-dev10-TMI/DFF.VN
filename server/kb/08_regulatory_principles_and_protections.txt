@@ -1,3 +1,4 @@
+==================================================================================================================
 1) Phạm vi & lưu ý pháp lý
 
 Tài liệu này tổng hợp các nguyên tắc, ví dụ quy định và thực hành tốt nhất cho: nhận thanh toán crypto, quản lý ví/custody, hoàn tiền/refund, phòng chống gian lận, bảo vệ dữ liệu khách hàng, xử lý dầu & vàng trong giao thương (logistics, giá cả, thuế).

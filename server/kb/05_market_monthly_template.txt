@@ -1,3 +1,4 @@
+Gợi ý Phân tích Thị trường Crypto Hàng Tháng
 ===============================================================================
 A. KẾT QUẢ MONG MUỐN (Output)
 - Một đoạn tóm tắt 2–3 câu về xu hướng 30 ngày (direction + volatility).
