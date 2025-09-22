@@ -40,7 +40,8 @@ class homeController
         $start_total_time = microtime(true);
         $last_checkpoint_time = $start_total_time;
 
-        function log_time($label, &$last_checkpoint, $log_file) {
+        function log_time($label, &$last_checkpoint, $log_file)
+        {
             $now = microtime(true);
             $execution_time = round(($now - $last_checkpoint) * 1000);
             file_put_contents($log_file, "[{$label}] Execution Time: {$execution_time}ms\n", FILE_APPEND);
@@ -114,8 +115,14 @@ class homeController
 
         // Gộp TẤT CẢ RSS + DB (dành cho slider: lấy vừa đủ 8 sau khi trộn theo thời gian)
         $allForSlider = array_merge(
-            $rssArticles1, $rssArticles2, $rssArticles3, $rssArticles4,
-            $rssArticles5, $rssArticles6, $rssArticles7, $rssArticles8,
+            $rssArticles1,
+            $rssArticles2,
+            $rssArticles3,
+            $rssArticles4,
+            $rssArticles5,
+            $rssArticles6,
+            $rssArticles7,
+            $rssArticles8,
             $dbArticlesForSlider
         );
 
@@ -175,16 +182,16 @@ class homeController
 
         // Danh sách khởi tạo 5 bài: trộn RSS ít + DB 5 bài (lấy 1 bài từ 4 nguồn đầu)
         $rssForInitial = array_merge(
-             array_slice($rssArticles1, 0, 1),
-             array_slice($rssArticles2, 0, 1),
-             array_slice($rssArticles3, 0, 1),
-             array_slice($rssArticles4, 0, 1)
+            array_slice($rssArticles1, 0, 1),
+            array_slice($rssArticles2, 0, 1),
+            array_slice($rssArticles3, 0, 1),
+            array_slice($rssArticles4, 0, 1)
         );
         $articlesInitialCombined = array_merge($rssForInitial, $dbArticlesInitial);
         // Logic gán avatar cho danh sách này (thêm các nguồn mới)
         foreach ($articlesInitialCombined as &$art2) {
             if (!empty($art2['is_rss'])) {
-                 if (isset($art2['link']) && str_contains($art2['link'], 'thanhnien')) {
+                if (isset($art2['link']) && str_contains($art2['link'], 'thanhnien')) {
                     $art2['avatar_url'] = 'public/img/avatar/thanhnien.png';
                     $art2['author_id'] = 67;
                 } elseif (isset($art2['link']) && str_contains($art2['link'], 'vnexpress')) {
@@ -207,8 +214,14 @@ class homeController
 
         // Tạo nhóm RSS cho các box HOT và ANALYSIS (gộp tất cả các nguồn RSS)
         $allRssArticles = array_merge(
-            $rssArticles1, $rssArticles2, $rssArticles3, $rssArticles4,
-            $rssArticles5, $rssArticles6, $rssArticles7, $rssArticles8
+            $rssArticles1,
+            $rssArticles2,
+            $rssArticles3,
+            $rssArticles4,
+            $rssArticles5,
+            $rssArticles6,
+            $rssArticles7,
+            $rssArticles8
         );
         $onlyRss = array_values(array_filter($allRssArticles, function ($it) {
             return !empty($it['is_rss']);
@@ -234,7 +247,7 @@ class homeController
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
-    
+
 
     // API: Load thêm bài viết (lazy load)
     public function loadMoreArticles()
@@ -243,7 +256,7 @@ class homeController
         try {
             require_once __DIR__ . '/../model/article/articlesmodel.php';
             require_once __DIR__ . '/../model/MarketDataModel.php';
-          require_once __DIR__ . '/../model/CommentsModel.php';   // Đúng tên file
+            require_once __DIR__ . '/../model/CommentsModel.php';   // Đúng tên file
 
             require_once __DIR__ . '/../model/user/businessmenModel.php';
 
@@ -383,6 +396,15 @@ class homeController
         $content = ob_get_clean();
 
         $profile = true;
+        require_once __DIR__ . '/../view/layout/main.php';
+    }
+
+    public static function video()
+    {
+        ob_start();
+        require_once __DIR__ . '/../view/page/video.php';
+        $content = ob_get_clean();
+        $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }
 }

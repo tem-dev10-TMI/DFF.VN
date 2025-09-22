@@ -115,6 +115,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->trends();
         break;
+    case 'video':
+        require_once __DIR__ . '/controller/HomeController.php';
+        $controller = new homeController();
+        $controller->video();
+        break;
     /*case 'details_topic':
                  require_once __DIR__ . '/controller/TopicController.php';
         $controller = new TopicController();
