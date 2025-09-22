@@ -2939,9 +2939,13 @@ article .accordion-button {
     padding: 8px;
 }
 
-article .accordion-button:focus {
-    box-shadow: 0 0;
+.accordion-button:focus,
+.accordion-button:active,
+.accordion-button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
+
 
 article .accordion-button i {
     padding: 2px 6px 0;

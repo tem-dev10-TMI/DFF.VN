@@ -58,8 +58,9 @@
                 </ul>
             </div>
             <div class="to-expend">
-                <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                    aria-expanded="false" aria-controls="flush-collapseOne"></i>
+                <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                    aria-expanded="true" aria-controls="flush-collapseOne">
+                </button>
             </div>
 
         <?php endif; ?>
