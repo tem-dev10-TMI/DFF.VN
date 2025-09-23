@@ -1,26 +1,23 @@
 <main class="main-content">
-<?php
-$isFollowing = false; // mặc định chưa theo dõi
-$followersCount = 0;
+    <?php
+    $isFollowing = false; // mặc định chưa theo dõi
+    $followersCount = 0;
 
-if (isset($user) && !empty($user['id'])) {
-    require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-    $db = new connect();
-    $pdo = $db->db;
-    $followModel = new UserFollowModel($pdo);
+    if (isset($user) && !empty($user['id'])) {
+        require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+        $db = new connect();
+        $pdo = $db->db;
+        $followModel = new UserFollowModel($pdo);
 
-    // Lấy số người theo dõi.
-    // Giả định có phương thức `countFollowers`.
-    if(method_exists($followModel, 'countFollowers')){
+        // Lấy số người theo dõi. Giả định phương thức là `countFollowers`.
         $followersCount = $followModel->countFollowers($user['id']);
-    }
 
-    // Kiểm tra trạng thái theo dõi nếu người dùng đã đăng nhập.
-    if (isset($_SESSION['user']['id'])) {
-        $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $user['id']);
+        // Kiểm tra trạng thái theo dõi nếu người dùng đã đăng nhập.
+        if (isset($_SESSION['user']['id'])) {
+            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $user['id']);
+        }
     }
-}
-?>
+    ?>
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
@@ -49,7 +46,7 @@ if (isset($user) && !empty($user['id'])) {
               background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
               color:#fff;font-weight:600;text-decoration:none;">
                                 <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-                                (<span class="number"><?= intval($followersCount) ?></span>)
+                                <span class="number"><?= intval($followersCount) ?></span>
                             </a>
                         </li>
                     </ul>
@@ -182,36 +179,39 @@ if (isset($user) && !empty($user['id'])) {
                 });
             });
         </script>
-<script>
-                //// Đừng có xóa dòng này mấy cha
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
                 document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
+                    btn.addEventListener("click", function() {
                         const userId = this.getAttribute("data-user");
                         const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
                         fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                            method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                            body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
-                            credentials: "include"
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                // cập nhật text nút
-                                this.querySelector(".follow-text").innerText =
-                                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                                credentials: "include"
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // cập nhật text nút
+                                    this.querySelector(".follow-text").innerText =
+                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
 
-                                // cập nhật số follower
-                                this.querySelector(".number").innerText = data.followers;
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert("Không thể kết nối đến server!");
-                        });
+                                    // cập nhật số follower
+                                    this.querySelector(".number").innerText = data.followers;
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Không thể kết nối đến server!");
+                            });
+                    });
                 });
             });
         </script>

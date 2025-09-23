@@ -49,36 +49,37 @@
         <div class="content-left cover-page" bis_skin_checked="1">
 
             <div class="block-k box-company-label">
-                <div class="block-t p-t-20" bis_skin_checked="1">
-                    <div class="block-t-top" bis_skin_checked="1">
-                        <img alt="image" class="profile-img"
-                            src="<?= $businessman['avatar_url'] ?>">
-                    </div>
-                    <div class="h-topic">
-                        <ul>
-                            <li class="alias">Doanh nhân</li>
-                            <li>
-                                <a href="#" class="nam-follow">
-                            <li><a href="#" class="nam-follow"><?= e($businessman['name']) ?></a></li>
+                <div class="w-100" bis_skin_checked="1">
+                    <div class="box-company">
+                        <div class="item">
+                            <div class="block-t-top logo d-flex align-items-center justify-content-center" bis_skin_checked="1">
+                                <img alt="image" class="profile-img" 
+                                    src="<?= $businessman['avatar_url'] ?>">
+                            </div>
+                            <div class="h-topic ">
+                                <ul>
+                                    <li class="alias">Doanh nhân</li>
+                                    <li class="mb-1">
+                                        <a href="#" class="nam-follow">
+                                    <li><a href="#" class="nam-follow"><?= e($businessman['name']) ?></a></li>
 
-                            </a>
-                            </li>
-                            <li>
-                                <div class="profile-actions" style="margin-top:15px;">
-                                    <a class="btn-follow" href="javascript:void(0)"
-                                        data-user="<?= $businessman['user_id'] ?>"
-                                        style="display:inline-block;padding:8px 16px;border-radius:6px;
+                                    </a>
+                                    </li>
+                                    <li class="f-folw pt-2">
+                                        <a class="btn-follow" href="javascript:void(0)"
+                                            data-user="<?= $user['id'] ?>"
+                                            style="display:inline-block;padding:8px 16px;border-radius:6px;
               background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
               color:#fff;font-weight:600;text-decoration:none;">
-                                        <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-                                        (<span class="number"><?= intval($followersCount) ?></span>)
-                                    </a>
-                                </div>
-                            </li>
+                                            <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                            <span class="number"><?= intval($followersCount) ?></span>
+                                        </a>
+                                    </li>
 
-                        </ul>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-
                 </div>
             </div>
 
@@ -242,15 +243,17 @@
         </div>
 
         <script>
-                //// Đừng có xóa dòng này mấy cha
-                document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const userId = this.getAttribute("data-user");
-                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+            //// Đừng có xóa dòng này mấy cha
+            document.querySelectorAll(".btn-follow").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const userId = this.getAttribute("data-user");
+                    const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                    fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
                             method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
                             body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                             credentials: "include"
                         })
