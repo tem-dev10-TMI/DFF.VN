@@ -1949,6 +1949,8 @@ textarea.form-control {
 
 .navbar-collapse.show {
     transition: all 0.5s;
+    max-height: 60vh;
+    overflow: auto;
 }
 
 .m-menu-i {
@@ -3302,6 +3304,8 @@ article p a {
 
 .f-register {
     padding: 10px 45px;
+    max-height: 60vh;
+    overflow-y: auto;
 }
 
 .f-register .title {
@@ -3445,6 +3449,16 @@ article p a {
     border: 0;
     background-color: #fff;
     font-size: 21px;
+}
+.modal-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2rem 0.5rem;
+    border-bottom: 1px solid #dee2e6;
+    border-top-left-radius: calc(.3rem - 1px);
+    border-top-right-radius: calc(.3rem - 1px);
 }
 
 .modal-content {
