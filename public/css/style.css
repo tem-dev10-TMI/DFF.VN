@@ -1948,8 +1948,7 @@ textarea.form-control {
 }
 
 .navbar-collapse.show {
-    transition: all 0.5s;
-    max-height: 60vh;
+    max-height: 80%;   
     overflow: auto;
 }
 
@@ -3304,7 +3303,7 @@ article p a {
 
 .f-register {
     padding: 10px 45px;
-    max-height: 60vh;
+    max-height: 51vh;
     overflow-y: auto;
 }
 
