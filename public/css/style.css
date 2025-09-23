@@ -255,7 +255,7 @@ a {
 @media (max-width: 767px) {
     .sidebar {
         padding-bottom: 180px;
-        /* chừa khoảng trống cho mobile */
+        
     }
 }
 
@@ -4504,17 +4504,17 @@ div[data-notify="container"] .close {
 }
 
 .top-stock {
-    width: 100%;
+   width: 100%;
     background: #fefefe;
     overflow: hidden;
     box-sizing: border-box;
     height: 50px;
     position: relative;
     border-bottom: 1px solid #e4e0e0;
-    border-top: 1px solid #40a92b;
-    display: flex;
+    border-top: 1px solid #40b029;
+    display: inline-table;
     position: fixed;
-
+    z-index: 9998;
     top: 66px;
 }
 
@@ -6993,7 +6993,7 @@ ul.timeline .left-arrow:after {
     }
 
     .top-stock {
-        top: 75px;
+        top: 66px;
     }
 
     .search-list .sea-user,
