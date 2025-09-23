@@ -1,4 +1,4 @@
-<?php require_once __DIR__ . '/../../helpers/cache_helper.php';  ?>
+<?php require_once __DIR__ . '/../../helpers/cache_helper.php'; require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
