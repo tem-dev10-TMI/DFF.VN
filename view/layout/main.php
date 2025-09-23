@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/../../helpers/cache_helper.php';  ?>
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
@@ -38,7 +39,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=2.4" />
+    <link rel="stylesheet" href="<?= asset_url('public/css/style.css') ?>" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -109,7 +110,7 @@
 
     <?php
 
-    require_once __DIR__ . '/../../helpers/cache_helper.php';
+    
 
     // Cache topics for 3 hours
     $allTopics = get_cache('all_topics', 5);
