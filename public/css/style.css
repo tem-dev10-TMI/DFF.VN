@@ -1949,6 +1949,8 @@ textarea.form-control {
 
 .navbar-collapse.show {
     transition: all 0.5s;
+    max-height: 60vh;
+    overflow: auto;
 }
 
 .m-menu-i {
