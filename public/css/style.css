@@ -1051,7 +1051,7 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background: #40b029;
+    background: #ffffff;
     z-index: 9999;
     height: 50px;
     position: fixed;
@@ -2248,7 +2248,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color: #40b029;
+    background-color: #ffffff;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -4505,7 +4505,7 @@ div[data-notify="container"] .close {
     box-sizing: border-box;
     height: 50px;
     position: relative;
-    border-bottom: 1px solid #e4e0e0;
+    border-bottom: 1px solid #40b029;
     border-top: 1px solid #40b029;
     display: inline-table;
     position: fixed;
@@ -4590,7 +4590,7 @@ div[data-notify="container"] .close {
     width: 208px;
     padding: 10px 0 0 8px;
     font-size: 13px;
-    color: #f1f1f1;
+    color: #000000;
 }
 
 .header-info i {
