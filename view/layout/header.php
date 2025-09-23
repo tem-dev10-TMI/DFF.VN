@@ -347,7 +347,7 @@
 <!-- Modal đăng nhập -->
 <div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable" >
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
@@ -436,7 +436,7 @@
 <!-- Modal đăng kí -->
 <div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
     data-popup-id="8268" aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
@@ -584,7 +584,7 @@
 <!-- Modal Quên mật khẩu -->
 <div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span class="core-popup-title">Quên mật khẩu</span></h4>
