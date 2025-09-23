@@ -255,7 +255,7 @@ a {
 @media (max-width: 767px) {
     .sidebar {
         padding-bottom: 180px;
-        
+        /* chừa khoảng trống cho mobile */
     }
 }
 
@@ -1051,13 +1051,12 @@ a:hover {
 
 .header-top {
     padding: 5px 0 5px 0;
-    background: #40b029;
-    height: 50px;
+    background: #ffffff;
     z-index: 9999;
+    height: 50px;
     position: fixed;
     top: 0px;
     width: 1260px !important;
-    border-bottom: 1px solid #40b029;
     display: flex;
     grid-column: 1;
     gap: 10px;
@@ -1090,12 +1089,12 @@ a:hover {
     border-radius: 10px;
     background: #fff;
     padding: 3px;
-    border: 2px solid #40b029;
+    border: 2px solid #4CAF50;
     transition: all 0.3s ease;
 }
 
 .header-logo img:hover {
-    box-shadow: 0 0 10px #40b029;
+    box-shadow: 0 0 10px #4CAF50;
     transform: scale(1.05);
 }
 
@@ -1593,7 +1592,7 @@ textarea.form-control {
 }
 
 .view-card .home-item ul li,
-.view-card .item-bottom ul.dropdown-menu li {
+.view-carde .item-bottom ul.dropdown-menu li {
     width: 100%;
     display: inline-flex;
     padding: 8px 12px;
@@ -2249,7 +2248,7 @@ ul.ul-history i {
 }
 
 .hmain {
-    background-color: #40b029;
+    background-color: #ffffff;
     width: 100%;
     position: fixed;
     height: 66px;
@@ -2941,9 +2940,13 @@ article .accordion-button {
     padding: 8px;
 }
 
-article .accordion-button:focus {
-    box-shadow: 0 0;
+.accordion-button:focus,
+.accordion-button:active,
+.accordion-button:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
+
 
 article .accordion-button i {
     padding: 2px 6px 0;
@@ -4236,28 +4239,20 @@ div[data-notify="container"] .close {
     position: relative;
     font-size: 16px;
     margin-left: 10px;
-    display: flex;               /* đổi từ inline-block -> flex */
-    align-items: center;         /* căn giữa dọc */
-    justify-content: center;
-     flex-shrink: 0; 
 }
 
 .header-right>ul>li>span>a,
 .m-menu>span>a,
 .m-search>span>a {
-      display: flex;
-    align-items: center;
-    justify-content: center;
+    position: absolute;
+    left: 10px;
+    top: 8px;
     color: #2e2e2e;
     font-size: 20px;
-      width: 100%;
-    height: 100%;
-    line-height: 1;  
 }
 
 .header-right>ul li.top-pro>span>a {
     left: 0;
-    align-items: center
     top: 0;
 }
 
@@ -4510,13 +4505,15 @@ div[data-notify="container"] .close {
     box-sizing: border-box;
     height: 50px;
     position: relative;
-    border-bottom: 1px solid #e4e0e0;
+    border-bottom: 1px solid #40b029;
     border-top: 1px solid #40b029;
     display: inline-table;
     position: fixed;
     z-index: 9998;
     top: 66px;
 }
+
+
 
 .marquee,
 *[class^="marquee"] {
@@ -4593,7 +4590,7 @@ div[data-notify="container"] .close {
     width: 208px;
     padding: 10px 0 0 8px;
     font-size: 13px;
-    color: #f1f1f1;
+    color: #000000;
 }
 
 .header-info i {
@@ -4651,10 +4648,6 @@ div[data-notify="container"] .close {
     box-shadow: rgba(0, 0, 0, 0.12) 0px 3px 6px;
     max-height: 600px;
     overflow: auto;
-
-}
-.price-ticker, .marquee {
-    z-index: 100 !important; /* nhỏ hơn box-alert */
 }
 
 .box-alert .nav .nav-item button.active {
@@ -7182,7 +7175,7 @@ ul.timeline .left-arrow:after {
     .editor,
     .step2-col1,
     .step2-col2 {
-        width: 100% ;
+        width: 100% !important;
     }
 
     .editor {
@@ -7351,7 +7344,7 @@ ul.timeline .left-arrow:after {
     .main>.left-sidebar {
         order: -1;
         width: 250px;
-        border-right: 1px solid rgb(212 211 211);
+        border-right: none
     }
 
     .main>.main-content {
@@ -7433,4 +7426,17 @@ ul.timeline .left-arrow:after {
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
 .notice-time { font-size: .8125rem; }
-@media (max-width: 768px)
+.left-sidebar {
+  width: 250px;              /* Desktop */
+  max-width: 100%;           /* Mobile không vượt màn hình */
+  height: 100vh;             /* Cao full màn hình */
+  overflow-y: auto;          /* Cho cuộn dọc */
+  overflow-x: hidden;        /* Chặn cuộn ngang */
+  box-sizing: border-box;
+  border-right: 1px solid rgb(212, 211, 211);
+}
+/* Bảo đảm con không tràn ra ngoài */
+.left-sidebar * {
+  max-width: 100%;
+  box-sizing: border-box;
+}
