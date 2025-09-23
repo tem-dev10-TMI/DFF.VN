@@ -114,7 +114,7 @@
                         <div class="button-ar fc-saved">
                             <i title="copy link bài viết" class="fas fa-link copylink"
                                 data-url="/post-<?= htmlspecialchars($article['id'] ?? '') ?>.html"></i>
-                            <i save-article="savenews" title="lưu bài viết" class="far fa-bookmark" data-id="<?= $article['id'] ?>"></i>
+                            <i save-article="savenews" title="lưu bài viết" class="<?= $iconClass ?> fa-bookmark" data-id="<?= $article['id'] ?>"></i>
 
                             <script>
                                 document.querySelectorAll('[save-article="savenews"]').forEach(btn => {

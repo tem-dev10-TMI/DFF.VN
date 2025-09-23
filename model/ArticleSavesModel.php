@@ -118,6 +118,23 @@ class ArticleSavesModel
         $stmt->execute(['article_id' => $article_id, 'user_id' => $user_id]);
         return $stmt->rowCount() > 0;
     }
+    public function isSavedBySlug($slug, $user_id)
+{
+    $sql = "SELECT s.id 
+            FROM article_saves s
+            INNER JOIN articles a ON s.article_id = a.id
+            WHERE a.slug = :slug AND s.user_id = :user_id
+            LIMIT 1";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([
+        ':slug'    => $slug,
+        ':user_id' => $user_id
+    ]);
+
+    return $stmt->fetchColumn() !== false;
+}
+
 
     // Lưu bài viết
     public function save($article_id, $user_id)

@@ -135,12 +135,14 @@ class ArticlesController
     {
         require_once __DIR__ . '/../model/article/articlesmodel.php';
         require_once __DIR__ . '/../model/user/userModel.php';
-
+        require_once __DIR__ . '/../model/ArticleSavesModel.php';
         $currentUserId = null;
         if (isset($_SESSION['user']['id'])) {
             $currentUserId = $_SESSION['user']['id'];
         }
-
+        $save=new ArticleSavesModel();
+        $saved = $save->isSavedbySlug($slug, $currentUserId);
+        $iconClass = $saved ? 'fas' : 'far';
         // Lấy dữ liệu từ model
         $article = ArticlesModel::getArticleBySlug($slug, $currentUserId);
         $authorId = UserModel::getUserById($article['author_id']);
