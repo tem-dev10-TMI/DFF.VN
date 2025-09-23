@@ -7,13 +7,14 @@
             .m-menu-i.collapsing,
             .m-menu-i.collapse.show {
                 position: fixed;
-                top: 0;
+                top: 10%;
+                
                 left: 0;
                 width: 100vw;
-                height: 100vh;
-                z-index: 1045; /* Dưới modal nhưng trên mọi thứ khác */
+                height: 95vh;
+                z-index: 9997; /* Dưới modal nhưng trên mọi thứ khác */
                 background: #fff;
-                padding: 20px;
+                padding: 20px 20px 35px 20px;
                 max-height: 100vh;
                 overflow-y: auto;
                 overscroll-behavior: contain;

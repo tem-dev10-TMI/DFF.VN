@@ -166,7 +166,7 @@
                     }
                     ?>
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                        <div class="card-header bg-white align-items-center justify-content-between d-none d-sm-flex">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="bi bi-bell-fill"></i>
                                 <h5 class="mb-0">Thông báo</h5>
@@ -190,7 +190,7 @@
                                         </span>
 
                                         <div class="notice-text">
-                                            <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
+                                            <h6 class="notice-title fw-semibold" title="<?= $title ?>"><?= $title ?></h6>
                                             <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
                                             <small class="text-muted notice-time" title="<?= $dateText ?>">
                                                 <?= $dateText ?>

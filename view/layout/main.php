@@ -231,15 +231,15 @@
 
     <!-- Mobile Modal -->
     <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
-        style="z-index: 1055;">
-        <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
-            <div class="modal-content">
+        style="z-index: 9998;">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable" >
+            <div class="modal-content h-100">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody"
-                    style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+                    style="padding: 10px 15px; overflow-y: auto; height: 100%"></div>
             </div>
         </div>
     </div>
