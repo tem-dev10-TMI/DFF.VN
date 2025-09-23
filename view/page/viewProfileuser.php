@@ -183,48 +183,36 @@ if (isset($user) && !empty($user['id'])) {
             });
         </script>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        const btn = document.querySelector(".btn-follow");
-        if (!btn) return;
+                //// Đừng có xóa dòng này mấy cha
+                document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function () {
+                        const userId = this.getAttribute("data-user");
+                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-        btn.addEventListener("click", function() {
-            const userId = this.getAttribute("data-user");
+                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                            credentials: "include"
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                // cập nhật text nút
+                                this.querySelector(".follow-text").innerText =
+                                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
 
-            fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: "user_id=" + encodeURIComponent(userId),
-                    credentials: "include"
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success) {
-                        this.querySelector(".follow-text").innerText =
-                            data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-                        this.querySelector(".number").innerText = data.followers;
-
-                        // đổi màu nút
-                        if (data.action === "follow") {
-                            this.style.background = "#6c757d"; // xám
-                        } else {
-                            this.style.background = "#28a745"; // xanh
-                        }
-                    } else {
-                         if (data.reason === 'NOT_LOGGED_IN') {
-                            alert("Vui lòng đăng nhập để thực hiện chức năng này.");
-                            window.location.href = '<?= BASE_URL ?>/login';
-                        } else {
-                            alert(data.message || "Có lỗi xảy ra!");
-                        }
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    alert("Không thể kết nối đến server!");
+                                // cập nhật số follower
+                                this.querySelector(".number").innerText = data.followers;
+                            } else {
+                                alert(data.message);
+                            }
+                        })
+                        .catch(err => {
+                            console.error(err);
+                            alert("Không thể kết nối đến server!");
+                        });
                 });
-        });
-    });
-</script>
+            });
+        </script>
 </main>
