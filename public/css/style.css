@@ -7370,6 +7370,12 @@ ul.timeline .left-arrow:after {
     .left-sidebar {
         position: relative;
     }
+    .cover-img {
+        width: 100%;           /* Chiếm toàn bộ chiều rộng của div cha */
+        height: 100%;          /* Chiếm toàn bộ chiều cao của div cha */
+        object-fit: cover;     /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
+        border-radius: 8px;    /* Bo góc giống với div cha */
+    }
 }
 
 @media (max-width: 768px) {

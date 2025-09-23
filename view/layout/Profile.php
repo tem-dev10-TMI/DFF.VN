@@ -30,6 +30,17 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
+  .cover-img {
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của div cha */
+    height: 100%;
+    /* Chiếm toàn bộ chiều cao của div cha */
+    object-fit: cover;
+    /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
+    border-radius: 8px;
+    /* Bo góc giống với div cha */
+  }
+
   .sidebar {
     background: white;
     border-radius: 8px;
@@ -319,16 +330,29 @@ if ($profile_category == 'user' && $user_id) {
 <div class="container mt-3">
   <!-- Cover -->
   <div class="cover">
-
     <?php
-    $avatarUrl = $user['avatar_url'] ?? null;
+    // Lấy avatar từ session nếu vừa upload, nếu không thì lấy từ database
+    $avatarUrl = $_SESSION['user']['avatar_url'] ?? $user['avatar_url'] ?? '';
     if (!$avatarUrl || trim($avatarUrl) === '') {
       $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
     }
+
+    // Lấy cover từ session hoặc database
+    $coverUrl = $_SESSION['user']['cover_photo'] ?? $user['cover_photo'] ?? '';
+    if (!$coverUrl || trim($coverUrl) === '') {
+      $coverUrl = 'https://via.placeholder.com/800x250?text=Default+Cover';
+    }
     ?>
-    <img src="<?= htmlspecialchars($avatarUrl) ?>" class="avatar" alt="avatar">
-    <!-- <img src="https://via.placeholder.com/120" class="avatar" alt="avatar"> -->
+
+    <!-- Cover -->
+    <img src="<?= htmlspecialchars($coverUrl) ?>?t=<?= time() ?>" class="cover-img" alt="cover">
+
+    <!-- Avatar -->
+    <div class="avatar-box">
+      <img src="<?= htmlspecialchars($avatarUrl) ?>" class="avatar" alt="avatar">
+    </div>
   </div>
+
   <div class="mt-5"></div>
 
   <div class="row mt-5">
