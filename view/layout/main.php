@@ -1,4 +1,5 @@
-<?php require_once __DIR__ . '/../../helpers/cache_helper.php'; require_once __DIR__ . '/_sidebar_content.php'; ?>
+<?php require_once __DIR__ . '/../../helpers/cache_helper.php';
+require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
@@ -110,7 +111,7 @@
 
     <?php
 
-    
+
 
     // Cache topics for 3 hours
     $allTopics = get_cache('all_topics', 5);
@@ -232,14 +233,14 @@
     <!-- Mobile Modal -->
     <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
         style="z-index: 9998;">
-        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable" >
-            <div class="modal-content h-100">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+            <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody"
-                    style="padding: 10px 15px; overflow-y: auto; height: 100%"></div>
+                    style="padding: 10px 15px; overflow-y: auto; "></div>
             </div>
         </div>
     </div>
@@ -308,26 +309,7 @@
             const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
             function renderAlerts(events) {
-                if (!Array.isArray(events) || events.length === 0) {
-                    return '<div class="text-muted">Chưa có thông báo nào.</div>';
-                }
-                const items = events.map(ev => {
-                    const title = (ev.title || '').toString();
-                    const id = ev.id;
-                    const when = ev.event_date ? new Date(ev.event_date.replace(' ', 'T')) : null;
-                    const dateStr = when ? when.toLocaleString('vi-VN', {
-                        hour12: false
-                    }) : '';
-                    const href = `${window.BASE_URL || ''}?url=event&id=${id}`;
-                    return `<li>
-                        <span class="ic"><i class="fas fa-bell"></i></span>
-                        <div class="txt">
-                            <a href="${href}">${title}</a>
-                            <div class="meta">${dateStr}</div>
-                        </div>
-                    </li>`;
-                }).join('');
-                return `<h5 class="m-section-title">Thông báo</h5><ul class="m-alerts">${items}</ul>`;
+
             }
 
             let mobileModalInstance = null;
@@ -339,7 +321,16 @@
 
                 if (type === 'alerts') {
                     title.textContent = 'Thông báo';
-                    body.innerHTML = renderAlerts(headerEvents);
+
+                    // Tìm đến nội dung thông báo của phiên bản desktop
+                    const desktopAlertsContent = document.querySelector('#id_alert .tab-content');
+
+                    // Sao chép HTML từ desktop vào modal body
+                    if (desktopAlertsContent) {
+                        body.innerHTML = desktopAlertsContent.innerHTML;
+                    } else {
+                        body.innerHTML = '<div>Không tìm thấy nội dung thông báo.</div>';
+                    }
                 } else if (type === 'create') {
                     title.textContent = 'Tạo mới';
                     body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';

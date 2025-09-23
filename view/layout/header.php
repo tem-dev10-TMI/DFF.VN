@@ -150,6 +150,27 @@
                     </li>
                 </ul>
             </div>
+            <style>
+                /* Áp dụng cho màn hình mobile (ví dụ: dưới 768px) */
+                @media (max-width: 767.98px) {
+
+                    /* 1. Cho phép các khung chứa co giãn để lấp đầy không gian */
+                    #pills-tabContent,
+                    #pills-tabContent .card {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                        min-height: 0;
+                    }
+
+                    /* 2. Cho list-group lấp đầy phần còn lại và cuộn được */
+                    .notice-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+                        /* Đã xóa display:flex và flex-direction:column-reverse ở đây */
+                    }
+                }
+            </style>
             <div class="collapse box-alert" id="id_alert">
 
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
@@ -216,57 +237,66 @@
 </div>
 
 <style>
-/* CSS cho Mobile Search */
-.mobile-search-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.98);
-    z-index: 10000;
-    display: none; /* Ẩn mặc định */
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    backdrop-filter: blur(5px);
-}
-.mobile-search-overlay .close-btn {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 35px;
-    color: #333;
-    cursor: pointer;
-    background: none;
-    border: none;
-    line-height: 1;
-}
-.mobile-search-overlay .search-container {
-    margin-top: 20vh;
-    width: 100%;
-    max-width: 500px;
-}
-.mobile-search-overlay .search-container h4 {
-    margin-bottom: 15px;
-    text-align: center;
-    color: #333;
-}
-/* Ẩn box search desktop và icon mobile menu trên mobile */
-@media (max-width: 767px) {
-    .header-logo .box-search {
+    /* CSS cho Mobile Search */
+    .mobile-search-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        z-index: 10000;
         display: none;
+        /* Ẩn mặc định */
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        backdrop-filter: blur(5px);
     }
-    .header-right .mnqtop, .header-right .n-chatbot, .header-right .n-alert {
-        display: none;
+
+    .mobile-search-overlay .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 35px;
+        color: #333;
+        cursor: pointer;
+        background: none;
+        border: none;
+        line-height: 1;
     }
-}
-/* Ẩn icon search mobile trên desktop */
-@media (min-width: 768px) {
-    .m-search {
-        display: none;
+
+    .mobile-search-overlay .search-container {
+        margin-top: 20vh;
+        width: 100%;
+        max-width: 500px;
     }
-}
+
+    .mobile-search-overlay .search-container h4 {
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
+
+    /* Ẩn box search desktop và icon mobile menu trên mobile */
+    @media (max-width: 767px) {
+        .header-logo .box-search {
+            display: none;
+        }
+
+        .header-right .mnqtop,
+        .header-right .n-chatbot,
+        .header-right .n-alert {
+            display: none;
+        }
+    }
+
+    /* Ẩn icon search mobile trên desktop */
+    @media (min-width: 768px) {
+        .m-search {
+            display: none;
+        }
+    }
 </style>
 
 <!-- Mobile Search Overlay HTML -->
@@ -284,30 +314,32 @@
 </div>
 
 <script>
-// --- Mobile Search Logic ---
-function openMobileSearch() {
-    document.getElementById('mobileSearchOverlay').style.display = 'flex';
-    document.getElementById('mobileSearchInput').focus();
-}
-function closeMobileSearch() {
-    document.getElementById('mobileSearchOverlay').style.display = 'none';
-}
-function doMobileSearch() {
-    const keyword = document.getElementById("mobileSearchInput").value.trim();
-    if (keyword) {
-        window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+    // --- Mobile Search Logic ---
+    function openMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'flex';
+        document.getElementById('mobileSearchInput').focus();
     }
-}
-// Event Listeners
-document.querySelector('.m-search a').addEventListener('click', function(e) {
-    e.preventDefault();
-    openMobileSearch();
-});
-document.getElementById('mobileSearchInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        doMobileSearch();
+
+    function closeMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'none';
     }
-});
+
+    function doMobileSearch() {
+        const keyword = document.getElementById("mobileSearchInput").value.trim();
+        if (keyword) {
+            window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+        }
+    }
+    // Event Listeners
+    document.querySelector('.m-search a').addEventListener('click', function(e) {
+        e.preventDefault();
+        openMobileSearch();
+    });
+    document.getElementById('mobileSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            doMobileSearch();
+        }
+    });
 </script>
 
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
@@ -1175,17 +1207,21 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
     });
 </script>
 <script>
-  function renderNow() {
-    const els = document.querySelectorAll('.currentDate');
-    const now = new Date();
-    const fmt = new Intl.DateTimeFormat('vi-VN', {
-      timeZone: 'Asia/Ho_Chi_Minh',
-      year: 'numeric', month: '2-digit', day: '2-digit',
-      hour: '2-digit', minute: '2-digit', second: '2-digit',
-      hour12: false
-    });
-    els.forEach(el => el.textContent = fmt.format(now));
-  }
-  renderNow();            // render ngay khi tải trang
-  setInterval(renderNow, 1000); // cập nhật mỗi giây (nếu cần “đồng hồ sống”)
+    function renderNow() {
+        const els = document.querySelectorAll('.currentDate');
+        const now = new Date();
+        const fmt = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        els.forEach(el => el.textContent = fmt.format(now));
+    }
+    renderNow(); // render ngay khi tải trang
+    setInterval(renderNow, 1000); // cập nhật mỗi giây (nếu cần “đồng hồ sống”)
 </script>
