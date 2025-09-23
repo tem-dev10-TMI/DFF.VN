@@ -32,7 +32,7 @@ function submitConversion() {
   submitBtn.disabled = true;
 
   // Gửi request đến PHP xử lý
-  fetch('businessman_register.php', {
+  fetch('api/businessman_register', {
     method: 'POST',
     body: formData
   })

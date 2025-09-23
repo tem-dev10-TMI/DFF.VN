@@ -463,67 +463,134 @@ if ($profile_category == 'user' && $user_id) {
 <!-- Modal xác nhận chuyển đổi -->
 <div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
-      <div class="modal-header bg-warning text-dark">
-        <h5 class="modal-title" id="convertModalLabel">
-          <i class="fas fa-building me-2"></i>Đăng ký tài khoản doanh nhân
+      <!-- Header -->
+      <div class="modal-header <?php echo $checkPendingBusiness ? 'bg-info text-white' : 'bg-warning text-dark'; ?>">
+        <h5 class="modal-title d-flex align-items-center gap-2" id="convertModalLabel">
+          <?php if ($checkPendingBusiness): ?>
+            <i class="fas fa-hourglass-half"></i>
+            Hồ sơ doanh nhân — Đang xét duyệt
+          <?php else: ?>
+            <i class="fas fa-building"></i>
+            Đăng ký tài khoản doanh nhân
+          <?php endif; ?>
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close <?php echo $checkPendingBusiness ? 'btn-close-white' : ''; ?>" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <!-- Thông tin hiện tại -->
-        <!-- Cảnh báo -->
-        <div class="alert alert-warning py-2">
-          <i class="fas fa-exclamation-triangle me-2"></i>
-          <strong>Lưu ý:</strong>
-          <small class="d-block mt-1">
-            Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1-3 ngày • Một số tính năng bị hạn chế
-          </small>
-        </div>
-
-        <!-- Form đăng ký doanh nhân -->
-        <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business">
-          <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-          <div class="row">
-            <div class="col-md-6 mb-2">
-              <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>
-              <input type="number" min="1900" max="2099" class="form-control form-control-sm" id="birthYear" name="birth_year" required>
+        <?php if ($checkPendingBusiness): ?>
+          <!-- STATE: PENDING -->
+          <div class="p-3">
+            <div class="alert alert-info d-flex align-items-start gap-3 mb-3">
+              <i class="fas fa-info-circle fs-4 mt-1"></i>
+              <div>
+                <strong>Hồ sơ của bạn đang được xét duyệt.</strong>
+                <div class="small mt-1">
+                  Vui lòng đợi khoảng <strong>1–2 ngày</strong> để chúng tôi kiểm tra. 
+                  Khi hoàn tất, hệ thống sẽ gửi thông báo cho bạn.
+                </div>
+              </div>
             </div>
-            <div class="col-md-6 mb-2">
-              <label for="nationality" class="form-label small">Quốc tịch <span class="text-danger">*</span></label>
-              <input type="text" class="form-control form-control-sm" id="nationality" name="nationality" required>
+
+            <div class="card border-0 shadow-sm rounded-4">
+              <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="rounded-circle bg-light p-3">
+                    <i class="fas fa-user-tie fs-3 text-primary"></i>
+                  </div>
+                  <div>
+                    <div class="fw-semibold">Trạng thái hồ sơ</div>
+                    <div class="badge bg-warning text-dark">Đang xét duyệt</div>
+                  </div>
+                </div>
+
+                <ul class="list-unstyled mb-0 small">
+                  <li class="d-flex align-items-start gap-2 mb-2">
+                    <i class="fas fa-check-circle mt-1"></i>
+                    Thông tin đã được gửi thành công.
+                  </li>
+                  <li class="d-flex align-items-start gap-2 mb-2">
+                    <i class="fas fa-user-shield mt-1"></i>
+                    Bộ phận kiểm duyệt sẽ xác minh tính hợp lệ (xác minh: đối chiếu thông tin cơ bản).
+                  </li>
+                  <li class="d-flex align-items-start gap-2">
+                    <i class="fas fa-bell mt-1"></i>
+                    Bạn sẽ nhận thông báo khi có kết quả (email/notification).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="text-center mt-3 small text-muted">
+              Cần hỗ trợ? <a href="<?= BASE_URL ?>/support" class="text-decoration-none">Liên hệ hỗ trợ</a>.
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-2">
-              <label for="education" class="form-label small">Học vấn</label>
-              <input type="text" class="form-control form-control-sm" id="education" name="education" placeholder="VD: Cử nhân Kinh tế">
-            </div>
-            <div class="col-md-6 mb-2">
-              <label for="position" class="form-label small">Chức vụ</label>
-              <input type="text" class="form-control form-control-sm" id="position" name="position" placeholder="VD: CEO, Founder">
-            </div>
+        <?php else: ?>
+          <!-- STATE: REGISTER (giữ nguyên form của master, có nâng giao diện nhẹ) -->
+          <!-- Cảnh báo -->
+          <div class="alert alert-warning py-2 mb-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Lưu ý:</strong>
+            <small class="d-block mt-1">
+              Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1–3 ngày • Một số tính năng bị hạn chế
+            </small>
           </div>
 
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
-            <label class="form-check-label small" for="agreeTerms">
-              Tôi đồng ý với <a href="#" class="text-primary">Điều khoản sử dụng</a> và <a href="#" class="text-primary">Chính sách bảo mật</a>
-            </label>
-          </div>
-        </form>
+          <!-- Form đăng ký doanh nhân -->
+          <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business" class="needs-validation" novalidate>
+            <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>
+                <input type="number" min="1900" max="2099" class="form-control form-control-sm" id="birthYear" name="birth_year" required>
+                <div class="invalid-feedback small">Vui lòng nhập năm sinh hợp lệ.</div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="nationality" class="form-label small">Quốc tịch <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="nationality" name="nationality" required>
+                <div class="invalid-feedback small">Vui lòng nhập quốc tịch.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="education" class="form-label small">Học vấn</label>
+                <input type="text" class="form-control form-control-sm" id="education" name="education" placeholder="VD: Cử nhân Kinh tế">
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="position" class="form-label small">Chức vụ</label>
+                <input type="text" class="form-control form-control-sm" id="position" name="position" placeholder="VD: CEO, Founder">
+              </div>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
+              <label class="form-check-label small" for="agreeTerms">
+                Tôi đồng ý với <a href="#" class="text-primary">Điều khoản sử dụng</a> và <a href="#" class="text-primary">Chính sách bảo mật</a>
+              </label>
+              <div class="invalid-feedback small">Vui lòng đồng ý điều khoản.</div>
+            </div>
+          </form>
+        <?php endif; ?>
       </div>
 
+      <!-- Footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fas fa-times me-1"></i>Hủy
-        </button>
-        <button type="submit" class="btn btn-warning" onclick="submitConversion()">
-          <i class="fas fa-building me-1"></i>Chuyển đổi
-        </button>
+        <?php if ($checkPendingBusiness): ?>
+          <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Đóng
+          </button>
+          
+        <?php else: ?>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Hủy
+          </button>
+          <button type="submit" class="btn btn-warning" onclick="submitConversion()">
+            <i class="fas fa-building me-1"></i>Chuyển đổi
+          </button>
+        <?php endif; ?>
       </div>
 
     </div>

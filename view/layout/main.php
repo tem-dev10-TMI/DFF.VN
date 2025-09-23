@@ -500,7 +500,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 const userId = this.getAttribute("data-user");
                 const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                fetch("api/follow", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"

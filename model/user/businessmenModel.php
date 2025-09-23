@@ -230,6 +230,22 @@ class businessmenModel
         return $info;
     }
 
+    // =============== Kiểm tra trạng thái doanh nhân đang chờ duyệt ===============
+    public static function isPendingBusiness($id)
+    {
+        $db = new connect();
+        $sql = "SELECT status FROM businessmen WHERE user_id = :user_id";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':user_id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($result && $result['status'] === 'pending') {
+            return true;
+        }
+
+        return false;
+    }
+
     // Thống kê 
     public static function getBusinessStats($user_id)
     {
