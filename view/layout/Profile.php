@@ -533,94 +533,91 @@ if ($profile_category == 'user' && $user_id) {
 
 <!-- Modal chỉnh sử thông tin người dùng  -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" style="max-width: 650px;">
+  <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-warning text-dark">
         <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Chỉnh sửa hồ sơ</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
+      
         <div class="modal-body">
+        <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Tên người dùng</label>
-              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
-            </div>
 
-            <div class="col-md-6">
-              <label class="form-label">Số điện thoại</label>
-              <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">UserName</label>
-              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['username'] ?? '') ?>">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Email</label>
-              <input type="text" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Ảnh đại diện</label>
-              <input type="file" class="form-control" name="avatar_file">
-              <?php if (!empty($user['avatar_url'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['avatar_url']) ?>" target="_blank">Xem</a></small>
-              <?php endif; ?>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Ảnh bìa</label>
-              <input type="file" class="form-control" name="cover_file">
-              <?php if (!empty($user['cover_photo'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['cover_photo']) ?>" target="_blank">Xem</a></small>
-              <?php endif; ?>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Mô tả bản thân</label>
-            <textarea class="form-control" name="description" rows="3"><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
-          </div>
-
-          <hr>
-
-          <div class="row mb-3">
+          <h6 class="text-muted mb-3">Thông tin tài khoản</h6>
+          <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label">Tên hiển thị</label>
-              <input type="text" class="form-control" name="display_name" value="<?= htmlspecialchars($profileUser['display_name'] ?? '') ?>">
+              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Username (Không thể đổi)</label>
+              <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly disabled>
+              <small class="form-text text-muted">Dùng để đăng nhập.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>" placeholder="example@email.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="tel" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>" placeholder="Số di động của bạn">
+            </div>
+          </div>
+
+          <h6 class="text-muted mb-3">Thông tin cá nhân</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label">Mô tả bản thân</label>
+              <textarea class="form-control" name="description" rows="3" placeholder="Vài dòng giới thiệu về bạn..."><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
             </div>
             <div class="col-md-6">
               <label class="form-label">Năm sinh</label>
-              <input type="number" class="form-control" name="birth_year" value="<?= htmlspecialchars($profileUser['birth_year'] ?? '') ?>">
+              <input type="number" class="form-control" name="birth_year" value="<?= htmlspecialchars($user['birth_year'] ?? '') ?>" placeholder="Ví dụ: 1995">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($user['live_at'] ?? '') ?>" placeholder="Thành phố bạn đang sống">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi làm việc</label>
+              <input type="text" class="form-control" name="workplace" value="<?= htmlspecialchars($user['workplace'] ?? '') ?>" placeholder="Tên công ty">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi học tập</label>
+              <input type="text" class="form-control" name="studied_at" value="<?= htmlspecialchars($user['studied_at'] ?? '') ?>" placeholder="Tên trường học">
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Nơi làm việc</label>
-            <input type="text" class="form-control" name="workplace" value="<?= htmlspecialchars($profileUser['workplace'] ?? '') ?>">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Nơi học tập</label>
-            <input type="text" class="form-control" name="studied_at" value="<?= htmlspecialchars($profileUser['studied_at'] ?? '') ?>">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Địa chỉ</label>
-            <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($profileUser['live_at'] ?? '') ?>">
+          <h6 class="text-muted mb-3">Thay đổi hình ảnh</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Ảnh đại diện mới</label>
+              <input type="file" class="form-control" name="avatar_file" accept="image/*">
+              <?php if (!empty($user['avatar_url'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['avatar_url']) ?>" alt="Avatar" class="img-thumbnail" width="80">
+                </div>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ảnh bìa mới</label>
+              <input type="file" class="form-control" name="cover_file" accept="image/*">
+              <?php if (!empty($user['cover_photo'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['cover_photo']) ?>" alt="Cover photo" class="img-thumbnail" width="120">
+                </div>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-warning">Cập nhật</button>
+          <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
         </div>
       </form>
     </div>
