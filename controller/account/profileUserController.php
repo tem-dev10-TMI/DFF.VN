@@ -485,7 +485,7 @@ class profileUserController
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
         // 1. Xác thực và Phân quyền
         if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
-            header("Location: " . BASE_URL . "/login");
+            header("Location: " . BASE_URL . "");
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {

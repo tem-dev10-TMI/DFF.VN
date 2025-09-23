@@ -4,39 +4,73 @@ $db = new connect();
 
 // Lấy keyword nếu có
 $q = isset($_GET['q']) ? trim($_GET['q']) : '';
+$pattern = '%' . $q . '%';
 
-// Lấy topics
-$sqlTopics = "SELECT * FROM topics ORDER BY display_order ASC, created_at DESC";
-$topics = $db->pdo->query($sqlTopics)->fetchAll(PDO::FETCH_ASSOC);
-
-// Lấy bài viết theo topic, có tìm kiếm nếu $q != ''
 $articlesByTopic = [];
 foreach ($topics as $tp) {
   $tid = (int)$tp['id'];
-  if ($q !== '') {
-    $stmt = $db->pdo->prepare("
-            SELECT a.id, a.title ,a.slug, a.created_at, u.name as author_name 
-            FROM articles a
-            JOIN users u ON a.author_id = u.id
-            WHERE a.topic_id = ? 
-              AND (a.title LIKE ? OR a.content LIKE ?)
-            ORDER BY a.created_at DESC
+
+  if (!empty($currentUserId)) {
+    // Logged-in: public + own (except rejected)
+    $searchCond = ($q !== '')
+      ? " AND (a.title LIKE :q OR a.content LIKE :q) "
+      : "";
+
+    // Use an outer SELECT to order the UNION result
+    $sql = "
+            SELECT * FROM (
+                (SELECT a.id, a.title, a.slug, a.created_at, u.name AS author_name
+                 FROM articles a
+                 JOIN users u ON a.author_id = u.id
+                 WHERE a.topic_id = :tid1
+                   AND a.status = 'public' {$searchCond})
+                UNION
+                (SELECT a.id, a.title, a.slug, a.created_at, u.name AS author_name
+                 FROM articles a
+                 JOIN users u ON a.author_id = u.id
+                 WHERE a.topic_id = :tid2
+                   AND a.author_id = :uid
+                   AND a.status <> 'rejected' {$searchCond})
+            ) AS x
+            ORDER BY x.created_at DESC, x.id DESC
             LIMIT 5
-        ");
-    $stmt->execute([$tid, "%$q%", "%$q%"]);
+        ";
+
+    $stmt = $db->pdo->prepare($sql);
+    $stmt->bindValue(':tid1', $tid, PDO::PARAM_INT);
+    $stmt->bindValue(':tid2', $tid, PDO::PARAM_INT);
+    $stmt->bindValue(':uid', (int)$currentUserId, PDO::PARAM_INT);
+    if ($q !== '') {
+      $stmt->bindValue(':q', $pattern, PDO::PARAM_STR);
+    }
   } else {
-    $stmt = $db->pdo->prepare("
-            SELECT a.id, a.title, a.slug,  a.created_at, u.name as author_name 
+    // Guest: public only
+    $searchCond = ($q !== '')
+      ? " AND (a.title LIKE :q OR a.content LIKE :q) "
+      : "";
+
+    $sql = "
+            SELECT a.id, a.title, a.slug, a.created_at, u.name AS author_name
             FROM articles a
             JOIN users u ON a.author_id = u.id
-            WHERE a.topic_id = ?
-            ORDER BY a.created_at DESC
+            WHERE a.topic_id = :tid
+              AND a.status = 'public' {$searchCond}
+            ORDER BY a.created_at DESC, a.id DESC
             LIMIT 5
-        ");
-    $stmt->execute([$tid]);
+        ";
+
+    $stmt = $db->pdo->prepare($sql);
+    $stmt->bindValue(':tid', $tid, PDO::PARAM_INT);
+    if ($q !== '') {
+      $stmt->bindValue(':q', $pattern, PDO::PARAM_STR);
+    }
   }
+
+  $stmt->execute();
   $articlesByTopic[$tid] = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+
 ?>
 <main class="main-content">
 
