@@ -1,4 +1,26 @@
 <main class="main-content">
+<?php
+$isFollowing = false; // mặc định chưa theo dõi
+$followersCount = 0;
+
+if (isset($user) && !empty($user['id'])) {
+    require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+    $db = new connect();
+    $pdo = $db->db;
+    $followModel = new UserFollowModel($pdo);
+
+    // Lấy số người theo dõi.
+    // Giả định có phương thức `countFollowers`.
+    if(method_exists($followModel, 'countFollowers')){
+        $followersCount = $followModel->countFollowers($user['id']);
+    }
+
+    // Kiểm tra trạng thái theo dõi nếu người dùng đã đăng nhập.
+    if (isset($_SESSION['user']['id'])) {
+        $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $user['id']);
+    }
+}
+?>
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
@@ -21,9 +43,13 @@
                             <a href="#"><?= htmlspecialchars($user['name'] ?? 'Không rõ') ?></a>
                         </li>
                         <li class="f-folw">
-                            <a data-type="5" href="javascript:void(0)" data-ref="user-profile">
-                                <val>Theo dõi</val>
-                                <span class="number">0</span>
+                            <a class="btn-follow" href="javascript:void(0)"
+                                data-user="<?= $user['id'] ?>"
+                                style="display:inline-block;padding:8px 16px;border-radius:6px;
+              background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
+              color:#fff;font-weight:600;text-decoration:none;">
+                                <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                (<span class="number"><?= intval($followersCount) ?></span>)
                             </a>
                         </li>
                     </ul>
@@ -38,7 +64,7 @@
                                 <img class="logo" src="<?= $article['avatar_url'] ?>" alt="">
                                 <div class="p-covers">
                                     <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <a href="view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
@@ -105,7 +131,7 @@
 
         <div class="adv">
             <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="../media.dff.vn/static/img/coins.jpg"></a>
+                    src="public/logo/coin.jpg"></a>
         </div>
 
         <div class="block-k bg-box-a">
@@ -156,4 +182,49 @@
                 });
             });
         </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const btn = document.querySelector(".btn-follow");
+        if (!btn) return;
+
+        btn.addEventListener("click", function() {
+            const userId = this.getAttribute("data-user");
+
+            fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded"
+                    },
+                    body: "user_id=" + encodeURIComponent(userId),
+                    credentials: "include"
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        this.querySelector(".follow-text").innerText =
+                            data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+                        this.querySelector(".number").innerText = data.followers;
+
+                        // đổi màu nút
+                        if (data.action === "follow") {
+                            this.style.background = "#6c757d"; // xám
+                        } else {
+                            this.style.background = "#28a745"; // xanh
+                        }
+                    } else {
+                         if (data.reason === 'NOT_LOGGED_IN') {
+                            alert("Vui lòng đăng nhập để thực hiện chức năng này.");
+                            window.location.href = '<?= BASE_URL ?>/login';
+                        } else {
+                            alert(data.message || "Có lỗi xảy ra!");
+                        }
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Không thể kết nối đến server!");
+                });
+        });
+    });
+</script>
 </main>

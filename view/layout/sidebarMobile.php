@@ -57,7 +57,7 @@
             <ul class=" top-item">
                 <?php foreach ($moreTopics as $topic): ?>
                 <li>
-                    <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>">
+                    <img src="<?=BASE_URL ?>/<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>">
                     <a title="<?= htmlspecialchars($topic['name']) ?>" href="details_topic?id=<?= htmlspecialchars($topic['id']) ?>">
                         <?= htmlspecialchars($topic['name']) ?>
                     </a>

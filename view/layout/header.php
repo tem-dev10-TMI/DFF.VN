@@ -143,7 +143,7 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
+                                    <img src="public/img/avatar/user-default.svg">
                                 </a>
                             </span>
                         <?php endif; ?>

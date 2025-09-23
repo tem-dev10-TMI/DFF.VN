@@ -27,11 +27,12 @@
         <div class="line"></div>
 
         <label class="bg-tranparent">CHỦ ĐỀ</label>
+        
         <?php if (!empty($topTopics)): ?>
             <ul class="nav nav-second-level top-item">
                 <?php foreach ($topTopics as $topic): ?>
                     <li>
-                        <img src="<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
+                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>"
                             alt="<?= htmlspecialchars($topic['name']) ?>" border="0" />
                         <a title="<?= htmlspecialchars($topic['name']) ?>"
                             href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
@@ -50,7 +51,7 @@
                 <ul class="nav nav-second-level top-item">
                     <?php foreach ($moreTopics as $topic): ?>
                         <li>
-                            <img src="<?= htmlspecialchars($topic['icon_url']) ?>"
+                            <img src="<?=BASE_URL ?>/<?= htmlspecialchars($topic['icon_url']) ?>"
                                 title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 border="0" />
                             <a title="<?= htmlspecialchars($topic['name']) ?>"

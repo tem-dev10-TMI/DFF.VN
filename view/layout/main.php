@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
-<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:46 GMT -->
-<!-- Added by HTTrack -->
+
 <meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 
 <head>
@@ -97,13 +96,7 @@
 </script> -->
 
 
-    <!-- <script type="application/ld+json">{ tự tra cái này nếu cần
- "@context": "http://schema.org",
-"@type": "WebSite",
-"name": "dff.vn",
-"alternateName": "DFF.VN - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường",
-"url": "https://dff.vn"
-}</script><link href="index.html" rel="canonical" /></head> -->
+
 
 
 
@@ -119,7 +112,7 @@
     require_once __DIR__ . '/../../helpers/cache_helper.php';
 
     // Cache topics for 3 hours
-    $allTopics = get_cache('all_topics', 10800);
+    $allTopics = get_cache('all_topics', 5);
     if ($allTopics === false) {
         require_once __DIR__ . '/../../model/TopicModel.php';
         $topicModel = new TopicModel();
