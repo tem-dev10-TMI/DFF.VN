@@ -67,14 +67,12 @@
                                 ?>
                                 <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                                 <div class="p-covers">
-                                    <span class="name" title="">
-                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['id'] ?>"
-                                            title="<?= htmlspecialchars($article['author_name']) ?>">
+                                    <span class="name">
+                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
-
-
-                                    </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                                    </span>
+                                    <span class="date"><?= timeAgo($article['created_at']) ?></span>
                                 </div>
                             </div>
 
