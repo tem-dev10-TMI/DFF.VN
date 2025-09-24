@@ -7,7 +7,7 @@
             .m-menu-i.collapsing,
             .m-menu-i.collapse.show {
                 position: fixed;
-                top: 10%;
+                top: 5%;
                 
                 left: 0;
                 width: 100vw;
@@ -27,6 +27,15 @@
 
             .m-menu-i .top-item li {
                 margin-bottom: 8px;
+            }
+        }
+
+        /* Điều chỉnh cho điện thoại có chiều cao thấp */
+        @media (max-width: 991.98px) and (max-height: 720px) {
+            .m-menu-i.collapsing,
+            .m-menu-i.collapse.show {
+                top: 10%;
+                height: 90vh;
             }
         }
     </style>

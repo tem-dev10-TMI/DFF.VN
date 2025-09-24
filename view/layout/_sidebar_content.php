@@ -5,6 +5,15 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
 
     ob_start(); // Start output buffering to capture HTML
 ?>
+<style>
+    /* Căn chỉnh lại text cho phần thông tin ở cuối sidebar trên mobile */
+    @media (max-width: 991.98px) {
+        .h-info li {
+            text-align: left !important; /* Dùng !important để ghi đè các style khác nếu cần */
+            word-wrap: break-word;
+        }
+    }
+</style>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -41,9 +50,9 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
         <ul class="<?= $is_mobile ? 'top-item' : 'nav nav-second-level top-item' ?>">
             <?php foreach ($topTopics as $topic): ?>
                 <li>
-                    <img src="<?= $is_mobile ? htmlspecialchars($topic['icon_url']) : BASE_URL . '/' . htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>" <?= $is_mobile ? '' : 'border="0"' ?> />
-                    <a title="<?= htmlspecialchars($topic['name']) ?>" href="<?= BASE_URL . '/details_topic/' . $topic['slug'] ?>">
-                        <?= htmlspecialchars($topic['name']) ?>
+                    <img src="<?= $is_mobile ? htmlspecialchars($topic['icon_url'] ?? '') : BASE_URL . '/' . htmlspecialchars($topic['icon_url'] ?? '') ?>" title="<?= htmlspecialchars($topic['name'] ?? '') ?>" alt="<?= htmlspecialchars($topic['name'] ?? '') ?>" <?= $is_mobile ? '' : 'border="0"' ?> />
+                    <a title="<?= htmlspecialchars($topic['name'] ?? '') ?>" href="<?= BASE_URL . '/details_topic/' . ($topic['slug'] ?? '') ?>">
+                        <?= htmlspecialchars($topic['name'] ?? '') ?>
                     </a>
                     <?php if (!$is_mobile): ?><i class="fas fa-plus icon-right"></i><?php endif; ?>
                 </li>
@@ -59,9 +68,9 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
             <ul class="<?= $is_mobile ? 'top-item' : 'nav nav-second-level top-item' ?>">
                 <?php foreach ($moreTopics as $topic): ?>
                     <li>
-                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($topic['icon_url']) ?>" title="<?= htmlspecialchars($topic['name']) ?>" alt="<?= htmlspecialchars($topic['name']) ?>">
-                        <a title="<?= htmlspecialchars($topic['name']) ?>" href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug']) ?>">
-                            <?= htmlspecialchars($topic['name']) ?>
+                        <img src="<?= BASE_URL ?>/<?= htmlspecialchars($topic['icon_url'] ?? '') ?>" title="<?= htmlspecialchars($topic['name'] ?? '') ?>" alt="<?= htmlspecialchars($topic['name'] ?? '') ?>">
+                        <a title="<?= htmlspecialchars($topic['name'] ?? '') ?>" href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug'] ?? '') ?>">
+                            <?= htmlspecialchars($topic['name'] ?? '') ?>
                         </a>
                     </li>
                 <?php endforeach; ?>

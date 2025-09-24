@@ -712,31 +712,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        <div class="block-k bg-box-a">
-            <div class="view-right-a h-lsk">
-                <div class="title">
-                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
-                </div>
-
-                <ol class="content-ol">
-                    <?php if (!empty($events)): ?>
-                        <?php foreach ($events as $index => $event): ?>
-                            <li class="card-list-item" key="<?php echo $index; ?>">
-                                <a title="<?= htmlspecialchars($event['title']); ?>"
-                                    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>">
-                                    <?= htmlspecialchars($event['title']); ?>
-                                </a>
-
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="card-list-item">
-                            <span>Chưa có sự kiện nào</span>
-                        </li>
-                    <?php endif; ?>
-                </ol>
-            </div>
-        </div>
+        
 
 
 
