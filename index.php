@@ -127,7 +127,8 @@ switch ($url) {
         break; */
     case (preg_match('/^details_topic\/([^\/]+)$/', $url, $matches) ? true : false):
         require_once __DIR__ . '/controller/TopicController.php';
-        $controller = new TopicController();
+        global $pdo;
+        $controller = new TopicController($pdo);
         $controller->details_topic($matches[1]);
         break;
     case 'about':

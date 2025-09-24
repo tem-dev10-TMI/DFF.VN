@@ -631,20 +631,19 @@ if ($profile_category == 'user' && $user_id) {
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      
+      <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
-        <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
 
           <h6 class="text-muted mb-3">Thông tin tài khoản</h6>
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label">Tên hiển thị</label>
-              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
+              <input type="text" class="form-control" name="display_name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
             </div>
             <div class="col-md-6">
               <label class="form-label">Username (Không thể đổi)</label>
-              <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly disabled>
+              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly>
               <small class="form-text text-muted">Dùng để đăng nhập.</small>
             </div>
             <div class="col-md-6">
@@ -720,6 +719,10 @@ if ($profile_category == 'user' && $user_id) {
 <?php if (isset($_GET['msg'])): ?>
   <script>
     switch ("<?= $_GET['msg'] ?>") {
+      case "invalid_token":
+        alert("❌ Phiên làm việc không hợp lệ hoặc đã hết hạn. Vui lòng tải lại trang và thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_user";
+        break;
       case "profile_updated":
         alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
         window.location.href = "<?= BASE_URL ?>/profile_user";

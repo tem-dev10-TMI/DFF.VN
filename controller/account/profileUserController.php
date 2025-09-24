@@ -463,6 +463,7 @@ class profileUserController
                         'phone' => $updatedUser['phone'],
                         'role' => $updatedUser['role'],
                         'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
