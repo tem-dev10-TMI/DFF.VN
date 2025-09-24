@@ -272,11 +272,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
+                                            <?php
+                                                $shareUrl = !empty($article['is_rss'])
+                                                    ? htmlspecialchars($article['link'])
+                                                    : BASE_URL . '/details_blog/' . urlencode($article['slug']);
+                                            ?>
                                             <li><a class="dropdown-item copylink"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -363,8 +368,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <div class="dropdown home-item">
                                         <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                                            <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                            <li><a class="dropdown-item copylink" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -382,6 +387,35 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         initialOffset: 5,
                         limit: 5,
                         renderItemFunction: renderHomepageArticle
+                    });
+
+                    // JS for Share & Copy Link
+                    document.addEventListener('click', function(event) {
+                        const target = event.target;
+
+                        // --- Copy Link ---
+                        if (target.classList.contains('copylink')) {
+                            event.preventDefault();
+                            const urlToCopy = target.getAttribute('data-url');
+                            if (urlToCopy) {
+                                navigator.clipboard.writeText(urlToCopy).then(() => {
+                                    alert('Đã sao chép link!');
+                                }).catch(err => {
+                                    console.error('Lỗi khi sao chép: ', err);
+                                    alert('Không thể sao chép link.');
+                                });
+                            }
+                        }
+
+                        // --- Share to Facebook ---
+                        if (target.classList.contains('sharefb')) {
+                            event.preventDefault();
+                            const urlToShare = target.getAttribute('data-url');
+                            if (urlToShare) {
+                                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                                window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+                            }
+                        }
                     });
                 });
             </script>
