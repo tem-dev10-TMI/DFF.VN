@@ -1001,7 +1001,10 @@ ul {
 ul li {
     float: left;
 }
-
+.topic-logo{
+    height: 50px;
+    
+}
 a:hover {
     text-decoration: none;
     color: #124889;
