@@ -1,13 +1,16 @@
 <?php
 
 class TopicController {
-    protected $model;
+    
+     protected $pdo; protected $model;
+    public function __construct($pdo){ $this->pdo = $pdo; $this->model = new Topic($pdo); }
+    // protected $model;
 
-    public function __construct() {
-        require_once __DIR__ . '/../../model/article/topicsmodel.php';
-        require_once __DIR__ . '/../../model/article/articlesmodel.php';
-        $this->model = new TopicsModel();
-    }
+    // public function __construct() {
+    //     require_once __DIR__ . '/../../model/article/topicsmodel.php';
+    //     require_once __DIR__ . '/../../model/article/articlesmodel.php';
+    //     $this->model = new TopicsModel();
+    // }
 
     // ===================== LIST =====================
     public function admin(){ 
@@ -119,63 +122,58 @@ class TopicController {
     /**
      * Upload icon vào public/topic_img, trả về URL tương đối (vd: /topic_img/abc.webp)
      */
-    private function uploadIcon(string $field = 'icon_file'): ?string {
-        if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
-            return null; // không có file hoặc lỗi upload
-        }
-
-        $file = $_FILES[$field];
-
-        // Validate extension
-        $allowExt = ['png','jpg','jpeg','webp','svg'];
-        $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        if (!in_array($ext, $allowExt, true)) {
-            return null;
-        }
-
-        // (khuyến nghị) kiểm tra mime cho ảnh bitmap
-        if ($ext !== 'svg') {
-            $finfo = new finfo(FILEINFO_MIME_TYPE);
-            $mime  = $finfo->file($file['tmp_name']);
-            $allowMime = ['image/png','image/jpeg','image/webp'];
-            if (!in_array($mime, $allowMime, true)) {
-                return null;
-            }
-            // Giới hạn 2MB
-            if ($file['size'] > 2 * 1024 * 1024) return null;
-        }
-
-        // Thư mục đích
-        $publicFsDir = $this->projectRoot() . DIRECTORY_SEPARATOR . 'public';
-        $subDirRel   = 'topic_img';
-        $destDir     = $publicFsDir . DIRECTORY_SEPARATOR . $subDirRel;
-
-        if (!is_dir($destDir)) {
-            @mkdir($destDir, 0755, true);
-        }
-
-        // Tên file an toàn, unique
-        $safeBase = preg_replace('~[^a-z0-9_-]+~i', '-', pathinfo($file['name'], PATHINFO_FILENAME));
-        $filename = $safeBase . '-' . date('Ymd-His') . '-' . substr(sha1(random_bytes(8)),0,8) . '.' . $ext;
-
-        $destPath = $destDir . DIRECTORY_SEPARATOR . $filename;
-
-        if (!move_uploaded_file($file['tmp_name'], $destPath)) {
-            return null;
-        }
-
-        // Trả URL tương đối để lưu DB
-        return 'public/' . $subDirRel . '/' . $filename; // ví dụ: /topic_img/abc-20250923-xxxx.webp
+   private function uploadIcon(string $field = 'icon_file'): ?string {
+    if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
+        error_log("uploadIcon: no file or err=" . ($_FILES[$field]['error'] ?? 'n/a'));
+        return null;
     }
+    $file = $_FILES[$field];
+
+    $allowExt = ['png','jpg','jpeg','webp','svg'];
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowExt, true)) {
+        error_log("uploadIcon: invalid ext $ext");
+        return null;
+    }
+
+    if ($ext !== 'svg') {
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $mime  = $finfo->file($file['tmp_name']);
+        $allowMime = ['image/png','image/jpeg','image/webp'];
+        if (!in_array($mime, $allowMime, true)) {
+            error_log("uploadIcon: invalid mime $mime");
+            return null;
+        }
+        if ($file['size'] > 2 * 1024 * 1024) {
+            error_log("uploadIcon: file too large " . $file['size']);
+            return null;
+        }
+    }
+
+    $publicFsDir = $this->projectRoot() . DIRECTORY_SEPARATOR . 'public';
+    $destDir     = $publicFsDir . DIRECTORY_SEPARATOR . 'topic_img';
+    if (!is_dir($destDir)) { @mkdir($destDir, 0755, true); }
+
+    $safeBase = preg_replace('~[^a-z0-9_-]+~i', '-', pathinfo($file['name'], PATHINFO_FILENAME));
+    $filename = $safeBase . '-' . date('Ymd-His') . '-' . substr(sha1(random_bytes(8)),0,8) . '.' . $ext;
+    $destPath = $destDir . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $destPath)) {
+        error_log("uploadIcon: move_uploaded_file failed");
+        return null;
+    }
+    return 'public/topic_img/' . $filename;
+}
+
 
     /**
      * Xoá file trong public/topic_img nếu relPath bắt đầu bằng /topic_img/
      */
-    private function deleteLocalFile(?string $relPath): void {
-        if (!$relPath) return;
-        if (str_starts_with($relPath, '/topic_img/')) {
-            $full = $this->projectRoot() . '/public' . $relPath;
-            if (is_file($full)) @unlink($full);
-        }
-    }
+  private function deleteLocalFile(?string $relPath): void {
+    if (!$relPath) return;
+    $rel = ltrim($relPath, '/'); // 'public/topic_img/...'
+    $full = $this->projectRoot() . DIRECTORY_SEPARATOR . $rel;
+    if (is_file($full)) @unlink($full);
+}
+
 }

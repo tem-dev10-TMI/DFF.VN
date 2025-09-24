@@ -1,5 +1,30 @@
 <?php include __DIR__ . '/../layout/header.php'; ?>
 <?php $isEdit = isset($article) && $article; ?>
+<?php
+// Chuẩn hoá $article
+$article = is_array($article ?? null) ? $article : [];
+
+// Mặc định các field để tránh null
+$defaults = [
+  'id'        => null,
+  'title'     => '',
+  'slug'      => '',
+  'topic_id'  => '',
+  'author_id' => '',
+  'main_image'=> '',
+  'content'   => '',
+  'status'    => 'public',
+];
+
+// Gộp defaults với dữ liệu hiện có
+$article = array_merge($defaults, $article);
+
+// Xác định đang sửa hay thêm mới (có id hợp lệ thì coi là edit)
+$isEdit = !empty($article['id']);
+
+// Tạo sẵn action để không lồng biểu thức dài trong HTML
+$formAction = BASE_URL . '/admin.php?route=articles&action=' . ($isEdit ? ('update&id=' . (int)$article['id']) : 'store');
+?>
 
 <div class="row justify-content-center">
   <div class="col-lg-8">
