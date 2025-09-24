@@ -1,3 +1,5 @@
+<?php require_once __DIR__ . '/../../helpers/cache_helper.php';
+require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
@@ -38,7 +40,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=2.4" />
+    <link rel="stylesheet" href="<?= asset_url('public/css/style.css') ?>" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
@@ -109,7 +111,7 @@
 
     <?php
 
-    require_once __DIR__ . '/../../helpers/cache_helper.php';
+
 
     // Cache topics for 3 hours
     $allTopics = get_cache('all_topics', 5);
@@ -138,10 +140,67 @@
     }
 
     ?>
+    <style>
+        /* Định nghĩa animation cho hiệu ứng gradient */
+        .user-gradient-name {
+            /* --- Chỉ giữ lại những gì cốt lõi nhất --- */
+            font-weight: bold;
+            font-size: 0.95em;
+            /* Hơi thu nhỏ lại một chút để an toàn hơn */
 
+            /* Hiệu ứng gradient */
+            background-image: linear-gradient(to right,
+                    #372f6a,
+                    /* Tím vũ trụ */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #f09819,
+                    /* Cam mặt trời */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #372f6a
+                    /* Tím vũ trụ (lặp lại để animation mượt) */
+                );
+            /*background-image: linear-gradient(to right, #FFD700, #FF8C00, #FF4500, #FFD700);*/
+            background-size: 200% auto;
+            animation: gradientAnimation 5s ease infinite;
+
+            /* Phép thuật cho chữ */
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            background-size: 400% 400%; 
+            animation: smoothGradientAnimation 15s linear infinite; 
+        }
+
+        /* Đừng quên keyframes animation */
+        @keyframes smoothGradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            25% {
+                background-position: 50% 0%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            75% {
+                background-position: 50% 100%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+    </style>
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
-        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event"> Lịch sự kiện </a></span>
+        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name"> <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
     </div>
     <!-- header start -->
 
@@ -230,15 +289,15 @@
 
     <!-- Mobile Modal -->
     <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
-        style="z-index: 1055;">
-        <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
+        style="z-index: 9998;">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody"
-                    style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+                    style="padding: 10px 15px; overflow-y: auto; "></div>
             </div>
         </div>
     </div>
@@ -307,26 +366,7 @@
             const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
             function renderAlerts(events) {
-                if (!Array.isArray(events) || events.length === 0) {
-                    return '<div class="text-muted">Chưa có thông báo nào.</div>';
-                }
-                const items = events.map(ev => {
-                    const title = (ev.title || '').toString();
-                    const id = ev.id;
-                    const when = ev.event_date ? new Date(ev.event_date.replace(' ', 'T')) : null;
-                    const dateStr = when ? when.toLocaleString('vi-VN', {
-                        hour12: false
-                    }) : '';
-                    const href = `${window.BASE_URL || ''}?url=event&id=${id}`;
-                    return `<li>
-                        <span class="ic"><i class="fas fa-bell"></i></span>
-                        <div class="txt">
-                            <a href="${href}">${title}</a>
-                            <div class="meta">${dateStr}</div>
-                        </div>
-                    </li>`;
-                }).join('');
-                return `<h5 class="m-section-title">Thông báo</h5><ul class="m-alerts">${items}</ul>`;
+
             }
 
             let mobileModalInstance = null;
@@ -338,7 +378,16 @@
 
                 if (type === 'alerts') {
                     title.textContent = 'Thông báo';
-                    body.innerHTML = renderAlerts(headerEvents);
+
+                    // Tìm đến nội dung thông báo của phiên bản desktop
+                    const desktopAlertsContent = document.querySelector('#id_alert .tab-content');
+
+                    // Sao chép HTML từ desktop vào modal body
+                    if (desktopAlertsContent) {
+                        body.innerHTML = desktopAlertsContent.innerHTML;
+                    } else {
+                        body.innerHTML = '<div>Không tìm thấy nội dung thông báo.</div>';
+                    }
                 } else if (type === 'create') {
                     title.textContent = 'Tạo mới';
                     body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
@@ -451,7 +500,7 @@
                 const userId = this.getAttribute("data-user");
                 const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                fetch("api/follow", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"

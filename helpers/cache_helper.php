@@ -43,3 +43,23 @@ if (!function_exists('set_cache')) {
         file_put_contents($cache_file, $data_to_save, LOCK_EX);
     }
 }
+
+if (!function_exists('asset_url')) {
+    /**
+     * Tạo URL cho file tĩnh với phiên bản tự động (dựa vào thời gian sửa file) để phá cache.
+     * @param string $path Đường dẫn tương đối đến file từ thư mục gốc của dự án.
+     * @return string URL đầy đủ đến file với tham số version.
+     */
+    function asset_url($path) {
+        $projectRoot = $_SERVER['DOCUMENT_ROOT'] . '/DFF.VN';
+        $filePath = $projectRoot . '/' . ltrim($path, '/');
+
+        $version = '1.0'; // Fallback version
+        if (file_exists($filePath)) {
+            $version = filemtime($filePath);
+        }
+
+        // Giả định BASE_URL đã được định nghĩa và có dạng http://localhost/DFF.VN
+        return BASE_URL . '/' . ltrim($path, '/') . '?v=' . $version;
+    }
+}

@@ -13,6 +13,7 @@ class profileUserController
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
         require_once __DIR__ . '/../../model/article/topicsmodel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
         $modelTopic = new TopicsModel();
 
@@ -23,7 +24,7 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
-
+        $checkPendingBusiness = businessmenModel::isPendingBusiness($_SESSION['user']['id']);
         $topics = $modelTopic->getAllTopics();
 
         /*         $articles = $modelArticle->getArticleById($userId);

@@ -1009,7 +1009,7 @@ a:hover {
 
 .modal {
     top: 125px !important;
-    z-index: 9992;
+    z-index: 9998;
 }
 
 .col-sm-1,
@@ -1052,7 +1052,7 @@ a:hover {
 .header-top {
     padding: 5px 0 5px 0;
     background: #ffffff;
-    z-index: 9999;
+    z-index: 9998;
     height: 50px;
     position: fixed;
     top: 0px;
@@ -4301,7 +4301,7 @@ div[data-notify="container"] .close {
     width: 100%;
     height: 58px;
     align-items: center;
-    z-index: 9999;
+    z-index: 9995;
     bottom: env(safe-area-inset-bottom, 0);
 }
 
@@ -4522,7 +4522,7 @@ div[data-notify="container"] .close {
     border-top: 1px solid #40b029;
     display: inline-table;
     position: fixed;
-    z-index: 9998;
+    z-index: 9995;
     top: 66px;
 }
 
@@ -7369,6 +7369,12 @@ ul.timeline .left-arrow:after {
     .left-sidebar {
         position: relative;
     }
+    .cover-img {
+        width: 100%;           /* Chiếm toàn bộ chiều rộng của div cha */
+        height: 100%;          /* Chiếm toàn bộ chiều cao của div cha */
+        object-fit: cover;     /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
+        border-radius: 8px;    /* Bo góc giống với div cha */
+    }
 }
 
 @media (max-width: 768px) {
@@ -7417,7 +7423,12 @@ ul.timeline .left-arrow:after {
 .notice-list { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
 
 /* Item gọn, không tràn */
-.notice-item { display: flex; align-items: center; gap: 12px; padding: .75rem 1rem; min-height: 56px; overflow: hidden; }
+.notice-item {
+    display: flex;
+    align-items: start; /* Sửa thành 'start' để căn lề trên, giải quyết lỗi lệch hàng */
+    gap: 12px;
+    padding: 1rem;     /* Tăng padding lên 1rem ở cả 4 cạnh, giải quyết lỗi "chạm đáy" */
+  }
 
 /* Icon cố định kích thước */
 .notice-icon { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; }

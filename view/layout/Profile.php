@@ -30,6 +30,17 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
 
+  .cover-img {
+    width: 100%;
+    /* Chiếm toàn bộ chiều rộng của div cha */
+    height: 100%;
+    /* Chiếm toàn bộ chiều cao của div cha */
+    object-fit: cover;
+    /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
+    border-radius: 8px;
+    /* Bo góc giống với div cha */
+  }
+
   .sidebar {
     background: white;
     border-radius: 8px;
@@ -319,16 +330,29 @@ if ($profile_category == 'user' && $user_id) {
 <div class="container mt-3">
   <!-- Cover -->
   <div class="cover">
-
     <?php
-    $avatarUrl = $user['avatar_url'] ?? null;
+    // Lấy avatar từ session nếu vừa upload, nếu không thì lấy từ database
+    $avatarUrl = $_SESSION['user']['avatar_url'] ?? $user['avatar_url'] ?? '';
     if (!$avatarUrl || trim($avatarUrl) === '') {
       $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
     }
+
+    // Lấy cover từ session hoặc database
+    $coverUrl = $_SESSION['user']['cover_photo'] ?? $user['cover_photo'] ?? '';
+    if (!$coverUrl || trim($coverUrl) === '') {
+      $coverUrl = 'https://via.placeholder.com/800x250?text=Default+Cover';
+    }
     ?>
-    <img src="<?= htmlspecialchars($avatarUrl) ?>" class="avatar" alt="avatar">
-    <!-- <img src="https://via.placeholder.com/120" class="avatar" alt="avatar"> -->
+
+    <!-- Cover -->
+    <img src="<?= htmlspecialchars($coverUrl) ?>?t=<?= time() ?>" class="cover-img" alt="cover">
+
+    <!-- Avatar -->
+    <div class="avatar-box">
+      <img src="<?= htmlspecialchars($avatarUrl) ?>" class="avatar" alt="avatar">
+    </div>
   </div>
+
   <div class="mt-5"></div>
 
   <div class="row mt-5">
@@ -463,67 +487,134 @@ if ($profile_category == 'user' && $user_id) {
 <!-- Modal xác nhận chuyển đổi -->
 <div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-    <div class="modal-content">
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
 
-      <div class="modal-header bg-warning text-dark">
-        <h5 class="modal-title" id="convertModalLabel">
-          <i class="fas fa-building me-2"></i>Đăng ký tài khoản doanh nhân
+      <!-- Header -->
+      <div class="modal-header <?php echo $checkPendingBusiness ? 'bg-info text-white' : 'bg-warning text-dark'; ?>">
+        <h5 class="modal-title d-flex align-items-center gap-2" id="convertModalLabel">
+          <?php if ($checkPendingBusiness): ?>
+            <i class="fas fa-hourglass-half"></i>
+            Hồ sơ doanh nhân — Đang xét duyệt
+          <?php else: ?>
+            <i class="fas fa-building"></i>
+            Đăng ký tài khoản doanh nhân
+          <?php endif; ?>
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close <?php echo $checkPendingBusiness ? 'btn-close-white' : ''; ?>" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <!-- Thông tin hiện tại -->
-        <!-- Cảnh báo -->
-        <div class="alert alert-warning py-2">
-          <i class="fas fa-exclamation-triangle me-2"></i>
-          <strong>Lưu ý:</strong>
-          <small class="d-block mt-1">
-            Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1-3 ngày • Một số tính năng bị hạn chế
-          </small>
-        </div>
-
-        <!-- Form đăng ký doanh nhân -->
-        <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business">
-          <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-          <div class="row">
-            <div class="col-md-6 mb-2">
-              <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>
-              <input type="number" min="1900" max="2099" class="form-control form-control-sm" id="birthYear" name="birth_year" required>
+        <?php if ($checkPendingBusiness): ?>
+          <!-- STATE: PENDING -->
+          <div class="p-3">
+            <div class="alert alert-info d-flex align-items-start gap-3 mb-3">
+              <i class="fas fa-info-circle fs-4 mt-1"></i>
+              <div>
+                <strong>Hồ sơ của bạn đang được xét duyệt.</strong>
+                <div class="small mt-1">
+                  Vui lòng đợi khoảng <strong>1–2 ngày</strong> để chúng tôi kiểm tra. 
+                  Khi hoàn tất, hệ thống sẽ gửi thông báo cho bạn.
+                </div>
+              </div>
             </div>
-            <div class="col-md-6 mb-2">
-              <label for="nationality" class="form-label small">Quốc tịch <span class="text-danger">*</span></label>
-              <input type="text" class="form-control form-control-sm" id="nationality" name="nationality" required>
+
+            <div class="card border-0 shadow-sm rounded-4">
+              <div class="card-body">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="rounded-circle bg-light p-3">
+                    <i class="fas fa-user-tie fs-3 text-primary"></i>
+                  </div>
+                  <div>
+                    <div class="fw-semibold">Trạng thái hồ sơ</div>
+                    <div class="badge bg-warning text-dark">Đang xét duyệt</div>
+                  </div>
+                </div>
+
+                <ul class="list-unstyled mb-0 small">
+                  <li class="d-flex align-items-start gap-2 mb-2">
+                    <i class="fas fa-check-circle mt-1"></i>
+                    Thông tin đã được gửi thành công.
+                  </li>
+                  <li class="d-flex align-items-start gap-2 mb-2">
+                    <i class="fas fa-user-shield mt-1"></i>
+                    Bộ phận kiểm duyệt sẽ xác minh tính hợp lệ (xác minh: đối chiếu thông tin cơ bản).
+                  </li>
+                  <li class="d-flex align-items-start gap-2">
+                    <i class="fas fa-bell mt-1"></i>
+                    Bạn sẽ nhận thông báo khi có kết quả (email/notification).
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="text-center mt-3 small text-muted">
+              Cần hỗ trợ? <a href="<?= BASE_URL ?>/support" class="text-decoration-none">Liên hệ hỗ trợ</a>.
             </div>
           </div>
-
-          <div class="row">
-            <div class="col-md-6 mb-2">
-              <label for="education" class="form-label small">Học vấn</label>
-              <input type="text" class="form-control form-control-sm" id="education" name="education" placeholder="VD: Cử nhân Kinh tế">
-            </div>
-            <div class="col-md-6 mb-2">
-              <label for="position" class="form-label small">Chức vụ</label>
-              <input type="text" class="form-control form-control-sm" id="position" name="position" placeholder="VD: CEO, Founder">
-            </div>
+        <?php else: ?>
+          <!-- STATE: REGISTER (giữ nguyên form của master, có nâng giao diện nhẹ) -->
+          <!-- Cảnh báo -->
+          <div class="alert alert-warning py-2 mb-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Lưu ý:</strong>
+            <small class="d-block mt-1">
+              Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1–3 ngày • Một số tính năng bị hạn chế
+            </small>
           </div>
 
-          <div class="form-check mb-2">
-            <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
-            <label class="form-check-label small" for="agreeTerms">
-              Tôi đồng ý với <a href="#" class="text-primary">Điều khoản sử dụng</a> và <a href="#" class="text-primary">Chính sách bảo mật</a>
-            </label>
-          </div>
-        </form>
+          <!-- Form đăng ký doanh nhân -->
+          <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business" class="needs-validation" novalidate>
+            <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="birthYear" class="form-label small">Năm sinh <span class="text-danger">*</span></label>
+                <input type="number" min="1900" max="2099" class="form-control form-control-sm" id="birthYear" name="birth_year" required>
+                <div class="invalid-feedback small">Vui lòng nhập năm sinh hợp lệ.</div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="nationality" class="form-label small">Quốc tịch <span class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="nationality" name="nationality" required>
+                <div class="invalid-feedback small">Vui lòng nhập quốc tịch.</div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="education" class="form-label small">Học vấn</label>
+                <input type="text" class="form-control form-control-sm" id="education" name="education" placeholder="VD: Cử nhân Kinh tế">
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="position" class="form-label small">Chức vụ</label>
+                <input type="text" class="form-control form-control-sm" id="position" name="position" placeholder="VD: CEO, Founder">
+              </div>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
+              <label class="form-check-label small" for="agreeTerms">
+                Tôi đồng ý với <a href="#" class="text-primary">Điều khoản sử dụng</a> và <a href="#" class="text-primary">Chính sách bảo mật</a>
+              </label>
+              <div class="invalid-feedback small">Vui lòng đồng ý điều khoản.</div>
+            </div>
+          </form>
+        <?php endif; ?>
       </div>
 
+      <!-- Footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fas fa-times me-1"></i>Hủy
-        </button>
-        <button type="submit" class="btn btn-warning" onclick="submitConversion()">
-          <i class="fas fa-building me-1"></i>Chuyển đổi
-        </button>
+        <?php if ($checkPendingBusiness): ?>
+          <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Đóng
+          </button>
+          
+        <?php else: ?>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-times me-1"></i>Hủy
+          </button>
+          <button type="submit" class="btn btn-warning" onclick="submitConversion()">
+            <i class="fas fa-building me-1"></i>Chuyển đổi
+          </button>
+        <?php endif; ?>
       </div>
 
     </div>
@@ -533,94 +624,91 @@ if ($profile_category == 'user' && $user_id) {
 
 <!-- Modal chỉnh sử thông tin người dùng  -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg" style="max-width: 650px;">
+  <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header bg-warning text-dark">
         <h5 class="modal-title"><i class="fas fa-user-edit me-2"></i>Chỉnh sửa hồ sơ</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
+      
         <div class="modal-body">
+        <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Tên người dùng</label>
-              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>">
-            </div>
 
-            <div class="col-md-6">
-              <label class="form-label">Số điện thoại</label>
-              <input type="text" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>">
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">UserName</label>
-              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['username'] ?? '') ?>">
-            </div>
-
-            <div class="col-md-6">
-              <label class="form-label">Email</label>
-              <input type="text" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>">
-            </div>
-          </div>
-
-          <div class="row mb-3">
-            <div class="col-md-6">
-              <label class="form-label">Ảnh đại diện</label>
-              <input type="file" class="form-control" name="avatar_file">
-              <?php if (!empty($user['avatar_url'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['avatar_url']) ?>" target="_blank">Xem</a></small>
-              <?php endif; ?>
-            </div>
-            <div class="col-md-6">
-              <label class="form-label">Ảnh bìa</label>
-              <input type="file" class="form-control" name="cover_file">
-              <?php if (!empty($user['cover_photo'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($user['cover_photo']) ?>" target="_blank">Xem</a></small>
-              <?php endif; ?>
-            </div>
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Mô tả bản thân</label>
-            <textarea class="form-control" name="description" rows="3"><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
-          </div>
-
-          <hr>
-
-          <div class="row mb-3">
+          <h6 class="text-muted mb-3">Thông tin tài khoản</h6>
+          <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label">Tên hiển thị</label>
-              <input type="text" class="form-control" name="display_name" value="<?= htmlspecialchars($profileUser['display_name'] ?? '') ?>">
+              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Username (Không thể đổi)</label>
+              <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly disabled>
+              <small class="form-text text-muted">Dùng để đăng nhập.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email" value="<?= htmlspecialchars($user['email'] ?? '') ?>" placeholder="example@email.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="tel" class="form-control" name="phone" value="<?= htmlspecialchars($user['phone'] ?? '') ?>" placeholder="Số di động của bạn">
+            </div>
+          </div>
+
+          <h6 class="text-muted mb-3">Thông tin cá nhân</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label">Mô tả bản thân</label>
+              <textarea class="form-control" name="description" rows="3" placeholder="Vài dòng giới thiệu về bạn..."><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
             </div>
             <div class="col-md-6">
               <label class="form-label">Năm sinh</label>
-              <input type="number" class="form-control" name="birth_year" value="<?= htmlspecialchars($profileUser['birth_year'] ?? '') ?>">
+              <input type="number" class="form-control" name="birth_year" value="<?= htmlspecialchars($user['birth_year'] ?? '') ?>" placeholder="Ví dụ: 1995">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($user['live_at'] ?? '') ?>" placeholder="Thành phố bạn đang sống">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi làm việc</label>
+              <input type="text" class="form-control" name="workplace" value="<?= htmlspecialchars($user['workplace'] ?? '') ?>" placeholder="Tên công ty">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi học tập</label>
+              <input type="text" class="form-control" name="studied_at" value="<?= htmlspecialchars($user['studied_at'] ?? '') ?>" placeholder="Tên trường học">
             </div>
           </div>
 
-          <div class="mb-3">
-            <label class="form-label">Nơi làm việc</label>
-            <input type="text" class="form-control" name="workplace" value="<?= htmlspecialchars($profileUser['workplace'] ?? '') ?>">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Nơi học tập</label>
-            <input type="text" class="form-control" name="studied_at" value="<?= htmlspecialchars($profileUser['studied_at'] ?? '') ?>">
-          </div>
-
-          <div class="mb-3">
-            <label class="form-label">Địa chỉ</label>
-            <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($profileUser['live_at'] ?? '') ?>">
+          <h6 class="text-muted mb-3">Thay đổi hình ảnh</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Ảnh đại diện mới</label>
+              <input type="file" class="form-control" name="avatar_file" accept="image/*">
+              <?php if (!empty($user['avatar_url'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['avatar_url']) ?>" alt="Avatar" class="img-thumbnail" width="80">
+                </div>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ảnh bìa mới</label>
+              <input type="file" class="form-control" name="cover_file" accept="image/*">
+              <?php if (!empty($user['cover_photo'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['cover_photo']) ?>" alt="Cover photo" class="img-thumbnail" width="120">
+                </div>
+              <?php endif; ?>
+            </div>
           </div>
         </div>
 
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-          <button type="submit" class="btn btn-warning">Cập nhật</button>
+          <button type="submit" class="btn btn-warning">Lưu thay đổi</button>
         </div>
       </form>
     </div>

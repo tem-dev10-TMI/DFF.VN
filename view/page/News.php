@@ -57,80 +57,83 @@
             return date('d/m/Y', strtotime($datetime));
         }
         ?>
+        <div id="news-articles-list">
+            <?php if (!empty($articles)): ?>
+                <?php foreach ($articles as $article): ?>
+                    <div class="block-k ">
+                        <div class="view-carde f-frame">
+                            <div class="provider">
+                                <?php
+                                $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                ?>
+                                <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
+                                <div class="p-covers">
+                                    <span class="name" title="">
+                                    <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" 
+    title="<?= htmlspecialchars($article['title']) ?>">
+    <?= htmlspecialchars($article['title']) ?>
+    </a>
 
-        <?php if (!empty($articles)): ?>
-            <?php foreach ($articles as $article): ?>
-                <div class="block-k ">
-                    <div class="view-carde f-frame">
-                        <div class="provider">
-                            <?php
-                            $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-                            ?>
-                            <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
-                            <div class="p-covers">
-                                <span class="name" title="">
-                                 <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" 
-   title="<?= htmlspecialchars($article['title']) ?>">
-   <?= htmlspecialchars($article['title']) ?>
-</a>
 
-
-                                </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                                    </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="title">
-                            <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
-                                <?= htmlspecialchars($article['title']) ?>
-                            </a>
-                        </div>
-                        <div class="sapo">
-                            <?= htmlspecialchars($article['summary']) ?>
-                            <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" class="d-more">Xem thêm</a>
-                        </div>
+                            <div class="title">
+                                <a title="<?= htmlspecialchars($article['title']) ?>"
+                                    href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
+                                    <?= htmlspecialchars($article['title']) ?>
+                                </a>
+                            </div>
+                            <div class="sapo">
+                                <?= htmlspecialchars($article['summary']) ?>
+                                <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" class="d-more">Xem thêm</a>
+                            </div>
 
 
-                        <?php if (!empty($article['main_image_url'])): ?>
-                            <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
-                        <?php endif; ?>
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
+                            <?php endif; ?>
 
-                        <div class="item-bottom">
-   
+                            <div class="item-bottom">
+    
 
-                            <div class="button-ar">
-                                <div class="dropdown home-item">
-                                    <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
-                                        aria-expanded="false">Chia sẻ</span>
-                                    <ul class="dropdown-menu">
-                                        <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
-                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
-                                                href="javascript:void(0)">Copy link</a></li>
-                                        <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
-                                                data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
-                                                href="javascript:void(0)">Share FB</a></li>
-                                    </ul>
+                                <div class="button-ar">
+                                    <div class="dropdown home-item">
+                                        <i class="far fa-share-square"></i><span data-bs-toggle="dropdown"
+                                            aria-expanded="false">Chia sẻ</span>
+                                        <ul class="dropdown-menu">
+                                            <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink"
+                                                    data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                    href="javascript:void(0)">Copy link</a></li>
+                                            <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb"
+                                                    data-url="/article-<?= $article['slug'] ?>-p<?= $article['id'] ?>.html"
+                                                    href="javascript:void(0)">Share FB</a></li>
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            <?php endforeach; ?>
-        <?php else: ?>
-            <div class="block-k ">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết nào trong cơ sở dữ liệu.</p>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="block-k ">
+                    <div class="view-carde f-frame">
+                        <div class="text-center p-4">
+                            <p>Chưa có bài viết nào trong cơ sở dữ liệu.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
 
-
-
-
-
+        <div id="loading" style="text-align:center; display:none; margin:20px;">
+            <em>Đang tải thêm...</em>
+        </div>
+        <div id="load-more-container" class="text-center" style="display: none; margin: 20px;">
+            <button id="load-more-btn" class="btn btn-primary">Xem thêm</button>
+        </div>
 
     </div>
 
@@ -181,6 +184,65 @@
         }
     </style>
 
-
-
 </main>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Hàm này định nghĩa cách một bài viết được vẽ ra HTML
+    function renderNewsArticle(article) {
+        const div = document.createElement('div');
+        div.className = 'block-k';
+
+        const authorAvatar = article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+        const articleLink = `<?= BASE_URL ?>/details_blog/${article.slug}`;
+        // API nên trả về trường time_ago đã được tính toán sẵn
+        const timeAgo = article.time_ago || new Date(article.created_at).toLocaleString('vi-VN');
+
+        div.innerHTML = `
+            <div class="view-carde f-frame">
+                <div class="provider">
+                    <img class="logo" alt="" src="${authorAvatar}">
+                    <div class="p-covers">
+                        <span class="name" title="${article.title}">
+                            <a href="${articleLink}" title="${article.title}">${article.title}</a>
+                        </span>
+                        <span class="date">${timeAgo}</span>
+                    </div>
+                </div>
+                <div class="title">
+                    <a title="${article.title}" href="${articleLink}">${article.title}</a>
+                </div>
+                <div class="sapo">
+                    ${article.summary}
+                    <a href="${articleLink}" class="d-more">Xem thêm</a>
+                </div>
+                ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" title="${article.title}" alt="${article.title}" border="0">` : ''}
+                <div class="item-bottom">
+                    <div class="button-ar">
+                        <div class="dropdown home-item">
+                            <i class="far fa-share-square"></i><span data-bs-toggle="dropdown" aria-expanded="false">Chia sẻ</span>
+                            <ul class="dropdown-menu">
+                                <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink" data-url="/article-${article.slug}-p${article.id}.html" href="javascript:void(0)">Copy link</a></li>
+                                <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb" data-url="/article-${article.slug}-p${article.id}.html" href="javascript:void(0)">Share FB</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        return div;
+    }
+
+    // Gọi hàm scroll vô tận với cấu hình cho trang News
+    setupInfiniteScroll({
+        listElementId: 'news-articles-list',
+        loadingElementId: 'loading',
+        loadMoreContainerId: 'load-more-container',
+        loadMoreBtnId: 'load-more-btn',
+        apiUrl: 'api/loadMoreArticles', // Giả định API endpoint là đây
+        initialOffset: <?= count($articles ?? []) ?>, // Bắt đầu tải từ vị trí sau các bài đã có
+        limit: 10, // Tải 10 bài mỗi lần
+        renderItemFunction: renderNewsArticle
+    });
+});
+</script>

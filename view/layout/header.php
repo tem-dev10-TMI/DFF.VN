@@ -150,6 +150,27 @@
                     </li>
                 </ul>
             </div>
+            <style>
+                /* Áp dụng cho màn hình mobile (ví dụ: dưới 768px) */
+                @media (max-width: 767.98px) {
+
+                    /* 1. Cho phép các khung chứa co giãn để lấp đầy không gian */
+                    #pills-tabContent,
+                    #pills-tabContent .card {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                        min-height: 0;
+                    }
+
+                    /* 2. Cho list-group lấp đầy phần còn lại và cuộn được */
+                    .notice-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+                        /* Đã xóa display:flex và flex-direction:column-reverse ở đây */
+                    }
+                }
+            </style>
             <div class="collapse box-alert" id="id_alert">
 
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
@@ -166,7 +187,7 @@
                     }
                     ?>
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                        <div class="card-header bg-white align-items-center justify-content-between d-none d-sm-flex">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="bi bi-bell-fill"></i>
                                 <h5 class="mb-0">Thông báo</h5>
@@ -190,7 +211,7 @@
                                         </span>
 
                                         <div class="notice-text">
-                                            <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
+                                            <h6 class="notice-title fw-semibold" title="<?= $title ?>"><?= $title ?></h6>
                                             <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
                                             <small class="text-muted notice-time" title="<?= $dateText ?>">
                                                 <?= $dateText ?>
@@ -214,12 +235,119 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* CSS cho Mobile Search */
+    .mobile-search-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        z-index: 10000;
+        display: none;
+        /* Ẩn mặc định */
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+    }
+
+    .mobile-search-overlay .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 35px;
+        color: #333;
+        cursor: pointer;
+        background: none;
+        border: none;
+        line-height: 1;
+    }
+
+    .mobile-search-overlay .search-container {
+        margin-top: 20vh;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .mobile-search-overlay .search-container h4 {
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
+
+    /* Ẩn box search desktop và icon mobile menu trên mobile */
+    @media (max-width: 767px) {
+        .header-logo .box-search {
+            display: none;
+        }
+
+        .header-right .mnqtop,
+        .header-right .n-chatbot,
+        .header-right .n-alert {
+            display: none;
+        }
+    }
+
+    /* Ẩn icon search mobile trên desktop */
+    @media (min-width: 768px) {
+        .m-search {
+            display: none;
+        }
+    }
+</style>
+
+<!-- Mobile Search Overlay HTML -->
+<div id="mobileSearchOverlay" class="mobile-search-overlay">
+    <button class="close-btn" onclick="closeMobileSearch()">&times;</button>
+    <div class="search-container">
+        <h4>Tìm kiếm trên MXH.ORG.VN</h4>
+        <div class="input-group input-group-lg">
+            <input id="mobileSearchInput" class="form-control" placeholder="Nhập từ khóa..." type="search">
+            <button class="btn btn-success" type="button" onclick="doMobileSearch()">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Mobile Search Logic ---
+    function openMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'flex';
+        document.getElementById('mobileSearchInput').focus();
+    }
+
+    function closeMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'none';
+    }
+
+    function doMobileSearch() {
+        const keyword = document.getElementById("mobileSearchInput").value.trim();
+        if (keyword) {
+            window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+        }
+    }
+    // Event Listeners
+    document.querySelector('.m-search a').addEventListener('click', function(e) {
+        e.preventDefault();
+        openMobileSearch();
+    });
+    document.getElementById('mobileSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            doMobileSearch();
+        }
+    });
+</script>
+
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
 <div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable" >
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
@@ -308,7 +436,7 @@
 <!-- Modal đăng kí -->
 <div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
     data-popup-id="8268" aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
@@ -456,7 +584,7 @@
 <!-- Modal Quên mật khẩu -->
 <div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span class="core-popup-title">Quên mật khẩu</span></h4>
@@ -1077,4 +1205,23 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             closeSidebar();
         }
     });
+</script>
+<script>
+    function renderNow() {
+        const els = document.querySelectorAll('.currentDate');
+        const now = new Date();
+        const fmt = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        els.forEach(el => el.textContent = fmt.format(now));
+    }
+    renderNow(); // render ngay khi tải trang
+    setInterval(renderNow, 1000); // cập nhật mỗi giây (nếu cần “đồng hồ sống”)
 </script>

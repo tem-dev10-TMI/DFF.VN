@@ -407,7 +407,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         const userId = this.getAttribute("data-user");
                         const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                        fetch("api/follow", {
                             method: "POST",
                             headers: { "Content-Type": "application/x-www-form-urlencoded" },
                             body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
@@ -589,7 +589,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const content = textarea.value.trim();
                 if (!content) return;
 
-                fetch("<?= BASE_URL ?>/comment_add.php", {
+                fetch("api/comment_add", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
