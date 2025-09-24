@@ -259,9 +259,18 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 </a>
                             </div>
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])) : ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php endif; ?>
+
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <div class="mt-2 mb-2">
+                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                </div>
                             <?php endif; ?>
 
                             <!-- Giữ nguyên phần like, comment, share -->
