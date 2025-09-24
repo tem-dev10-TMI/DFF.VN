@@ -370,6 +370,7 @@ function addPost() {
 
   var formData = new FormData();
   formData.append('session_token', window.userSessionToken || '');
+  
   formData.append('title', postTitle);
   formData.append('summary', postSummary);
   formData.append('content', postContent);

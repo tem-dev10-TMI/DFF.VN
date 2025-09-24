@@ -776,6 +776,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </script>
     <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
+    <script>
+        // Make session token available to JS
+        window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+    </script>
 </body>
 
 
