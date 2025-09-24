@@ -57,17 +57,18 @@ class ArticlesModel
 
         if ($currentUserId) {
             // Logic cho người dùng đã đăng nhập
-            // Vế thứ hai của UNION đã được cập nhật để loại trừ bài viết 'rejected'
-            $sql = "(SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+            $sql = "(SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
+                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
                 WHERE a.status = 'public')
                 UNION
-                (SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+                (SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
+                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
                 WHERE a.author_id = :current_user_id AND a.status != 'rejected')
                 ORDER BY created_at DESC, id DESC
                 LIMIT :limit OFFSET :offset";
@@ -76,10 +77,11 @@ class ArticlesModel
             $stmt->bindValue(':current_user_id', $currentUserId, PDO::PARAM_INT);
         } else {
             // Logic cho khách không thay đổi
-            $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
+            $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
+                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
                 WHERE a.status = 'public'
                 ORDER BY a.created_at DESC, a.id DESC
                 LIMIT :limit OFFSET :offset";
