@@ -54,14 +54,14 @@ class homeController
 
         // 1. Lấy dữ liệu từ Database
         $cache_key_slider = 'articles_slider';
-        $dbArticlesForSlider = get_cache($cache_key_slider, 15);
+        $dbArticlesForSlider = get_cache($cache_key_slider, 5);
         if ($dbArticlesForSlider === false) {
             $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
             set_cache($cache_key_slider, $dbArticlesForSlider);
         }
 
         $cache_key_initial = 'articles_initial';
-        $dbArticlesInitial = get_cache($cache_key_initial, 15);
+        $dbArticlesInitial = get_cache($cache_key_initial, 5);
         if ($dbArticlesInitial === false) {
             $dbArticlesInitial = ArticlesModel::getArticlesPaged(0, 5);
             set_cache($cache_key_initial, $dbArticlesInitial);

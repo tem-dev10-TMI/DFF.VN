@@ -57,7 +57,9 @@
         }
         ?>
         <div id="news-articles-list">
-            <?php if (!empty($articles)): ?>
+            <?php 
+            $currentUserIdForView = $_SESSION['user']['id'] ?? null;
+            if (!empty($articles)): ?>
                 <?php foreach ($articles as $article): ?>
                     <div class="block-k ">
                         <div class="view-carde f-frame">
@@ -68,7 +70,7 @@
                                 <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                                 <div class="p-covers">
                                     <span class="name" title="">
-                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['id'] ?>"
+                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>"
                                             title="<?= htmlspecialchars($article['author_name']) ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
@@ -77,6 +79,27 @@
                                     </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                                 </div>
                             </div>
+
+                            <?php
+                            if (($currentUserIdForView ?? null) && isset($article['author_id']) && $article['author_id'] == $currentUserIdForView) {
+                                $status = $article['status'] ?? 'pending';
+                                $badgeClass = '';
+                                $badgeText = '';
+                                switch ($status) {
+                                    case 'pending':
+                                        $badgeClass = 'bg-warning text-dark';
+                                        $badgeText = 'Chờ duyệt';
+                                        break;
+                                    case 'public':
+                                        $badgeClass = 'bg-success';
+                                        $badgeText = 'Công khai';
+                                        break;
+                                }
+                                if ($badgeText) {
+                                    echo '<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ' . $badgeClass . '">' . htmlspecialchars($badgeText) . '</span></div>';
+                                }
+                            }
+                            ?>
 
                             <div class="title">
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
@@ -90,9 +113,18 @@
                             </div>
 
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])) : ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
+                            <?php endif; ?>
+
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <div class="mt-2 mb-2">
+                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                </div>
                             <?php endif; ?>
 
                             <div class="item-bottom">
@@ -198,6 +230,20 @@
             // API nên trả về trường time_ago đã được tính toán sẵn
             const timeAgo = article.time_ago || new Date(article.created_at).toLocaleString('vi-VN');
 
+            let statusBadgeHtml = '';
+            const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+            if (currentUserId && article.author_id == currentUserId && article.status) {
+                let badgeClass = '';
+                let badgeText = '';
+                switch (article.status) {
+                    case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+                    case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+                }
+                if (badgeText) {
+                    statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
+                }
+            }
+
             div.innerHTML = `
             <div class="view-carde f-frame">
                 <div class="provider">
@@ -209,6 +255,7 @@
                         <span class="date">${timeAgo}</span>
                     </div>
                 </div>
+                ${statusBadgeHtml}
                 <div class="title">
                     <a title="${article.title}" href="${articleLink}">${article.title}</a>
                 </div>
