@@ -283,7 +283,7 @@
                 color:#fff;
                 border:none;
                 padding:10px 20px;
-                border-radius:6px;
+                border: radius 20px;
                 font-size:14px;
                 font-weight:bold;
                 cursor:pointer;
