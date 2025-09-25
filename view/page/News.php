@@ -287,7 +287,7 @@ $currentUserIdForView = $_SESSION['user']['id'] ?? null;
             loadingElementId: 'loading',
             loadMoreContainerId: 'load-more-container',
             loadMoreBtnId: 'load-more-btn',
-            apiUrl: '<?= BASE_URL ?>/news/loadMore',
+            apiUrl: '<?= BASE_URL ?>/api/loadMoreArticles',
             initialOffset: <?= count($articles ?? []) ?>,
             limit: 5,
             renderItemFunction: renderNewsArticle // DÙNG HÀM JS
