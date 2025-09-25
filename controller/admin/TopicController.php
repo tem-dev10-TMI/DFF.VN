@@ -88,23 +88,34 @@ class TopicController {
         redirect(BASE_URL . '/admin.php?route=topics');
     }
 
-    // ===================== DETAILS (theo slug) =====================
-    public function details_topic($slug = null) {
-        if (!$slug) $slug = $_GET['slug'] ?? null;
-        if (!$slug) { echo "Thiếu slug!"; return; }
+// ===================== DETAILS (theo slug) =====================
+public function details_topic($slug = null) {
+    if (!$slug) $slug = $_GET['slug'] ?? null;
+    if (!$slug) { echo "Thiếu slug!"; return; }
 
-        $topic = $this->model->findBySlug($slug);
-        $articles = ArticlesModel::getArticlesByTopicSlug($slug, 10);
+    // Lấy danh sách bài viết theo slug chủ đề
+    $articles = ArticlesModel::getArticlesByTopicSlug($slug, 10);
 
-        if (!$topic) { echo "Chủ đề không tồn tại!"; return; }
-
-        ob_start();
-        require __DIR__ . '/../../view/page/DetailsTopic.php';
-        $content = ob_get_clean();
-
-        $profile = false; 
-        require __DIR__ . '/../../view/layout/main.php';
+    // Nếu không có bài nào => coi như chủ đề không tồn tại
+    if (!$articles || count($articles) === 0) {
+        echo "Chủ đề không tồn tại!";
+        return;
     }
+
+    // Chủ đề có thể lấy từ record đầu tiên trong $articles
+    $topic = [
+        'slug' => $slug,
+        'name' => $articles[0]['topic_name'] ?? 'Chưa đặt tên'
+    ];
+
+    ob_start();
+    require __DIR__ . '/../../view/page/DetailsTopic.php';
+    $content = ob_get_clean();
+
+    $profile = false; 
+    require __DIR__ . '/../../view/layout/main.php';
+}
+
 
     // ===================== helpers =====================
     private function slugify(string $str): string {
