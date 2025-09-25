@@ -48,26 +48,35 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
             <label class="bg-tranparent">CHỦ ĐỀ</label>
         <?php endif; ?>
 
-        <?php if (!empty($topTopics)): ?>
-            <ul class="<?= $is_mobile ? 'top-item' : 'nav nav-second-level top-item' ?>">
-                <?php foreach ($topTopics as $topic): ?>
-                    <li>
-                        <img src="<?= $is_mobile ? htmlspecialchars($topic['icon_url'] ?? '') : BASE_URL . '/' . htmlspecialchars($topic['icon_url'] ?? '') ?>"
-                            title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
-                            alt="<?= htmlspecialchars($topic['name'] ?? '') ?>" <?= $is_mobile ? '' : 'border="0"' ?> />
-                        <a title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
-                            href="<?= BASE_URL . '/details_topic/' . ($topic['slug'] ?? '') ?>">
-                            <?= htmlspecialchars($topic['name'] ?? '') ?>
-                        </a>
-                        <?php if (!$is_mobile): ?><i class="fas fa-plus icon-right"></i><?php endif; ?>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        <?php else: ?>
-            <p>Chưa có chủ đề nào</p>
+
+        <?php if (!empty($moreTopics)): ?>
+            <?php $collapse_id = $is_mobile ? 'm-collapseTopics' : 'flush-collapseOne'; ?>
+            <div id="<?= $collapse_id ?>" class="accordion-collapse collapse">
+                <ul class="<?= $is_mobile ? 'top-item' : 'nav nav-second-level top-item' ?>">
+                    <?php foreach ($moreTopics as $topic): ?>
+                        <li>
+                            <img src="<?= BASE_URL ?>/<?= htmlspecialchars($topic['icon_url'] ?? '') ?>"
+                                title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
+                                alt="<?= htmlspecialchars($topic['name'] ?? '') ?>">
+                            <a title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
+                                href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug'] ?? '') ?>">
+                                <?= htmlspecialchars($topic['name'] ?? '') ?>
+                            </a>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+            <div class="to-expend">
+                <?php if ($is_mobile): ?>
+                    <i class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#<?= $collapse_id ?>"
+                        aria-expanded="false" aria-controls="<?= $collapse_id ?>"></i>
+                <?php else: ?>
+                    <button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#<?= $collapse_id ?>"
+                        aria-expanded="true" aria-controls="<?= $collapse_id ?>"></button>
+                <?php endif; ?>
+            </div>
         <?php endif; ?>
 
-<<<<<<< Updated upstream
         <div class="line"></div>
         <ul class="<?= $is_mobile ? 'about-c' : 'nav nav-second-level about-c' ?>">
             <li><i class="bi bi-tv"></i>
