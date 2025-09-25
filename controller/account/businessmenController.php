@@ -151,6 +151,7 @@ class businessmenController
 
             // Lấy và làm sạch dữ liệu từ form (bao gồm cả trường description mới)
             $name        = htmlspecialchars($_POST['name'] ?? '');
+            $username    = htmlspecialchars($_POST['user_name'] ?? $currentUserData['username']);
             $email       = htmlspecialchars($_POST['email'] ?? '');
             $phone       = htmlspecialchars($_POST['phone'] ?? '');
             $description = htmlspecialchars($_POST['description'] ?? '');
@@ -196,7 +197,6 @@ class businessmenController
             }
 
             if ($successUser && $successBusiness) {
-<<<<<<< HEAD
                 // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
                 $updatedUser = $modelUser->getUserById($userId);
                 if ($updatedUser) {
@@ -225,8 +225,6 @@ class businessmenController
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
                 
-=======
->>>>>>> parent of ef01db3 (update_avatarbusiness)
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {
