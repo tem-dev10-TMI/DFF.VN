@@ -137,48 +137,35 @@ class businessmenModel
     }
 
 
-    public static function getAllBusinessmen($limit = 10, $currentUserId = null)
-    {
-        global $pdo;
+    public static function getAllBusinessmen($limit = 6)
+{
+    $db = new connect();
+    $pdo = $db->db;
 
-        // 1. Xây dựng câu SQL cơ bản
-        $sql = "
-            SELECT 
-                b.id, 
-                u.id AS user_id, 
-                u.username, 
-                u.name, 
-                u.avatar_url,
-                b.position,
-                (SELECT COUNT(*) FROM user_follows f WHERE f.following_id = u.id) AS followers
-            FROM businessmen b
-            JOIN users u ON b.user_id = u.id
-        ";
+    $sql = "
+        SELECT 
+            u.id AS user_id,
+            u.name,
+            u.username,
+            u.avatar_url,
+            b.position,
+            COUNT(f.follower_id) AS followers
+        FROM businessmen b
+        INNER JOIN users u ON b.user_id = u.id
+        LEFT JOIN user_follows f ON u.id = f.following_id
+        WHERE b.status = 'approved'
+        GROUP BY u.id, u.name, u.username, u.avatar_url, b.position
+        ORDER BY followers DESC
+        LIMIT :limit
+    ";
 
-        // 2. Thêm điều kiện WHERE nếu có currentUserId được truyền vào
-        if ($currentUserId !== null) {
-            $sql .= " WHERE u.id != :currentUserId ";
-        }
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->execute();
 
-        // 3. Thêm phần còn lại của câu lệnh
-        $sql .= "
-            ORDER BY followers DESC
-            LIMIT :limit
-        ";
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
-        // 4. Chuẩn bị và thực thi câu lệnh
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        // Chỉ bind giá trị :currentUserId nếu nó tồn tại
-        if ($currentUserId !== null) {
-            $stmt->bindValue(':currentUserId', (int)$currentUserId, PDO::PARAM_INT);
-        }
-
-        $stmt->execute();
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
     // Tạo dữ liệu mẫu cho businessmen
     public static function createSampleBusinessmen()
     {
