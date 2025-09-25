@@ -7682,3 +7682,58 @@ ul.timeline .left-arrow:after {
     max-width: 100%;
     box-sizing: border-box;
 }
+/* --- TÙY CHỈNH MODAL TRÊN MOBILE --- */
+
+/* Chỉ áp dụng cho màn hình nhỏ (đi điện thoại) */
+/* --- CSS CHO MODAL TRÀN VIỀN TRÊN DI ĐỘNG --- */
+@media (max-width: 767.98px) {
+    .modal-fullscreen-mobile {
+        /* Ghi đè align-items của Bootstrap để đẩy modal lên sát cạnh trên */
+        align-items: flex-start;
+    }
+
+    .modal-fullscreen-mobile .modal-dialog {
+        /* Đảm bảo chiếm toàn bộ chiều rộng và chiều cao */
+        width: 100vw; /* Chiếm 100% chiều rộng của viewport */
+        max-width: none; /* Bỏ giới hạn chiều rộng tối đa */
+        height: 100vh; /* Chiếm 100% chiều cao của viewport */
+        margin: 0; /* Bỏ margin xung quanh */
+        transform: none; /* Bỏ mọi transform dịch chuyển trước đó */
+
+        /* Nếu bạn muốn hiệu ứng trượt từ dưới lên, hãy thêm animation */
+        animation: slideInUpFullScreen 0.3s ease-out forwards;
+    }
+
+    .modal-fullscreen-mobile.show .modal-dialog {
+        animation: slideInUpFullScreen 0.3s ease-out forwards;
+    }
+
+    .modal-fullscreen-mobile .modal-content {
+        height: 100%; /* Đảm bảo content chiếm hết chiều cao dialog */
+        max-height: none; /* Bỏ giới hạn chiều cao tối đa */
+        border-radius: 0; /* Bỏ bo góc để tạo hiệu ứng tràn viền */
+        box-shadow: none; /* Bỏ bóng đổ */
+        border: none; /* Bỏ viền */
+    }
+
+    .modal-fullscreen-mobile .modal-header {
+        border-bottom: 1px solid #eee; /* Có thể thêm lại đường viền header */
+        padding: 1rem;
+    }
+
+    .modal-fullscreen-mobile .modal-body {
+        padding: 1rem;
+        /* Nếu nội dung tràn, body sẽ scroll */
+        overflow-y: auto; 
+    }
+
+    /* Hiệu ứng trượt lên (có thể tái sử dụng hoặc tinh chỉnh) */
+    @keyframes slideInUpFullScreen {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+}

@@ -475,15 +475,15 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
-        style="z-index: 9998;">
-        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 9998;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
+                    <h5 class="modal-title" id="mobileModalLabel">Menu</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; overflow-y: auto; "></div>
+                <div class="modal-body" id="mobileModalBody">
+                </div>
             </div>
         </div>
     </div>
@@ -548,58 +548,70 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     <script>
         (function() {
-            // Dữ liệu sự kiện từ PHP
-            const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
-
-            function renderAlerts(events) {
-
+            var modalEl = document.getElementById('mobileModal');
+            var modalBody = document.getElementById('mobileModalBody');
+            var modalTitle = document.getElementById('mobileModalLabel');
+            var bsModal = null;
+            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                bsModal = new bootstrap.Modal(modalEl);
             }
 
-            let mobileModalInstance = null;
+            // NÂNG CẤP: Thêm tham số `modalClass` để nhận tên lớp CSS
+            function openMobileModal(title, html, modalClass) {
+                if (!modalEl) return;
 
-            function openMobileModal(type) {
-                const body = document.getElementById('mobileModalBody');
-                const title = document.getElementById('mobileModalLabel');
-                if (!body || !title) return;
+                // --- BẮT ĐẦU PHẦN CHỈNH SỬA QUAN TRỌNG ---
 
-                if (type === 'alerts') {
-                    title.textContent = 'Thông báo';
+                // 1. Luôn xóa các lớp style cũ trước khi mở để reset
+                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style');
 
-                    // Tìm đến nội dung thông báo của phiên bản desktop
-                    const desktopAlertsContent = document.querySelector('#id_alert .tab-content');
+                // 2. Nếu có lớp mới được truyền vào, hãy thêm nó
+                if (modalClass) {
+                    modalEl.classList.add(modalClass);
+                }
 
-                    // Sao chép HTML từ desktop vào modal body
-                    if (desktopAlertsContent) {
-                        body.innerHTML = desktopAlertsContent.innerHTML;
-                    } else {
-                        body.innerHTML = '<div>Không tìm thấy nội dung thông báo.</div>';
+                // --- KẾT THÚC PHẦN CHỈNH SỬA ---
+
+                if (modalTitle) modalTitle.textContent = title || 'Menu';
+                if (modalBody) modalBody.innerHTML = html || '';
+                if (bsModal) bsModal.show();
+                else modalEl.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileModal() {
+                if (!modalEl) return;
+                if (bsModal) bsModal.hide();
+                else modalEl.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            modalEl && modalEl.addEventListener('click', function(e) {
+                if (e.target === modalEl) closeMobileModal();
+            });
+
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                a.addEventListener('click', function(e) {
+                    var type = this.getAttribute('data-mobile-modal');
+                    if (!type) return;
+
+                    if (type === 'alerts') {
+                        var alerts = document.getElementById('id_alert');
+                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                        // NÂNG CẤP: Truyền vào lớp 'modal-mobile-custom'
+                        openMobileModal('Thông báo', html, 'modal-mobile-custom');
+                    } else if (type === 'profile') {
+                        var tpl = document.getElementById('mobile-profile-template');
+                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                        // NÂNG CẤP: Truyền vào lớp 'modal-account-style'
+                        openMobileModal('Tài khoản', html, 'modal-account-style');
+                    } else if (type === 'create') {
+                        var createHtml = '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>';
+                        // Giữ nguyên, không cần style đặc biệt, nó sẽ tự động căn giữa
+                        openMobileModal('Tạo mới', createHtml);
                     }
-                } else if (type === 'create') {
-                    title.textContent = 'Tạo mới';
-                    body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
-                } else if (type === 'profile') {
-                    // Thay vì chỉ hiển thị text, mở modal login
-                    showLoginModal(); // <-- Gọi trực tiếp modal login từ header.php
-                    return; // thoát luôn để không mở modal mobile
-                } else {
-                    title.textContent = 'Menu';
-                    body.innerHTML = '';
-                }
-
-                const modalEl = document.getElementById('mobileModal');
-                if (modalEl) {
-                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                    document.body.classList.remove('modal-open');
-                    document.body.style.removeProperty('padding-right');
-
-                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
-                        backdrop: true,
-                        focus: true
-                    });
-                    mobileModalInstance.show();
-                }
-            }
-
+                });
+            });
         })();
     </script>
 
@@ -630,89 +642,75 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <script>
+        // Bọc trong IIFE để tránh xung đột
         (function() {
-            var modalEl = document.getElementById('mobileModal');
-            var modalBody = document.getElementById('mobileModalBody');
-            var modalTitle = document.getElementById('mobileModalLabel');
-            var bsModal = null;
-            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-                bsModal = new bootstrap.Modal(modalEl);
+            // Chỉ lấy element, không khởi tạo modal ở đây
+            const modalEl = document.getElementById('mobileModal');
+            if (!modalEl) return; // Nếu không có element thì dừng luôn
+
+            /**
+             * HÀM QUAN TRỌNG: Lấy hoặc Tạo đối tượng Modal duy nhất.
+             * Dù hàm này được gọi bao nhiêu lần, nó luôn trả về cùng một đối tượng modal.
+             */
+            function getModalInstance() {
+                if (!window.bootstrap || !window.bootstrap.Modal) return null;
+
+                // Kiểm tra xem đã có instance nào được gắn vào element chưa
+                let instance = bootstrap.Modal.getInstance(modalEl);
+
+                // Nếu chưa có, tạo mới và lưu lại
+                if (!instance) {
+                    instance = new bootstrap.Modal(modalEl);
+                }
+                return instance;
             }
 
-            function openMobileModal(title, html) {
-                if (!modalEl) return;
+            // Hàm mở modal, giờ sẽ an toàn hơn
+            window.openMobileModal = function(title, html, modalClass) {
+                const bsModal = getModalInstance();
+                if (!bsModal) return;
+
+                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style', 'modal-fullscreen-mobile'); // THÊM LỚP MỚI VÀO ĐÂY ĐỂ XÓA TRƯỚC
+                if (modalClass) {
+                    modalEl.classList.add(modalClass);
+                }
+
+                const modalTitle = modalEl.querySelector('#mobileModalLabel');
+                const modalBody = modalEl.querySelector('#mobileModalBody');
+
                 if (modalTitle) modalTitle.textContent = title || 'Menu';
                 if (modalBody) modalBody.innerHTML = html || '';
-                if (bsModal) bsModal.show();
-                else modalEl.style.display = 'block';
-                // Khóa scroll nền khi mở modal thủ công (fallback)
-                document.body.style.overflow = 'hidden';
-            }
 
-            function closeMobileModal() {
-                if (!modalEl) return;
-                if (bsModal) bsModal.hide();
-                else modalEl.style.display = 'none';
-                document.body.style.overflow = '';
-            }
+                bsModal.show();
+            };
 
-            // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
-            modalEl && modalEl.addEventListener('click', function(e) {
-                if (e.target === modalEl) closeMobileModal();
-            });
+            // Gắn sự kiện vào các nút bấm chỉ một lần
+            // Dùng một cờ để đảm bảo code này chỉ chạy 1 lần duy nhất
+            if (!window.mobileModalListenerAttached) {
+                document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const type = this.getAttribute('data-mobile-modal');
+                        if (!type) return;
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                a.addEventListener('click', function(e) {
-                    var type = this.getAttribute('data-mobile-modal');
-                    if (!type) return;
-                    if (type === 'alerts') {
-                        var alerts = document.getElementById('id_alert');
-                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
-                        openMobileModal('Thông báo', html);
-                    } else if (type === 'profile') {
-                        var tpl = document.getElementById('mobile-profile-template');
-                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
-                        openMobileModal('Tài khoản', html);
-                    } else if (type === 'create') {
-                        // Tái sử dụng quick write nếu có
-                        openMobileModal('Tạo mới', '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>');
-                    }
-                });
-            });
-        })();
-
-        document.querySelectorAll(".btn-follow").forEach(btn => {
-            btn.addEventListener("click", function() {
-                const userId = this.getAttribute("data-user");
-                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
-
-                fetch("api/follow", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
-                        credentials: "include"
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            // cập nhật text nút
-                            this.querySelector(".follow-text").innerText =
-                                data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-
-                            // cập nhật số follower
-                            this.querySelector(".number").innerText = data.followers;
-                        } else {
-                            alert(data.message);
+                        if (type === 'alerts') {
+                            const alerts = document.getElementById('id_alert');
+                            const html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                            window.openMobileModal('Thông báo', html, 'modal-mobile-custom');
+                        } else if (type === 'profile') {
+                            const tpl = document.getElementById('mobile-profile-template');
+                            const html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                            // THAY ĐỔI: Dùng lớp 'modal-fullscreen-mobile' cho Tài khoản
+                            window.openMobileModal('Tài khoản', html, 'modal-fullscreen-mobile');
+                        } else if (type === 'create') {
+                            const createHtml = '<div>...</div>'; // Nội dung của bạn
+                            window.openMobileModal('Tạo mới', createHtml);
                         }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert("Không thể kết nối đến server!");
                     });
-            });
-        });
+                });
+                window.mobileModalListenerAttached = true; // Đánh dấu là đã gắn sự kiện
+            }
+        })();
     </script>
     <a module-load="boxIndex"></a>
 
@@ -772,223 +770,92 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                             </div>
 
                             <!-- Body -->
-                            <!-- Body -->
-                            <div class="modal-body bg-light p-4">
+                            <div class="modal-body bg-light p-10">
                                 <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
 
+                                    <!-- Avatar + tên -->
                                     <div class="d-flex align-items-center mb-3">
-                                        <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg" class="rounded-circle border border-2 border-success me-2" alt="avatar" style="width: 48px; height: 48px;">
+                                        <?php
+                                        $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
+                                        if (!$avatarUrl || trim($avatarUrl) === '') {
+                                            $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                        }
+                                        ?>
+                                        <img src="<?= htmlspecialchars($avatarUrl) ?>"
+                                            class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                            style="width: 48px; height: 48px;">
                                         <div>
-                                            <h6 class="mb-0 fw-bold text-dark">Khanh Lam</h6>
-                                            <small class="text-muted">Doanh nhân</small>
+                                            <h6 class="mb-0 fw-bold text-dark">
+                                                <?php
+                                                echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
+                                                ?>
+                                            </h6>
+                                            <small class="text-muted">
+                                                <?= htmlspecialchars((($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân') ?>
+
+                                            </small>
+
                                         </div>
                                     </div>
 
-                                    <form id="postForm" class="needs-validation" novalidate>
-                                        <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-                                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success" placeholder="Nhập tiêu đề bài viết..." required>
+                                    <!-- Tiêu đề -->
+                                    <input type="text" id="postTitle"
+                                        class="form-control form-control-lg mb-3 border-success"
+                                        placeholder="Nhập tiêu đề bài viết...">
 
-                                        <div class="mb-3">
-                                            <label for="postSummary" class="form-label fw-bold text-success">Tóm tắt bài viết:</label>
-                                            <textarea id="postSummary" class="form-control border-success" rows="3" placeholder="Nhập một đoạn tóm tắt ngắn gọn về nội dung bài viết..." required></textarea>
-                                        </div>
+                                    <!-- Tóm tắt -->
+                                    <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
+                                        placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
 
-                                        <div class="mb-3">
-                                            <label for="postCoverImage" class="form-label fw-bold text-success">Ảnh bìa (cover):</label>
-                                            <input type="file" id="postCoverImage" class="form-control border-success" accept="image/*" required>
-                                        </div>
+                                    <!-- Nội dung chính -->
+                                    <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
+                                        placeholder="Nội dung chính của bài viết..."></textarea>
 
-                                        <div class="mb-3">
-                                            <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
-                                            <select class="form-select border-success" id="topicSelect" required>
-                                                <option value="">-- Chọn chủ đề --</option>
-                                                <?php if (!empty($allTopics)) : ?>
-                                                    <?php foreach ($allTopics as $topic) : ?>
-                                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-                                                    <?php endforeach; ?>
-                                                <?php else : ?>
-                                                    <option value="1" selected>Kinh doanh</option>
-                                                    <option value="2">Công nghệ</option>
-                                                    <option value="3">Đời sống</option>
-                                                <?php endif; ?>
-                                            </select>
-                                        </div>
+                                    <!-- Chọn chủ đề -->
+                                    <div class="mb-3">
+                                        <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ
+                                            đề:</label>
+                                        <select class="form-select border-success" id="topicSelect" name="topic_id"
+                                            required>
+                                            <option value="">-- Chọn chủ đề --</option>
+                                            <?php foreach ($allTopics as $topic): ?>
+                                                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
 
-                                        <div id="sectionsWrap" class="d-flex flex-column gap-3">
-
-                                            <div class="card border-0 shadow-sm section-item" data-index="1">
-                                                <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">1</span>
-                                                        <strong>Phần 1</strong>
-                                                    </div>
-                                                    <div class="d-flex align-items-center gap-2">
-                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
-                                                            <i class="fas fa-image me-1"></i> Ảnh
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
-                                                            <i class="fas fa-video me-1"></i> Video
-                                                        </button>
-                                                        <button type="button" class="btn btn-outline-danger btn-sm d-none section-remove">
-                                                            <i class="fas fa-trash-alt"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <div class="card-body">
-                                                    <div class="mb-3">
-                                                        <label class="form-label fw-semibold">Tiêu đề phần 1</label>
-                                                        <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." value="Tổng quan & mục tiêu" required>
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <input type="file" class="d-none section-file" accept="image/*,video/*">
-                                                        <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
-                                                    </div>
-
-                                                    <div class="mb-2">
-                                                        <label class="form-label fw-semibold">Nội dung phần 1</label>
-                                                        <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required>
-                                - Doanh thu mục tiêu: +25%
-                                - Tập trung sản phẩm chủ lực
-                                - Tối ưu kênh phân phối
-                            </textarea>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center mt-3">
-                                            <button type="button" id="btnAddSection" class="btn btn-outline-success">
-                                                <i class="fas fa-plus me-1"></i> Thêm phần
-                                            </button>
-                                            <button type="submit" class="btn btn-success px-4 rounded-pill">
-                                                <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                    <!-- Thanh công cụ -->
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex gap-2">
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
+                                                <i class="fas fa-image me-1"></i> Hình ảnh
+                                            </label>
+                                            <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
+                                                <i class="fas fa-video me-1"></i> Video
+                                            </label>
+                                            <button class="btn btn-outline-success btn-sm" type="button">
+                                                <i class="fas fa-link me-1"></i> Link
                                             </button>
                                         </div>
-                                    </form>
+                                        <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
+                                            <i class="fas fa-paper-plane me-1"></i> Đăng bài
+                                        </button>
+
+                                    </div>
+
+                                    <!-- Input hidden -->
+                                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+                                    <input type="file" id="postImage" class="d-none" accept="image/*"
+                                        onchange="previewImage(event)">
+                                    <input type="file" id="postVideo" class="d-none" accept="video/*"
+                                        onchange="previewVideo(event)">
                                 </div>
+
+                                <!-- Preview ảnh / video -->
+                                <div id="imagePreview" class="mt-2 bt-4"></div>
+                                <div id="videoPreview" class="mt-2 bt-4"></div>
                             </div>
-
-                            <!-- Style nhẹ cho preview -->
-                            <style>
-                                .media-preview {
-                                    min-height: 140px;
-                                    display: flex;
-                                    align-items: center;
-                                    justify-content: center;
-                                    background: #f8f9fa
-                                }
-
-                                .media-preview img,
-                                .media-preview video {
-                                    max-width: 100%;
-                                    max-height: 320px
-                                }
-                            </style>
-                            <script>
-                                (function() {
-                                    const sectionsWrap = document.getElementById('sectionsWrap');
-                                    const btnAddSection = document.getElementById('btnAddSection');
-
-                                    // Lấy số thứ tự kế tiếp
-                                    const nextIndex = () => {
-                                        const items = sectionsWrap.querySelectorAll('.section-item');
-                                        let max = 0;
-                                        items.forEach(i => {
-                                            max = Math.max(max, parseInt(i.dataset.index, 10));
-                                        });
-                                        return max + 1;
-                                    };
-
-                                    // Tạo 1 block phần mới (UI fix cứng mẫu)
-                                    const sectionHTML = (idx) => `
-    <div class="card border-0 shadow-sm section-item" data-index="\${idx}">
-      <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
-        <div class="d-flex align-items-center gap-2">
-          <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">\${idx}</span>
-          <strong>Phần \${idx}</strong>
-        </div>
-        <div class="d-flex align-items-center gap-2">
-          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
-            <i class="fas fa-image me-1"></i> Ảnh
-          </button>
-          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
-            <i class="fas fa-video me-1"></i> Video
-          </button>
-          <button type="button" class="btn btn-outline-danger btn-sm section-remove">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </div>
-      </div>
-      <div class="card-body">
-        <div class="mb-3">
-          <label class="form-label fw-semibold">Tiêu đề phần \${idx}</label>
-          <input type="text" class="form-control" placeholder="Nhập tiêu đề phần \${idx}..." value="Tiêu đề phần \${idx}" required>
-        </div>
-
-        <div class="mb-3">
-          <input type="file" class="d-none section-file" accept="image/*,video/*">
-          <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
-        </div>
-
-        <div class="mb-2">
-          <label class="form-label fw-semibold">Nội dung phần \${idx}</label>
-          <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần \${idx}..." required>Mô tả nội dung phần \${idx}...</textarea>
-        </div>
-      </div>
-    </div>
-  `;
-
-                                    // Thêm phần mới
-                                    btnAddSection.addEventListener('click', () => {
-                                        const idx = nextIndex();
-                                        sectionsWrap.insertAdjacentHTML('beforeend', sectionHTML(idx));
-                                    });
-
-                                    // Uỷ quyền sự kiện: chọn media + xoá phần
-                                    sectionsWrap.addEventListener('click', (e) => {
-                                        const addBtn = e.target.closest('.section-add-media');
-                                        if (addBtn) {
-                                            const card = addBtn.closest('.section-item');
-                                            const fileInput = card.querySelector('.section-file');
-                                            fileInput.setAttribute('accept', addBtn.dataset.type === 'image' ? 'image/*' : 'video/*');
-                                            fileInput.click();
-                                        }
-
-                                        const removeBtn = e.target.closest('.section-remove');
-                                        if (removeBtn) {
-                                            const all = sectionsWrap.querySelectorAll('.section-item');
-                                            if (all.length <= 1) return; // ít nhất phải còn 1 phần
-                                            removeBtn.closest('.section-item').remove();
-                                        }
-                                    });
-
-                                    // Preview media (UI)
-                                    sectionsWrap.addEventListener('change', (e) => {
-                                        if (!e.target.classList.contains('section-file')) return;
-                                        const file = e.target.files?.[0];
-                                        const preview = e.target.closest('.section-item').querySelector('.media-preview');
-                                        preview.textContent = 'Chưa chọn ảnh/video.';
-                                        if (!file) return;
-                                        const url = URL.createObjectURL(file);
-                                        preview.innerHTML = '';
-                                        if (file.type.startsWith('image/')) {
-                                            const img = document.createElement('img');
-                                            img.src = url;
-                                            img.alt = 'preview';
-                                            preview.appendChild(img);
-                                        } else if (file.type.startsWith('video/')) {
-                                            const video = document.createElement('video');
-                                            video.src = url;
-                                            video.controls = true;
-                                            preview.appendChild(video);
-                                        } else {
-                                            preview.textContent = 'Định dạng không hỗ trợ.';
-                                        }
-                                    });
-                                })();
-                            </script>
-
                         </div>
                     </div>
                 </div>

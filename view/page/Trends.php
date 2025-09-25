@@ -228,7 +228,12 @@ foreach ($topics as $tp) {
                 <li>Chưa có dữ liệu.</li>
               <?php endif; ?>
             </ul>
-            <a class="more" href="#">Xem thêm</a>
+            <a class="more"
+              href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($tp['slug'] ?? '') ?>"
+              title="Xem thêm">
+              Xem thêm <i class="fas fa-arrow-right"></i>
+            </a>
+
           </div>
         <?php endforeach; ?>
       <?php else: ?>
