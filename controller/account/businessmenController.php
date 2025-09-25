@@ -199,6 +199,7 @@ class businessmenController
                         'phone' => $updatedUser['phone'],
                         'role' => $updatedUser['role'],
                         'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'cover_photo' => $updatedUser['cover_photo'] ?? null,
                         'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
                     
@@ -210,6 +211,7 @@ class businessmenController
                     $_SESSION['user_phone'] = $updatedUser['phone'];
                     $_SESSION['user_role'] = $updatedUser['role'];
                     $_SESSION['user_avatar_url'] = $updatedUser['avatar_url'] ?? null;
+                    $_SESSION['user_cover_photo'] = $updatedUser['cover_photo'] ?? null;
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
                 

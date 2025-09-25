@@ -255,6 +255,19 @@
 <div class="container mt-3">
   <!-- Cover -->
   <div class="cover">
+    <?php
+    // Lấy cover photo từ session hoặc database
+    $coverUrl = $_SESSION['user']['cover_photo'] ?? $_SESSION['user_cover_photo'] ?? null;
+    if (!$coverUrl || trim($coverUrl) === '') {
+      // Nếu không có cover photo, giữ background gradient
+      $coverUrl = null;
+    }
+    ?>
+    
+    <?php if ($coverUrl): ?>
+      <!-- Cover Image -->
+      <img src="<?= htmlspecialchars($coverUrl) ?>?t=<?= time() ?>" class="cover-img" alt="cover" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; position: absolute; top: 0; left: 0;">
+    <?php endif; ?>
 
     <?php
     $avatarUrl = $_SESSION['user']['avatar_url'] ?? $_SESSION['user_avatar_url'] ?? null;
