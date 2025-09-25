@@ -36,7 +36,7 @@
                             if (keyword) {
                                 // chuyển trang sang search
 
-                                window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+                                window.location.href = "<?= BASE_URL ?>/search?q=" + encodeURIComponent(keyword);
 
                             }
                         }
