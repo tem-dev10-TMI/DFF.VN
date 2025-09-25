@@ -350,7 +350,6 @@ function addPost() {
   var postContent = document.getElementById('newPost').value.trim();
   var postTopic = document.getElementById('topicSelect').value;
 
-
   if (!postTitle || !postContent || !postTopic) {
     showNotification('Vui lòng nhập tiêu đề, nội dung và chọn chủ đề!', 'warning');
     return;
@@ -362,22 +361,31 @@ function addPost() {
   submitBtn.disabled = true;
 
   var formData = new FormData();
-  formData.append('session_token', window.userSessionToken || '');
-  
+  // Lấy token từ form, đảm bảo nó luôn được gửi đi
+  const formElement = document.querySelector('#createPostModal form') || document.querySelector('.post-box'); // Tìm form ở modal hoặc trang profile
+  if (formElement) {
+      const tokenInput = formElement.querySelector('input[name="session_token"]');
+      if (tokenInput) {
+          formData.append('session_token', tokenInput.value);
+      }
+  }
   formData.append('title', postTitle);
   formData.append('summary', postSummary);
   formData.append('content', postContent);
-  formData.append('topic_id', postTopic); // tạm fix cứng, hoặc để user chọn
+  formData.append('topic_id', postTopic);
 
-  var imageFile = document.getElementById('postImage').files[0];
-  if (imageFile) {
-    formData.append('main_image_url', imageFile);
-  }
+  // Thêm tất cả ảnh
+  var imageFiles = document.getElementById('postImage').files;
+  Array.from(imageFiles).forEach((file, idx) => {
+    
+    formData.append(`images[${idx}]`, file);
+  });
 
-  var videoFile = document.getElementById('postVideo').files[0];
-  if (videoFile) {
-    formData.append('post_video', videoFile);
-  }
+  // Thêm tất cả video
+  var videoFiles = document.getElementById('postVideo').files;
+  Array.from(videoFiles).forEach((file, idx) => {
+    formData.append(`videos[${idx}]`, file);
+  });
 
   fetch('api/addPost', {
     method: 'POST',
@@ -394,9 +402,10 @@ function addPost() {
         document.getElementById('newPost').value = '';
         document.getElementById('topicSelect').value = '';
         document.getElementById('postImage').value = '';
+        document.getElementById('postVideo').value = '';
         document.getElementById('imagePreview').innerHTML = '';
+        document.getElementById('videoPreview').innerHTML = '';
 
-        // Refresh danh sách bài viết
         loadPosts();
         showNotification(data.message || 'Đăng bài thành công!', 'success');
       } else {
@@ -411,38 +420,92 @@ function addPost() {
     });
 }
 
-// Xem trước ảnh trước khi đăng
+// Preview nhiều ảnh
 function previewImage(event) {
   const preview = document.getElementById('imagePreview');
-  preview.innerHTML = ''; // Xóa preview cũ
 
-  const file = event.target.files[0];
-  if (file) {
+  // Không xoá tất cả files trong input
+  // preview.innerHTML = ''; // <-- chỉ xoá preview, không reset files
+
+  const files = event.target.files;
+
+  Array.from(files).forEach(file => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.marginRight = '8px';
+
     const img = document.createElement('img');
     img.src = URL.createObjectURL(file);
-    img.classList.add('img-fluid', 'rounded', 'mt-2');
-    img.style.maxHeight = '200px';
-    preview.appendChild(img);
-  }
+    img.style.width = '100px';
+    img.style.height = '100px';
+    img.style.objectFit = 'cover';
+    img.classList.add('rounded', 'mb-2');
+
+    const btnRemove = document.createElement('button');
+    btnRemove.type = 'button';
+    btnRemove.innerHTML = '&times;';
+    btnRemove.classList.add('btn', 'btn-sm', 'btn-danger');
+    btnRemove.style.position = 'absolute';
+    btnRemove.style.top = '2px';
+    btnRemove.style.right = '2px';
+    btnRemove.onclick = () => {
+      wrapper.remove();
+      removeFileFromInput('postImage', file);
+    };
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(btnRemove);
+    preview.appendChild(wrapper);
+  });
 }
 
-// Hiển thị tên video đã chọn
 function previewVideo(event) {
   const preview = document.getElementById('videoPreview');
-  preview.innerHTML = ''; // Xóa preview cũ
+  const files = event.target.files;
 
-  const file = event.target.files[0];
-  if (file) {
-    const fileNameDiv = document.createElement('div');
-    fileNameDiv.classList.add('alert', 'alert-info', 'py-2', 'mt-2');
-    fileNameDiv.innerHTML = `
-        <i class="fas fa-video me-2"></i>
-        Đã chọn video: <strong>${file.name}</strong>
-        <button type="button" class="btn-close" onclick="clearVideoPreview()" style="font-size: 0.75rem; float: right;"></button>
-      `;
-    preview.appendChild(fileNameDiv);
-  }
+  Array.from(files).forEach(file => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '150px';
+    wrapper.style.height = '100px';
+    wrapper.style.marginRight = '8px';
+
+    const video = document.createElement('video');
+    video.src = URL.createObjectURL(file);
+    video.controls = true;
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.classList.add('rounded');
+
+    const btnRemove = document.createElement('button');
+    btnRemove.type = 'button';
+    btnRemove.innerHTML = '&times;';
+    btnRemove.classList.add('btn', 'btn-sm', 'btn-danger');
+    btnRemove.style.position = 'absolute';
+    btnRemove.style.top = '2px';
+    btnRemove.style.right = '2px';
+    btnRemove.onclick = () => {
+      wrapper.remove();
+      removeFileFromInput('postVideo', file);
+    };
+
+    wrapper.appendChild(video);
+    wrapper.appendChild(btnRemove);
+    preview.appendChild(wrapper);
+  });
 }
+
+// Hàm xóa 1 file khỏi input type="file" mà vẫn giữ các file khác
+function removeFileFromInput(inputId, fileToRemove) {
+  const input = document.getElementById(inputId);
+  const dt = new DataTransfer();
+  Array.from(input.files)
+       .filter(f => f !== fileToRemove)
+       .forEach(f => dt.items.add(f));
+  input.files = dt.files;
+}
+
 
 function clearVideoPreview() {
   document.getElementById('postVideo').value = ''; // Xóa file đã chọn

@@ -136,10 +136,13 @@ class ArticlesController
         require_once __DIR__ . '/../model/article/articlesmodel.php';
         require_once __DIR__ . '/../model/user/userModel.php';
         require_once __DIR__ . '/../model/ArticleSavesModel.php';
+        require_once __DIR__ . '/../model/mediamodel.php';
+
         $currentUserId = null;
         if (isset($_SESSION['user']['id'])) {
             $currentUserId = $_SESSION['user']['id'];
         }
+        //$mediaItems = MediaModel::getMediaByArticle($articleId);
         $save=new ArticleSavesModel();
         $saved = $save->isSavedbySlug($slug, $currentUserId);
         $iconClass = $saved ? 'fas' : 'far';

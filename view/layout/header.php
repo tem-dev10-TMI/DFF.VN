@@ -36,7 +36,7 @@
                             if (keyword) {
                                 // chuyển trang sang search
 
-                                window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+                                window.location.href = "<?= BASE_URL ?>/search?q=" + encodeURIComponent(keyword);
 
                             }
                         }
@@ -797,174 +797,48 @@
 
 
 <?php
-// Load market data nếu chưa có
+// Tải dữ liệu từ model
 if (!isset($marketData)) {
     require_once __DIR__ . '/../../model/MarketDataModel.php';
     $marketData = MarketDataModel::getCachedMarketData();
 }
-// Debug: Kiểm tra dữ liệu market
-echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData) : 'undefined') . " -->";
 ?>
+
 <div class="top-stock">
     <div class="marquee">
-        <div class="item co-VNINDEX">
-            <div class="irow label">
-                <span>VNINDEX</span>
-                <span class="value"><?= $marketData['VNINDEX']['price'] ?? '1,667.26' ?></span>
+        <?php foreach ($marketData as $key => $item): ?>
+            <div class="item co-<?= strtolower($key) ?>">
+                <div class="irow label">
+                    <span>
+                        <?php 
+                            // Sử dụng tên thân thiện hơn nếu cần
+                            $displayName = $item['name'] ?? $key;
+                            echo htmlspecialchars($displayName);
+                        ?>
+                    </span>
+                    <span class="value">
+                        <?php 
+                            echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
+                        ?>
+                    </span>
+                </div>
+                <div class="irow content">
+                    <span>
+                        <i class="<?= ($item['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                        <index>
+                            <?php 
+                                echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
+                            ?>
+                        </index>
+                    </span>
+                    <span class="per <?= ($item['isPositive'] ?? true) ? 'positive' : 'negative' ?>">
+                        <?php 
+                            echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
+                        ?>
+                    </span>
+                </div>
             </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VNINDEX']['change'] ?? '9.51' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-HNX">
-            <div class="irow label">
-                <span>HNX</span>
-                <span class="value"><?= $marketData['HNX']['price'] ?? '245.33' ?></span>
-                <!-- Debug: <?= isset($marketData['HNX']) ? 'HNX data exists' : 'HNX data missing' ?> -->
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['HNX']['change'] ?? '2.33' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-VN30F1M">
-            <div class="irow label">
-                <span>VN30F1M</span>
-                <span class="value"><?= $marketData['VN30F1M']['price'] ?? '276.51' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VN30F1M']['change'] ?? '5.5' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-VN30">
-            <div class="irow label">
-                <span>VN30</span>
-                <span class="value"><?= $marketData['VN30']['price'] ?? '1,859.00' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VN30']['change'] ?? '10.37' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-UPCOM">
-            <div class="irow label">
-                <span>UPCOM</span>
-                <span class="value"><?= $marketData['UPCOM']['price'] ?? '1,865.45' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['UPCOM']['change'] ?? '-0.01' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-Slave">
-            <div class="irow label">
-                <span>Bạc</span>
-                <span class="value"><?= $marketData['Silver']['price'] ?? '110.09' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Silver']['change'] ?? '0.68' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-Oil">
-            <div class="irow label">
-                <span>Dầu Thô WTI</span>
-                <span class="value"><?= $marketData['Oil']['price'] ?? '42.83' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Oil']['change'] ?? '0.32' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-BTC">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-bitcoin.html">Bitcoin</a></span>
-                <span class="value"><?= $marketData['Bitcoin']['price'] ?? '62.69' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Bitcoin']['change'] ?? '745.53' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-ETH">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-ethereum.html">Ethereum</a></span>
-                <span class="value"><?= $marketData['Ethereum']['price'] ?? '115,974.00' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Ethereum']['change'] ?? '271.52' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-BNB">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-binancecoin.html">BNB</a></span>
-                <span class="value"><?= $marketData['BNB']['price'] ?? '4,760.21' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['BNB']['change'] ?? '25.54' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
-            </div>
-        </div>
-
-
-
+        <?php endforeach; ?>
     </div>
 </div>
 
