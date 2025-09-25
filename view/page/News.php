@@ -1,11 +1,15 @@
 <?php
 // require_once __DIR__ . '/../../config/db.php';
-// require_once __DIR__ . '/../../model/article/articlesmodel.php';
+require_once __DIR__ . '/../../model/article/articlesmodel.php';
 // require_once __DIR__ . '/../../model/commentmodel.php';
-// require_once __DIR__ . '/../../model/user/businessmenModel.php';
+//require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
 // $comments = CommentsModel::getComments();
-// $articles = ArticlesModel::getAllArticles();      
+$initialLimit = 10;
+$articles = ArticlesModel::getArticlesPaged(0, $initialLimit);
+
+$currentUserIdForView = $_SESSION['user']['id'] ?? null;
+
 // $topBusinessmen = businessmenModel::getAllBusinessmen(10); // Lấy tối đa 10 doanh nhân                                                                                                                                                                      
 ?>
 
@@ -28,7 +32,7 @@
         </div>
         <script>
             document.querySelector(".openModalcreatePost").addEventListener("click", function() {
-                <?php if (isset($_SESSION['user_id'])): ?>
+                <?php if (isset($_SESSION['user']['id'])): ?>
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
                     myModal.show();
@@ -57,9 +61,7 @@
         }
         ?>
         <div id="news-articles-list">
-            <?php 
-            $currentUserIdForView = $_SESSION['user']['id'] ?? null;
-            if (!empty($articles)): ?>
+            <?php if (!empty($articles)): ?>
                 <?php foreach ($articles as $article): ?>
                     <div class="block-k ">
                         <div class="view-carde f-frame">
@@ -69,22 +71,22 @@
                                 ?>
                                 <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                                 <div class="p-covers">
-                                    <span class="name" title="">
-                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>"
-                                            title="<?= htmlspecialchars($article['author_name']) ?>">
+                                    <span class="name">
+                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
-
-
-                                    </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
+                                    </span>
+                                    <span class="date"><?= timeAgo($article['created_at']) ?></span>
                                 </div>
                             </div>
 
                             <?php
-                            if (($currentUserIdForView ?? null) && isset($article['author_id']) && $article['author_id'] == $currentUserIdForView) {
-                                $status = $article['status'] ?? 'pending';
+                            // LOGIC MỚI: Kiểm tra author_id và dùng cột status gốc
+                            if ($currentUserIdForView && $article['author_id'] == $currentUserIdForView) {
+                                $status = $article['status']; // Sử dụng cột status từ DB
                                 $badgeClass = '';
                                 $badgeText = '';
+
                                 switch ($status) {
                                     case 'pending':
                                         $badgeClass = 'bg-warning text-dark';
@@ -94,9 +96,13 @@
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
+                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
+
                                 if ($badgeText) {
-                                    echo '<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ' . $badgeClass . '">' . htmlspecialchars($badgeText) . '</span></div>';
+                                    echo '<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;">';
+                                    echo '<span class="badge ' . $badgeClass . '">' . htmlspecialchars($badgeText) . '</span>';
+                                    echo '</div>';
                                 }
                             }
                             ?>
@@ -113,18 +119,9 @@
                             </div>
 
 
-                            <?php if (!empty($article['main_image_url'])) : ?>
+                            <?php if (!empty($article['main_image_url'])): ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
-                            <?php endif; ?>
-
-                            <?php if (!empty($article['video_url'])) : ?>
-                                <div class="mt-2 mb-2">
-                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
-                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
-                                        Trình duyệt của bạn không hỗ trợ thẻ video.
-                                    </video>
-                                </div>
                             <?php endif; ?>
 
                             <div class="item-bottom">
@@ -216,9 +213,22 @@
     </style>
 
 </main>
-
+<script>
+    const currentUserId = <?= json_encode($currentUserIdForView) ?>;
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Hàm escape HTML
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+
         // Hàm này định nghĩa cách một bài viết được vẽ ra HTML
         function renderNewsArticle(article) {
             const div = document.createElement('div');
@@ -227,58 +237,49 @@
             const authorAvatar = article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
             const articleLink = `<?= BASE_URL ?>/details_blog/${article.slug}`;
             const linkAuthor = `<?= BASE_URL ?>/view_profile?id=${article.author_id}`;
-            // API nên trả về trường time_ago đã được tính toán sẵn
             const timeAgo = article.time_ago || new Date(article.created_at).toLocaleString('vi-VN');
 
             let statusBadgeHtml = '';
-            const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
             if (currentUserId && article.author_id == currentUserId && article.status) {
-                let badgeClass = '';
-                let badgeText = '';
+                let badgeClass = '',
+                    badgeText = '';
                 switch (article.status) {
-                    case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
-                    case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+                    case 'pending':
+                        badgeClass = 'bg-warning text-dark';
+                        badgeText = 'Chờ duyệt';
+                        break;
+                    case 'public':
+                        badgeClass = 'bg-success';
+                        badgeText = 'Công khai';
+                        break;
                 }
-                if (badgeText) {
-                    statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
-                }
+                if (badgeText) statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom:8px; margin-top:5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
             }
 
             div.innerHTML = `
-            <div class="view-carde f-frame">
-                <div class="provider">
-                    <img class="logo" alt="" src="${authorAvatar}">
-                    <div class="p-covers">
-                        <span class="name" title="${article.author_name}">
-                            <a href="${linkAuthor}" title="${article.author_name}">${article.author_name}</a>
-                        </span>
-                        <span class="date">${timeAgo}</span>
-                    </div>
-                </div>
-                ${statusBadgeHtml}
-                <div class="title">
-                    <a title="${article.title}" href="${articleLink}">${article.title}</a>
-                </div>
-                <div class="sapo">
-                    ${article.summary}
-                    <a href="${articleLink}" class="d-more">Xem thêm</a>
-                </div>
-                ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" title="${article.title}" alt="${article.title}" border="0">` : ''}
-                <div class="item-bottom">
-                    <div class="button-ar">
-                        <div class="dropdown home-item">
-                            <i class="far fa-share-square"></i><span data-bs-toggle="dropdown" aria-expanded="false">Chia sẻ</span>
-                            <ul class="dropdown-menu">
-                                <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink" data-url="/article-${article.slug}-p${article.id}.html" href="javascript:void(0)">Copy link</a></li>
-                                <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb" data-url="/article-${article.slug}-p${article.id}.html" href="javascript:void(0)">Share FB</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+    <div class="view-carde f-frame">
+        <div class="provider">
+            <img class="logo" alt="" src="${authorAvatar}">
+            <div class="p-covers">
+                <span class="name" title="${article.author_name}">
+                    <a href="${linkAuthor}" title="${article.author_name}">${article.author_name}</a>
+                </span>
+                <span class="date">${timeAgo}</span>
             </div>
-        `;
+        </div>
+        ${statusBadgeHtml}
+        <div class="title">
+            <a title="${article.title}" href="${articleLink}">${article.title}</a>
+        </div>
+        <div class="sapo">
+            ${article.summary}
+            <a href="${articleLink}" class="d-more">Xem thêm</a>
+        </div>
+        ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" title="${article.title}" alt="${article.title}" border="0">` : ''}
+    </div>`;
             return div;
         }
+
 
         // Gọi hàm scroll vô tận với cấu hình cho trang News
         setupInfiniteScroll({
@@ -286,10 +287,10 @@
             loadingElementId: 'loading',
             loadMoreContainerId: 'load-more-container',
             loadMoreBtnId: 'load-more-btn',
-            apiUrl: 'api/loadMoreArticles', // Giả định API endpoint là đây
-            initialOffset: <?= count($articles ?? []) ?>, // Bắt đầu tải từ vị trí sau các bài đã có
-            limit: 10, // Tải 10 bài mỗi lần
-            renderItemFunction: renderNewsArticle
+            apiUrl: '<?= BASE_URL ?>/api/loadMoreArticles',
+            initialOffset: <?= count($articles ?? []) ?>,
+            limit: 5,
+            renderItemFunction: renderNewsArticle // DÙNG HÀM JS
         });
     });
 </script>
