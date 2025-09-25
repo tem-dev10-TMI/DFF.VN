@@ -175,6 +175,58 @@ a {
     text-decoration: underline;
 }
 
+/* Violation indicator */
+.comment-card.violation {
+    border-left: 4px solid var(--violation);
+    background: rgba(255, 71, 87, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0 -16px;
+}
+
+.comment-card.violation::before {
+    content: "⚠️";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 16px;
+}
+
+.comment-card.checking {
+    border-left: 4px solid #ffc107;
+    background: rgba(255, 193, 7, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0 -16px;
+}
+
+.comment-card.checking::before {
+    content: "🔄";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Warning text */
+.simple-warning-text {
+    color: var(--violation);
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
 /* Khi chưa có comment */
 .comment-empty {
     margin-top: 10px;

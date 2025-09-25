@@ -1,4 +1,9 @@
 <?php
+// Start session nếu chưa có
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../model/CommentGlobalModel.php';
 
@@ -528,7 +533,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 <h5 class="bg-success"><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
                 <ul class="list_comment">
                     <?php foreach ($comments as $c): ?>
-                        <li class="chat-item" data-id="<?= $c['id'] ?>">
+                        <li class="chat-item <?= ($c['ai_checked'] && $c['ai_violation']) ? 'violation' : '' ?>" data-id="<?= $c['id'] ?>">
                             <div class="chat-avatar">
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
@@ -545,6 +550,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <div class="chat-content">
                                     <?= nl2br(preg_replace('/@(\w+)/u', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content']))) ?>
                                 </div>
+
+                                <?php if ($c['ai_checked'] && $c['ai_violation']): ?>
+                                    <div class="ai-violation-warning">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>
+                                <?php endif; ?>
 
                                 <div class="chat-actions">
                                     <button>⬆</button>
@@ -633,68 +642,108 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </div>
 
 
+        <style>
+            /* AI Violation Warning Styles */
+            .ai-violation-warning {
+                background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+                border: 2px solid #f39c12;
+                border-radius: 8px;
+                padding: 8px 12px;
+                margin: 8px 0;
+                color: #856404;
+                font-weight: 600;
+                font-size: 14px;
+                text-align: center;
+                box-shadow: 0 2px 4px rgba(243, 156, 18, 0.2);
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% { transform: scale(1); }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); }
+            }
+
+            /* Comment với vi phạm */
+            .chat-item.violation {
+                border-left: 4px solid #f39c12;
+                background: linear-gradient(90deg, rgba(243, 156, 18, 0.05), transparent);
+            }
+
+            /* Comment đang được check - Ẩn trạng thái checking */
+            .chat-item.checking {
+                /* Không hiển thị gì đặc biệt khi đang check */
+            }
+
+            .chat-item.checking::after {
+                /* Ẩn hoàn toàn phần "Đang kiểm tra..." */
+                display: none;
+            }
+        </style>
+
         <script>
             let lastId = <?= !empty($comments) ? max(array_column($comments, 'id')) : 0 ?>;
 
-            // Render comment
+            // Render comment (cũ - không dùng nữa)
             function createCommentElement(c) {
-                const li = document.createElement("li");
-                li.className = "chat-item";
-                li.dataset.id = c.id;
-                li.innerHTML = `
-        <div class="chat-avatar">
-            ${c.avatar_url
-                        ? `<img src="${c.avatar_url}">`
-                        : `<span class="avatar-fallback">${c.username ? c.username[0].toUpperCase() : '#'}</span>`}
-        </div>
-        <div class="chat-body" data-comment-id="${c.id}" data-username="${c.username}">
-            <div class="chat-meta">
-                <span class="chat-name">${c.username}</span>
-                <span class="chat-time">${c.time_ago}</span>
-            </div>
-            <div class="chat-content">${c.content.replace(/@([\p{L}\p{N}_]+)/gu, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
-            <div class="chat-actions">
-                <button>⬆</button>
-                <span class="vote-count">${c.upvotes || 0}</span>
-                <button>⬇</button>
-                <a href="#" class="chat-reply">Trả lời</a>
-            </div>
-        </div>`;
-                return li;
+                // Redirect to new function
+                return createCommentElementWithAI(c);
             }
-            // Gửi comment
+            // Gửi comment với AI check
             document.getElementById("send-comment").addEventListener("click", () => {
                 const textarea = document.getElementById("comment-content");
                 const content = textarea.value.trim();
-                if (!content) return;
+                
+                // Kiểm tra user có login không
+                const userId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                if (userId <= 0) {
+                    alert("Vui lòng đăng nhập để gửi bình luận!");
+                    return;
+                }
+                
+                if (!content) {
+                    alert("Vui lòng nhập nội dung bình luận!");
+                    return;
+                }
+                
+                console.log("🚀 User ID:", userId, "Content:", content);
 
-                fetch("api/comment_add", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: "content=" + encodeURIComponent(content)
-                    })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            const ul = document.querySelector(".list_comment");
-                            const li = createCommentElement(data.comment);
+                // Tạo temp ID cho comment
+                const tempId = "temp-" + Date.now();
+                
+                // Tạo comment element tạm thời
+                const tempComment = {
+                    id: tempId,
+                    username: "<?= htmlspecialchars($_SESSION['user']['name'] ?? 'User') ?>",
+                    avatar_url: "<?= htmlspecialchars($_SESSION['user']['avatar_url'] ?? '') ?>",
+                    content: content,
+                    time_ago: "Vừa xong",
+                    upvotes: 0,
+                    ai: { isChecking: true }
+                };
 
-                            // ✅ thêm xuống cuối
-                            // ul.prepend(li);
+                console.log("🔍 Creating temp comment:", tempComment);
 
-                            // ✅ auto scroll xuống cuối
-                            ul.scrollTop = 0;
+                // Hiển thị comment tạm thời
+                const ul = document.querySelector(".list_comment");
+                if (!ul) {
+                    console.error("❌ Không tìm thấy .list_comment");
+                    return;
+                }
+                
+                const li = createCommentElementWithAI(tempComment);
+                console.log("🔍 Created temp element:", li);
+                
+                ul.prepend(li);
+                ul.scrollTop = 0;
+                
+                console.log("✅ Temp comment displayed");
 
-                            if (data.comment.id > lastId) lastId = data.comment.id;
-                        } else {
-                            // Ghi log lỗi nếu có để dễ debug
-                            console.error("Lỗi khi thêm comment:", data.error || "Dữ liệu trả về không hợp lệ");
-                            alert(data.error || "Có lỗi xảy ra, vui lòng thử lại.");
-                        }
-                    })
-                    .finally(() => textarea.value = "");
+                // Gửi comment với AI check
+                sendCommentWithAI(content, tempId, userId);
+                
+                // Clear textarea
+                textarea.value = "";
             });
 
             // nhấn enter 
@@ -709,14 +758,31 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Load comment mới
             function loadNewComments() {
-                fetch("<?= BASE_URL ?>/comment_list.php?last_id=" + lastId + "&_=" + new Date().getTime())
+                fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=getComments&last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
-                        if (data.success) {
+                        if (data.status === "success") {
+                            console.log("📥 Loaded new comments:", data.comments.length);
                             const ul = document.querySelector(".list_comment");
                             data.comments.forEach(c => {
-                                if (!document.querySelector(`.chat-item[data-id="${c.id}"]`)) {
-                                    const li = createCommentElement(c);
+                                // Kiểm tra comment đã tồn tại chưa (bao gồm cả temp comment)
+                                const existingElement = document.querySelector(`.chat-item[data-id="${c.id}"]`);
+                                const tempElement = document.querySelector(`.chat-item[data-id*="temp-"]`);
+                                
+                                if (!existingElement && !tempElement) {
+                                    console.log("🆕 New comment found:", c.id, c.content);
+                                    
+                                    // Thêm thông tin AI vào comment
+                                    if (c.ai_checked) {
+                                        c.ai = {
+                                            isViolation: c.ai_violation == 1,
+                                            isChecking: false,
+                                            details: c.ai_details
+                                        };
+                                        console.log("🤖 AI info added:", c.ai);
+                                    }
+                                    
+                                    const li = createCommentElementWithAI(c);
 
                                     // ✅ cũng append lên đầuđầu
                                     ul.prepend(li);
@@ -725,14 +791,244 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     ul.scrollTop = 0;
 
                                     if (c.id > lastId) lastId = c.id;
+                                } else {
+                                    console.log("⏭️ Comment already exists or temp comment present:", c.id);
                                 }
                             });
+                        } else {
+                            console.log("❌ Failed to load comments:", data);
                         }
+                    })
+                    .catch(error => {
+                        console.error("❌ Error loading comments:", error);
                     });
             }
 
-            // Auto refresh
-            setInterval(loadNewComments, 2000);
+            // Auto refresh (tạm thời tắt để tránh duplicate)
+            // setInterval(loadNewComments, 2000);
+
+            // ========== AI CHECK FUNCTIONS ==========
+            
+            // Function gửi comment với AI check
+            async function sendCommentWithAI(content, tempId, userId) {
+                try {
+                    console.log("🚀 Sending comment to server:", content, "User ID:", userId);
+                    
+                    // 1. Gửi comment vào database
+                    const res = await fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=addComment", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "user_id=" + encodeURIComponent(userId) + 
+                              "&content=" + encodeURIComponent(content)
+                    });
+                    
+                    console.log("📡 Server response status:", res.status);
+                    
+                    const data = await res.json();
+                    console.log("📡 Server response data:", data);
+                    
+                    if (data.status === "success") {
+                        console.log("✅ Comment saved to database. ID:", data.comment_id);
+                        
+                        // Thay thế temp comment bằng real comment
+                        const tempElement = document.querySelector(`[data-id="${tempId}"]`);
+                        if (tempElement) {
+                            tempElement.dataset.id = data.comment_id;
+                            console.log("🔄 Replaced temp comment with real ID:", data.comment_id);
+                        }
+                        
+                        // 2. AI check comment
+                        checkCommentWithAI(tempId, content, data.comment_id);
+                        
+                        if (data.comment_id > lastId) lastId = data.comment_id;
+                    } else {
+                        console.error("❌ Lỗi khi thêm comment:", data.message);
+                        // Xóa comment tạm nếu lỗi
+                        const tempElement = document.querySelector(`[data-id="${tempId}"]`);
+                        if (tempElement) tempElement.remove();
+                    }
+                } catch (error) {
+                    console.error("❌ Lỗi gửi comment:", error);
+                    // Xóa comment tạm nếu lỗi
+                    const tempElement = document.querySelector(`[data-id="${tempId}"]`);
+                    if (tempElement) tempElement.remove();
+                }
+            }
+
+            // Function AI check comment
+            async function checkCommentWithAI(tempId, content, commentId) {
+                try {
+                    console.log("🔍 Bắt đầu AI check cho comment:", content);
+                    
+                    const response = await fetch("<?= BASE_URL ?>/checkCmt/check_comment.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            content: content
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    console.log("🤖 AI check result:", result);
+
+                    // Cập nhật UI với kết quả AI
+                    updateCommentWithAIResult(tempId, result);
+                    
+                    // Lưu kết quả AI vào database
+                    saveAIResultToDatabase(commentId, result);
+
+                } catch (error) {
+                    console.error("❌ Lỗi AI check:", error);
+                    // Xóa trạng thái checking nếu có lỗi
+                    const tempElement = document.querySelector(`[data-id="${tempId}"]`);
+                    if (tempElement) {
+                        tempElement.classList.remove("checking");
+                    }
+                }
+            }
+
+            // Function cập nhật UI với kết quả AI
+            function updateCommentWithAIResult(tempId, aiResult) {
+                console.log("🔄 Updating UI with AI result for tempId:", tempId);
+                
+                // Tìm element bằng tempId
+                let element = document.querySelector(`[data-id="${tempId}"]`);
+                if (!element) {
+                    console.warn("❌ Không tìm thấy element với tempId:", tempId);
+                    // Thử tìm bằng cách khác - tìm comment mới nhất
+                    const allComments = document.querySelectorAll('.chat-item');
+                    if (allComments.length > 0) {
+                        element = allComments[0]; // Lấy comment đầu tiên (mới nhất)
+                        console.log("🔄 Using latest comment element instead");
+                    }
+                }
+                
+                if (!element) {
+                    console.error("❌ Không thể tìm thấy element để cập nhật");
+                    return;
+                }
+
+                // Xóa class checking
+                element.classList.remove("checking");
+
+                // Debug AI result
+                console.log("🤖 AI Result:", aiResult);
+                console.log("🤖 isViolation:", aiResult.isViolation);
+                
+                // Nếu có vi phạm, thêm cảnh báo
+                if (aiResult.isViolation) {
+                    console.log("🚨 VIOLATION DETECTED - Adding warning to UI");
+                    element.classList.add("violation");
+                    
+                    // Thêm message cảnh báo
+                    const chatBody = element.querySelector(".chat-body");
+                    if (chatBody) {
+                        // Kiểm tra xem đã có cảnh báo chưa
+                        if (!chatBody.querySelector(".ai-violation-warning")) {
+                            const warningDiv = document.createElement("div");
+                            warningDiv.className = "ai-violation-warning";
+                            warningDiv.innerHTML = "⚠️ Bạn đã vi phạm quy tắc cộng đồng";
+                            chatBody.appendChild(warningDiv);
+                            console.log("✅ Violation warning added to UI");
+                        } else {
+                            console.log("⚠️ Violation warning already exists");
+                        }
+                    } else {
+                        console.error("❌ Cannot find chat-body to add warning");
+                    }
+                    
+                    console.log("🚨 VIOLATION DETECTED - Auto-updating database");
+                    console.log("🚨 Violation details:", aiResult);
+                } else {
+                    console.log("✅ Comment is safe, no violation detected");
+                }
+
+                console.log("✅ AI result applied to UI");
+            }
+
+            // Function lưu kết quả AI vào database
+            async function saveAIResultToDatabase(commentId, aiResult) {
+                try {
+                    const response = await fetch("<?= BASE_URL ?>/controller/updateAIresultGlobalController.php", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            comment_id: commentId,
+                            isViolation: aiResult.isViolation,
+                            aiDetails: aiResult
+                        })
+                    });
+
+                    if (response.ok) {
+                        console.log("💾 AI result saved to database for comment:", commentId);
+                        if (aiResult.isViolation) {
+                            console.log("🚨 User will see violation warning in UI");
+                        }
+                        
+                        // Không cần load comment mới vì đã cập nhật UI trực tiếp
+                        // setTimeout(() => {
+                        //     loadNewComments();
+                        // }, 1000);
+                    } else {
+                        console.error("❌ Failed to save AI result to database");
+                    }
+                } catch (error) {
+                    console.error("❌ Error saving AI result:", error);
+                }
+            }
+
+            // Function tạo comment element với AI info
+            function createCommentElementWithAI(c) {
+                const li = document.createElement("li");
+                li.className = "chat-item";
+                li.dataset.id = c.id;
+                
+                // Thêm class dựa trên AI result
+                if (c.ai) {
+                    if (c.ai.isChecking) {
+                        li.classList.add("checking");
+                    } else if (c.ai.isViolation) {
+                        li.classList.add("violation");
+                    }
+                }
+                
+                let aiWarning = "";
+                if (c.ai && c.ai.isViolation && !c.ai.isChecking) {
+                    aiWarning = '<div class="ai-violation-warning">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>';
+                }
+                
+                li.innerHTML = `
+        <div class="chat-avatar">
+            ${c.avatar_url
+                        ? `<img src="${c.avatar_url}">`
+                        : `<span class="avatar-fallback">${c.username ? c.username[0].toUpperCase() : '#'}</span>`}
+        </div>
+        <div class="chat-body" data-comment-id="${c.id}" data-username="${c.username}">
+            <div class="chat-meta">
+                <span class="chat-name">${c.username}</span>
+                <span class="chat-time">${c.time_ago}</span>
+            </div>
+            <div class="chat-content">${c.content.replace(/@([\p{L}\p{N}_]+)/gu, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
+            ${aiWarning}
+            <div class="chat-actions">
+                <button>⬆</button>
+                <span class="vote-count">${c.upvotes || 0}</span>
+                <button>⬇</button>
+                <a href="#" class="chat-reply">Trả lời</a>
+            </div>
+        </div>`;
+                return li;
+            }
         </script>
 
         <div class="adv block-k">
