@@ -1,13 +1,12 @@
 <?php
-require_once __DIR__ . '/../model/NewsModel.php';
+require_once __DIR__ . '/../model/article/articlesmodel.php';
 
 class NewsController
 {
     public static function index()
     {
         // Lấy danh sách bài viết
-        $articles = NewsModel::getAllArticles();
-        $articles = NewsModel::getLatestArticles($limit = 6);
+        $articles = ArticlesModel::getArticlesPaged(0, 10); // Lấy 10 bài đầu tiên
 
         // Load view
         ob_start();

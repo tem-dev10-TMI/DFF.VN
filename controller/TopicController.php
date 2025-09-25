@@ -85,44 +85,47 @@ class TopicController
         require_once __DIR__ . '/../model/rss/RssModel.php';
         $initial_limit = 5; // Chỉ tải 5 bài cho mỗi nguồn RSS ban đầu
 
-        if ($slug == 'tai-chinh') {
-            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://thanhnien.vn/rss/kinh-te.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else if ($slug == 'vi-mo') {
-            $feedUrl1 = "https://baochinhphu.vn/kinh-te.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else if ($slug == 'thi-truong') {
-            $feedUrl1 = "https://bnews.vn/rss/thi-truong-4.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://vietnamnet.vn/rss/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else if ($slug == 'quoc-te') {
-            $feedUrl1 = "https://tuoitre.vn/rss/the-gioi.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://vnexpress.net/rss/the-gioi.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else if ($slug == 'nha-dat') {
-            $feedUrl1 = "https://thanhnien.vn/rss/bat-dong-san.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://vnexpress.net/rss/bat-dong-san.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else if ($slug == '360-doanh-nghiep') {
-            $feedUrl1 = "https://vnexpress.net/rss/kinh-doanh.rss";
-            $rssArticles1 = RssModel::getFeedItems($feedUrl1, $initial_limit, 15);
-            $feedUrl2 = "https://dantri.com.vn/kinh-doanh.rss";
-            $rssArticles2 = RssModel::getFeedItems($feedUrl2, $initial_limit, 15);
-            $articles = array_merge($rssArticles1, $rssArticles2);
-        } else {
-            $articles = articlesmodel::getArticlesByTopicSlug($slug, 5, 0); // Lấy 10 bài đầu tiên
+        // Luôn lấy bài viết từ CSDL của người dùng trước
+        $dbArticles = articlesmodel::getArticlesByTopicSlug($slug, 5, 0);
+        $articles = $dbArticles ?: []; // Khởi tạo mảng articles với bài viết từ CSDL (nếu có)
+
+        // Định nghĩa các nguồn RSS cho các chủ đề cụ thể
+        $rssFeedMap = [
+            'tai-chinh' => [
+                "https://baochinhphu.vn/kinh-te.rss",
+                "https://thanhnien.vn/rss/kinh-te.rss"
+            ],
+            'vi-mo' => [
+                "https://baochinhphu.vn/kinh-te.rss",
+                "https://vietnamnet.vn/rss/kinh-doanh.rss"
+            ],
+            'thi-truong' => [
+                "https://bnews.vn/rss/thi-truong-4.rss",
+                "https://vietnamnet.vn/rss/kinh-doanh.rss"
+            ],
+            'quoc-te' => [
+                "https://tuoitre.vn/rss/the-gioi.rss",
+                "https://vnexpress.net/rss/the-gioi.rss"
+            ],
+            'nha-dat' => [
+                "https://thanhnien.vn/rss/bat-dong-san.rss",
+                "https://vnexpress.net/rss/bat-dong-san.rss"
+            ],
+            '360-doanh-nghiep' => [
+                "https://vnexpress.net/rss/kinh-doanh.rss",
+                "https://dantri.com.vn/kinh-doanh.rss"
+            ]
+        ];
+
+        // Nếu slug hiện tại có trong map, lấy thêm bài từ RSS và gộp vào
+        if (isset($rssFeedMap[$slug])) {
+            $rssArticles = [];
+            foreach ($rssFeedMap[$slug] as $feedUrl) {
+                $rssItems = RssModel::getFeedItems($feedUrl, $initial_limit, 15);
+                $rssArticles = array_merge($rssArticles, $rssItems);
+            }
+            // Gộp bài từ CSDL và RSS
+            $articles = array_merge($articles, $rssArticles);
         }
 
         usort($articles, function ($a, $b) {

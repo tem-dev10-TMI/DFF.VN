@@ -1,5 +1,26 @@
 <?php include __DIR__ . '/../layout/header.php'; ?>
 <?php $isEdit = isset($topic) && $topic; ?>
+<?php
+// Chuẩn hoá $topic thành mảng an toàn
+$topic = is_array($topic ?? null) ? $topic : [];
+
+$defaults = [
+  'id'          => null,
+  'name'        => '',
+  'slug'        => '',
+  'description' => '',
+  'icon_url'    => '',
+];
+
+// Gộp default với dữ liệu hiện có
+$topic = array_merge($defaults, $topic);
+
+// Xác định edit theo id
+$isEdit = !empty($topic['id']);
+
+// Tạo sẵn action
+$formAction = BASE_URL . '/admin.php?route=topics&action=' . ($isEdit ? ('update&id='.(int)$topic['id']) : 'store');
+?>
 
 <div class="row justify-content-center">
   <div class="col-lg-6">
@@ -10,10 +31,7 @@
       <div class="card-body">
 
         <!-- Nếu có upload file thì thêm enctype -->
-        <form method="post"
-              action="<?= BASE_URL ?>/admin.php?route=topics&action=<?= $isEdit ? 'update&id='.$topic['id'] : 'store'?>"
-              enctype="multipart/form-data">
-
+        <form method="post" action="<?= $formAction ?>" enctype="multipart/form-data">
           <div class="mb-3">
             <label class="form-label fw-semibold">Tên topic</label>
             <input name="name" class="form-control" value="<?= $isEdit? e($topic['name']) : '' ?>" required>
@@ -33,33 +51,40 @@
          <div class="mb-3">
   <label class="form-label fw-semibold">Tải ảnh lên (file)</label>
   <input type="file" name="icon_file" id="icon_file" class="form-control" accept=".png,.jpg,.jpeg,.svg,.webp">
-  <div class="form-text">Chọn ảnh PNG/JPG/SVG/WebP. Gợi ý ~ 64×64.</div>
+  <div class="form-text">Chọn ảnh PNG/JPG/SVG/WebP. Gợi ý ~ 64x64.</div>
 </div>
+
 
 <!-- Preview luôn có sẵn -->
 <div class="mb-3">
   <label class="form-label fw-semibold d-block">Xem trước</label>
 <?php
-  $iconRel = ($isEdit && !empty($topic['icon_url'])) ? $topic['icon_url'] : '';
+  // $iconRel = ($isEdit && !empty($topic['icon_url'])) ? $topic['icon_url'] : '';
 
 // chuẩn hoá: đảm bảo bắt đầu bằng '/public/...'
-  if ($iconRel) {
+  // if ($iconRel) {
     // nếu là 'public/...' thì thêm '/' ở đầu
-    if (strpos($iconRel, 'public/') === 0) {
-      $iconRel = '/' . $iconRel;              // -> '/public/...'
-    }
+    // if (strpos($iconRel, 'public/') === 0) {
+      // $iconRel = '/' . $iconRel;              // -> '/public/...'
+    // }
     // nếu là '/topic_img/...' mà server bạn cần '/public', có thể thêm:
     // if (strpos($iconRel, '/topic_img/') === 0) { $iconRel = '/public' . $iconRel; }
-  }
+  // }
 
 
     // Ghép BASE_URL an toàn
-    $iconSrc = $iconRel ? (rtrim(BASE_URL, '/') . $iconRel) : '';
+    // $iconSrc = $iconRel ? (rtrim(BASE_URL, '/') . $iconRel) : '';
   ?>
-  <img id="icon_preview"
-       src="<?= e($iconSrc) ?>"
-       alt="icon preview"
-       style="max-height:64px; border:1px solid #eee; border-radius:8px; padding:4px; background:#fff; <?= $iconSrc ? '' : 'display:none;' ?>">
+<?php
+$iconSrc = $topic['icon_url'] 
+  ? rtrim(BASE_URL, '/') . '/' . ltrim($topic['icon_url'], '/')
+  : '';
+?>
+<img id="icon_preview"
+     src="<?= e($iconSrc) ?>"
+     alt="icon preview"
+     style="max-height:64px;border:1px solid #eee;border-radius:8px;padding:4px;background:#fff; <?= $topic['icon_url'] ? '' : 'display:none;' ?>">
+
 </div>
 
 

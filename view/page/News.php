@@ -15,7 +15,7 @@
 
     <!-- bài viết chính block start -->
     <div class="content-left cover-page">
-       <div class="block-k box-write openModalcreatePost">
+        <div class="block-k box-write openModalcreatePost">
             <a href="javascript:void(0)" class="img-own"> <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
             </a>
             <div class="input-group box-search">
@@ -27,7 +27,7 @@
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+            document.querySelector(".openModalcreatePost").addEventListener("click", function() {
                 <?php if (isset($_SESSION['user_id'])): ?>
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
@@ -37,7 +37,6 @@
                     alert("Bạn cần đăng nhập để viết bài.");
                 <?php endif; ?>
             });
-
         </script>
 
 
@@ -58,7 +57,9 @@
         }
         ?>
         <div id="news-articles-list">
-            <?php if (!empty($articles)): ?>
+            <?php 
+            $currentUserIdForView = $_SESSION['user']['id'] ?? null;
+            if (!empty($articles)): ?>
                 <?php foreach ($articles as $article): ?>
                     <div class="block-k ">
                         <div class="view-carde f-frame">
@@ -69,15 +70,36 @@
                                 <img class="logo" alt="" src="<?= htmlspecialchars($authorAvatar) ?>">
                                 <div class="p-covers">
                                     <span class="name" title="">
-                                    <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>" 
-    title="<?= htmlspecialchars($article['title']) ?>">
-    <?= htmlspecialchars($article['title']) ?>
-    </a>
+                                        <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>"
+                                            title="<?= htmlspecialchars($article['author_name']) ?>">
+                                            <?= htmlspecialchars($article['author_name']) ?>
+                                        </a>
 
 
                                     </span><span class="date"> <?= timeAgo($article['created_at']) ?></span>
                                 </div>
                             </div>
+
+                            <?php
+                            if (($currentUserIdForView ?? null) && isset($article['author_id']) && $article['author_id'] == $currentUserIdForView) {
+                                $status = $article['status'] ?? 'pending';
+                                $badgeClass = '';
+                                $badgeText = '';
+                                switch ($status) {
+                                    case 'pending':
+                                        $badgeClass = 'bg-warning text-dark';
+                                        $badgeText = 'Chờ duyệt';
+                                        break;
+                                    case 'public':
+                                        $badgeClass = 'bg-success';
+                                        $badgeText = 'Công khai';
+                                        break;
+                                }
+                                if ($badgeText) {
+                                    echo '<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ' . $badgeClass . '">' . htmlspecialchars($badgeText) . '</span></div>';
+                                }
+                            }
+                            ?>
 
                             <div class="title">
                                 <a title="<?= htmlspecialchars($article['title']) ?>"
@@ -91,13 +113,22 @@
                             </div>
 
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])) : ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
                             <?php endif; ?>
 
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <div class="mt-2 mb-2">
+                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                </div>
+                            <?php endif; ?>
+
                             <div class="item-bottom">
-    
+
 
                                 <div class="button-ar">
                                     <div class="dropdown home-item">
@@ -187,28 +218,44 @@
 </main>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Hàm này định nghĩa cách một bài viết được vẽ ra HTML
-    function renderNewsArticle(article) {
-        const div = document.createElement('div');
-        div.className = 'block-k';
+    document.addEventListener('DOMContentLoaded', function() {
+        // Hàm này định nghĩa cách một bài viết được vẽ ra HTML
+        function renderNewsArticle(article) {
+            const div = document.createElement('div');
+            div.className = 'block-k';
 
-        const authorAvatar = article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
-        const articleLink = `<?= BASE_URL ?>/details_blog/${article.slug}`;
-        // API nên trả về trường time_ago đã được tính toán sẵn
-        const timeAgo = article.time_ago || new Date(article.created_at).toLocaleString('vi-VN');
+            const authorAvatar = article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+            const articleLink = `<?= BASE_URL ?>/details_blog/${article.slug}`;
+            const linkAuthor = `<?= BASE_URL ?>/view_profile?id=${article.author_id}`;
+            // API nên trả về trường time_ago đã được tính toán sẵn
+            const timeAgo = article.time_ago || new Date(article.created_at).toLocaleString('vi-VN');
 
-        div.innerHTML = `
+            let statusBadgeHtml = '';
+            const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+            if (currentUserId && article.author_id == currentUserId && article.status) {
+                let badgeClass = '';
+                let badgeText = '';
+                switch (article.status) {
+                    case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+                    case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+                }
+                if (badgeText) {
+                    statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
+                }
+            }
+
+            div.innerHTML = `
             <div class="view-carde f-frame">
                 <div class="provider">
                     <img class="logo" alt="" src="${authorAvatar}">
                     <div class="p-covers">
-                        <span class="name" title="${article.title}">
-                            <a href="${articleLink}" title="${article.title}">${article.title}</a>
+                        <span class="name" title="${article.author_name}">
+                            <a href="${linkAuthor}" title="${article.author_name}">${article.author_name}</a>
                         </span>
                         <span class="date">${timeAgo}</span>
                     </div>
                 </div>
+                ${statusBadgeHtml}
                 <div class="title">
                     <a title="${article.title}" href="${articleLink}">${article.title}</a>
                 </div>
@@ -230,19 +277,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `;
-        return div;
-    }
+            return div;
+        }
 
-    // Gọi hàm scroll vô tận với cấu hình cho trang News
-    setupInfiniteScroll({
-        listElementId: 'news-articles-list',
-        loadingElementId: 'loading',
-        loadMoreContainerId: 'load-more-container',
-        loadMoreBtnId: 'load-more-btn',
-        apiUrl: 'api/loadMoreArticles', // Giả định API endpoint là đây
-        initialOffset: <?= count($articles ?? []) ?>, // Bắt đầu tải từ vị trí sau các bài đã có
-        limit: 10, // Tải 10 bài mỗi lần
-        renderItemFunction: renderNewsArticle
+        // Gọi hàm scroll vô tận với cấu hình cho trang News
+        setupInfiniteScroll({
+            listElementId: 'news-articles-list',
+            loadingElementId: 'loading',
+            loadMoreContainerId: 'load-more-container',
+            loadMoreBtnId: 'load-more-btn',
+            apiUrl: 'api/loadMoreArticles', // Giả định API endpoint là đây
+            initialOffset: <?= count($articles ?? []) ?>, // Bắt đầu tải từ vị trí sau các bài đã có
+            limit: 10, // Tải 10 bài mỗi lần
+            renderItemFunction: renderNewsArticle
+        });
     });
-});
 </script>

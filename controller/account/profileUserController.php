@@ -401,7 +401,7 @@ class profileUserController
             }
 
             // Lấy và làm sạch dữ liệu từ form
-            $name = isset($_POST['name']) && $_POST['name'] !== '' ? htmlspecialchars($_POST['name']) : null;
+            $name = isset($_POST['display_name']) && $_POST['display_name'] !== '' ? htmlspecialchars($_POST['display_name']) : null;
             $username = isset($_POST['user_name']) && $_POST['user_name'] !== '' ? htmlspecialchars($_POST['user_name']) : null;
             $email = isset($_POST['email']) && $_POST['email'] !== '' ? htmlspecialchars($_POST['email']) : null;
             $phone = isset($_POST['phone']) && $_POST['phone'] !== '' ? htmlspecialchars($_POST['phone']) : null;
@@ -463,6 +463,7 @@ class profileUserController
                         'phone' => $updatedUser['phone'],
                         'role' => $updatedUser['role'],
                         'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---

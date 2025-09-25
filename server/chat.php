@@ -152,7 +152,7 @@ if (mb_strlen($contextText, 'UTF-8') > 4500) {
 
 // System prompt with strict safety and Vietnamese style guidance
 $systemPrompt = <<<PROMPT
-Bạn là Gemini Crypto Advisor, một trợ lý AI tiếng Việt cho thương mại điện tử và tiền ảo.
+Bạn là Chat Box MXH, một trợ lý AI tiếng Việt cho thương mại điện tử và tiền ảo.
 Nguyên tắc:
 - Nếu người dùng hỏi bằng ngôn ngữ nào thì trả lời bằng ngôn ngữ đó.
 - Không đưa lời khuyên đầu tư. Luôn nhắc người dùng tự nghiên cứu, rủi ro cao.

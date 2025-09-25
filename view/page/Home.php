@@ -259,9 +259,18 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 </a>
                             </div>
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])) : ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php endif; ?>
+
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <div class="mt-2 mb-2">
+                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                </div>
                             <?php endif; ?>
 
                             <!-- Giữ nguyên phần like, comment, share -->
@@ -272,11 +281,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
+                                            <?php
+                                                $shareUrl = !empty($article['is_rss'])
+                                                    ? htmlspecialchars($article['link'])
+                                                    : BASE_URL . '/details_blog/' . urlencode($article['slug']);
+                                            ?>
                                             <li><a class="dropdown-item copylink"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -363,8 +377,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <div class="dropdown home-item">
                                         <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                                            <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                            <li><a class="dropdown-item copylink" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -382,6 +396,35 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         initialOffset: 5,
                         limit: 5,
                         renderItemFunction: renderHomepageArticle
+                    });
+
+                    // JS for Share & Copy Link
+                    document.addEventListener('click', function(event) {
+                        const target = event.target;
+
+                        // --- Copy Link ---
+                        if (target.classList.contains('copylink')) {
+                            event.preventDefault();
+                            const urlToCopy = target.getAttribute('data-url');
+                            if (urlToCopy) {
+                                navigator.clipboard.writeText(urlToCopy).then(() => {
+                                    alert('Đã sao chép link!');
+                                }).catch(err => {
+                                    console.error('Lỗi khi sao chép: ', err);
+                                    alert('Không thể sao chép link.');
+                                });
+                            }
+                        }
+
+                        // --- Share to Facebook ---
+                        if (target.classList.contains('sharefb')) {
+                            event.preventDefault();
+                            const urlToShare = target.getAttribute('data-url');
+                            if (urlToShare) {
+                                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                                window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+                            }
+                        }
                     });
                 });
             </script>
@@ -712,31 +755,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        <div class="block-k bg-box-a">
-            <div class="view-right-a h-lsk">
-                <div class="title">
-                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
-                </div>
-
-                <ol class="content-ol">
-                    <?php if (!empty($events)): ?>
-                        <?php foreach ($events as $index => $event): ?>
-                            <li class="card-list-item" key="<?php echo $index; ?>">
-                                <a title="<?= htmlspecialchars($event['title']); ?>"
-                                    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>">
-                                    <?= htmlspecialchars($event['title']); ?>
-                                </a>
-
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="card-list-item">
-                            <span>Chưa có sự kiện nào</span>
-                        </li>
-                    <?php endif; ?>
-                </ol>
-            </div>
-        </div>
+        
 
 
 

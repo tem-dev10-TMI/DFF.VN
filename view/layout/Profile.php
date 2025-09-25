@@ -352,8 +352,68 @@ if ($profile_category == 'user' && $user_id) {
       <img src="<?= htmlspecialchars($avatarUrl) ?>" class="avatar" alt="avatar">
     </div>
   </div>
+  <style>
+        /* Định nghĩa animation cho hiệu ứng gradient */
+        .user-gradient-name-profile {
+            /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
+            
+            /* Hiệu ứng gradient cho chữ */
+            display: inline-block; /* Cần thiết để background-clip hoạt động đúng */
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            
+            /* Định nghĩa màu và kích thước cho gradient */
+            background-image: linear-gradient(to right,
+                #372f6a, /* Tím vũ trụ */
+                #a73737, /* Đỏ hoàng hôn */
+                #f09819, /* Cam mặt trời */
+                #a73737, /* Đỏ hoàng hôn */
+                #372f6a  /* Tím vũ trụ (lặp lại) */
+            );
+            background-size: 400% 400%;
 
-  <div class="mt-5"></div>
+            /* Animation */
+            animation: smoothGradientAnimation 15s linear infinite;
+        }
+
+        /* Đừng quên keyframes animation */
+        @keyframes smoothGradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            25% {
+                background-position: 50% 0%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            75% {
+                background-position: 50% 100%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+    </style>
+  <div class="text-center" style="margin-top: -20px;">
+    <h4 class="fw-bold mb-0 user-gradient-name-profile">
+      <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Tên người dùng') ?>
+      <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'businessmen'): ?>
+        <i class="fas fa-check-circle text-primary" title="Tài khoản doanh nhân đã xác minh"></i>
+      <?php endif; ?>
+    </h4>
+    
+    <p class="text-muted mb-3">
+      @<?= htmlspecialchars($_SESSION['user']['username'] ?? 'username') ?>
+    </p>
+  </div>
 
   <div class="row mt-5">
     <!-- Sidebar -->
@@ -512,7 +572,7 @@ if ($profile_category == 'user' && $user_id) {
               <div>
                 <strong>Hồ sơ của bạn đang được xét duyệt.</strong>
                 <div class="small mt-1">
-                  Vui lòng đợi khoảng <strong>1–2 ngày</strong> để chúng tôi kiểm tra. 
+                  Vui lòng đợi khoảng <strong>1–2 ngày</strong> để chúng tôi kiểm tra.
                   Khi hoàn tất, hệ thống sẽ gửi thông báo cho bạn.
                 </div>
               </div>
@@ -606,7 +666,7 @@ if ($profile_category == 'user' && $user_id) {
           <button type="button" class="btn btn-info text-white" data-bs-dismiss="modal">
             <i class="fas fa-times me-1"></i>Đóng
           </button>
-          
+
         <?php else: ?>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
             <i class="fas fa-times me-1"></i>Hủy
@@ -631,20 +691,19 @@ if ($profile_category == 'user' && $user_id) {
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
-      
+      <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
         <div class="modal-body">
-        <form action="<?= BASE_URL ?>/edit_profile" method="POST" enctype="multipart/form-data">
           <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
 
           <h6 class="text-muted mb-3">Thông tin tài khoản</h6>
           <div class="row g-3 mb-4">
             <div class="col-md-6">
               <label class="form-label">Tên hiển thị</label>
-              <input type="text" class="form-control" name="name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
+              <input type="text" class="form-control" name="display_name" value="<?= htmlspecialchars($user['name'] ?? '') ?>" placeholder="Tên bạn muốn mọi người thấy">
             </div>
             <div class="col-md-6">
               <label class="form-label">Username (Không thể đổi)</label>
-              <input type="text" class="form-control" name="username" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly disabled>
+              <input type="text" class="form-control" name="user_name" value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly>
               <small class="form-text text-muted">Dùng để đăng nhập.</small>
             </div>
             <div class="col-md-6">
@@ -720,6 +779,10 @@ if ($profile_category == 'user' && $user_id) {
 <?php if (isset($_GET['msg'])): ?>
   <script>
     switch ("<?= $_GET['msg'] ?>") {
+      case "invalid_token":
+        alert("❌ Phiên làm việc không hợp lệ hoặc đã hết hạn. Vui lòng tải lại trang và thử lại.");
+        window.location.href = "<?= BASE_URL ?>/profile_user";
+        break;
       case "profile_updated":
         alert("📝 Thông tin cá nhân đã được cập nhật thành công!");
         window.location.href = "<?= BASE_URL ?>/profile_user";

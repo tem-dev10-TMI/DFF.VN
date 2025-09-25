@@ -9,7 +9,7 @@
                 <div class="item">
                     <ul>
                         <li>
-                            <img class="logo" alt="<?= htmlspecialchars($topic['name']) ?>"
+                            <img class="topic-logo" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 src="<?= !empty($topic['icon_url']) ? htmlspecialchars($topic['icon_url']) : 'https://via.placeholder.com/80x80/4A90E2/FFFFFF?text=🌍' ?>">
                         </li>
                         <li class="alias">Chủ đề</li>

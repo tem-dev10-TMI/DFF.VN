@@ -27,7 +27,64 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
 
+    <style>
+        /* Định nghĩa animation cho hiệu ứng gradient */
+        .user-gradient-name {
+            /* --- Chỉ giữ lại những gì cốt lõi nhất --- */
+            font-weight: bold;
+            font-size: 0.95em;
+            /* Hơi thu nhỏ lại một chút để an toàn hơn */
 
+            /* Hiệu ứng gradient */
+            background-image: linear-gradient(to right,
+                    #372f6a,
+                    /* Tím vũ trụ */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #f09819,
+                    /* Cam mặt trời */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #372f6a
+                    /* Tím vũ trụ (lặp lại để animation mượt) */
+                );
+            /*background-image: linear-gradient(to right, #FFD700, #FF8C00, #FF4500, #FFD700);*/
+            background-size: 200% auto;
+            animation: gradientAnimation 5s ease infinite;
+
+            /* Phép thuật cho chữ */
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            background-size: 400% 400%; 
+            animation: smoothGradientAnimation 15s linear infinite; 
+        }
+
+        /* Đừng quên keyframes animation */
+        @keyframes smoothGradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            25% {
+                background-position: 50% 0%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            75% {
+                background-position: 50% 100%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+        
+    </style>
 
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
@@ -140,64 +197,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     }
 
     ?>
-    <style>
-        /* Định nghĩa animation cho hiệu ứng gradient */
-        .user-gradient-name {
-            /* --- Chỉ giữ lại những gì cốt lõi nhất --- */
-            font-weight: bold;
-            font-size: 0.95em;
-            /* Hơi thu nhỏ lại một chút để an toàn hơn */
-
-            /* Hiệu ứng gradient */
-            background-image: linear-gradient(to right,
-                    #372f6a,
-                    /* Tím vũ trụ */
-                    #a73737,
-                    /* Đỏ hoàng hôn */
-                    #f09819,
-                    /* Cam mặt trời */
-                    #a73737,
-                    /* Đỏ hoàng hôn */
-                    #372f6a
-                    /* Tím vũ trụ (lặp lại để animation mượt) */
-                );
-            /*background-image: linear-gradient(to right, #FFD700, #FF8C00, #FF4500, #FFD700);*/
-            background-size: 200% auto;
-            animation: gradientAnimation 5s ease infinite;
-
-            /* Phép thuật cho chữ */
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            color: transparent;
-            background-size: 400% 400%; 
-            animation: smoothGradientAnimation 15s linear infinite; 
-        }
-
-        /* Đừng quên keyframes animation */
-        @keyframes smoothGradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            25% {
-                background-position: 50% 0%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            75% {
-                background-position: 50% 100%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
-    </style>
+    
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
         <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name"> <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
@@ -776,6 +776,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </script>
     <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
+    <script>
+        // Make session token available to JS
+        window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+    </script>
 </body>
 
 
