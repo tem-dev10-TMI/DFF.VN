@@ -115,7 +115,7 @@
                                             Hỗ trợ AI</a></li>
                                     <li><a class="dropdown-item" href="home"><i class="fas fa-plus"></i> Viết bài</a></li>
 
-                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user_role'] == 'user' || $_SESSION['user_role'] == 'admin') {
+                                    <li><a class="dropdown-item" href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin') {
                                                                                             echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
@@ -347,7 +347,7 @@
 <!-- Modal đăng nhập -->
 <div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable" >
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
@@ -453,7 +453,7 @@
                     <div class="f-register">
                         <div class="col-12">
                             <div class="title">
-                                Tạo tài khoản để sử dụng đầy đủ tính năng và tham gia cộng đồng thành viên của DFF.VN
+                                Hàng ngàn người đã tham gia cộng đồng, còn bạn thì sao? Tạo tài khoản để kết nối ngay!
                             </div>
                         </div>
                         <input type="hidden" name="role" value="user">
@@ -517,8 +517,9 @@
                         </div>
                         <div class="col-12">
                             <div class="input-social text-center">
-                                Khi bấm tạo tài khoản bạn đã đồng ý
-                                với <a href="/policy.html" target="_blank">quy định</a> của DFF.VN
+                                Bằng việc đăng ký, bạn đã chấp nhận
+                                <a href="<?= BASE_URL ?>/about" target="_blank">quy định</a> của MXH.ORG.VN.
+
                             </div>
                         </div>
                         <div class="col-12 text-center">
@@ -810,15 +811,15 @@ if (!isset($marketData)) {
             <div class="item co-<?= strtolower($key) ?>">
                 <div class="irow label">
                     <span>
-                        <?php 
-                            // Sử dụng tên thân thiện hơn nếu cần
-                            $displayName = $item['name'] ?? $key;
-                            echo htmlspecialchars($displayName);
+                        <?php
+                        // Sử dụng tên thân thiện hơn nếu cần
+                        $displayName = $item['name'] ?? $key;
+                        echo htmlspecialchars($displayName);
                         ?>
                     </span>
                     <span class="value">
-                        <?php 
-                            echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
+                        <?php
+                        echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
                         ?>
                     </span>
                 </div>
@@ -826,14 +827,14 @@ if (!isset($marketData)) {
                     <span>
                         <i class="<?= ($item['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                         <index>
-                            <?php 
-                                echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
+                            <?php
+                            echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
                             ?>
                         </index>
                     </span>
                     <span class="per <?= ($item['isPositive'] ?? true) ? 'positive' : 'negative' ?>">
-                        <?php 
-                            echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
+                        <?php
+                        echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
                         ?>
                     </span>
                 </div>
