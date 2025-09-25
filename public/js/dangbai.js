@@ -361,7 +361,14 @@ function addPost() {
   submitBtn.disabled = true;
 
   var formData = new FormData();
-  formData.append('session_token', window.userSessionToken || '');
+  // Lấy token từ form, đảm bảo nó luôn được gửi đi
+  const formElement = document.querySelector('#createPostModal form') || document.querySelector('.post-box'); // Tìm form ở modal hoặc trang profile
+  if (formElement) {
+      const tokenInput = formElement.querySelector('input[name="session_token"]');
+      if (tokenInput) {
+          formData.append('session_token', tokenInput.value);
+      }
+  }
   formData.append('title', postTitle);
   formData.append('summary', postSummary);
   formData.append('content', postContent);

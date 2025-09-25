@@ -12,6 +12,8 @@
     $summary = nl2br(htmlspecialchars($article['summary'] ?? ''));
     $content = nl2br(htmlspecialchars($article['content'] ?? ''));
     $mainImage = $article['main_image_url'] ?? '';
+    $videoUrl = $article['media_url'] ?? '';
+
     ?>
 
     <main class="main-content">
@@ -47,10 +49,18 @@
                         <?php if (!empty($mainImage)): ?>
                             <figure><img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= $title ?>"></figure>
                         <?php endif; ?>
-
+                        <?php if (!empty($videoUrl)): ?>
+                            <div class="video-wrapper" style="margin: 20px 0;">
+                                <video width="100%" height="auto" controls>
+                                    <source src="<?= htmlspecialchars($videoUrl) ?>" type="video/mp4">
+                                    Trình duyệt của bạn không hỗ trợ video.
+                                </video>
+                            </div>
+                        <?php endif; ?>
                         <?php if (!empty($content)): ?>
                             <p><?= $content ?></p>
                         <?php endif; ?>
+
 
                         <div class="bysource"></div>
                     </div>

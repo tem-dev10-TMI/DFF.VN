@@ -830,6 +830,7 @@ const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-orig
                                     </div>
 
                                     <!-- Input hidden -->
+                                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
                                     <input type="file" id="postImage" class="d-none" accept="image/*"
                                         onchange="previewImage(event)">
                                     <input type="file" id="postVideo" class="d-none" accept="video/*"
