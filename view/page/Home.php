@@ -36,15 +36,21 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
-                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                href="<?= 'details_blog/' . urlencode($article['slug']) ?>"
+                                target="_self">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
                         <div class="cover-hover" style="">
-                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                title="<?= htmlspecialchars($article['title']) ?>"
-                                alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    title="<?= htmlspecialchars($article['title']) ?>"
+                                    alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
+                            <?php else: ?>
+                                <div class="mmavatar" style="height: 157px; display: flex; align-items: center; justify-content: center; background-color:rgb(110, 130, 160);">
+                                    <span>Người dùng này chưa thêm ảnh</span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="text" style="">
                             <h4>
@@ -245,16 +251,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             ?>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : BASE_URL .'/details_blog/' . $article['slug'] ?>"
-                                    target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <a href="<?= BASE_URL .'/details_blog/' . $article['slug'] ?>"
+                                    target="_self">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
-                                    class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <a href="<?= 'details_blog/' . $article['slug'] ?>"
+                                    class="d-more" target="_self">
                                     Xem thêm
                                 </a>
                             </div>
@@ -282,9 +288,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
                                             <?php
-                                                $shareUrl = !empty($article['is_rss'])
-                                                    ? htmlspecialchars($article['link'])
-                                                    : BASE_URL . '/details_blog/' . urlencode($article['slug']);
+                                                $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
                                             ?>
                                             <li><a class="dropdown-item copylink"
                                                     data-url="<?= $shareUrl ?>"

@@ -100,6 +100,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <link rel="stylesheet" href="<?= asset_url('public/css/style.css') ?>" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
@@ -160,6 +161,92 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
 <body>
+
+    <!-- Preloader Framework -->
+    <style>
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #globe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+            filter: blur(0.5px);
+        }
+
+        .loader-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .loading-text {
+            color: #00FF41;
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            animation: pulse-text 2.5s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.7);
+        }
+
+        @keyframes pulse-text {
+            0%, 100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        /* Thêm style để đảm bảo hiệu ứng mờ dần cho nội dung chính */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+    <div id="preloader">
+        <div class="spinner-container">
+            <!-- Container cho canvas 3D -->
+            <div id="globe-container"></div>
+            
+            <!-- Nội dung text -->
+            <div class="loader-content">
+                <h2 class="loading-text">Đang giải mã tín hiệu thị trường</h2>
+            </div>
+        </div>
+    </div>
+    <!-- End Preloader Framework -->
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
         nonce="9gkWGB3D"></script>
@@ -779,6 +866,95 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <script>
         // Make session token available to JS
         window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+    </script>
+    <script>
+        // --- Kịch bản cho hiệu ứng 3D (Không đổi) ---
+        const container = document.getElementById('globe-container');
+        let scene, camera, renderer, globe, particles;
+        let mouseX = 0, mouseY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        function init3D() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.001);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.z = 600;
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            const globeGeometry = new THREE.SphereGeometry(180, 64, 64);
+            const globeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF41, wireframe: true, transparent: true, opacity: 0.05 });
+            globe = new THREE.Mesh(globeGeometry, globeMaterial);
+            scene.add(globe);
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 4000;
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 1500;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0x00FF41, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / 3;
+            mouseY = (event.clientY - windowHalfY) / 3;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.0008;
+            particles.rotation.y += 0.0004;
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+
+        init3D();
+        animate();
+
+        // --- Preloader logic (Không đổi) ---
+        let loaderHidden = false;
+        function hideLoader() {
+            if (loaderHidden) return;
+            loaderHidden = true;
+
+            const preloader = document.getElementById('preloader');
+            const mainContent = document.getElementById('main-content');
+            
+            if (preloader) {
+                preloader.classList.add('hidden');
+            }
+            if(mainContent) {
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 100); 
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(function() {
+                    preloader.classList.add('hidden');
+                }, 500); // 500ms = 0.5 giây
+            }
+        };
+        setTimeout(hideLoader, 5000);
     </script>
 </body>
 
