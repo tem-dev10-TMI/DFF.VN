@@ -141,6 +141,7 @@ class businessmenController
 
             // Lấy và làm sạch dữ liệu từ form (bao gồm cả trường description mới)
             $name        = htmlspecialchars($_POST['name'] ?? '');
+            $username    = htmlspecialchars($_POST['username'] ?? $currentUserData['username'] ?? '');
             $email       = htmlspecialchars($_POST['email'] ?? '');
             $phone       = htmlspecialchars($_POST['phone'] ?? '');
             $description = htmlspecialchars($_POST['description'] ?? '');
@@ -186,6 +187,32 @@ class businessmenController
             }
 
             if ($successUser && $successBusiness) {
+                // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
+                $updatedUser = $modelUser->getUserById($userId);
+                if ($updatedUser) {
+                    $_SESSION['user'] = [
+                        'id' => $updatedUser['id'],
+                        'name' => $updatedUser['name'],
+                        'username' => $updatedUser['username'],
+                        'password_hash' => $updatedUser['password_hash'],
+                        'email' => $updatedUser['email'],
+                        'phone' => $updatedUser['phone'],
+                        'role' => $updatedUser['role'],
+                        'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
+                    ];
+                    
+                    // Cập nhật các session variables riêng lẻ để tương thích với header
+                    $_SESSION['user_id'] = $updatedUser['id'];
+                    $_SESSION['user_name'] = $updatedUser['name'];
+                    $_SESSION['user_username'] = $updatedUser['username'];
+                    $_SESSION['user_email'] = $updatedUser['email'];
+                    $_SESSION['user_phone'] = $updatedUser['phone'];
+                    $_SESSION['user_role'] = $updatedUser['role'];
+                    $_SESSION['user_avatar_url'] = $updatedUser['avatar_url'] ?? null;
+                }
+                // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
+                
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {

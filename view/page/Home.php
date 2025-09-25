@@ -285,7 +285,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <div class="title">
 
-                                <a href="<?= BASE_URL .'/details_blog/' . $article['slug'] ?>"
+                                <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>"
                                     target="_self">
 
                                     <?= htmlspecialchars($article['title']) ?>
@@ -324,7 +324,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <ul class="dropdown-menu">
                                             <?php
 
-                                                $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
+                                            $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
 
                                             ?>
                                             <li><a class="dropdown-item copylink"
