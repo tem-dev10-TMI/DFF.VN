@@ -55,37 +55,26 @@ class ArticlesModel
         $currentUserId = $_SESSION['user']['id'] ?? null;
         $db = new connect();
 
-        if ($currentUserId) {
-            // Logic cho người dùng đã đăng nhập
-            $sql = "(SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
+        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
                 LEFT JOIN topics t ON a.topic_id = t.id
-                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
-                WHERE a.status = 'public')
-                UNION
-                (SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-                LEFT JOIN topics t ON a.topic_id = t.id
-                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
-                WHERE a.author_id = :current_user_id AND a.status != 'rejected')
-                ORDER BY created_at DESC, id DESC
-                LIMIT :limit OFFSET :offset";
+                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'";
 
-            $stmt = $db->db->prepare($sql);
-            $stmt->bindValue(':current_user_id', $currentUserId, PDO::PARAM_INT);
+        if ($currentUserId) {
+            // Nếu đã đăng nhập: lấy bài public HOẶC bài của chính mình (để xem được cả bài pending)
+            $sql .= " WHERE a.status = 'public' OR a.author_id = :current_user_id";
         } else {
-            // Logic cho khách không thay đổi
-            $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name, m.media_url AS video_url
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-                LEFT JOIN topics t ON a.topic_id = t.id
-                LEFT JOIN media m ON a.id = m.article_id AND m.media_type = 'video'
-                WHERE a.status = 'public'
-                ORDER BY a.created_at DESC, a.id DESC
-                LIMIT :limit OFFSET :offset";
-            $stmt = $db->db->prepare($sql);
+            // Nếu là khách: chỉ lấy bài public
+            $sql .= " WHERE a.status = 'public'";
+        }
+
+        $sql .= " ORDER BY a.created_at DESC, a.id DESC LIMIT :limit OFFSET :offset";
+
+        $stmt = $db->db->prepare($sql);
+
+        if ($currentUserId) {
+            $stmt->bindValue(':current_user_id', $currentUserId, PDO::PARAM_INT);
         }
 
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
