@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-[DB Queries] Execution Time: 2124ms
-=======
-[DB Queries] Execution Time: 596ms
->>>>>>> parent of ef01db3 (update_avatarbusiness)
+[DB Queries] Execution Time: 794ms

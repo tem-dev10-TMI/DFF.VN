@@ -113,40 +113,125 @@ class ArticlesModel
     {
         $db = new connect();
 
-        // Bắt đầu câu SQL
+        // 1) Lấy bản ghi bài viết + tác giả + chủ đề (không join media để tránh nhân dòng)
         $sql = "SELECT 
-                  a.*,
-                  u.name  AS author_name,
-                  u.avatar_url,
-                  t.name  AS topic_name,
-                  m.id        AS media_id,
-                  m.media_url,
-                  m.media_type,
-                  m.caption,
-                  m.created_at AS media_created_at
-                FROM articles a
-                LEFT JOIN users  u ON a.author_id = u.id
-                LEFT JOIN topics t ON a.topic_id  = t.id
-                LEFT JOIN media m ON m.article_id = a.id
-                WHERE a.slug = :slug";
+                a.*,
+                u.name       AS author_name,
+                u.avatar_url AS author_avatar_url,
+                t.name       AS topic_name
+            FROM articles a
+            LEFT JOIN users  u ON a.author_id = u.id
+            LEFT JOIN topics t ON a.topic_id  = t.id
+            WHERE a.slug = :slug";
 
-        // Mảng chứa các tham số để bind
         $params = [':slug' => $slug];
 
-        // Nếu là khách (không có user id), chỉ cho xem bài viết public
+        // Quyền xem: khách chỉ xem 'public', người đăng nhập xem 'public' + bài của chính họ
         if ($currentUserId === null) {
             $sql .= " AND a.status = 'public'";
-        }
-        // Nếu đã đăng nhập, cho phép xem bài public HOẶC bài viết của chính họ
-        else {
-            $sql .= " AND (a.status = 'public' OR a.author_id = :currentUserId)";
-            $params[':currentUserId'] = $currentUserId;
+        } else {
+            $sql .= " AND (a.status = 'public' OR a.author_id = :uid)";
+            $params[':uid'] = $currentUserId;
         }
 
         $stmt = $db->db->prepare($sql);
         $stmt->execute($params);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $article = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$article) {
+            return null; // Không tìm thấy hoặc không có quyền
+        }
+
+        $articleId = (int)$article['id'];
+
+        // 2) Lấy danh sách section của bài viết (theo position ASC)
+        $sqlSec = "SELECT 
+                    s.id, s.article_id, s.position, s.title, s.content,
+                    s.created_at, s.updated_at
+               FROM article_sections s
+               WHERE s.article_id = :aid
+               ORDER BY s.position ASC, s.id ASC";
+        $stmtSec = $db->db->prepare($sqlSec);
+        $stmtSec->execute([':aid' => $articleId]);
+        $sections = $stmtSec->fetchAll(PDO::FETCH_ASSOC);
+
+        // 3) Nếu có section, lấy toàn bộ media của các section đó, group theo section_id
+        $sectionsById = [];
+        $sectionIds    = [];
+        foreach ($sections as $sec) {
+            $sec['media'] = [];                // chỗ chứa media của section
+            $sectionsById[$sec['id']] = $sec;  // tạm map
+            $sectionIds[] = (int)$sec['id'];
+        }
+
+        if (!empty($sectionIds)) {
+            // Tạo placeholder động cho mảng section_id
+            $inPlaceholders = [];
+            $inParams = [];
+            foreach ($sectionIds as $i => $sid) {
+                $key = ":sid{$i}";
+                $inPlaceholders[]   = $key;
+                $inParams[$key]     = $sid;
+            }
+
+            $sqlSM = "SELECT 
+                      asm.section_id,
+                      asm.position     AS media_position,
+                      m.id             AS media_id,
+                      m.media_url,
+                      m.media_type,
+                      m.caption,
+                      m.created_at     AS media_created_at
+                  FROM article_section_media asm
+                  JOIN media m ON m.id = asm.media_id
+                  WHERE asm.section_id IN (" . implode(',', $inPlaceholders) . ")
+                  ORDER BY asm.section_id ASC, asm.position ASC, m.id ASC";
+
+            $stmtSM = $db->db->prepare($sqlSM);
+            $stmtSM->execute($inParams);
+            $rowsSM = $stmtSM->fetchAll(PDO::FETCH_ASSOC);
+
+            foreach ($rowsSM as $row) {
+                $sid = (int)$row['section_id'];
+                if (isset($sectionsById[$sid])) {
+                    $sectionsById[$sid]['media'][] = [
+                        'id'         => (int)$row['media_id'],
+                        'url'        => $row['media_url'],
+                        'type'       => $row['media_type'],   // 'image' | 'video'
+                        'caption'    => $row['caption'],
+                        'position'   => (int)$row['media_position'],
+                        'created_at' => $row['media_created_at'],
+                    ];
+                }
+            }
+        }
+
+        // Build lại mảng sections theo thứ tự position
+        $articleSections = [];
+        if (!empty($sectionsById)) {
+            // $sections ban đầu đã theo position; chỉ cần đọc lại theo thứ tự cũ
+            foreach ($sections as $sec) {
+                $articleSections[] = $sectionsById[$sec['id']];
+            }
+        }
+
+        // 4) Media cấp bài viết (legacy): media gắn trực tiếp article_id
+        $sqlAM = "SELECT 
+                 m.id, m.media_url, m.media_type, m.caption, m.created_at
+              FROM media m
+              WHERE m.article_id = :aid
+              ORDER BY m.id ASC";
+        $stmtAM = $db->db->prepare($sqlAM);
+        $stmtAM->execute([':aid' => $articleId]);
+        $articleLevelMedia = $stmtAM->fetchAll(PDO::FETCH_ASSOC);
+
+        // 5) Trả về: vẫn giữ fields cũ + bổ sung 2 key mới
+        $article['sections']      = $articleSections;   // mảng section, mỗi section có 'media'
+        $article['article_media'] = $articleLevelMedia; // media cấp bài (nếu có, ví dụ video legacy)
+
+        return $article;
     }
+
 
 
     public static function getRelatedArticles($topic_id, $exclude_id, $limit = 5)
@@ -335,13 +420,15 @@ class ArticlesModel
         return $stmt->fetchColumn() > 0;
     }
 
-    public static function addArticleFromProfile(array $data)
+    public static function addArticleFromProfile(array $data, array $sections = [])
     {
-        $db = new connect();
+        $db  = new connect();
+        $pdo = $db->db;
+
         date_default_timezone_set('Asia/Ho_Chi_Minh');
         $created_at = date("Y-m-d H:i:s");
 
-        // Đảm bảo các trường bắt buộc có dữ liệu
+        // Validate cơ bản
         if (empty($data['title']) || empty($data['content']) || empty($data['author_id'])) {
             return false;
         }
@@ -351,37 +438,109 @@ class ArticlesModel
         $slug = $baseSlug;
         $counter = 1;
         while (self::slugExists($slug)) {
-            $slug = $baseSlug . '-' . $counter;
-            $counter++;
+            $slug = $baseSlug . '-' . $counter++;
         }
 
-        $sql = "INSERT INTO articles 
-        (title, slug, summary, content, main_image_url, author_id, topic_id, status, created_at, is_hot, is_analysis) 
-        VALUES 
-        (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, :created_at, :is_hot, :is_analysis)";
+        try {
+            $pdo->beginTransaction();
 
+            // 1) Insert bài viết (cover = main_image_url, tóm tắt = summary)
+            $sql = "INSERT INTO articles 
+                (title, slug, summary, content, main_image_url, author_id, topic_id, status, created_at, is_hot, is_analysis) 
+                VALUES 
+                (:title, :slug, :summary, :content, :main_image_url, :author_id, :topic_id, :status, :created_at, :is_hot, :is_analysis)";
+            $stmt = $pdo->prepare($sql);
 
-        $stmt = $db->db->prepare($sql);
+            $ok = $stmt->execute([
+                ':title'          => $data['title'],
+                ':slug'           => $slug,
+                ':summary'        => $data['summary']        ?? '',
+                ':content'        => $data['content'],
+                ':main_image_url' => $data['main_image_url'] ?? null, // ảnh cover
+                ':author_id'      => $data['author_id'],
+                ':topic_id'       => $data['topic_id']       ?? null,
+                ':status'         => $data['status']         ?? 'pending',
+                ':is_hot'         => $data['is_hot']         ?? 0,
+                ':is_analysis'    => $data['is_analysis']    ?? 0,
+                ':created_at'     => $created_at
+            ]);
 
-        $success = $stmt->execute([
-            ':title'          => $data['title'],
-            ':slug'           => $slug,
-            ':summary'        => $data['summary'] ?? '',
-            ':content'        => $data['content'],
-            ':main_image_url' => $data['main_image_url'] ?? null,
-            ':author_id'      => $data['author_id'],
-            ':topic_id'       => $data['topic_id'] ?? null,
-            ':status'         => $data['status'] ?? 'pending',
-            ':is_hot'         => $data['is_hot'] ?? 0,
-            ':is_analysis'    => $data['is_analysis'] ?? 0,
-            ':created_at'     => $created_at
-        ]);
+            if (!$ok) {
+                $pdo->rollBack();
+                return false;
+            }
 
-        if ($success) {
-            return $db->db->lastInsertId();
+            $articleId = (int)$pdo->lastInsertId();
+
+            // 2) Nếu có sections từ UI thì lưu
+            if (!empty($sections)) {
+                // Chuẩn bị statement
+                $insSection = $pdo->prepare("
+                INSERT INTO article_sections (article_id, position, title, content)
+                VALUES (:article_id, :position, :title, :content)
+            ");
+                $insMedia = $pdo->prepare("
+                INSERT INTO media (article_id, media_url, media_type, caption)
+                VALUES (:article_id, :url, :type, :caption)
+            ");
+                $insMap = $pdo->prepare("
+                INSERT INTO article_section_media (section_id, media_id, position)
+                VALUES (:section_id, :media_id, :position)
+            ");
+
+                foreach ($sections as $i => $sec) {
+                    $position = isset($sec['position']) ? (int)$sec['position'] : ($i + 1);
+
+                    // 2.1) Lưu section
+                    $insSection->execute([
+                        ':article_id' => $articleId,
+                        ':position'   => $position,
+                        ':title'      => $sec['title']   ?? null,
+                        ':content'    => $sec['content'] ?? null,
+                    ]);
+                    $sectionId = (int)$pdo->lastInsertId();
+
+                    // 2.2) Lưu media & mapping (nếu có)
+                    if (!empty($sec['media']) && is_array($sec['media'])) {
+                        foreach ($sec['media'] as $j => $m) {
+                            // Cho phép dùng media sẵn có (id) hoặc tạo mới (url/type/caption)
+                            if (!empty($m['id'])) {
+                                $mediaId = (int)$m['id'];
+                            } else {
+                                $insMedia->execute([
+                                    ':article_id' => $articleId,
+                                    ':url'        => $m['url']     ?? null,
+                                    ':type'       => $m['type']    ?? null, // 'image' | 'video'
+                                    ':caption'    => $m['caption'] ?? null,
+                                ]);
+                                $mediaId = (int)$pdo->lastInsertId();
+                            }
+
+                            // mapping vào section
+                            $insMap->execute([
+                                ':section_id' => $sectionId,
+                                ':media_id'   => $mediaId,
+                                ':position'   => ($m['position'] ?? ($j + 1)),
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            $pdo->commit();
+            return $articleId;
+        } catch (Throwable $e) {
+            if ($pdo->inTransaction()) $pdo->rollBack();
+            // TODO: ghi log $e->getMessage()
+            return false;
         }
-        return false;
     }
+
+    /**
+     * Helper kiểm tra slug đã tồn tại
+     */
+
+
     public static function searchArticles($q)
     {
         $db = new connect();

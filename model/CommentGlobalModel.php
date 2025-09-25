@@ -48,6 +48,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                 c.id, c.user_id, c.content, c.upvotes, c.created_at,
+                c.ai_violation, c.ai_checked, c.ai_details,
                 u.name AS username, u.avatar_url
             FROM comment_global c
             LEFT JOIN users u ON c.user_id = u.id
@@ -57,7 +58,16 @@ class CommentGlobalModel
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Parse AI details từ JSON
+        foreach ($comments as &$comment) {
+            if ($comment['ai_details']) {
+                $comment['ai_details'] = json_decode($comment['ai_details'], true);
+            }
+        }
+        
+        return $comments;
     }
 
 
@@ -67,6 +77,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                     c.id, c.user_id, c.content, c.upvotes, c.created_at,
+                    c.ai_violation, c.ai_checked, c.ai_details,
                     u.name AS username, u.avatar_url
                 FROM comment_global c
                 LEFT JOIN users u ON c.user_id = u.id
@@ -74,7 +85,16 @@ class CommentGlobalModel
                 ORDER BY c.created_at ASC";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':parent_id' => $parent_id]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Parse AI details từ JSON
+        foreach ($comments as &$comment) {
+            if ($comment['ai_details']) {
+                $comment['ai_details'] = json_decode($comment['ai_details'], true);
+            }
+        }
+        
+        return $comments;
     }
 
     // Tăng upvote cho comment
@@ -92,13 +112,20 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
             c.id, c.user_id, c.parent_id, c.content, c.upvotes, c.created_at,
+            c.ai_violation, c.ai_checked, c.ai_details,
             u.name AS username, u.avatar_url
         FROM comment_global c
         LEFT JOIN users u ON c.user_id = u.id
         WHERE c.id = :id";
         $stmt = $db->db->prepare($sql);
         $stmt->execute([':id' => $id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($comment && $comment['ai_details']) {
+            $comment['ai_details'] = json_decode($comment['ai_details'], true);
+        }
+        
+        return $comment;
     }
 
     public static function getNewComments($last_id, $limit = 20)
@@ -106,6 +133,7 @@ class CommentGlobalModel
         $db = new connect();
         $sql = "SELECT 
                 c.id, c.user_id, c.parent_id, c.content, c.upvotes, c.created_at,
+                c.ai_violation, c.ai_checked, c.ai_details,
                 u.name AS username, u.avatar_url
             FROM comment_global c
             LEFT JOIN users u ON c.user_id = u.id
@@ -116,6 +144,73 @@ class CommentGlobalModel
         $stmt->bindValue(':last_id', (int)$last_id, PDO::PARAM_INT);
         $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $comments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+        // Parse AI details từ JSON
+        foreach ($comments as &$comment) {
+            if ($comment['ai_details']) {
+                $comment['ai_details'] = json_decode($comment['ai_details'], true);
+            }
+        }
+        
+        return $comments;
+    }
+
+    // Lấy ID của comment vừa thêm
+    public static function getLastInsertId()
+    {
+        $db = new connect();
+        return $db->db->lastInsertId();
+    }
+
+    // Cập nhật kết quả AI check cho comment
+    public static function updateAIResult($comment_id, $isViolation, $aiDetails = null)
+    {
+        $db = new connect();
+        $sql = "UPDATE comment_global 
+                SET ai_violation = :ai_violation, 
+                    ai_checked = 1, 
+                    ai_details = :ai_details 
+                WHERE id = :comment_id";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([
+            ':comment_id' => $comment_id,
+            ':ai_violation' => $isViolation ? 1 : 0,
+            ':ai_details' => $aiDetails ? json_encode($aiDetails) : null
+        ]);
+    }
+
+    // Lấy comment theo ID (alias cho getCommentById)
+    public static function getById($comment_id)
+    {
+        return self::getCommentById($comment_id);
+    }
+
+    // Lấy comment mới nhất của user (cho global comments)
+    public static function getLatestCommentByUser($user_id)
+    {
+        $db = new connect();
+        $sql = "SELECT c.*, u.name AS username, u.avatar_url,
+                       c.ai_violation, c.ai_checked, c.ai_details
+                FROM comment_global c 
+                LEFT JOIN users u ON c.user_id = u.id 
+                WHERE c.user_id = :user_id 
+                ORDER BY c.created_at DESC 
+                LIMIT 1";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':user_id' => $user_id]);
+        $comment = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($comment && $comment['ai_details']) {
+            $comment['ai_details'] = json_decode($comment['ai_details'], true);
+        }
+        
+        return $comment;
+    }
+
+    // Thêm bình luận mới (alias cho addComment)
+    public static function insert($user_id, $content, $parent_id = null)
+    {
+        return self::addComment($user_id, $content, $parent_id);
     }
 }

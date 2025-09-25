@@ -4,15 +4,17 @@
             .m-menu-i.collapse:not(.show) {
                 display: none;
             }
+
             .m-menu-i.collapsing,
             .m-menu-i.collapse.show {
                 position: fixed;
                 top: 5%;
-                
+
                 left: 0;
                 width: 100vw;
-                height: 95vh;
-                z-index: 9997; /* Dưới modal nhưng trên mọi thứ khác */
+
+                z-index: 9997;
+                /* Dưới modal nhưng trên mọi thứ khác */
                 background: #fff;
                 padding: 20px 20px 35px 20px;
                 max-height: 100vh;
@@ -32,6 +34,7 @@
 
         /* Điều chỉnh cho điện thoại có chiều cao thấp */
         @media (max-width: 991.98px) and (max-height: 720px) {
+
             .m-menu-i.collapsing,
             .m-menu-i.collapse.show {
                 top: 10%;
@@ -39,7 +42,7 @@
             }
         }
     </style>
-    
+
     <?php render_sidebar_content('mobile', $topTopics, $moreTopics); ?>
 
     <script>

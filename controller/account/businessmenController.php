@@ -14,10 +14,10 @@ class businessmenController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        
-        require_once __DIR__.'/../../model/user/userModel.php';
-        require_once __DIR__.'/../../model/user/businessmenModel.php';
-        require_once __DIR__.'/../../model/article/articlesmodel.php';
+
+        require_once __DIR__ . '/../../model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
 
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
@@ -33,20 +33,20 @@ class businessmenController
         if ($role === 'businessmen') {
             $businessData = $modelBusiness->getBusinessByUserId($userId);
             $stats = $modelBusiness->getBusinessStats($userId);
-            
+
             // Merge dữ liệu từ bảng users và businessmen
             $business = array_merge($user, $businessData ?: []);
             $profileUser = $business; // Tương thích với Profile.php
-            
+
             //Load view
             ob_start();
             $profile_category = 'businessmen';
-            require_once __DIR__.'/../../view/layout/Profile.php';
+            require_once __DIR__ . '/../../view/layout/Profile.php';
             $content = ob_get_clean();
 
             //Load layout
             $profile = true; // đừng ai xóa
-            require_once __DIR__.'/../../view/layout/main.php';
+            require_once __DIR__ . '/../../view/layout/main.php';
         } else {
             header("Location: " . BASE_URL);
             exit;
@@ -73,20 +73,25 @@ class businessmenController
     //     require __DIR__ . '/../views/businessmen/create.php';
     // }
 
-    // Xử lý lưu doanh nhân mới
+    // ========== Xử lý lưu doanh nhân ==========
     public static function store()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $user_id = $_POST['user_id'] ?? '';
-            $birth_year = $_POST['birth_year'] ?? '';
+            $user_id     = $_POST['user_id'] ?? '';
+            $birth_year  = $_POST['birth_year'] ?? '';
             $nationality = $_POST['nationality'] ?? '';
-            $education = $_POST['education'] ?? '';
-            $position = $_POST['position'] ?? '';
+            $education   = $_POST['education'] ?? '';
+            $position    = $_POST['position'] ?? '';
 
-            businessmenModel::registerBusiness($user_id, $birth_year, $nationality, $education, $position);
+            require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
-            header('Location: index.php?controller=businessmen&action=index');
+            if (businessmenModel::existsByUserId($user_id)) {
+                businessmenModel::updateBusiness($user_id, $birth_year, $nationality, $education, $position);
+            } else {
+                businessmenModel::registerBusiness($user_id, $birth_year, $nationality, $education, $position);
+            }
 
+            header('Location: ' . BASE_URL . '/businessmen/index');
             exit;
         }
     }
@@ -102,8 +107,8 @@ class businessmenController
         }
         $userId = $_SESSION['user']['id'];
 
-        require_once __DIR__.'/../../model/user/businessmenModel.php';
-        require_once __DIR__.'/../../model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
+        require_once __DIR__ . '/../../model/user/userModel.php';
 
         $modelBusiness = new businessmenModel();
         $modelUser = new userModel();
@@ -146,6 +151,7 @@ class businessmenController
 
             // Lấy và làm sạch dữ liệu từ form (bao gồm cả trường description mới)
             $name        = htmlspecialchars($_POST['name'] ?? '');
+            $username    = htmlspecialchars($_POST['user_name'] ?? $currentUserData['username']);
             $email       = htmlspecialchars($_POST['email'] ?? '');
             $phone       = htmlspecialchars($_POST['phone'] ?? '');
             $description = htmlspecialchars($_POST['description'] ?? '');
@@ -191,7 +197,9 @@ class businessmenController
             }
 
             if ($successUser && $successBusiness) {
-<<<<<<< HEAD
+
+
+
                 // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
                 $updatedUser = $modelUser->getUserById($userId);
                 if ($updatedUser) {
@@ -207,7 +215,7 @@ class businessmenController
                         'cover_photo' => $updatedUser['cover_photo'] ?? null,
                         'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
-                    
+
                     // Cập nhật các session variables riêng lẻ để tương thích với header
                     $_SESSION['user_id'] = $updatedUser['id'];
                     $_SESSION['user_name'] = $updatedUser['name'];
@@ -219,9 +227,10 @@ class businessmenController
                     $_SESSION['user_cover_photo'] = $updatedUser['cover_photo'] ?? null;
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
-                
-=======
->>>>>>> parent of ef01db3 (update_avatarbusiness)
+
+
+
+
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {
@@ -231,7 +240,7 @@ class businessmenController
         }
 
         $business = $modelBusiness->getBusinessByUserId($userId);
-        require_once __DIR__."/../../view/page/profileUser.php";
+        require_once __DIR__ . "/../../view/page/profileUser.php";
     }
 
     // Xử lý update doanh nhân
@@ -245,8 +254,7 @@ class businessmenController
 
             businessmenModel::updateBusiness($user_id, $birth_year, $nationality, $education, $position);
 
-            header('Location: index.php?controller=businessmen&action=index');
-
+            header('Location: ' . BASE_URL . '/businessmen/index');
             exit;
         }
     }
@@ -256,7 +264,7 @@ class businessmenController
     public static function destroy($user_id)
     {
         businessmenModel::deleteBusiness($user_id);
-        header('Location: index.php?controller=businessmen&action=index');
+        header('Location: ' . BASE_URL . '/businessmen/index');
         exit;
     }
 
@@ -268,7 +276,7 @@ class businessmenController
             exit;
         }
         $userId = $_SESSION['user']['id'];
-        require_once __DIR__.'/../../model/user/businessmenModel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
         $modelBusiness = new businessmenModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -290,7 +298,7 @@ class businessmenController
 
             if ($career_id) {
                 // Cập nhật quá trình công tác hiện có
-                $result = $modelBusiness->updateBusinessmenCareers($id, $start_year, $end_year, $position, $company, $description);
+                $result = $modelBusiness->updateBusinessmenCareers($career_id, $start_year, $end_year, $position, $company, $description);
             } else {
                 // Thêm mới quá trình công tác
                 $result = $modelBusiness->addBusinessmenCareers($businessmen_id, $start_year, $end_year, $position, $company, $description);
@@ -310,6 +318,6 @@ class businessmenController
         $careers = $modelBusiness->getCareersByBusinessmenId($business['businessman_id']);
         // Truyền dữ liệu này đến View nếu bạn muốn hiển thị ngay khi load trang
 
-        require_once __DIR__."/../../view/page/profileUser.php";
+        require_once __DIR__ . "/../../view/page/profileUser.php";
     }
 }

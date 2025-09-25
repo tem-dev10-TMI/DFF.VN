@@ -3,8 +3,6 @@ require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../model/user/userModel.php';
 
-
-// ===================== UserController.php =====================
 use Google\Client as GoogleClient;
 use Google\Service\Oauth2 as GoogleServiceOauth2;
 
@@ -56,6 +54,14 @@ class UserController
                 $avatarUrl
             );
 
+            // ================== THÊM PHẦN TẠO USERNAME ==================
+            if (empty($user['username'])) {
+                $username = $this->generateUsername($googleUser->name);
+                UserModel::updateUsername($user['id'], $username);
+                $user['username'] = $username;
+            }
+            // ============================================================
+
             $token = bin2hex(random_bytes(32));
             UserModel::updateSessionToken($user['id'], $token);
             $_SESSION['user'] = ['id' => $user['id'], 'name' => $user['name'], 'username' => $user['username'] ?? null, 'email' => $user['email'], 'role' => $user['role'] ?? 'user', 'session_token' => $token , 'avatar_url' => $user['avatar_url'] ?? $googleUser->picture];
@@ -77,14 +83,12 @@ class UserController
             // Nếu là link Google, tăng kích thước avatar
             $avatarUrl = str_replace('s96-c', 's200-c', $avatarUrl);
 
-
             header('Location: ' . BASE_URL);
             exit();
         } catch (\Exception $e) {
             die('Google callback error: ' . $e->getMessage());
         }
     }
-
 
     private function createGoogleClient(): GoogleClient
     {
@@ -102,4 +106,28 @@ class UserController
 
         return $client;
     }
+
+    // ================== THÊM HÀM TẠO USERNAME ==================
+    private function generateUsername(string $name): string
+    {
+        // Bỏ dấu và ký tự đặc biệt
+        $username = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
+        $username = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $username));
+        $username = trim($username, '_');
+
+        if (empty($username)) {
+            $username = "user";
+        }
+
+        // Đảm bảo không trùng
+        $base = $username;
+        $i = 1;
+        while (UserModel::usernameExists($username)) {
+            $username = $base . "_" . $i;
+            $i++;
+        }
+
+        return $username;
+    }
+    // ===========================================================
 }

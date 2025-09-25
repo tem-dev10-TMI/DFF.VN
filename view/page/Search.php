@@ -195,13 +195,20 @@
         <h2>Kết quả tìm kiếm "<i><?= htmlspecialchars($q) ?></i>"</h2>
         <ul class="nav nav-pills" id="pills-search-tab" role="tablist">
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-semibold position-relative" id="pills-articles-tab" data-type="5" data-bs-toggle="pill" data-bs-target="#pills-articles" type="button" role="tab" aria-controls="pills-articles" aria-selected="true"><i class="fas fa-file-alt"></i> Bài viết</button>
+                <button class="nav-link fw-semibold position-relative" id="pills-articles-tab" data-type="5"
+                    data-bs-toggle="pill" data-bs-target="#pills-articles" type="button" role="tab"
+                    aria-controls="pills-articles" aria-selected="true"><i class="fas fa-file-alt"></i> Bài
+                    viết</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-semibold position-relative" id="pills-tags-tab" data-type="25" data-bs-toggle="pill" data-bs-target="#pills-tags" type="button" role="tab" aria-controls="pills-tags" aria-selected="false"><i class="fas fa-hashtag"></i> Tags</button>
+                <button class="nav-link fw-semibold position-relative" id="pills-tags-tab" data-type="25"
+                    data-bs-toggle="pill" data-bs-target="#pills-tags" type="button" role="tab"
+                    aria-controls="pills-tags" aria-selected="false"><i class="fas fa-hashtag"></i> Tags</button>
             </li>
             <li class="nav-item" role="presentation">
-                <button class="nav-link fw-semibold position-relative" id="pills-users-tab" data-type="26" data-bs-toggle="pill" data-bs-target="#pills-users" type="button" role="tab" aria-controls="pills-users" aria-selected="false"><i class="fas fa-user"></i> Người dùng</button>
+                <button class="nav-link fw-semibold position-relative" id="pills-users-tab" data-type="26"
+                    data-bs-toggle="pill" data-bs-target="#pills-users" type="button" role="tab"
+                    aria-controls="pills-users" aria-selected="false"><i class="fas fa-user"></i> Người dùng</button>
             </li>
         </ul>
 
@@ -335,14 +342,14 @@
         <div class="tab-content">
 
             <!-- Tab Bài viết -->
-            <div class="tab-pane fade show active" id="pills-articles" role="tabpanel" aria-labelledby="pills-articles-tab">
+            <div class="tab-pane fade show active" id="pills-articles" role="tabpanel"
+                aria-labelledby="pills-articles-tab">
                 <?php if (!empty($articles)): ?>
                     <?php foreach ($articles as $article): ?>
                         <div class="sea-news">
                             <!-- Nếu có ảnh thì dùng, còn không thì bỏ -->
                             <img src="<?= !empty($article['main_image_url']) ? htmlspecialchars($article['main_image_url']) : '/uploads/default.jpg' ?>"
-                                class="s-img"
-                                alt="<?= htmlspecialchars($article['title']) ?>">
+                                class="s-img" alt="<?= htmlspecialchars($article['title']) ?>">
                             <div class="item">
                                 <h3>
                                     <a href="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>">
@@ -369,14 +376,13 @@
                         <div class="sea-tag">
                             <img src="<?= !empty($tag['icon_url'])
                                             ? htmlspecialchars($tag['icon_url'])
-                                            : '/uploads/default.jpg' ?>"
-                                class=""
+                                            : '/uploads/default.jpg' ?>" class=""
                                 alt="<?= htmlspecialchars($tag['name']) ?>">
 
                             <h3>
                                 <a href="<?= BASE_URL ?>/details_topic/<?= $tag['slug'] ?>">
-                                        <?= htmlspecialchars($tag['name']) ?>
-                                    </a>
+                                    <?= htmlspecialchars($tag['name']) ?>
+                                </a>
                             </h3>
                         </div>
                     <?php endforeach; ?>
@@ -393,17 +399,16 @@
                             <!-- Avatar -->
                             <img src="<?= !empty($user['avatar_url'])
                                             ? htmlspecialchars($user['avatar_url'])
-                                            : '/uploads/default.jpg' ?>"
-                                class="user-avatar"
+                                            : '/uploads/default.jpg' ?>" class="user-avatar"
                                 alt="<?= htmlspecialchars($user['name']) ?>">
 
                             <!-- Thông tin -->
                             <div class="info">
                                 <h3 class="name">
-                                   <a title="<?= htmlspecialchars($user['name']) ?>"
-                            href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
-                            <?= htmlspecialchars($user['name']) ?>
-                        </a>
+                                    <a title="<?= htmlspecialchars($user['name']) ?>"
+                                        href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
+                                        <?= htmlspecialchars($user['name']) ?>
+                                    </a>
                                 </h3>
                                 <p>@<?= htmlspecialchars($user['username']) ?></p>
                                 <small>Email: <?= htmlspecialchars($user['email']) ?></small>
@@ -479,8 +484,7 @@
         </div>
 
         <div class="adv">
-            <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="public/logo/coin.jpg"></a>
+            <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto" src="public/logo/coin.jpg"></a>
         </div>
 
         <div class="block-k bg-box-a">

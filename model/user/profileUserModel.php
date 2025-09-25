@@ -142,14 +142,20 @@ class profileUserModel
         $db = new connect();
 
         try {
-            // Bắt đầu transaction
             $db->db->beginTransaction();
 
-            // 1. Insert vào bảng businessmen
+            // Kiểm tra user đã là doanh nhân chưa
+            $stmtCheck = $db->db->prepare("SELECT COUNT(*) FROM businessmen WHERE user_id = :user_id");
+            $stmtCheck->execute([':user_id' => $user_id]);
+            if ($stmtCheck->fetchColumn() > 0) {
+                return false; // Tránh trùng lặp
+            }
+
+            // Insert vào businessmen
             $stmt = $db->db->prepare("
-                INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
-                VALUES (:user_id, :birth_year, :nationality, :education, :position)
-            ");
+            INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
+            VALUES (:user_id, :birth_year, :nationality, :education, :position)
+        ");
             $stmt->execute([
                 ':user_id' => $user_id,
                 ':birth_year' => $birth_year,
@@ -158,11 +164,10 @@ class profileUserModel
                 ':position' => $position
             ]);
 
-            // 2. Update role trong bảng users
+            // Update role
             $stmt2 = $db->db->prepare("UPDATE users SET role = 'businessmen' WHERE id = :user_id");
             $stmt2->execute([':user_id' => $user_id]);
 
-            // Commit
             $db->db->commit();
             return true;
         } catch (Exception $e) {
