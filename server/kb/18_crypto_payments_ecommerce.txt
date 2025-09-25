@@ -1,5 +1,4 @@
-# 18_crypto_payments_ecommerce — Thanh toán & E-commerce bằng crypto
-
+Thanh toán & E-commerce bằng crypto
 ================================================================================
 1) TÓM TẮT NGẮN
 - Merchant hiển thị giá bằng fiat (VND, USD…), chuyển sang tương đương crypto theo thời gian thực (rate_timestamped), tạo invoice chứa: address, amount_crypto, qr, expires_at.  

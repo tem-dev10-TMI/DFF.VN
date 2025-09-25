@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../../model/user/userModel.php';
 class profileUserController
 {
     // Trang hồ sơ người dùng
@@ -12,6 +13,7 @@ class profileUserController
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
         require_once __DIR__ . '/../../model/article/topicsmodel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
 
         $modelTopic = new TopicsModel();
 
@@ -22,7 +24,7 @@ class profileUserController
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
-
+        $checkPendingBusiness = businessmenModel::isPendingBusiness($_SESSION['user']['id']);
         $topics = $modelTopic->getAllTopics();
 
         /*         $articles = $modelArticle->getArticleById($userId);
@@ -116,6 +118,7 @@ class profileUserController
     public static function addArticle()
     {
         header('Content-Type: application/json');
+        require_once __DIR__ . '/../../model/user/userModel.php';
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
 
@@ -137,9 +140,9 @@ class profileUserController
             ]);
             exit;
         }
-
+        require_once __DIR__ . '/../../model/user/userModel.php';
         $submittedToken = $_POST['session_token'] ?? '';
-        if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+        if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
             http_response_code(401);
             echo json_encode([
                 'success' => false,
@@ -283,6 +286,13 @@ class profileUserController
         $modelArticle = new ArticlesModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $title = $_POST['title'];
             $summary = $_POST['summary'];
             $content = $_POST['content'];
@@ -305,6 +315,13 @@ class profileUserController
         $modelProfile = new profileUserModel();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user_id'])) {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $user_id = $_SESSION['user_id'];
             $display_name = $_POST['display_name'];
             $birth_year = $_POST['birth_year'];
@@ -384,7 +401,7 @@ class profileUserController
             }
 
             // Lấy và làm sạch dữ liệu từ form
-            $name = isset($_POST['name']) && $_POST['name'] !== '' ? htmlspecialchars($_POST['name']) : null;
+            $name = isset($_POST['display_name']) && $_POST['display_name'] !== '' ? htmlspecialchars($_POST['display_name']) : null;
             $username = isset($_POST['user_name']) && $_POST['user_name'] !== '' ? htmlspecialchars($_POST['user_name']) : null;
             $email = isset($_POST['email']) && $_POST['email'] !== '' ? htmlspecialchars($_POST['email']) : null;
             $phone = isset($_POST['phone']) && $_POST['phone'] !== '' ? htmlspecialchars($_POST['phone']) : null;
@@ -446,6 +463,7 @@ class profileUserController
                         'phone' => $updatedUser['phone'],
                         'role' => $updatedUser['role'],
                         'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
@@ -469,10 +487,17 @@ class profileUserController
         require_once __DIR__ . '/../../model/user/profileUserModel.php';
         // 1. Xác thực và Phân quyền
         if (!isset($_SESSION['user']) || !isset($_SESSION['user']['id'])) {
-            header("Location: " . BASE_URL . "/login");
+            header("Location: " . BASE_URL . "");
             exit;
         }
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Bảo mật: Kiểm tra session token
+            $submittedToken = $_POST['session_token'] ?? '';
+            if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
+                header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
+                exit;
+            }
+
             $user_id     = $_SESSION['user']['id'];
             $birth_year  = $_POST['birth_year'] ?? null;
             $nationality = $_POST['nationality'] ?? null;
@@ -510,12 +535,10 @@ class profileUserController
 
         // Khởi tạo các biến thông báo
         $changePasswordMessage = '';
-        $messageType = '';
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Bảo mật: Kiểm tra session token
             $submittedToken = $_POST['session_token'] ?? '';
-            if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
+            if (!UserModel::isTokenValid($userId, $submittedToken)) {
                 header('Location: ' . BASE_URL . '/profile_user?msg=invalid_token');
                 exit;
             }
@@ -652,12 +675,14 @@ class profileUserController
     }
     public static function deleteArticle()
     {
+        
         header('Content-Type: application/json');
 
         // Giả sử các file này đã được autoload hoặc require ở một nơi khác
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
-        require_once __DIR__ . '/../../model/connect.php';
+        //require_once __DIR__ . '/../../model/connect.php';
+        
 
         // 1. Chỉ chấp nhận phương thức POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -665,20 +690,30 @@ class profileUserController
             exit;
         }
 
-        // 2. Kiểm tra đăng nhập
+        // 2. Kiểm tra đăng nhập và token
         if (!isset($_SESSION['user']['id'])) {
+            http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để thực hiện hành động này.']);
             exit;
         }
 
+        
+
         // 3. Lấy và xác thực dữ liệu đầu vào
         $postId = $_POST['post_id'] ?? null;
+        $token = $_POST['session_token'] ?? null;
+        $currentUserId = $_SESSION['user']['id'];
+
+        // Bảo mật: Xác thực token
+        if (!UserModel::isTokenValid($currentUserId, $token)) {
+            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng đăng nhập lại.']);
+            exit;
+        }
+
         if (empty($postId) || !is_numeric($postId)) {
             echo json_encode(['success' => false, 'message' => 'ID bài viết không hợp lệ.']);
             exit;
         }
-
-        $currentUserId = $_SESSION['user']['id'];
         $db = new connect();
 
         try {

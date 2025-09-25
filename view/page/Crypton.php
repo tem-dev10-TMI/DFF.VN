@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DFF.VN - Mạng Xã Hội Kinh Tế Tài Chính</title>
+    <title>MXH.ORG.VN</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style_of_crypton.css">

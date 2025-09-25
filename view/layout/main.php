@@ -1,8 +1,20 @@
+<!-- Lâm Phương Khánh logic lượt truy cập -->
+ <?php
+require_once __DIR__ . '/../../TRACK/track.php'; // ghi nhận mỗi lần mở trang
+
+// Lấy số liệu
+$metrics = json_decode(file_get_contents(__DIR__ . '/../../TRACK/metrics.php'), true) ?: [
+  'totalVisitors'=>0,'onlineVisitors'=>0,'totalViews'=>0
+];
+?>
+<!-- Lâm Phương Khánh END logic lượt truy cập -->
+
+<?php require_once __DIR__ . '/../../helpers/cache_helper.php';
+require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
 <html lang="vi" xmlns="../www.w3.org/1999/xhtml/index.html">
 
-<!-- Mirrored from dff.vn/ by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 10 Sep 2025 14:45:46 GMT -->
-<!-- Added by HTTrack -->
+
 <meta http-equiv="content-type" content="text/html;charset=utf-8" /><!-- /Added by HTTrack -->
 
 <head>
@@ -26,10 +38,66 @@
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
     <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
 
+    <style>
+        /* Định nghĩa animation cho hiệu ứng gradient */
+        .user-gradient-name {
+            /* --- Chỉ giữ lại những gì cốt lõi nhất --- */
+            font-weight: bold;
+            font-size: 0.95em;
+            /* Hơi thu nhỏ lại một chút để an toàn hơn */
 
+            /* Hiệu ứng gradient */
+            background-image: linear-gradient(to right,
+                    #372f6a,
+                    /* Tím vũ trụ */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #f09819,
+                    /* Cam mặt trời */
+                    #a73737,
+                    /* Đỏ hoàng hôn */
+                    #372f6a
+                    /* Tím vũ trụ (lặp lại để animation mượt) */
+                );
+            /*background-image: linear-gradient(to right, #FFD700, #FF8C00, #FF4500, #FFD700);*/
+            background-size: 200% auto;
+            animation: gradientAnimation 5s ease infinite;
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+            /* Phép thuật cho chữ */
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            background-size: 400% 400%;
+            animation: smoothGradientAnimation 15s linear infinite;
+        }
+
+        /* Đừng quên keyframes animation */
+        @keyframes smoothGradientAnimation {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            25% {
+                background-position: 50% 0%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            75% {
+                background-position: 50% 100%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
@@ -39,9 +107,15 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
 
-    <link rel="stylesheet" href="public/css/style.css?v=2.3" />
+    <link rel="stylesheet" href="<?= asset_url('public/css/style.css') ?>" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
@@ -49,10 +123,8 @@
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -97,17 +169,170 @@
 </script> -->
 
 
-    <!-- <script type="application/ld+json">{ tự tra cái này nếu cần
- "@context": "http://schema.org",
-"@type": "WebSite",
-"name": "dff.vn",
-"alternateName": "DFF.VN - Mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư và thị trường",
-"url": "https://dff.vn"
-}</script><link href="index.html" rel="canonical" /></head> -->
+
 
 
 
 <body>
+    <!-- TOKEN lượt truy cập Lâm Phương Khánh -->
+     <!-- Live Counter - bottom-left -->
+<!-- Floating Live Counter -->
+<div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
+  <div class="lc-inner d-flex align-items-center">
+    <span class="lc-dot" id="onlineDot" aria-hidden="true"></span>
+    <span class="lc-text">
+      <span class="lc-line">
+        <i class="bi bi-people-fill me-1"></i>
+        Đang truy cập: <strong id="onlineCount">--</strong>
+      </span>
+      <span class="lc-line lc-sub">
+        <i class="bi bi-eye me-1"></i>
+        Tổng: <strong id="totalViews">--</strong>
+      </span>
+    </span>
+  </div>
+</div>
+
+<script>
+  // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+  window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+</script>
+
+<script>
+(function () {
+  const onlineEl = document.getElementById('onlineCount');
+  const totalEl  = document.getElementById('totalViews');
+  const dotEl    = document.getElementById('onlineDot');
+
+  async function updateCounter() {
+    try {
+     // trong JS
+const base = window.BASE_URL || '';
+const metricsUrl = base + '/TRACK/metrics.php';
+// console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
+
+const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      onlineEl.textContent = (data?.onlineVisitors ?? 0);
+      if (totalEl) totalEl.textContent = (data?.totalViews ?? 0);
+
+      // hiệu ứng chớp nhẹ khi cập nhật
+      dotEl.textContent = '•';
+    } catch (e) {
+      // lỗi thì giữ số cũ, chấm chuyển x
+      dotEl.textContent = '×';
+    }
+    // chuyển lại dấu chấm sau 1s cho gọn
+    setTimeout(() => { dotEl.textContent = '•'; }, 1000);
+  }
+
+  // cập nhật ngay khi tải trang
+  updateCounter();
+
+  // cập nhật mỗi 15 giây
+  let timer = setInterval(updateCounter, 15000);
+
+  // tiết kiệm tài nguyên khi tab bị ẩn
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timer);
+    } else {
+      updateCounter();
+      timer = setInterval(updateCounter, 15000);
+    }
+  });
+})();
+</script>
+<!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
+
+    <!-- Preloader Framework -->
+    <style>
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background-color: #000000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+
+        #preloader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        #globe-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            opacity: 0.8;
+            filter: blur(0.5px);
+        }
+
+        .loader-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        .loading-text {
+            color: #00FF41;
+            font-size: 1.1rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            animation: pulse-text 2.5s ease-in-out infinite;
+            text-shadow: 0 0 15px rgba(0, 255, 65, 0.7);
+        }
+
+        @keyframes pulse-text {
+            0%, 100% {
+                opacity: 0.7;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.02);
+            }
+        }
+
+        /* Thêm style để đảm bảo hiệu ứng mờ dần cho nội dung chính */
+        #main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+    <div id="preloader">
+        <div class="spinner-container">
+            <!-- Container cho canvas 3D -->
+            <div id="globe-container"></div>
+            
+            <!-- Nội dung text -->
+            <div class="loader-content">
+                <h2 class="loading-text">Đang giải mã tín hiệu thị trường</h2>
+            </div>
+        </div>
+    </div>
+    <!-- End Preloader Framework -->
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
         nonce="9gkWGB3D"></script>
@@ -116,10 +341,10 @@
 
     <?php
 
-    require_once __DIR__ . '/../../helpers/cache_helper.php';
+
 
     // Cache topics for 3 hours
-    $allTopics = get_cache('all_topics', 10800);
+    $allTopics = get_cache('all_topics', 5);
     if ($allTopics === false) {
         require_once __DIR__ . '/../../model/TopicModel.php';
         $topicModel = new TopicModel();
@@ -148,7 +373,7 @@
 
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
-        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="event"> Lịch sự kiện </a></span>
+        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name"> <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
     </div>
     <!-- header start -->
 
@@ -237,15 +462,15 @@
 
     <!-- Mobile Modal -->
     <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
-        style="z-index: 1055;">
-        <div class="modal-dialog modal-lg" style="width: 95vw; max-width: 480px; margin: 10vh auto;">
+        style="z-index: 9998;">
+        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="mobileModalBody"
-                    style="padding: 10px 15px; max-height: 60vh; overflow-y: auto;"></div>
+                    style="padding: 10px 15px; overflow-y: auto; "></div>
             </div>
         </div>
     </div>
@@ -314,26 +539,7 @@
             const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
 
             function renderAlerts(events) {
-                if (!Array.isArray(events) || events.length === 0) {
-                    return '<div class="text-muted">Chưa có thông báo nào.</div>';
-                }
-                const items = events.map(ev => {
-                    const title = (ev.title || '').toString();
-                    const id = ev.id;
-                    const when = ev.event_date ? new Date(ev.event_date.replace(' ', 'T')) : null;
-                    const dateStr = when ? when.toLocaleString('vi-VN', {
-                        hour12: false
-                    }) : '';
-                    const href = `${window.BASE_URL || ''}?url=event&id=${id}`;
-                    return `<li>
-                        <span class="ic"><i class="fas fa-bell"></i></span>
-                        <div class="txt">
-                            <a href="${href}">${title}</a>
-                            <div class="meta">${dateStr}</div>
-                        </div>
-                    </li>`;
-                }).join('');
-                return `<h5 class="m-section-title">Thông báo</h5><ul class="m-alerts">${items}</ul>`;
+
             }
 
             let mobileModalInstance = null;
@@ -345,7 +551,16 @@
 
                 if (type === 'alerts') {
                     title.textContent = 'Thông báo';
-                    body.innerHTML = renderAlerts(headerEvents);
+
+                    // Tìm đến nội dung thông báo của phiên bản desktop
+                    const desktopAlertsContent = document.querySelector('#id_alert .tab-content');
+
+                    // Sao chép HTML từ desktop vào modal body
+                    if (desktopAlertsContent) {
+                        body.innerHTML = desktopAlertsContent.innerHTML;
+                    } else {
+                        body.innerHTML = '<div>Không tìm thấy nội dung thông báo.</div>';
+                    }
                 } else if (type === 'create') {
                     title.textContent = 'Tạo mới';
                     body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
@@ -458,7 +673,7 @@
                 const userId = this.getAttribute("data-user");
                 const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                fetch("api/follow", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -732,8 +947,101 @@
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.2"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
+    <script>
+        // Make session token available to JS
+        window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+    </script>
+    <script>
+        // --- Kịch bản cho hiệu ứng 3D (Không đổi) ---
+        const container = document.getElementById('globe-container');
+        let scene, camera, renderer, globe, particles;
+        let mouseX = 0, mouseY = 0;
+        const windowHalfX = window.innerWidth / 2;
+        const windowHalfY = window.innerHeight / 2;
+
+        function init3D() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.001);
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
+            camera.position.z = 600;
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            container.appendChild(renderer.domElement);
+            const globeGeometry = new THREE.SphereGeometry(180, 64, 64);
+            const globeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF41, wireframe: true, transparent: true, opacity: 0.05 });
+            globe = new THREE.Mesh(globeGeometry, globeMaterial);
+            scene.add(globe);
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particleCount = 4000;
+            const posArray = new Float32Array(particleCount * 3);
+            for (let i = 0; i < particleCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 1500;
+            }
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0x00FF41, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+            particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(particles);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = (event.clientX - windowHalfX) / 3;
+            mouseY = (event.clientY - windowHalfY) / 3;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            globe.rotation.y += 0.0008;
+            particles.rotation.y += 0.0004;
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+
+        init3D();
+        animate();
+
+        // --- Preloader logic (Không đổi) ---
+        let loaderHidden = false;
+        function hideLoader() {
+            if (loaderHidden) return;
+            loaderHidden = true;
+
+            const preloader = document.getElementById('preloader');
+            const mainContent = document.getElementById('main-content');
+            
+            if (preloader) {
+                preloader.classList.add('hidden');
+            }
+            if(mainContent) {
+                setTimeout(() => {
+                    mainContent.style.opacity = '1';
+                }, 100); 
+            }
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onload = function() {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                setTimeout(function() {
+                    preloader.classList.add('hidden');
+                }, 500); // 500ms = 0.5 giây
+            }
+        };
+        setTimeout(hideLoader, 5000);
+    </script>
 </body>
 
 

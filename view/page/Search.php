@@ -480,7 +480,7 @@
 
         <div class="adv">
             <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="../media.dff.vn/static/img/coins.jpg"></a>
+                    src="public/logo/coin.jpg"></a>
         </div>
 
         <div class="block-k bg-box-a">

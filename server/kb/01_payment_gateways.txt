@@ -1,5 +1,4 @@
-# 01_payment_gateways — Cổng thanh toán Crypto (Chi tiết cho KB chatbot)
-
+Cổng thanh toán Crypto
 ====================================================================
 1. PHẠM VI & MỤC ĐÍCH
 - Phạm vi: thanh toán on-chain (BTC, ETH, ERC20, TRC20...), stablecoin (USDT, USDC...), cổng custodial (Coinbase Commerce, BitPay...), self-hosted (BTCPay), webhook, refund, xác nhận on-chain, accounting, security, UX.

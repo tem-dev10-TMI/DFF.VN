@@ -40,7 +40,7 @@ if (empty($url)) {
     $controller->index();
     exit;
 }
-
+//var_dump($_SESSION['user']);
 switch ($url) {
 
     case 'home':
@@ -115,6 +115,11 @@ switch ($url) {
         $controller = new homeController();
         $controller->trends();
         break;
+    case 'video':
+        require_once __DIR__ . '/controller/HomeController.php';
+        $controller = new homeController();
+        $controller->video();
+        break;
     /*case 'details_topic':
                  require_once __DIR__ . '/controller/TopicController.php';
         $controller = new TopicController();
@@ -122,7 +127,8 @@ switch ($url) {
         break; */
     case (preg_match('/^details_topic\/([^\/]+)$/', $url, $matches) ? true : false):
         require_once __DIR__ . '/controller/TopicController.php';
-        $controller = new TopicController();
+        global $pdo;
+        $controller = new TopicController($pdo);
         $controller->details_topic($matches[1]);
         break;
     case 'about':
@@ -153,10 +159,26 @@ switch ($url) {
         $controller = new homeController();
         $controller->loadMoreArticles();
         exit;
+    case 'api/follow':
+        require_once __DIR__ . '/controller/account/toggle_follow.php';
+
+        exit;
+    case 'api/comment_add':
+        require_once __DIR__ . '/controller/comment_add.php';
+
+        exit;
+    case 'api/comment_list':
+        require_once __DIR__ . '/controller/comment_list.php';
+
+        exit;
     case 'api/loadMoreForTopic':
         require_once __DIR__ . '/controller/TopicController.php';
         $controller = new TopicController();
         $controller->loadMoreArticlesBySlug();
+        exit;
+    case 'api/businessman_register':
+        require_once __DIR__ . '/controller/businessman_register.php';
+
         exit;
     case 'crypton':
         require_once __DIR__ . '/controller/CryptonController.php';
@@ -187,8 +209,31 @@ switch ($url) {
         $controller->show($id);
         break;
 
+    case 'like':
+        require_once __DIR__ . '/controller/ArticleLikeController.php';
+        $controller = new ArticleLikeController();
 
-    // ========== API ROUTES ==========
+        $action = $_GET['action'] ?? '';
+
+        switch ($action) {
+            case 'toggle':
+                $controller->toggle();
+                break;
+            case 'get':
+                $controller->get(); // bạn cần thêm hàm này nếu chưa có (mình hướng dẫn bên dưới)
+                break;
+            default:
+                echo json_encode(['status' => 'error', 'msg' => 'Hành động không hợp lệ']);
+                break;
+        }
+        break;
+    case 'ArticleSave':
+        require_once __DIR__ . '/controller/ArticleSaveController.php';
+        $controller = new ArticleSaveController();
+        $controller->toggle();
+        exit;
+
+        // ========== API ROUTES ==========
     case 'api/addPost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         $controller = new profileUserController();
@@ -197,6 +242,7 @@ switch ($url) {
     case 'api/deletePost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         $controller = new profileUserController();
+
         $controller->deleteArticle();
         exit;
     case 'api/loadPost':

@@ -36,15 +36,21 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : ('details_blog/' . urlencode($article['slug'])) ?>"
-                                target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                href="<?= 'details_blog/' . urlencode($article['slug']) ?>"
+                                target="_self">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
                         <div class="cover-hover" style="">
-                            <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                title="<?= htmlspecialchars($article['title']) ?>"
-                                alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
+                            <?php if (!empty($article['main_image_url'])): ?>
+                                <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    title="<?= htmlspecialchars($article['title']) ?>"
+                                    alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
+                            <?php else: ?>
+                                <div class="mmavatar" style="height: 157px; display: flex; align-items: center; justify-content: center; background-color:rgb(110, 130, 160);">
+                                    <span>Người dùng này chưa thêm ảnh</span>
+                                </div>
+                            <?php endif; ?>
                         </div>
                         <div class="text" style="">
                             <h4>
@@ -176,10 +182,43 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </div>
 
 
+        <!-- KOL -->
+        <div class="block-k box-kol-section">
+            <h5 class="d-flex justify-content-between align-items-center">
+                <span><a href="#">Top KOL</a></span>
+                <span class="c-note"><i class="fas fa-chart-line"></i> Được theo dõi nhiều nhất</span>
+            </h5>
 
+            <!-- Slider -->
+            <div class="owl-carousel kol-carousel">
+                <?php if (!empty($topKOLs)): ?>
+                    <?php foreach ($topKOLs as $kol): ?>
 
+                        <div class="item">
+                            <div class="card text-center shadow-sm kol-card">
+                                <img src="<?= htmlspecialchars($kol['avatar_url'] ?? 'https://via.placeholder.com/150', ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="<?= htmlspecialchars(($kol['name'] ?? '') ?: ($kol['username'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                    class="card-img-top rounded-circle mx-auto mt-4"
+                                    style="width:70px;height:70px;object-fit:cover;">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-1">
+                                        <?= htmlspecialchars(($kol['name'] ?? '') ?: ($kol['username'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                    </h6>
+                                    <p class="text-muted small mb-2">@<?= htmlspecialchars($kol['username'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                                    <div class="folloewrs"><i class="fas fa-user-friends"></i> <?= (int)($kol['followers'] ?? 0) ?> follower</div>
+                                    <div class="likes"><i class="fas fa-thumbs-up"></i> <?= (int)($kol['likes'] ?? 0) ?> lượt thích</div>
+                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= urlencode($kol['user_id']) ?>" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
+                                </div>
+                            </div>
+                        </div>
 
-
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-muted">Chưa có KOL nào.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+        <!-- END KOL -->
 
         <!-- ///////////////////////////// -->
 
@@ -245,44 +284,54 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             ?>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
-                                    target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+
+                                <a href="<?= BASE_URL .'/details_blog/' . $article['slug'] ?>"
+                                    target="_self">
+
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog/' . $article['slug'] ?>"
-                                    class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <a href="<?= 'details_blog/' . $article['slug'] ?>"
+                                    class="d-more" target="_self">
                                     Xem thêm
                                 </a>
                             </div>
 
-                            <?php if (!empty($article['main_image_url'])): ?>
+                            <?php if (!empty($article['main_image_url'])) : ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
 
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <div class="mt-2 mb-2">
+                                    <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                                        <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                        Trình duyệt của bạn không hỗ trợ thẻ video.
+                                    </video>
+                                </div>
+                            <?php endif; ?>
+
                             <!-- Giữ nguyên phần like, comment, share -->
                             <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="<?= $article['id'] ?>">
-                                    <span class="value"><?= $article['upvotes'] ?? 0 ?></span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="details_blog?id<?= $article['id'] ?>#anc_comment">
-                                        <span><?= $article['comment_count'] ?? 0 ?></span>
-                                    </a>
-                                </div>
+
+
                                 <div class="button-ar">
                                     <div class="dropdown home-item">
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
+                                            <?php
+
+                                                $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
+
+                                            ?>
                                             <li><a class="dropdown-item copylink"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
                                             <li><a class="dropdown-item sharefb"
-                                                    data-url="<?= BASE_URL ?>/details_blog/<?= $article['slug'] ?>"
+                                                    data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -364,20 +413,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             </div>
                             ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
                             <div class="item-bottom">
-                                <div class="bt-cover com-like" data-id="${article.id}">
-                                    <span class="value">${article.upvotes || 0}</span>
-                                </div>
-                                <div class="button-ar">
-                                    <a href="details_blog/${article.slug}#anc_comment">
-                                        <span>${article.comment_count || 0}</span>
-                                    </a>
-                                </div>
+
                                 <div class="button-ar">
                                     <div class="dropdown home-item">
                                         <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item copylink" data-url="details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
-                                            <li><a class="dropdown-item sharefb" data-url="details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                                            <li><a class="dropdown-item copylink" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Copy link</a></li>
+                                            <li><a class="dropdown-item sharefb" data-url="${article.is_rss ? article.link : '<?= BASE_URL ?>/details_blog/' + article.slug}" href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -391,10 +433,39 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         loadingElementId: 'loading',
                         loadMoreContainerId: 'load-more-container',
                         loadMoreBtnId: 'load-more-btn',
-                        apiUrl: 'api/loadMoreArticles',
+                        apiUrl: '<?= BASE_URL ?>/api/loadMoreArticles',
                         initialOffset: 5,
                         limit: 5,
                         renderItemFunction: renderHomepageArticle
+                    });
+
+                    // JS for Share & Copy Link
+                    document.addEventListener('click', function(event) {
+                        const target = event.target;
+
+                        // --- Copy Link ---
+                        if (target.classList.contains('copylink')) {
+                            event.preventDefault();
+                            const urlToCopy = target.getAttribute('data-url');
+                            if (urlToCopy) {
+                                navigator.clipboard.writeText(urlToCopy).then(() => {
+                                    alert('Đã sao chép link!');
+                                }).catch(err => {
+                                    console.error('Lỗi khi sao chép: ', err);
+                                    alert('Không thể sao chép link.');
+                                });
+                            }
+                        }
+
+                        // --- Share to Facebook ---
+                        if (target.classList.contains('sharefb')) {
+                            event.preventDefault();
+                            const urlToShare = target.getAttribute('data-url');
+                            if (urlToShare) {
+                                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                                window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+                            }
+                        }
                     });
                 });
             </script>
@@ -414,15 +485,17 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <script>
-                //// Đừng có xóa dòng này mấy cha
-                document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const userId = this.getAttribute("data-user");
-                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+            //// Đừng có xóa dòng này mấy cha
+            document.querySelectorAll(".btn-follow").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const userId = this.getAttribute("data-user");
+                    const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                        fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                    fetch("api/follow", {
                             method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
                             body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                             credentials: "include"
                         })
@@ -458,8 +531,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <div class="content-right">
-            <div class="block-k cover-chat">
-                <h5><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
+            <div class="block-k cover-chat ">
+                <h5 class="bg-success"><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
                 <ul class="list_comment">
                     <?php foreach ($comments as $c): ?>
                         <li class="chat-item" data-id="<?= $c['id'] ?>">
@@ -602,7 +675,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const content = textarea.value.trim();
                 if (!content) return;
 
-                fetch("<?= BASE_URL ?>/comment_add.php", {
+                fetch("api/comment_add", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -725,31 +798,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        <div class="block-k bg-box-a">
-            <div class="view-right-a h-lsk">
-                <div class="title">
-                    <h3><a href="javascript:void(0)">Lịch sự kiện</a> </h3>
-                </div>
 
-                <ol class="content-ol">
-                    <?php if (!empty($events)): ?>
-                        <?php foreach ($events as $index => $event): ?>
-                            <li class="card-list-item" key="<?php echo $index; ?>">
-                                <a title="<?= htmlspecialchars($event['title']); ?>"
-                                    href="<?= BASE_URL ?>/event?id=<?= $event['id'] ?>">
-                                    <?= htmlspecialchars($event['title']); ?>
-                                </a>
-
-                            </li>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <li class="card-list-item">
-                            <span>Chưa có sự kiện nào</span>
-                        </li>
-                    <?php endif; ?>
-                </ol>
-            </div>
-        </div>
 
 
 
@@ -847,6 +896,32 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
             });
+
+            /*================ KOL =================*/
+
+            $('.owl-carousel.kol-carousel').owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: true,
+                dots: false,
+                navText: [
+                    '<i class="fa fa-chevron-left"></i>',
+                    '<i class="fa fa-chevron-right"></i>'
+                ],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    500: {
+                        items: 2
+                    },
+                    1000: {
+                        items: 3
+                    }
+                }
+            });
+
+            /*================ End KOL =================*/
         </script>
 
 

@@ -1,4 +1,23 @@
 <main class="main-content">
+    <?php
+    $isFollowing = false; // mặc định chưa theo dõi
+    $followersCount = 0;
+
+    if (isset($user) && !empty($user['id'])) {
+        require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+        $db = new connect();
+        $pdo = $db->db;
+        $followModel = new UserFollowModel($pdo);
+
+        // Lấy số người theo dõi. Giả định phương thức là `countFollowers`.
+        $followersCount = $followModel->countFollowers($user['id']);
+
+        // Kiểm tra trạng thái theo dõi nếu người dùng đã đăng nhập.
+        if (isset($_SESSION['user']['id'])) {
+            $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $user['id']);
+        }
+    }
+    ?>
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
@@ -21,9 +40,13 @@
                             <a href="#"><?= htmlspecialchars($user['name'] ?? 'Không rõ') ?></a>
                         </li>
                         <li class="f-folw">
-                            <a data-type="5" href="javascript:void(0)" data-ref="user-profile">
-                                <val>Theo dõi</val>
-                                <span class="number">0</span>
+                            <a class="btn-follow" href="javascript:void(0)"
+                                data-user="<?= $user['id'] ?>"
+                                style="display:inline-block;padding:8px 16px;border-radius:6px;
+              background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
+              color:#fff;font-weight:600;text-decoration:none;">
+                                <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                <span class="number"><?= intval($followersCount) ?></span>
                             </a>
                         </li>
                     </ul>
@@ -38,7 +61,7 @@
                                 <img class="logo" src="<?= $article['avatar_url'] ?>" alt="">
                                 <div class="p-covers">
                                     <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <a href="view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
@@ -105,7 +128,7 @@
 
         <div class="adv">
             <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="../media.dff.vn/static/img/coins.jpg"></a>
+                    src="public/logo/coin.jpg"></a>
         </div>
 
         <div class="block-k bg-box-a">
@@ -153,6 +176,42 @@
                             items: 3
                         }
                     }
+                });
+            });
+        </script>
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelectorAll(".btn-follow").forEach(btn => {
+                    btn.addEventListener("click", function() {
+                        const userId = this.getAttribute("data-user");
+                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+
+                        fetch("api/follow", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/x-www-form-urlencoded"
+                                },
+                                body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                                credentials: "include"
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // cập nhật text nút
+                                    this.querySelector(".follow-text").innerText =
+                                        data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+
+                                    // cập nhật số follower
+                                    this.querySelector(".number").innerText = data.followers;
+                                } else {
+                                    alert(data.message);
+                                }
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                alert("Không thể kết nối đến server!");
+                            });
+                    });
                 });
             });
         </script>

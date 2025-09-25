@@ -1,5 +1,4 @@
-# 14_vn_tax_and_legal_policy_on_crypto — Chính sách thuế & pháp lý tại Việt Nam
-
+Chính sách thuế & pháp lý tại Việt Nam
 --- 
 TÓM TẮT NGẮN
 - Vị thế lịch sử: Ngân hàng Nhà nước (SBV) tuyên bố tiền mã hoá **không phải là phương tiện thanh toán hợp pháp** và cấm “phát hành, cung cấp, sử dụng” crypto làm phương tiện thanh toán (thông báo 2017). :contentReference[oaicite:0]{index=0}  

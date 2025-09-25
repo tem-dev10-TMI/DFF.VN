@@ -2,7 +2,7 @@
 session_start();
 
 // Giới hạn câu hỏi mỗi ngày
-$limit = 10;
+$limit = 30;
 $today = date('Y-m-d');
 
 // Nếu chưa có dữ liệu session thì khởi tạo
@@ -21,7 +21,7 @@ if ($_SESSION['question_date'] !== $today) {
 if ($_SESSION['question_count'] >= $limit) {
     header('Content-Type: application/json; charset=utf-8');
     echo json_encode([
-        'reply' => '❌ Bạn đã đạt giới hạn 10 câu hỏi cho hôm nay. Vui lòng quay lại vào ngày mai.',
+        'reply' => '❌ Bạn đã đạt giới hạn 30 câu hỏi cho hôm nay. Vui lòng quay lại vào ngày mai.',
         'sources' => []
     ]);
     exit;
@@ -152,7 +152,7 @@ if (mb_strlen($contextText, 'UTF-8') > 4500) {
 
 // System prompt with strict safety and Vietnamese style guidance
 $systemPrompt = <<<PROMPT
-Bạn là Gemini Crypto Advisor, một trợ lý AI tiếng Việt cho thương mại điện tử và tiền ảo.
+Bạn là Chat Box MXH, một trợ lý AI tiếng Việt cho thương mại điện tử và tiền ảo.
 Nguyên tắc:
 - Nếu người dùng hỏi bằng ngôn ngữ nào thì trả lời bằng ngôn ngữ đó.
 - Không đưa lời khuyên đầu tư. Luôn nhắc người dùng tự nghiên cứu, rủi ro cao.
@@ -161,6 +161,9 @@ Nguyên tắc:
 - Chỉ trả lời trong phạm vi crypto, thanh toán, bảo mật, pháp lý cơ bản liên quan tới e-commerce.
 - Nếu câu hỏi ngoài phạm vi: lịch sự từ chối và đề xuất chủ đề liên quan.
 - Trích xuất thông tin từ NGỮ CẢNH sau. Nếu không chắc, nói "Tôi không chắc" và đề xuất bước xác minh.
+- Luôn trả lời **đúng 100% ngôn ngữ của tin nhắn người dùng ở lượt gần nhất** (không trộn ngôn ngữ, không kèm bản dịch nếu người dùng không yêu cầu).
+- Tuyệt đối KHÔNG tiết lộ tên file, thư mục, đường dẫn, ID tài liệu hay tag như [doc], [*.txt] từ KB.
+- Không tạo tiêu đề kiểu “Tóm tắt thông tin từ các file văn bản”.
 
 Hướng dẫn phân tích thị trường theo thời gian:
 - Daily (24h): dùng khung trong KB "market_daily_template" khi truy vấn về ngày/hôm nay/24h.
@@ -290,8 +293,8 @@ if ($status === 429) {
     // Cut system+context if too long (keep last 3500 chars)
     if (isset($smallerParts[0]['text'])) {
         $t = $smallerParts[0]['text'];
-        if (mb_strlen($t, 'UTF-8') > 3500) {
-            $smallerParts[0]['text'] = mb_substr($t, -3500, null, 'UTF-8');
+        if (mb_strlen($t, 'UTF-8') > 6000) {
+            $smallerParts[0]['text'] = mb_substr($t, -6000, null, 'UTF-8');
         }
     }
     // Re-cut history to 3 most recent exchanges

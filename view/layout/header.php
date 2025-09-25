@@ -119,7 +119,8 @@
                                                                                             echo 'profile_user';
                                                                                         } else {
                                                                                             echo 'profile_business';
-                                                                                        } ?>"><i class="fas fa-user"></i> Profile</a></li>
+                                                                                        } ?>"><i
+                                                class="fas fa-user"></i> Profile</a></li>
 
                                     <li><a class="dropdown-item" href="javascript:void(0)" module-load="info"><i
                                                 class="fas fa-info-circle"></i> Thông tin tài khoản</a></li>
@@ -142,13 +143,34 @@
                             <!-- Chưa đăng nhập -->
                             <span class="signin">
                                 <a href="javascript:void(0)" onclick="showLoginModal()">
-                                    <img src="https://dff.vn/vendor/dffvn/content/img/user.svg">
+                                    <img src="public/img/avatar/user-default.svg">
                                 </a>
                             </span>
                         <?php endif; ?>
                     </li>
                 </ul>
             </div>
+            <style>
+                /* Áp dụng cho màn hình mobile (ví dụ: dưới 768px) */
+                @media (max-width: 767.98px) {
+
+                    /* 1. Cho phép các khung chứa co giãn để lấp đầy không gian */
+                    #pills-tabContent,
+                    #pills-tabContent .card {
+                        display: flex;
+                        flex-direction: column;
+                        flex-grow: 1;
+                        min-height: 0;
+                    }
+
+                    /* 2. Cho list-group lấp đầy phần còn lại và cuộn được */
+                    .notice-list {
+                        flex-grow: 1;
+                        overflow-y: auto;
+                        /* Đã xóa display:flex và flex-direction:column-reverse ở đây */
+                    }
+                }
+            </style>
             <div class="collapse box-alert" id="id_alert">
 
                 <ul class="nav nav-pills" id="pills-tab" role="tablist">
@@ -165,7 +187,7 @@
                     }
                     ?>
                     <div class="card shadow-sm border-0">
-                        <div class="card-header bg-white d-flex align-items-center justify-content-between">
+                        <div class="card-header bg-white align-items-center justify-content-between d-none d-sm-flex">
                             <div class="d-flex align-items-center gap-2">
                                 <i class="bi bi-bell-fill"></i>
                                 <h5 class="mb-0">Thông báo</h5>
@@ -189,7 +211,7 @@
                                         </span>
 
                                         <div class="notice-text">
-                                            <h6 class="notice-title fw-semibold mb-1" title="<?= $title ?>"><?= $title ?></h6>
+                                            <h6 class="notice-title fw-semibold" title="<?= $title ?>"><?= $title ?></h6>
                                             <?php $dateText = !empty($ev['event_date']) ? date('d/m/Y', strtotime($ev['event_date'])) : ''; ?>
                                             <small class="text-muted notice-time" title="<?= $dateText ?>">
                                                 <?= $dateText ?>
@@ -213,12 +235,119 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* CSS cho Mobile Search */
+    .mobile-search-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.98);
+        z-index: 10000;
+        display: none;
+        /* Ẩn mặc định */
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+    }
+
+    .mobile-search-overlay .close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 35px;
+        color: #333;
+        cursor: pointer;
+        background: none;
+        border: none;
+        line-height: 1;
+    }
+
+    .mobile-search-overlay .search-container {
+        margin-top: 20vh;
+        width: 100%;
+        max-width: 500px;
+    }
+
+    .mobile-search-overlay .search-container h4 {
+        margin-bottom: 15px;
+        text-align: center;
+        color: #333;
+    }
+
+    /* Ẩn box search desktop và icon mobile menu trên mobile */
+    @media (max-width: 767px) {
+        .header-logo .box-search {
+            display: none;
+        }
+
+        .header-right .mnqtop,
+        .header-right .n-chatbot,
+        .header-right .n-alert {
+            display: none;
+        }
+    }
+
+    /* Ẩn icon search mobile trên desktop */
+    @media (min-width: 768px) {
+        .m-search {
+            display: none;
+        }
+    }
+</style>
+
+<!-- Mobile Search Overlay HTML -->
+<div id="mobileSearchOverlay" class="mobile-search-overlay">
+    <button class="close-btn" onclick="closeMobileSearch()">&times;</button>
+    <div class="search-container">
+        <h4>Tìm kiếm trên MXH.ORG.VN</h4>
+        <div class="input-group input-group-lg">
+            <input id="mobileSearchInput" class="form-control" placeholder="Nhập từ khóa..." type="search">
+            <button class="btn btn-success" type="button" onclick="doMobileSearch()">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- Mobile Search Logic ---
+    function openMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'flex';
+        document.getElementById('mobileSearchInput').focus();
+    }
+
+    function closeMobileSearch() {
+        document.getElementById('mobileSearchOverlay').style.display = 'none';
+    }
+
+    function doMobileSearch() {
+        const keyword = document.getElementById("mobileSearchInput").value.trim();
+        if (keyword) {
+            window.location.href = "<?= BASE_URL ?>/search&q=" + encodeURIComponent(keyword);
+        }
+    }
+    // Event Listeners
+    document.querySelector('.m-search a').addEventListener('click', function(e) {
+        e.preventDefault();
+        openMobileSearch();
+    });
+    document.getElementById('mobileSearchInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            doMobileSearch();
+        }
+    });
+</script>
+
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
 <div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable" >
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
@@ -283,7 +412,7 @@
                 color:#fff;
                 border:none;
                 padding:10px 20px;
-                border-radius:6px;
+                border: radius 20px;
                 font-size:14px;
                 font-weight:bold;
                 cursor:pointer;
@@ -307,7 +436,7 @@
 <!-- Modal đăng kí -->
 <div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
     data-popup-id="8268" aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
@@ -426,7 +555,8 @@
                 <?php endif; ?>
 
                 <form method="POST" action="<?= BASE_URL ?>/change_password" id="changePassForm">
-                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+                    <input type="hidden" name="session_token"
+                        value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
                     <div class="mb-3">
                         <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
                         <input type="password" class="form-control" id="currentPassword" name="old_password" required>
@@ -454,7 +584,7 @@
 <!-- Modal Quên mật khẩu -->
 <div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg" style="width:450px">
+    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title"><span class="core-popup-title">Quên mật khẩu</span></h4>
@@ -667,174 +797,48 @@
 
 
 <?php
-// Load market data nếu chưa có
+// Tải dữ liệu từ model
 if (!isset($marketData)) {
     require_once __DIR__ . '/../../model/MarketDataModel.php';
     $marketData = MarketDataModel::getCachedMarketData();
 }
-// Debug: Kiểm tra dữ liệu market
-echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData) : 'undefined') . " -->";
 ?>
+
 <div class="top-stock">
     <div class="marquee">
-        <div class="item co-VNINDEX">
-            <div class="irow label">
-                <span>VNINDEX</span>
-                <span class="value"><?= $marketData['VNINDEX']['price'] ?? '1,667.26' ?></span>
+        <?php foreach ($marketData as $key => $item): ?>
+            <div class="item co-<?= strtolower($key) ?>">
+                <div class="irow label">
+                    <span>
+                        <?php 
+                            // Sử dụng tên thân thiện hơn nếu cần
+                            $displayName = $item['name'] ?? $key;
+                            echo htmlspecialchars($displayName);
+                        ?>
+                    </span>
+                    <span class="value">
+                        <?php 
+                            echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
+                        ?>
+                    </span>
+                </div>
+                <div class="irow content">
+                    <span>
+                        <i class="<?= ($item['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
+                        <index>
+                            <?php 
+                                echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
+                            ?>
+                        </index>
+                    </span>
+                    <span class="per <?= ($item['isPositive'] ?? true) ? 'positive' : 'negative' ?>">
+                        <?php 
+                            echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
+                        ?>
+                    </span>
+                </div>
             </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VNINDEX']['change'] ?? '9.51' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VNINDEX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VNINDEX']['changePercent'] ?? 0.57) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-HNX">
-            <div class="irow label">
-                <span>HNX</span>
-                <span class="value"><?= $marketData['HNX']['price'] ?? '245.33' ?></span>
-                <!-- Debug: <?= isset($marketData['HNX']) ? 'HNX data exists' : 'HNX data missing' ?> -->
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['HNX']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['HNX']['change'] ?? '2.33' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['HNX']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['HNX']['changePercent'] ?? 0.96) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-VN30F1M">
-            <div class="irow label">
-                <span>VN30F1M</span>
-                <span class="value"><?= $marketData['VN30F1M']['price'] ?? '276.51' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VN30F1M']['change'] ?? '5.5' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VN30F1M']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30F1M']['changePercent'] ?? 0.85) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-VN30">
-            <div class="irow label">
-                <span>VN30</span>
-                <span class="value"><?= $marketData['VN30']['price'] ?? '1,859.00' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['VN30']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['VN30']['change'] ?? '10.37' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['VN30']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['VN30']['changePercent'] ?? 0.3) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-UPCOM">
-            <div class="irow label">
-                <span>UPCOM</span>
-                <span class="value"><?= $marketData['UPCOM']['price'] ?? '1,865.45' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['UPCOM']['change'] ?? '-0.01' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['UPCOM']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['UPCOM']['changePercent'] ?? 0.56) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-Slave">
-            <div class="irow label">
-                <span>Bạc</span>
-                <span class="value"><?= $marketData['Silver']['price'] ?? '110.09' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Silver']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Silver']['change'] ?? '0.68' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Silver']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Silver']['changePercent'] ?? -0.01) ?>%</span>
-            </div>
-        </div>
-        <div class="item co-Oil">
-            <div class="irow label">
-                <span>Dầu Thô WTI</span>
-                <span class="value"><?= $marketData['Oil']['price'] ?? '42.83' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Oil']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Oil']['change'] ?? '0.32' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Oil']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Oil']['changePercent'] ?? 1.62) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-BTC">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-bitcoin.html">Bitcoin</a></span>
-                <span class="value"><?= $marketData['Bitcoin']['price'] ?? '62.69' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Bitcoin']['change'] ?? '745.53' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Bitcoin']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Bitcoin']['changePercent'] ?? 0.51) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-ETH">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-ethereum.html">Ethereum</a></span>
-                <span class="value"><?= $marketData['Ethereum']['price'] ?? '115,974.00' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['Ethereum']['change'] ?? '271.52' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['Ethereum']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['Ethereum']['changePercent'] ?? 0.64) ?>%</span>
-            </div>
-        </div>
-
-        <div class="item co-BNB">
-            <div class="irow label">
-                <span><a target="_blank" href="coins-binancecoin.html">BNB</a></span>
-                <span class="value"><?= $marketData['BNB']['price'] ?? '4,760.21' ?></span>
-            </div>
-            <div class="irow content">
-                <span>
-                    <i
-                        class="<?= ($marketData['BNB']['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
-                    <index><?= $marketData['BNB']['change'] ?? '25.54' ?></index>
-                </span>
-                <span
-                    class="per <?= ($marketData['BNB']['isPositive'] ?? true) ? 'positive' : 'negative' ?>"><?= ($marketData['BNB']['changePercent'] ?? 5.7) ?>%</span>
-            </div>
-        </div>
-
-
-
+        <?php endforeach; ?>
     </div>
 </div>
 
@@ -1075,4 +1079,23 @@ echo "<!-- Debug: marketData count = " . (isset($marketData) ? count($marketData
             closeSidebar();
         }
     });
+</script>
+<script>
+    function renderNow() {
+        const els = document.querySelectorAll('.currentDate');
+        const now = new Date();
+        const fmt = new Intl.DateTimeFormat('vi-VN', {
+            timeZone: 'Asia/Ho_Chi_Minh',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+            hour12: false
+        });
+        els.forEach(el => el.textContent = fmt.format(now));
+    }
+    renderNow(); // render ngay khi tải trang
+    setInterval(renderNow, 1000); // cập nhật mỗi giây (nếu cần “đồng hồ sống”)
 </script>

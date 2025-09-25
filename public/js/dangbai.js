@@ -32,7 +32,7 @@ function submitConversion() {
   submitBtn.disabled = true;
 
   // Gửi request đến PHP xử lý
-  fetch('businessman_register.php', {
+  fetch('api/businessman_register', {
     method: 'POST',
     body: formData
   })
@@ -186,12 +186,15 @@ function deletePost(postId, buttonElement) {
   // Tìm phần tử cha để xóa khỏi giao diện
   const postElement = buttonElement.closest('.block-k');
 
-  fetch('/api/delete_post.php', {
+  // Lấy token từ biến global đã được tạo trong view
+  const token = window.userSessionToken || '';
+
+  fetch('api/deletePost', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
     },
-    body: `post_id=${postId}`
+    body: `post_id=${postId}&session_token=${token}`
   })
     .then(response => response.json())
     .then(data => {
@@ -215,106 +218,99 @@ function deletePost(postId, buttonElement) {
 
 
 function createPostElement(post) {
-  const profileDataElement = document.getElementById('profileData');
+    const profileDataElement = document.getElementById('profileData');
+    const userId = profileDataElement ? profileDataElement.dataset.userId : null;
 
-  // Nếu không tìm thấy thẻ div này, dừng lại và báo lỗi để tránh sự cố
-  if (!profileDataElement) {
-    console.error('Lỗi nghiêm trọng: Không tìm thấy thẻ div#profileData. Không thể tải bài viết.');
-    const postsContainer = document.getElementById('posts');
-    if (postsContainer) {
-      postsContainer.innerHTML = '<p class="text-danger text-center">Lỗi cấu hình trang. Không thể tải dữ liệu.</p>';
+    const postDiv = document.createElement('div');
+    postDiv.className = 'block-k article-item';
+    postDiv.setAttribute('id', `post-${post.id}`);
+
+    const safeContent = post.content || '';
+    const safeTitle = post.title || safeContent.substring(0, 70);
+    const articleLink = `details_blog/${post.slug}`;
+
+    let statusBadgeHtml = '';
+    if (userId && post.author_id == userId && post.status) {
+        let badgeClass = '';
+        let badgeText = '';
+        switch (post.status) {
+            case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+            case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+        }
+        if (badgeText) {
+            statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
+        }
     }
-    return document.createElement('div'); // Trả về một element rỗng để không làm crash vòng lặp
-  }
 
-  const userId = profileDataElement.dataset.userId;
+    const deleteButtonHtml = (userId && post.author_id == userId)
+        ? `<div class="post-actions">
+               <span class="delete-post-btn" onclick="deletePost(${post.id}, this)" title="Xóa bài viết">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
+                       <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
+                   </svg>
+               </span>
+           </div>`
+        : '';
 
-  var postDiv = document.createElement('div');
-  postDiv.className = 'block-k';
-  postDiv.setAttribute('id', `post-${post.id}`);
-
-  // --- START FIX ---
-  // Đảm bảo post.content là một chuỗi để tránh lỗi
-  const safeContent = post.content || '';
-  const safeTitle = post.title || safeContent.substring(0, 70);
-  // --- END FIX ---
-
-  const deleteButtonHtml = (userId && post.author_id == userId)
-    ? `<div class="post-actions">
-           <span class="delete-post-btn" onclick="deletePost(${post.id}, this)" title="Xóa bài viết">
-               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                   <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
-                   <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
-               </svg>
-           </span>
-       </div>`
-    : '';
-
-  postDiv.innerHTML = `
+    postDiv.innerHTML = `
     <div class="view-carde f-frame">
-      <div class="provider">
-        <img class="logo" alt="Avatar" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
-        <div class="p-covers">
-          <span class="badge ${renderStatusBadgeClass(post.status)}" style="margin-right:6px;" title="${post.review_reason ? escapeHtml(post.review_reason) : ''}">${renderStatusText(post.status)}</span>
-          <span class="name" title="${escapeHtml(post.author_name)}">
-            <a href="/profile.html?q=${post.author_id || post.user_id}" title="${escapeHtml(post.author_name)}">${escapeHtml(post.author_name)}</a>
-          </span>
-          <span class="date">${post.time_ago || ''}</span>
+        <div class="provider">
+            <img class="logo" alt="Avatar" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
+            <div class="p-covers">
+                <span class="name" title="${escapeHtml(post.author_name)}">
+                    <a href="/DFF.VN/view_profile?id=${post.author_id || post.user_id}">${escapeHtml(post.author_name)}</a>
+                </span>
+                <span class="date">${post.time_ago || ''}</span>
+            </div>
+            ${deleteButtonHtml}
         </div>
-        ${deleteButtonHtml}
-      </div>
 
-      <div class="title">
-        <a title="${escapeHtml(safeTitle)}" href="/post-${post.id}.html">${escapeHtml(safeTitle)}</a>
-      </div>
+        ${statusBadgeHtml}
 
-      ${post.status && (post.status.toLowerCase() === 'rejected' || post.status.toLowerCase() === 'reject') && post.review_reason ? `
-      <div class="mt-1 mb-2">
-        <div class="alert alert-danger py-1 px-2 m-0">
-          <small><strong>Lý do:</strong> ${escapeHtml(post.review_reason)}</small>
+        <div class="title">
+            <a title="${escapeHtml(safeTitle)}" href="${articleLink}">${escapeHtml(safeTitle)}</a>
         </div>
-      </div>
-      ` : ''}
 
-      <div class="sapo">
-        ${safeContent}
-        ${(safeContent && safeContent.length > 100) ? `<a href="/post-${post.id}.html" class="d-more">Xem thêm</a>` : ''}
-      </div>
-
-      ${post.video_url ? `
-      <div class="mt-2 mb-2">
-        <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
-          <source src="${post.video_url}" type="video/mp4">
-          Trình duyệt của bạn không hỗ trợ thẻ video.
-        </video>
-      </div>
-      ` : ''}
-
-      ${post.image ? `<img class="h-img" src="${post.image}" title="${escapeHtml(safeTitle)}" alt="${escapeHtml(safeTitle)}" border="0">` : ''}
-
-      <div class="item-bottom">
-        <div class="bt-cover com-like" data-id="${post.id}">
-            <span class="for-up" onclick="toggleLike(${post.id})"><svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16" icon-name="upvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z"></path></svg></span>
-            <span class="value" data-old="${post.likes_count || 0}">${post.likes_count || 0}</span>
-            <span class="for-down" onclick="toggleDislike(${post.id})"><svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16" icon-name="downvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z"></path></svg></span>
+        <div class="sapo">
+            ${safeContent}
+            ${(safeContent && safeContent.length > 100) ? `<a href="${articleLink}" class="d-more">Xem thêm</a>` : ''}
         </div>
-        <div class="button-ar">
-            <a href="/post-${post.id}.html#anc_comment" onclick="showComments(${post.id})"><svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor" height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z"></path></svg>
-            <span>${post.comments_count || 0}</span></a>
+
+        ${post.video_url ? `
+        <div class="mt-2 mb-2">
+            <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
+                <source src="${post.video_url}" type="video/mp4">
+                Trình duyệt của bạn không hỗ trợ thẻ video.
+            </video>
         </div>
-        <div class="button-ar">
-            <div class="dropdown home-item">
-                <i class="far fa-share-square"></i><span data-bs-toggle="dropdown" aria-expanded="false">Chia sẻ</span>
-                <ul class="dropdown-menu">
-                    <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink" data-url="/post-${post.id}.html" href="javascript:void(0)">Copy link</a></li>
-                    <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb" data-url="/post-${post.id}.html" href="javascript:void(0)">Share FB</a></li>
-                </ul>
+        ` : ''}
+
+        ${post.image ? `<img class="h-img" src="${post.image}" title="${escapeHtml(safeTitle)}" alt="${escapeHtml(safeTitle)}" border="0">` : ''}
+
+        <div class="item-bottom">
+            <div class="bt-cover com-like" data-id="${post.id}">
+                <span class="for-up" onclick="toggleLike(${post.id})"><svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16" icon-name="upvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z"></path></svg></span>
+                <span class="value" data-old="${post.likes_count || 0}">${post.likes_count || 0}</span>
+                <span class="for-down" onclick="toggleDislike(${post.id})"><svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16" icon-name="downvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z"></path></svg></span>
+            </div>
+            <div class="button-ar">
+                <a href="/post-${post.id}.html#anc_comment" onclick="showComments(${post.id})"><svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor" height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z"></path></svg>
+                <span>${post.comments_count || 0}</span></a>
+            </div>
+            <div class="button-ar">
+                <div class="dropdown home-item">
+                    <i class="far fa-share-square"></i><span data-bs-toggle="dropdown" aria-expanded="false">Chia sẻ</span>
+                    <ul class="dropdown-menu">
+                        <li><i class="bi bi-link-45deg"></i> <a class="dropdown-item copylink" data-url="/post-${post.id}.html" href="javascript:void(0)">Copy link</a></li>
+                        <li><i class="bi bi-facebook"></i> <a class="dropdown-item sharefb" data-url="/post-${post.id}.html" href="javascript:void(0)">Share FB</a></li>
+                    </ul>
+                </div>
             </div>
         </div>
-      </div>
     </div>
   `;
-  return postDiv;
+    return postDiv;
 }
 
 function renderStatusText(status) {
@@ -354,7 +350,6 @@ function addPost() {
   var postContent = document.getElementById('newPost').value.trim();
   var postTopic = document.getElementById('topicSelect').value;
 
-
   if (!postTitle || !postContent || !postTopic) {
     showNotification('Vui lòng nhập tiêu đề, nội dung và chọn chủ đề!', 'warning');
     return;
@@ -366,20 +361,24 @@ function addPost() {
   submitBtn.disabled = true;
 
   var formData = new FormData();
+  formData.append('session_token', window.userSessionToken || '');
   formData.append('title', postTitle);
   formData.append('summary', postSummary);
   formData.append('content', postContent);
-  formData.append('topic_id', postTopic); // tạm fix cứng, hoặc để user chọn
+  formData.append('topic_id', postTopic);
 
-  var imageFile = document.getElementById('postImage').files[0];
-  if (imageFile) {
-    formData.append('main_image_url', imageFile);
-  }
+  // Thêm tất cả ảnh
+  var imageFiles = document.getElementById('postImage').files;
+  Array.from(imageFiles).forEach((file, idx) => {
+    
+    formData.append(`images[${idx}]`, file);
+  });
 
-  var videoFile = document.getElementById('postVideo').files[0];
-  if (videoFile) {
-    formData.append('post_video', videoFile);
-  }
+  // Thêm tất cả video
+  var videoFiles = document.getElementById('postVideo').files;
+  Array.from(videoFiles).forEach((file, idx) => {
+    formData.append(`videos[${idx}]`, file);
+  });
 
   fetch('api/addPost', {
     method: 'POST',
@@ -396,9 +395,10 @@ function addPost() {
         document.getElementById('newPost').value = '';
         document.getElementById('topicSelect').value = '';
         document.getElementById('postImage').value = '';
+        document.getElementById('postVideo').value = '';
         document.getElementById('imagePreview').innerHTML = '';
+        document.getElementById('videoPreview').innerHTML = '';
 
-        // Refresh danh sách bài viết
         loadPosts();
         showNotification(data.message || 'Đăng bài thành công!', 'success');
       } else {
@@ -413,38 +413,92 @@ function addPost() {
     });
 }
 
-// Xem trước ảnh trước khi đăng
+// Preview nhiều ảnh
 function previewImage(event) {
   const preview = document.getElementById('imagePreview');
-  preview.innerHTML = ''; // Xóa preview cũ
 
-  const file = event.target.files[0];
-  if (file) {
+  // Không xoá tất cả files trong input
+  // preview.innerHTML = ''; // <-- chỉ xoá preview, không reset files
+
+  const files = event.target.files;
+
+  Array.from(files).forEach(file => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.display = 'inline-block';
+    wrapper.style.marginRight = '8px';
+
     const img = document.createElement('img');
     img.src = URL.createObjectURL(file);
-    img.classList.add('img-fluid', 'rounded', 'mt-2');
-    img.style.maxHeight = '200px';
-    preview.appendChild(img);
-  }
+    img.style.width = '100px';
+    img.style.height = '100px';
+    img.style.objectFit = 'cover';
+    img.classList.add('rounded', 'mb-2');
+
+    const btnRemove = document.createElement('button');
+    btnRemove.type = 'button';
+    btnRemove.innerHTML = '&times;';
+    btnRemove.classList.add('btn', 'btn-sm', 'btn-danger');
+    btnRemove.style.position = 'absolute';
+    btnRemove.style.top = '2px';
+    btnRemove.style.right = '2px';
+    btnRemove.onclick = () => {
+      wrapper.remove();
+      removeFileFromInput('postImage', file);
+    };
+
+    wrapper.appendChild(img);
+    wrapper.appendChild(btnRemove);
+    preview.appendChild(wrapper);
+  });
 }
 
-// Hiển thị tên video đã chọn
 function previewVideo(event) {
   const preview = document.getElementById('videoPreview');
-  preview.innerHTML = ''; // Xóa preview cũ
+  const files = event.target.files;
 
-  const file = event.target.files[0];
-  if (file) {
-    const fileNameDiv = document.createElement('div');
-    fileNameDiv.classList.add('alert', 'alert-info', 'py-2', 'mt-2');
-    fileNameDiv.innerHTML = `
-        <i class="fas fa-video me-2"></i>
-        Đã chọn video: <strong>${file.name}</strong>
-        <button type="button" class="btn-close" onclick="clearVideoPreview()" style="font-size: 0.75rem; float: right;"></button>
-      `;
-    preview.appendChild(fileNameDiv);
-  }
+  Array.from(files).forEach(file => {
+    const wrapper = document.createElement('div');
+    wrapper.style.position = 'relative';
+    wrapper.style.width = '150px';
+    wrapper.style.height = '100px';
+    wrapper.style.marginRight = '8px';
+
+    const video = document.createElement('video');
+    video.src = URL.createObjectURL(file);
+    video.controls = true;
+    video.style.width = '100%';
+    video.style.height = '100%';
+    video.classList.add('rounded');
+
+    const btnRemove = document.createElement('button');
+    btnRemove.type = 'button';
+    btnRemove.innerHTML = '&times;';
+    btnRemove.classList.add('btn', 'btn-sm', 'btn-danger');
+    btnRemove.style.position = 'absolute';
+    btnRemove.style.top = '2px';
+    btnRemove.style.right = '2px';
+    btnRemove.onclick = () => {
+      wrapper.remove();
+      removeFileFromInput('postVideo', file);
+    };
+
+    wrapper.appendChild(video);
+    wrapper.appendChild(btnRemove);
+    preview.appendChild(wrapper);
+  });
 }
+
+// Hàm xóa 1 file khỏi input type="file" mà vẫn giữ các file khác
+function removeFileFromInput(inputId, fileToRemove) {
+  const input = document.getElementById(inputId);
+  const dt = new DataTransfer();
+  Array.from(input.files)
+       .filter(f => f !== fileToRemove)
+       .forEach(f => dt.items.add(f));
+  input.files = dt.files;
+}
+
 
 function clearVideoPreview() {
   document.getElementById('postVideo').value = ''; // Xóa file đã chọn

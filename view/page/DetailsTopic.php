@@ -9,7 +9,7 @@
                 <div class="item">
                     <ul>
                         <li>
-                            <img class="logo" alt="<?= htmlspecialchars($topic['name']) ?>"
+                            <img class="topic-logo" alt="<?= htmlspecialchars($topic['name']) ?>"
                                 src="<?= !empty($topic['icon_url']) ? htmlspecialchars($topic['icon_url']) : 'https://via.placeholder.com/80x80/4A90E2/FFFFFF?text=🌍' ?>">
                         </li>
                         <li class="alias">Chủ đề</li>
@@ -43,7 +43,7 @@
                                     alt="<?= htmlspecialchars($article['author_name']) ?>">
                                 <div class="p-covers">
                                     <span class="name">
-                                        <a href="/DFF.VN/view_profile?id=<?= $article['author_id'] ?>">
+                                        <a href="view_profile?id=<?= $article['author_id'] ?>">
                                             <?= htmlspecialchars($article['author_name']) ?>
                                         </a>
                                     </span>
@@ -117,8 +117,8 @@
         </div>
 
         <div class="adv">
-            <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                    src="../media.dff.vn/static/img/coins.jpg"></a>
+            <a target="_blank" href="cryton"><img alt="Crypto"
+                    src="public/logo/coin.jpg"></a>
         </div>
 
         <div class="block-k bg-box-a">
@@ -210,7 +210,7 @@
                   <img class="logo" src="${article.avatar_url || 'https://via.placeholder.com/50'}" alt="${article.author_name}">
                   <div class="p-covers">
                       <span class="name">
-                          <a href="/DFF.VN/view_profile?id=${article.author_id}">${article.author_name}</a>
+                          <a href="view_profile?id=${article.author_id}">${article.author_name}</a>
                       </span>
                       <span class="date">${createdAt}</span>
                   </div>

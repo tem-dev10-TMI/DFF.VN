@@ -16,7 +16,12 @@ body {
     align-items: center;
     text-align: center;
 }
+.topic-logo{
 
+    height: 50px;
+
+
+}
 /* --- Lớp Gradient động --- */
 body::before {
     content: '';

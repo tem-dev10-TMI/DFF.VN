@@ -49,35 +49,37 @@
         <div class="content-left cover-page" bis_skin_checked="1">
 
             <div class="block-k box-company-label">
-                <div class="block-t p-t-20" bis_skin_checked="1">
-                    <div class="block-t-top" bis_skin_checked="1">
-                        <img alt="image" class="profile-img"
-                            src="<?= $businessman['avatar_url'] ?>">
-                    </div>
-                    <div class="h-topic">
-                        <ul>
-                            <li class="alias">Doanh nhân</li>
-                            <li>
-                                <a href="#" class="nam-follow">
-                            <li><a href="#" class="nam-follow"><?= e($businessman['name']) ?></a></li>
+                <div class="w-100" bis_skin_checked="1">
+                    <div class="box-company">
+                        <div class="item">
+                            <div class="block-t-top logo d-flex align-items-center justify-content-center" bis_skin_checked="1">
+                                <img alt="image" class="profile-img" 
+                                    src="<?= $businessman['avatar_url'] ?>">
+                            </div>
+                            <div class="h-topic ">
+                                <ul>
+                                    <li class="alias">Doanh nhân</li>
+                                    <li class="mb-1">
+                                        <a href="#" class="nam-follow">
+                                    <li><a href="#" class="nam-follow"><?= e($businessman['name']) ?></a></li>
 
-                            </a>
-                            </li>
-                            <div class="profile-actions" style="margin-top:15px;">
-                                <a class="btn-follow" href="javascript:void(0)"
-                                    data-user="<?= $businessman['user_id'] ?>"
-                                    style="display:inline-block;padding:8px 16px;border-radius:6px;
+                                    </a>
+                                    </li>
+                                    <li class="f-folw pt-2">
+                                        <a class="btn-follow" href="javascript:void(0)"
+                                            data-user="<?= $user['id'] ?>"
+                                            style="display:inline-block;padding:8px 16px;border-radius:6px;
               background:<?= $isFollowing ? '#6c757d' : '#28a745' ?>;
               color:#fff;font-weight:600;text-decoration:none;">
-                                    <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-                                    (<span class="number"><?= intval($followersCount) ?></span>)
-                                </a>
+                                            <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                            <span class="number"><?= intval($followersCount) ?></span>
+                                        </a>
+                                    </li>
+
+                                </ul>
                             </div>
-
-
-                        </ul>
+                        </div>
                     </div>
-
                 </div>
             </div>
 
@@ -152,93 +154,6 @@
                     </ul>
                 </div>
             </div>
-            <!-- ✅ KHUNG NHẬP BÌNH LUẬN -->
-            <div class="comment-input-box"
-                style="border:1px solid #ccc;border-radius:8px;padding:15px;margin-bottom:20px;background:#fafafa;">
-                <h5 style="margin-top:0;margin-bottom:10px;">
-                    <i class="fas fa-comments"></i> Viết bình luận
-                </h5>
-                <div style="display:flex;align-items:flex-start;gap:10px;">
-                    <img src="/Upload/img_static//profile_638930336755560936.png"
-                        style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-                    <textarea id="comment-text"
-                        placeholder="Bạn nghĩ gì về nội dung này?"
-                        style="flex:1;min-height:60px;padding:8px;border:1px solid #ccc;border-radius:6px;"></textarea>
-                    <button id="send-comment"
-                        style="background:#007bff;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;">
-                        Gửi
-                    </button>
-                </div>
-                <div id="comment-message" style="display:none;color:green;margin-top:8px;">Đã thêm bình luận</div>
-            </div>
-
-            <!-- Khung hiển thị bình luận -->
-            <div class="comment-display-box"
-                style="border:1px solid #ccc;border-radius:8px;padding:15px;background:#fff;display:none;">
-                <h5 style="margin:0 0 10px 0;">Bình luận đã đăng</h5>
-                <ul id="comment-list" style="list-style:none;margin:0;padding:0;"></ul>
-            </div>
-
-
-            <script>
-                document.addEventListener('DOMContentLoaded', function() {
-                    const sendBtn = document.getElementById('send-comment');
-                    const textarea = document.getElementById('comment-text');
-                    const message = document.getElementById('comment-message');
-                    const displayBox = document.querySelector('.comment-display-box');
-                    const commentList = document.getElementById('comment-list');
-
-                    function createCommentItem(text) {
-                        const li = document.createElement('li');
-                        li.style.cssText = 'display:block;width:100%;margin-bottom:12px;'; // <- quan trọng
-                        li.innerHTML = `
-        <div style="display:flex;align-items:flex-start;gap:10px;">
-        <img src="/Upload/img_static//profile_638930336755560936.png"
-            style="width:40px;height:40px;border-radius:50%;object-fit:cover;">
-        <div style="background:#f1f1f1;padding:10px;border-radius:6px;flex:1;">
-            <span style="white-space:pre-wrap;">${text}</span>
-        </div>
-        </div>
-    `;
-                        return li;
-                    }
-
-
-                    // Lấy bình luận cũ từ localStorage, hiển thị cũ trước mới sau
-                    const savedComments = JSON.parse(localStorage.getItem('comments') || '[]');
-                    if (savedComments.length > 0) {
-                        savedComments.forEach(text => commentList.prepend(createCommentItem(text)));
-                        displayBox.style.display = 'block';
-                    }
-
-                    sendBtn.addEventListener('click', function() {
-                        const text = textarea.value.trim();
-                        if (!text) return;
-
-                        // Lưu mới nhất lên đầu mảng để lần tải sau vẫn giữ thứ tự mới -> cũ
-                        savedComments.unshift(text);
-                        localStorage.setItem('comments', JSON.stringify(savedComments));
-
-                        // Hiển thị mới nhất lên trên cùng
-                        commentList.prepend(createCommentItem(text));
-                        displayBox.style.display = 'block';
-
-                        message.style.display = 'block';
-                        setTimeout(() => {
-                            message.style.display = 'none';
-                        }, 1500);
-                        textarea.value = '';
-                    });
-                });
-            </script>
-
-
-
-
-
-
-
-
         </div>
 
         <!-- bài viết chính block end -->
@@ -274,7 +189,7 @@
 
             <div class="adv">
                 <a target="_blank" href="coins-bitcoin.html"><img alt="Crypto"
-                        src="../media.dff.vn/static/img/coins.jpg"></a>
+                        src="public/logo/coin.jpg"></a>
             </div>
 
             <div class="block-k bg-box-a">
@@ -328,36 +243,31 @@
         </div>
 
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                const btn = document.querySelector(".btn-follow");
-                if (!btn) return;
-
+            //// Đừng có xóa dòng này mấy cha
+            document.querySelectorAll(".btn-follow").forEach(btn => {
                 btn.addEventListener("click", function() {
                     const userId = this.getAttribute("data-user");
+                    const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                    fetch("<?= BASE_URL ?>/controller/account/toggle_follow.php", {
+                    fetch("api/follow", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
-                            body: "user_id=" + encodeURIComponent(userId),
+                            body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                             credentials: "include"
                         })
                         .then(res => res.json())
                         .then(data => {
                             if (data.success) {
+                                // cập nhật text nút
                                 this.querySelector(".follow-text").innerText =
                                     data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-                                this.querySelector(".number").innerText = data.followers;
 
-                                // đổi màu nút
-                                if (data.action === "follow") {
-                                    this.style.background = "#6c757d"; // xám
-                                } else {
-                                    this.style.background = "#28a745"; // xanh
-                                }
+                                // cập nhật số follower
+                                this.querySelector(".number").innerText = data.followers;
                             } else {
-                                alert(data.message || "Có lỗi xảy ra!");
+                                alert(data.message);
                             }
                         })
                         .catch(err => {

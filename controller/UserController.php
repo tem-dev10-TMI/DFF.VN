@@ -48,21 +48,24 @@ class UserController
 
             // Avatar URL Google (size 200)
             $avatarUrl = str_replace('s96-c', 's200-c', $googleUser->picture ?? '');
-
+            
             // Lưu user vào DB
             $user = UserModel::loginOrRegisterGoogleUser(
                 $googleUser->name,
                 $googleUser->email,
                 $avatarUrl
             );
-            $_SESSION['user'] = [ 'id' => $user['id'], 'name' => $user['name'], 'username' => $user['username'] ?? null, 'email' => $user['email'], 'role' => $user['role'] ?? 'user', 'avatar_url' => $user['avatar_url'] ?? $googleUser->picture ];
+
+            $token = bin2hex(random_bytes(32));
+            UserModel::updateSessionToken($user['id'], $token);
+            $_SESSION['user'] = ['id' => $user['id'], 'name' => $user['name'], 'username' => $user['username'] ?? null, 'email' => $user['email'], 'role' => $user['role'] ?? 'user', 'session_token' => $token , 'avatar_url' => $user['avatar_url'] ?? $googleUser->picture];
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_username'] = $user['username'] ?? null;
             $_SESSION['user_email'] = $user['email'];
             $_SESSION['user_role'] = $user['role'] ?? 'user';
             $_SESSION['user_avatar_url'] = $user['avatar_url'] ?? $googleUser->picture; // link Google
-
+            
             // Lấy avatar để hiển thị
             $avatarUrl = $_SESSION['user_avatar_url'] ?? null;
 
@@ -77,7 +80,6 @@ class UserController
 
             header('Location: ' . BASE_URL);
             exit();
-
         } catch (\Exception $e) {
             die('Google callback error: ' . $e->getMessage());
         }
@@ -101,4 +103,3 @@ class UserController
         return $client;
     }
 }
-

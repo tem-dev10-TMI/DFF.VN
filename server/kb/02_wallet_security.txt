@@ -1,6 +1,4 @@
-# 02_wallet_security — Bảo mật ví Crypto cho cửa hàng & khách hàng (Chi tiết cho KB chatbot)
-chi tiết để chatbot và đội ngũ vận hành tham chiếu khi trả lời/triển khai chính sách bảo mật ví và xử lý gian lận trong thanh toán crypto.
-
+Bảo mật ví Crypto cho cửa hàng & khách hàng
 ========================================================================
 0. Ghi chú chung
 - File này bao gồm: nguyên tắc bảo mật, phân loại gian lận, mô tả cách thực hiện gian lận phổ biến, dấu hiệu cảnh báo, biện pháp phòng ngừa (kỹ thuật & quy trình), checklist vận hành, playbook xử lý sự cố, mẫu trả lời chatbot, và đề xuất công cụ giám sát.
