@@ -183,14 +183,13 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- Live Counter - bottom-left -->
     <!-- Floating Live Counter -->
     <div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
-        <div class="lc-inner d-flex align-items-center">
-            <span class="lc-dot" id="onlineDot" aria-hidden="true"></span>
+        <div class="lc-inner d-flex align-items-center rongthem">
             <span class="lc-text">
                 <div class="lc-line">
                     <i class="bi bi-people-fill me-1"></i>
                     Đang truy cập: <strong id="onlineCount">--</strong>
                 </div>
-                <div class="lc-line lc-sub">
+                <div class="lc-line">
                     <i class="bi bi-eye me-1"></i>
                     Tổng lượt truy cập: <strong id="totalViews">--</strong>
                 </div>
@@ -251,6 +250,72 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             });
         })();
     </script>
+    <!-- ====== HEADER (đặt trong navbar) ====== -->
+    <nav class="navbar navbar-light bg-light px-2">
+        <a class="navbar-brand" href="#">Logo</a>
+
+        <!-- Counter badge: CHỈ hiện trên mobile -->
+        <div class="ms-auto d-sm-none" id="navCounter" role="status" aria-live="polite">
+            <span class="counter-badge">
+                <i class="bi bi-people-fill"></i>
+                <strong data-counter="online">--</strong>
+            </span>
+        </div>
+    </nav>
+    <!-- ====== BASE_URL (giữ nguyên như bạn đang dùng) ====== -->
+    <script>
+        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+    </script>
+
+    <!-- ====== JS cập nhật cho cả header & floating ====== -->
+    <script>
+        (function () {
+            const dotEl = document.getElementById('onlineDot');
+
+            function setAllCounters(selector, value) {
+                document.querySelectorAll(selector).forEach(el => el.textContent = value);
+            }
+
+            async function updateCounter() {
+                try {
+                    const base = window.BASE_URL || '';
+                    const metricsUrl = base + '/TRACK/metrics.php';
+                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+                    const data = await res.json();
+
+                    const online = data?.onlineVisitors ?? 0;
+                    const total = data?.totalViews ?? 0;
+
+                    setAllCounters('[data-counter="online"]', online);
+                    setAllCounters('[data-counter="total"]', total);
+
+                    if (dotEl) dotEl.textContent = '•';
+                } catch (e) {
+                    if (dotEl) dotEl.textContent = '×';
+                }
+                if (dotEl) setTimeout(() => { dotEl.textContent = '•'; }, 1000);
+            }
+
+            // cập nhật ngay khi tải
+            updateCounter();
+
+            // cập nhật mỗi 15 giây
+            let timer = setInterval(updateCounter, 15000);
+
+            // tiết kiệm tài nguyên khi tab bị ẩn
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(timer);
+                } else {
+                    updateCounter();
+                    timer = setInterval(updateCounter, 15000);
+                }
+            });
+        })();
+    </script>
+
     <!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
 
     <!-- Preloader Framework -->
@@ -842,7 +907,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                     </div>
 
                                     <!-- Input hidden -->
-                                    <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+                                    <input type="hidden" name="session_token"
+                                        value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
                                     <input type="file" id="postImage" class="d-none" accept="image/*"
                                         onchange="previewImage(event)">
                                     <input type="file" id="postVideo" class="d-none" accept="video/*"
