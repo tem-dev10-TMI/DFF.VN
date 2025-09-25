@@ -7,6 +7,8 @@ require_once __DIR__ . '/../model/event/Events.php';
 
 require_once __DIR__ . '/../model/TopicModel.php';
 
+require_once __DIR__ . '/../model/kolModel.php';
+
 
 class Events
 {
@@ -96,6 +98,8 @@ class homeController
         } else {
             $profile_category = "businessmen";
         }
+
+        $topKOLs = KOLModel::getTopUsersByFollowersAndLikes(10);
 
         // 4. Load view Home
         ob_start();

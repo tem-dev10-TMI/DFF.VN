@@ -1,3 +1,14 @@
+<!-- Lâm Phương Khánh logic lượt truy cập -->
+ <?php
+require_once __DIR__ . '/../../TRACK/track.php'; // ghi nhận mỗi lần mở trang
+
+// Lấy số liệu
+$metrics = json_decode(file_get_contents(__DIR__ . '/../../TRACK/metrics.php'), true) ?: [
+  'totalVisitors'=>0,'onlineVisitors'=>0,'totalViews'=>0
+];
+?>
+<!-- Lâm Phương Khánh END logic lượt truy cập -->
+
 <?php require_once __DIR__ . '/../../helpers/cache_helper.php';
 require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
@@ -57,8 +68,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             background-clip: text;
             -webkit-text-fill-color: transparent;
             color: transparent;
-            background-size: 400% 400%; 
-            animation: smoothGradientAnimation 15s linear infinite; 
+            background-size: 400% 400%;
+            animation: smoothGradientAnimation 15s linear infinite;
         }
 
         /* Đừng quên keyframes animation */
@@ -83,11 +94,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 background-position: 0% 50%;
             }
         }
-        
     </style>
 
-    <link rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" />
@@ -100,7 +110,12 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <link rel="stylesheet" href="<?= asset_url('public/css/style.css') ?>" />
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
@@ -108,10 +123,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
@@ -161,6 +174,79 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
 <body>
+    <!-- TOKEN lượt truy cập Lâm Phương Khánh -->
+     <!-- Live Counter - bottom-left -->
+<!-- Floating Live Counter -->
+<div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
+  <div class="lc-inner d-flex align-items-center">
+    <span class="lc-dot" id="onlineDot" aria-hidden="true"></span>
+    <span class="lc-text">
+      <span class="lc-line">
+        <i class="bi bi-people-fill me-1"></i>
+        Đang truy cập: <strong id="onlineCount">--</strong>
+      </span>
+      <span class="lc-line lc-sub">
+        <i class="bi bi-eye me-1"></i>
+        Tổng: <strong id="totalViews">--</strong>
+      </span>
+    </span>
+  </div>
+</div>
+
+<script>
+  // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+  window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+</script>
+
+<script>
+(function () {
+  const onlineEl = document.getElementById('onlineCount');
+  const totalEl  = document.getElementById('totalViews');
+  const dotEl    = document.getElementById('onlineDot');
+
+  async function updateCounter() {
+    try {
+     // trong JS
+const base = window.BASE_URL || '';
+const metricsUrl = base + '/TRACK/metrics.php';
+// console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
+
+const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      onlineEl.textContent = (data?.onlineVisitors ?? 0);
+      if (totalEl) totalEl.textContent = (data?.totalViews ?? 0);
+
+      // hiệu ứng chớp nhẹ khi cập nhật
+      dotEl.textContent = '•';
+    } catch (e) {
+      // lỗi thì giữ số cũ, chấm chuyển x
+      dotEl.textContent = '×';
+    }
+    // chuyển lại dấu chấm sau 1s cho gọn
+    setTimeout(() => { dotEl.textContent = '•'; }, 1000);
+  }
+
+  // cập nhật ngay khi tải trang
+  updateCounter();
+
+  // cập nhật mỗi 15 giây
+  let timer = setInterval(updateCounter, 15000);
+
+  // tiết kiệm tài nguyên khi tab bị ẩn
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timer);
+    } else {
+      updateCounter();
+      timer = setInterval(updateCounter, 15000);
+    }
+  });
+})();
+</script>
+<!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
 
     <!-- Preloader Framework -->
     <style>
@@ -284,7 +370,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     }
 
     ?>
-    
+
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
         <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name"> <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
@@ -861,7 +947,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
         });
     </script>
-    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.1"></script>
+    <script src="<?= BASE_URL ?>/public/js/main.js?v=1.2"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
     <script>
         // Make session token available to JS
