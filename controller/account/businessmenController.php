@@ -31,8 +31,13 @@ class businessmenController
 
         $role = $_SESSION['user']['role'];
         if ($role === 'businessmen') {
-            $business = $modelBusiness->getBusinessByUserId($userId);
+            $businessData = $modelBusiness->getBusinessByUserId($userId);
             $stats = $modelBusiness->getBusinessStats($userId);
+            
+            // Merge dữ liệu từ bảng users và businessmen
+            $business = array_merge($user, $businessData ?: []);
+            $profileUser = $business; // Tương thích với Profile.php
+            
             //Load view
             ob_start();
             $profile_category = 'businessmen';
@@ -191,6 +196,37 @@ class businessmenController
             }
 
             if ($successUser && $successBusiness) {
+<<<<<<< HEAD
+                // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
+                $updatedUser = $modelUser->getUserById($userId);
+                if ($updatedUser) {
+                    $_SESSION['user'] = [
+                        'id' => $updatedUser['id'],
+                        'name' => $updatedUser['name'],
+                        'username' => $updatedUser['username'],
+                        'password_hash' => $updatedUser['password_hash'],
+                        'email' => $updatedUser['email'],
+                        'phone' => $updatedUser['phone'],
+                        'role' => $updatedUser['role'],
+                        'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'cover_photo' => $updatedUser['cover_photo'] ?? null,
+                        'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
+                    ];
+                    
+                    // Cập nhật các session variables riêng lẻ để tương thích với header
+                    $_SESSION['user_id'] = $updatedUser['id'];
+                    $_SESSION['user_name'] = $updatedUser['name'];
+                    $_SESSION['user_username'] = $updatedUser['username'];
+                    $_SESSION['user_email'] = $updatedUser['email'];
+                    $_SESSION['user_phone'] = $updatedUser['phone'];
+                    $_SESSION['user_role'] = $updatedUser['role'];
+                    $_SESSION['user_avatar_url'] = $updatedUser['avatar_url'] ?? null;
+                    $_SESSION['user_cover_photo'] = $updatedUser['cover_photo'] ?? null;
+                }
+                // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
+                
+=======
+>>>>>>> parent of ef01db3 (update_avatarbusiness)
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {
