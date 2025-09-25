@@ -247,8 +247,8 @@
   /* Fix cho Bootstrap modal */
   @media (min-width: 576px) {
     .modal-dialog {
-      max-width: 800px;
-      margin: 1.75rem auto;
+      max-width: 400px;
+      margin: auto;
     }
   }
 </style>
@@ -287,8 +287,13 @@
             $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
           }
           ?>
+<<<<<<< Updated upstream
           <img src="<?= htmlspecialchars($avatarUrl) ?>" class="rounded-circle me-2" alt="avatar" style="width: 40px; height: 40px;">
           <!-- <img src="https://via.placeholder.com/40" class="rounded-circle me-2" alt="avatar" style="width: 40px; height: 40px;"> -->
+=======
+          <img src="<?= htmlspecialchars($avatarUrl) ?>" class="rounded-circle me-2" alt="avatar"
+            style="width: 40px; height: 40px;">
+>>>>>>> Stashed changes
           <div>
             <h6 class="mb-0">
               <?php
@@ -299,17 +304,20 @@
               }
               ?>
             </h6>
-            <small class="text-muted"><?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?></small>
+            <small
+              class="text-muted"><?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?></small>
           </div>
         </div>
         <!-- Tiêu đề -->
         <input type="text" id="postTitle" class="form-control mb-2" placeholder="Nhập tiêu đề bài viết...">
 
         <!-- Tóm tắt -->
-        <textarea id="postSummary" class="form-control mb-2" rows="2" placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+        <textarea id="postSummary" class="form-control mb-2" rows="2"
+          placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
 
         <!-- Nội dung chính -->
-        <textarea id="newPost" class="form-control mb-3" rows="4" placeholder="Nội dung chính của bài viết..."></textarea>
+        <textarea id="newPost" class="form-control mb-3" rows="4"
+          placeholder="Nội dung chính của bài viết..."></textarea>
 
         <!-- Thanh công cụ -->
         <div class="d-flex justify-content-between align-items-center post-box">
@@ -329,8 +337,18 @@
           </button>
         </div>
         <!-- Input hidden -->
+<<<<<<< Updated upstream
         <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
         <input type="file" id="postVideo" class="d-none" accept="video/*">
+=======
+        <input type="hidden" name="session_token"
+          value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+        <input type="file" id="postImage" class="d-none" accept="image/*" multiple
+          onchange="previewImage(event)">
+        <input type="file" id="postVideo" class="d-none" accept="video/*" multiple
+          onchange="previewVideo(event)">
+
+>>>>>>> Stashed changes
       </div>
 
       <!-- Preview ảnh -->
@@ -338,6 +356,12 @@
 
       <!-- Posts -->
       <!-- Danh sách bài viết -->
+<<<<<<< Updated upstream
+=======
+      <div id="profileData" data-category="<?= $profile_category ?>"
+        data-user-id="<?= isset($user_id) ? $user_id : 0 ?>">
+      </div>
+>>>>>>> Stashed changes
       <div id="posts">
         <div class="block-k" id="loadingPosts">
           <div class="view-carde f-frame">
@@ -356,7 +380,7 @@
 <style>
   /* Giới hạn chiều cao modal */
   .modal-dialog {
-    max-height: 90vh;
+    max-height: 60vh;
     /* không vượt quá 90% chiều cao màn hình */
     margin: auto;
   }
@@ -383,12 +407,31 @@
 <!-- Modal xác nhận chuyển đổi -->
 <div class="modal fade" id="convertModal" tabindex="-1" aria-labelledby="convertModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
+<<<<<<< Updated upstream
     <div class="modal-content">
       <div class="modal-header bg-warning text-dark">
         <h5 class="modal-title" id="convertModalLabel">
           <i class="fas fa-building me-2"></i>Đăng ký tài khoản doanh nghiệp
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+=======
+    <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+
+      <!-- Header -->
+      <div
+        class="modal-header <?php echo $checkPendingBusiness ? 'bg-info text-white' : 'bg-warning text-dark'; ?>">
+        <h5 class="modal-title d-flex align-items-center gap-2" id="convertModalLabel">
+          <?php if ($checkPendingBusiness): ?>
+            <i class="fas fa-hourglass-half"></i>
+            Hồ sơ doanh nhân — Đang xét duyệt
+          <?php else: ?>
+            <i class="fas fa-building"></i>
+            Đăng ký tài khoản doanh nhân
+          <?php endif; ?>
+        </h5>
+        <button type="button" class="btn-close <?php echo $checkPendingBusiness ? 'btn-close-white' : ''; ?>"
+          data-bs-dismiss="modal" aria-label="Close"></button>
+>>>>>>> Stashed changes
       </div>
       <div class="modal-body">
         <!-- Thông tin hiện tại - Compact version -->
@@ -443,6 +486,7 @@
               </div>
             </div>
           </div>
+<<<<<<< Updated upstream
         </div>
 
         <!-- Cảnh báo - Compact version -->
@@ -484,6 +528,39 @@
                   <option value="securities">Chứng khoán</option>
                   <option value="other">Khác</option>
                 </select>
+=======
+        <?php else: ?>
+          <!-- STATE: REGISTER (giữ nguyên form của master, có nâng giao diện nhẹ) -->
+          <!-- Cảnh báo -->
+          <div class="alert alert-warning py-2 mb-3">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            <strong>Lưu ý:</strong>
+            <small class="d-block mt-1">
+              Chuyển đổi sang doanh nhân • Cần thông tin hợp lệ • Xét duyệt 1–3 ngày • Một số tính năng bị hạn
+              chế
+            </small>
+          </div>
+
+          <!-- Form đăng ký doanh nhân -->
+          <form id="convertForm" method="POST" action="<?= BASE_URL ?>/register_business" class="needs-validation"
+            novalidate>
+            <input type="hidden" name="session_token"
+              value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="birthYear" class="form-label small">Năm sinh <span
+                    class="text-danger">*</span></label>
+                <input type="number" min="1900" max="2099" class="form-control form-control-sm"
+                  id="birthYear" name="birth_year" required>
+                <div class="invalid-feedback small">Vui lòng nhập năm sinh hợp lệ.</div>
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="nationality" class="form-label small">Quốc tịch <span
+                    class="text-danger">*</span></label>
+                <input type="text" class="form-control form-control-sm" id="nationality" name="nationality"
+                  required>
+                <div class="invalid-feedback small">Vui lòng nhập quốc tịch.</div>
+>>>>>>> Stashed changes
               </div>
             </div>
             <div class="col-md-6">
@@ -501,6 +578,7 @@
             </div>
           </div>
 
+<<<<<<< Updated upstream
           <div class="mb-2">
             <label for="businessAddress" class="form-label small">Địa chỉ trụ sở <span class="text-danger">*</span></label>
             <textarea class="form-control form-control-sm" id="businessAddress" name="business_address" rows="2" placeholder="Nhập địa chỉ trụ sở chính" required></textarea>
@@ -518,6 +596,31 @@
             </label>
           </div>
         </form>
+=======
+            <div class="row">
+              <div class="col-md-6 mb-2">
+                <label for="education" class="form-label small">Học vấn</label>
+                <input type="text" class="form-control form-control-sm" id="education" name="education"
+                  placeholder="VD: Cử nhân Kinh tế">
+              </div>
+              <div class="col-md-6 mb-2">
+                <label for="position" class="form-label small">Chức vụ</label>
+                <input type="text" class="form-control form-control-sm" id="position" name="position"
+                  placeholder="VD: CEO, Founder">
+              </div>
+            </div>
+
+            <div class="form-check mb-2">
+              <input class="form-check-input" type="checkbox" id="agreeTerms" name="agree_terms" required>
+              <label class="form-check-label small" for="agreeTerms">
+                Tôi đồng ý với <a href="#" class="text-primary">Điều khoản sử dụng</a> và <a href="#"
+                  class="text-primary">Chính sách bảo mật</a>
+              </label>
+              <div class="invalid-feedback small">Vui lòng đồng ý điều khoản.</div>
+            </div>
+          </form>
+        <?php endif; ?>
+>>>>>>> Stashed changes
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -542,6 +645,7 @@
 
       <form action="<?= BASE_URL ?>/edit_profile" method="POST">
         <div class="modal-body">
+<<<<<<< Updated upstream
           <!-- Hiển thị thông tin hiện tại -->
           <div class="row mb-3">
             <div class="col-md-6">
@@ -567,6 +671,91 @@
           <div class="mb-3">
             <label class="form-label">Địa chỉ</label>
             <input type="text" class="form-control" name="live_at" value="<?= htmlspecialchars($profileUser['live_at'] ?? '') ?>">
+=======
+          <input type="hidden" name="session_token"
+            value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+
+          <h6 class="text-muted mb-3">Thông tin tài khoản</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-md-6">
+              <label class="form-label">Tên hiển thị</label>
+              <input type="text" class="form-control" name="display_name"
+                value="<?= htmlspecialchars($user['name'] ?? '') ?>"
+                placeholder="Tên bạn muốn mọi người thấy">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Username (Không thể đổi)</label>
+              <input type="text" class="form-control" name="user_name"
+                value="<?= htmlspecialchars($user['username'] ?? '') ?>" readonly>
+              <small class="form-text text-muted">Dùng để đăng nhập.</small>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Email</label>
+              <input type="email" class="form-control" name="email"
+                value="<?= htmlspecialchars($user['email'] ?? '') ?>" placeholder="example@email.com">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Số điện thoại</label>
+              <input type="tel" class="form-control" name="phone"
+                value="<?= htmlspecialchars($user['phone'] ?? '') ?>" placeholder="Số di động của bạn">
+            </div>
+          </div>
+
+          <h6 class="text-muted mb-3">Thông tin cá nhân</h6>
+          <div class="row g-3 mb-4">
+            <div class="col-12">
+              <label class="form-label">Mô tả bản thân</label>
+              <textarea class="form-control" name="description" rows="3"
+                placeholder="Vài dòng giới thiệu về bạn..."><?= htmlspecialchars($user['description'] ?? '') ?></textarea>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Năm sinh</label>
+              <input type="number" class="form-control" name="birth_year"
+                value="<?= htmlspecialchars($user['birth_year'] ?? '') ?>" placeholder="Ví dụ: 1995">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Địa chỉ</label>
+              <input type="text" class="form-control" name="live_at"
+                value="<?= htmlspecialchars($user['live_at'] ?? '') ?>"
+                placeholder="Thành phố bạn đang sống">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi làm việc</label>
+              <input type="text" class="form-control" name="workplace"
+                value="<?= htmlspecialchars($user['workplace'] ?? '') ?>" placeholder="Tên công ty">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Nơi học tập</label>
+              <input type="text" class="form-control" name="studied_at"
+                value="<?= htmlspecialchars($user['studied_at'] ?? '') ?>" placeholder="Tên trường học">
+            </div>
+          </div>
+
+          <h6 class="text-muted mb-3">Thay đổi hình ảnh</h6>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Ảnh đại diện mới</label>
+              <input type="file" class="form-control" name="avatar_file" accept="image/*">
+              <?php if (!empty($user['avatar_url'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['avatar_url']) ?>" alt="Avatar"
+                    class="img-thumbnail" width="80">
+                </div>
+              <?php endif; ?>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Ảnh bìa mới</label>
+              <input type="file" class="form-control" name="cover_file" accept="image/*">
+              <?php if (!empty($user['cover_photo'])): ?>
+                <div class="mt-2">
+                  <small class="text-muted">Ảnh hiện tại:</small><br>
+                  <img src="<?= htmlspecialchars($user['cover_photo']) ?>" alt="Cover photo"
+                    class="img-thumbnail" width="120">
+                </div>
+              <?php endif; ?>
+            </div>
+>>>>>>> Stashed changes
           </div>
         </div>
 

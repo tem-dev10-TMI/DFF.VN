@@ -154,7 +154,6 @@
                 /* Áp dụng cho màn hình mobile (ví dụ: dưới 768px) */
                 @media (max-width: 767.98px) {
 
-                    /* 1. Cho phép các khung chứa co giãn để lấp đầy không gian */
                     #pills-tabContent,
                     #pills-tabContent .card {
                         display: flex;
@@ -162,13 +161,15 @@
                         flex-grow: 1;
                         min-height: 0;
                     }
+                }
 
-                    /* 2. Cho list-group lấp đầy phần còn lại và cuộn được */
-                    .notice-list {
-                        flex-grow: 1;
-                        overflow-y: auto;
-                        /* Đã xóa display:flex và flex-direction:column-reverse ở đây */
-                    }
+
+
+                /* 2. Cho list-group lấp đầy phần còn lại và cuộn được */
+                .notice-list {
+                    flex-grow: 1;
+                    overflow-y: auto;
+                    /* Đã xóa display:flex và flex-direction:column-reverse ở đây */
                 }
             </style>
             <div class="collapse box-alert" id="id_alert">
@@ -345,14 +346,19 @@
 <!-- khu tự trị header nha cái này để hiện thị header ở phía trên  -->
 
 <!-- Modal đăng nhập -->
-<div class="modal" role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
+<div class="modal " role="dialog" id="div_modal" aria-labelledby="myModalLabel" data-popup="true" data-popup-id="5560"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable" >
+    <div class="modal-dialog modal-md modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
-                <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng nhập </span></h4>
-                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+            <div class="modal-header d-flex justify-content-center position-relative">
+                <h4 class="modal-title m-0">
+                    <span class="core-popup-title">Đăng nhập</span>
+                </h4>
+                <button type="button" class="close sh-popup-close position-absolute end-0 me-2" style="top: 5px;">
+                    <i class="far fa-times-circle"></i>
+                </button>
             </div>
+
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="popup-area-msg">
                     <?php if (isset($_SESSION['login_error'])): ?>
@@ -395,6 +401,7 @@
                                 <button type="submit" id="submit">Đăng nhập</button>
                             </div>
                         </div>
+
                         <div class="content-divider text-muted"> <span>OR</span> </div>
 
                         <div class="col-12">
@@ -434,13 +441,14 @@
     </div>
 </div>
 <!-- Modal đăng kí -->
-<div class="modal" role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
+<div class="modal " role="dialog" id="register_modal" aria-labelledby="registerModalLabel" data-popup="true"
     data-popup-id="8268" aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
+    <div class="modal-dialog modal-md modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header d-flex justify-content-center position-relative">
                 <h4 class="modal-title" style="cursor: move;"><span class="core-popup-title">Đăng ký tài khoản </span>
-                </h4> <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                </h4> <button type="button" class="close sh-popup-close position-absolute end-0 me-2"
+                    style="top: 5px;"><i class="far fa-times-circle"></i></button>
             </div>
             <div class="modal-body" style="padding:10px 15px 10px">
                 <div class="row">
@@ -451,11 +459,7 @@
 
                 <form id="register" action="<?= BASE_URL ?>/register" method="POST" novalidate="novalidate">
                     <div class="f-register">
-                        <div class="col-12">
-                            <div class="title">
-                                Tạo tài khoản để sử dụng đầy đủ tính năng và tham gia cộng đồng thành viên của DFF.VN
-                            </div>
-                        </div>
+
                         <input type="hidden" name="role" value="user">
                         <div class="col-12">
                             <div class="input-group">
@@ -584,11 +588,12 @@
 <!-- Modal Quên mật khẩu -->
 <div class="modal" role="dialog" id="forgot_modal" aria-labelledby="forgotModalLabel" data-popup="true"
     aria-modal="true" tabindex="-1">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down modal-dialog-scrollable">
+    <div class="modal-dialog modal-md modal-fullscreen-md-down modal-dialog-scrollable">
         <div class="modal-content">
-            <div class="modal-header">
+            <div class="modal-header d-flex justify-content-center position-relative">
                 <h4 class="modal-title"><span class="core-popup-title">Quên mật khẩu</span></h4>
-                <button type="button" class="close sh-popup-close"><i class="far fa-times-circle"></i></button>
+                <button type="button" class="close sh-popup-close position-absolute end-0 me-2" style="top: 5px;"><i
+                        class="far fa-times-circle"></i></button>
             </div>
 
             <div class="modal-body" style="padding:10px 15px 10px">
@@ -596,9 +601,6 @@
                 <!-- Bước 1: Nhập email + mật khẩu -->
                 <form id="forgot_step1">
                     <div class="f-register">
-                        <div class="col-12">
-                            <div class="title">Nhập email để nhận mã OTP đặt lại mật khẩu</div>
-                        </div>
                         <div class="col-12">
                             <div class="input-group">
                                 <div class="input-group-text"><i class="fas fa-at"></i></div>
@@ -810,15 +812,15 @@ if (!isset($marketData)) {
             <div class="item co-<?= strtolower($key) ?>">
                 <div class="irow label">
                     <span>
-                        <?php 
-                            // Sử dụng tên thân thiện hơn nếu cần
-                            $displayName = $item['name'] ?? $key;
-                            echo htmlspecialchars($displayName);
+                        <?php
+                        // Sử dụng tên thân thiện hơn nếu cần
+                        $displayName = $item['name'] ?? $key;
+                        echo htmlspecialchars($displayName);
                         ?>
                     </span>
                     <span class="value">
-                        <?php 
-                            echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
+                        <?php
+                        echo is_numeric($item['price']) ? number_format($item['price'], 2) : '---';
                         ?>
                     </span>
                 </div>
@@ -826,14 +828,14 @@ if (!isset($marketData)) {
                     <span>
                         <i class="<?= ($item['isPositive'] ?? true) ? 'fa fa-arrow-up' : 'fa fa-arrow-down' ?>"></i>
                         <index>
-                            <?php 
-                                echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
+                            <?php
+                            echo is_numeric($item['change']) ? number_format($item['change'], 2) : '---';
                             ?>
                         </index>
                     </span>
                     <span class="per <?= ($item['isPositive'] ?? true) ? 'positive' : 'negative' ?>">
-                        <?php 
-                            echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
+                        <?php
+                        echo is_numeric($item['changePercent']) ? number_format($item['changePercent'], 2) . '%' : '---%';
                         ?>
                     </span>
                 </div>
