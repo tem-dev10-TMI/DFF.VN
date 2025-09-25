@@ -204,7 +204,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </script>
 
     <script>
-        (function () {
+        (function() {
             const onlineEl = document.getElementById('onlineCount');
             const totalEl = document.getElementById('totalViews');
             const dotEl = document.getElementById('onlineDot');
@@ -216,7 +216,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                     const metricsUrl = base + '/TRACK/metrics.php';
                     // console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
 
-                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+                    const res = await fetch(metricsUrl, {
+                        cache: 'no-store',
+                        credentials: 'same-origin'
+                    });
 
                     if (!res.ok) throw new Error('HTTP ' + res.status);
                     const data = await res.json();
@@ -231,7 +234,9 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                     dotEl.textContent = '×';
                 }
                 // chuyển lại dấu chấm sau 1s cho gọn
-                setTimeout(() => { dotEl.textContent = '•'; }, 1000);
+                setTimeout(() => {
+                    dotEl.textContent = '•';
+                }, 1000);
             }
 
             // cập nhật ngay khi tải trang
@@ -393,7 +398,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function () {
+        $(function() {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -404,7 +409,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function () {
+                    marqueeInterval = setInterval(function() {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -470,15 +475,15 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1"
-        style="z-index: 9998;">
-        <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 9998;">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
+                    <h5 class="modal-title" id="mobileModalLabel">Menu</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; overflow-y: auto; "></div>
+                <div class="modal-body" id="mobileModalBody">
+                </div>
             </div>
         </div>
     </div>
@@ -542,59 +547,71 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </style>
 
     <script>
-        (function () {
-            // Dữ liệu sự kiện từ PHP
-            const headerEvents = <?php echo json_encode($headerEvents ?? [], JSON_UNESCAPED_UNICODE); ?>;
-
-            function renderAlerts(events) {
-
+        (function() {
+            var modalEl = document.getElementById('mobileModal');
+            var modalBody = document.getElementById('mobileModalBody');
+            var modalTitle = document.getElementById('mobileModalLabel');
+            var bsModal = null;
+            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
+                bsModal = new bootstrap.Modal(modalEl);
             }
 
-            let mobileModalInstance = null;
+            // NÂNG CẤP: Thêm tham số `modalClass` để nhận tên lớp CSS
+            function openMobileModal(title, html, modalClass) {
+                if (!modalEl) return;
 
-            function openMobileModal(type) {
-                const body = document.getElementById('mobileModalBody');
-                const title = document.getElementById('mobileModalLabel');
-                if (!body || !title) return;
+                // --- BẮT ĐẦU PHẦN CHỈNH SỬA QUAN TRỌNG ---
 
-                if (type === 'alerts') {
-                    title.textContent = 'Thông báo';
+                // 1. Luôn xóa các lớp style cũ trước khi mở để reset
+                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style');
 
-                    // Tìm đến nội dung thông báo của phiên bản desktop
-                    const desktopAlertsContent = document.querySelector('#id_alert .tab-content');
+                // 2. Nếu có lớp mới được truyền vào, hãy thêm nó
+                if (modalClass) {
+                    modalEl.classList.add(modalClass);
+                }
 
-                    // Sao chép HTML từ desktop vào modal body
-                    if (desktopAlertsContent) {
-                        body.innerHTML = desktopAlertsContent.innerHTML;
-                    } else {
-                        body.innerHTML = '<div>Không tìm thấy nội dung thông báo.</div>';
+                // --- KẾT THÚC PHẦN CHỈNH SỬA ---
+
+                if (modalTitle) modalTitle.textContent = title || 'Menu';
+                if (modalBody) modalBody.innerHTML = html || '';
+                if (bsModal) bsModal.show();
+                else modalEl.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMobileModal() {
+                if (!modalEl) return;
+                if (bsModal) bsModal.hide();
+                else modalEl.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+
+            modalEl && modalEl.addEventListener('click', function(e) {
+                if (e.target === modalEl) closeMobileModal();
+            });
+
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                a.addEventListener('click', function(e) {
+                    var type = this.getAttribute('data-mobile-modal');
+                    if (!type) return;
+
+                    if (type === 'alerts') {
+                        var alerts = document.getElementById('id_alert');
+                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                        // NÂNG CẤP: Truyền vào lớp 'modal-mobile-custom'
+                        openMobileModal('Thông báo', html, 'modal-mobile-custom');
+                    } else if (type === 'profile') {
+                        var tpl = document.getElementById('mobile-profile-template');
+                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                        // NÂNG CẤP: Truyền vào lớp 'modal-account-style'
+                        openMobileModal('Tài khoản', html, 'modal-account-style');
+                    } else if (type === 'create') {
+                        var createHtml = '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>';
+                        // Giữ nguyên, không cần style đặc biệt, nó sẽ tự động căn giữa
+                        openMobileModal('Tạo mới', createHtml);
                     }
-                } else if (type === 'create') {
-                    title.textContent = 'Tạo mới';
-                    body.innerHTML = '<div>Chức năng tạo mới sẽ cập nhật sau.</div>';
-                } else if (type === 'profile') {
-                    // Thay vì chỉ hiển thị text, mở modal login
-                    showLoginModal(); // <-- Gọi trực tiếp modal login từ header.php
-                    return; // thoát luôn để không mở modal mobile
-                } else {
-                    title.textContent = 'Menu';
-                    body.innerHTML = '';
-                }
-
-                const modalEl = document.getElementById('mobileModal');
-                if (modalEl) {
-                    document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
-                    document.body.classList.remove('modal-open');
-                    document.body.style.removeProperty('padding-right');
-
-                    mobileModalInstance = bootstrap.Modal.getOrCreateInstance(modalEl, {
-                        backdrop: true,
-                        focus: true
-                    });
-                    mobileModalInstance.show();
-                }
-            }
-
+                });
+            });
         })();
     </script>
 
@@ -603,10 +620,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                      echo 'profile_user';
-                  } else {
-                      //echo 'profile_business';
-                  } ?>"><i class="fas fa-user"></i> Trang cá
+                                                                            echo 'profile_user';
+                                                                        } else {
+                                                                            //echo 'profile_business';
+                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
                         nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
@@ -625,89 +642,75 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <script>
-        (function () {
-            var modalEl = document.getElementById('mobileModal');
-            var modalBody = document.getElementById('mobileModalBody');
-            var modalTitle = document.getElementById('mobileModalLabel');
-            var bsModal = null;
-            if (modalEl && window.bootstrap && window.bootstrap.Modal) {
-                bsModal = new bootstrap.Modal(modalEl);
+        // Bọc trong IIFE để tránh xung đột
+        (function() {
+            // Chỉ lấy element, không khởi tạo modal ở đây
+            const modalEl = document.getElementById('mobileModal');
+            if (!modalEl) return; // Nếu không có element thì dừng luôn
+
+            /**
+             * HÀM QUAN TRỌNG: Lấy hoặc Tạo đối tượng Modal duy nhất.
+             * Dù hàm này được gọi bao nhiêu lần, nó luôn trả về cùng một đối tượng modal.
+             */
+            function getModalInstance() {
+                if (!window.bootstrap || !window.bootstrap.Modal) return null;
+
+                // Kiểm tra xem đã có instance nào được gắn vào element chưa
+                let instance = bootstrap.Modal.getInstance(modalEl);
+
+                // Nếu chưa có, tạo mới và lưu lại
+                if (!instance) {
+                    instance = new bootstrap.Modal(modalEl);
+                }
+                return instance;
             }
 
-            function openMobileModal(title, html) {
-                if (!modalEl) return;
+            // Hàm mở modal, giờ sẽ an toàn hơn
+            window.openMobileModal = function(title, html, modalClass) {
+                const bsModal = getModalInstance();
+                if (!bsModal) return;
+
+                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style', 'modal-fullscreen-mobile'); // THÊM LỚP MỚI VÀO ĐÂY ĐỂ XÓA TRƯỚC
+                if (modalClass) {
+                    modalEl.classList.add(modalClass);
+                }
+
+                const modalTitle = modalEl.querySelector('#mobileModalLabel');
+                const modalBody = modalEl.querySelector('#mobileModalBody');
+
                 if (modalTitle) modalTitle.textContent = title || 'Menu';
                 if (modalBody) modalBody.innerHTML = html || '';
-                if (bsModal) bsModal.show();
-                else modalEl.style.display = 'block';
-                // Khóa scroll nền khi mở modal thủ công (fallback)
-                document.body.style.overflow = 'hidden';
-            }
 
-            function closeMobileModal() {
-                if (!modalEl) return;
-                if (bsModal) bsModal.hide();
-                else modalEl.style.display = 'none';
-                document.body.style.overflow = '';
-            }
+                bsModal.show();
+            };
 
-            // Đóng khi click nút đóng (fallback nếu không dùng bootstrap)
-            modalEl && modalEl.addEventListener('click', function (e) {
-                if (e.target === modalEl) closeMobileModal();
-            });
+            // Gắn sự kiện vào các nút bấm chỉ một lần
+            // Dùng một cờ để đảm bảo code này chỉ chạy 1 lần duy nhất
+            if (!window.mobileModalListenerAttached) {
+                document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                    a.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const type = this.getAttribute('data-mobile-modal');
+                        if (!type) return;
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
-                a.addEventListener('click', function (e) {
-                    var type = this.getAttribute('data-mobile-modal');
-                    if (!type) return;
-                    if (type === 'alerts') {
-                        var alerts = document.getElementById('id_alert');
-                        var html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
-                        openMobileModal('Thông báo', html);
-                    } else if (type === 'profile') {
-                        var tpl = document.getElementById('mobile-profile-template');
-                        var html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
-                        openMobileModal('Tài khoản', html);
-                    } else if (type === 'create') {
-                        // Tái sử dụng quick write nếu có
-                        openMobileModal('Tạo mới', '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>');
-                    }
-                });
-            });
-        })();
-
-        document.querySelectorAll(".btn-follow").forEach(btn => {
-            btn.addEventListener("click", function () {
-                const userId = this.getAttribute("data-user");
-                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
-
-                fetch("api/follow", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded"
-                    },
-                    body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
-                    credentials: "include"
-                })
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.success) {
-                            // cập nhật text nút
-                            this.querySelector(".follow-text").innerText =
-                                data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
-
-                            // cập nhật số follower
-                            this.querySelector(".number").innerText = data.followers;
-                        } else {
-                            alert(data.message);
+                        if (type === 'alerts') {
+                            const alerts = document.getElementById('id_alert');
+                            const html = alerts ? alerts.innerHTML : '<p>Chưa có thông báo.</p>';
+                            window.openMobileModal('Thông báo', html, 'modal-mobile-custom');
+                        } else if (type === 'profile') {
+                            const tpl = document.getElementById('mobile-profile-template');
+                            const html = tpl ? tpl.innerHTML : '<p>Không có dữ liệu.</p>';
+                            // THAY ĐỔI: Dùng lớp 'modal-fullscreen-mobile' cho Tài khoản
+                            window.openMobileModal('Tài khoản', html, 'modal-fullscreen-mobile');
+                        } else if (type === 'create') {
+                            const createHtml = '<div>...</div>'; // Nội dung của bạn
+                            window.openMobileModal('Tạo mới', createHtml);
                         }
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        alert("Không thể kết nối đến server!");
                     });
-            });
-        });
+                });
+                window.mobileModalListenerAttached = true; // Đánh dấu là đã gắn sự kiện
+            }
+        })();
     </script>
     <a module-load="boxIndex"></a>
 
@@ -862,7 +865,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function () {
+            $(function() {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -902,14 +905,14 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function () {
+                $('.mb-chat').click(function() {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function () {
+                $('.cover-chat .cclose').click(function() {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function (e) {
+                $('.cm-more').on('click', function(e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -920,7 +923,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </script>
 
         <script>
-            $(function () {
+            $(function() {
                 type = 3;
             });
         </script>
@@ -942,11 +945,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
     <script>
-        $(function () {
+        $(function() {
             Page.registerModule(document);
 
 
-            $(window).scroll(function () {
+            $(window).scroll(function() {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");
@@ -970,7 +973,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         // --- Kịch bản cho hiệu ứng 3D (Không đổi) ---
         const container = document.getElementById('globe-container');
         let scene, camera, renderer, globe, particles;
-        let mouseX = 0, mouseY = 0;
+        let mouseX = 0,
+            mouseY = 0;
         const windowHalfX = window.innerWidth / 2;
         const windowHalfY = window.innerHeight / 2;
 
@@ -979,12 +983,20 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             scene.fog = new THREE.FogExp2(0x000000, 0.001);
             camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 3000);
             camera.position.z = 600;
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true
+            });
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
             const globeGeometry = new THREE.SphereGeometry(180, 64, 64);
-            const globeMaterial = new THREE.MeshPhongMaterial({ color: 0x00FF41, wireframe: true, transparent: true, opacity: 0.05 });
+            const globeMaterial = new THREE.MeshPhongMaterial({
+                color: 0x00FF41,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.05
+            });
             globe = new THREE.Mesh(globeGeometry, globeMaterial);
             scene.add(globe);
             const particlesGeometry = new THREE.BufferGeometry();
@@ -994,7 +1006,13 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 posArray[i] = (Math.random() - 0.5) * 1500;
             }
             particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
-            const particlesMaterial = new THREE.PointsMaterial({ size: 1.5, color: 0x00FF41, transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending });
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 1.5,
+                color: 0x00FF41,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
             particles = new THREE.Points(particlesGeometry, particlesMaterial);
             scene.add(particles);
             document.addEventListener('mousemove', onDocumentMouseMove, false);
@@ -1027,6 +1045,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
         // --- Preloader logic (Không đổi) ---
         let loaderHidden = false;
+
         function hideLoader() {
             if (loaderHidden) return;
             loaderHidden = true;
@@ -1045,10 +1064,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             document.body.style.overflow = 'auto';
         }
 
-        window.onload = function () {
+        window.onload = function() {
             const preloader = document.getElementById('preloader');
             if (preloader) {
-                setTimeout(function () {
+                setTimeout(function() {
                     preloader.classList.add('hidden');
                 }, 500); // 500ms = 0.5 giây
             }
