@@ -15,7 +15,16 @@
     $videoUrl = $article['media_url'] ?? '';
 
     ?>
+<?php
+require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+$db = new connect();
+$pdo = $db->db;
+$followModel = new UserFollowModel($pdo);
 
+// Đảm bảo có authorId
+$authorId = isset($authorId) ? intval($authorId) : 0;
+$totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
+?>
     <main class="main-content">
         <div class="block-k">
 
@@ -32,8 +41,9 @@
                     </div>
                 </div>
 
-                <div class="follower-r f-right" style="font-size: 13px;"><b class="total-fol">0</b> Người theo dõi</div>
-            </div>
+<div class="follower-r f-right" style="font-size: 13px;">
+    <b class="total-fol"><?= intval($totalFollowers) ?></b> Người theo dõi
+</div>            </div>
 
             <div class="detail">
                 <div class="line"></div>
