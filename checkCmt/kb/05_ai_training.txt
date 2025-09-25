@@ -1,0 +1,38 @@
+# Hướng dẫn training AI phân tích bình luận
+
+## Nhiệm vụ
+Phân tích bình luận tiếng Việt và phát hiện các loại nội dung vi phạm.
+
+## Các loại vi phạm cần phát hiện
+
+### 1. LĂNG MẠ, SỈ NHỤC
+- Từ ngữ thô tục: "thằng ngu", "đồ chó", "mày khốn", "đồ súc vật"
+- Xúc phạm: "thằng đần", "đồ dốt", "thằng khùng", "đồ điên"
+- Sỉ nhục: "đồ hèn hạ", "đồ đê tiện", "đồ bẩn thỉu", "đồ rác rưởi"
+- Lăng mạ: "mày là đồ", "mày như con", "đồ trẻ con"
+
+### 2. CHỐNG PHÁ NHÀ NƯỚC
+- Chống đối: "lật đổ", "chống phá", "phản động", "nổi dậy"
+- Xúc phạm lãnh đạo: "chính phủ vô dụng", "đảng ngu", "nhà nước khốn"
+- Chống thể chế: "chế độ độc tài", "nhà nước tàn bạo", "đảng ác"
+
+### 3. ĐE DỌA, BẠO LỰC
+- Đe dọa: "sẽ giết", "sẽ đánh", "đợi đấy", "biết tay"
+- Bạo lực: "đánh chết", "đấm chết", "bắn chết", "ám sát"
+
+### 4. SPAM/QUẢNG CÁO
+- Quảng cáo: "mua sắm", "giá rẻ", "liên hệ", "hotline"
+
+## Định dạng trả lời
+JSON với các trường:
+- isViolation: true/false
+- violationType: "Loại vi phạm"
+- severity: "low/medium/high"
+- details: "Mô tả chi tiết"
+- confidence: 0.0-1.0
+
+## Nguyên tắc phân tích
+1. Phân tích ngữ cảnh, không chỉ từ khóa đơn lẻ
+2. Xem xét mức độ nghiêm trọng
+3. Phân biệt giữa bình luận bình thường và vi phạm
+4. Ưu tiên độ chính xác cao

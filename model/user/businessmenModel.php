@@ -22,8 +22,51 @@ class businessmenModel
     public static function registerBusiness($user_id, $birth_year, $nationality, $education, $position)
     {
         $db = new connect();
-        $sql = "INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
-                VALUES (:user_id, :birth_year, :nationality, :education, :position)";
+
+        // 1. Kiểm tra user đã là doanh nhân chưa
+        $stmtCheck = $db->db->prepare("SELECT COUNT(*) FROM businessmen WHERE user_id = :user_id");
+        $stmtCheck->execute([':user_id' => $user_id]);
+        if ($stmtCheck->fetchColumn() > 0) {
+            return false; // User đã là doanh nhân
+        }
+
+        try {
+            // Bắt đầu transaction
+            $db->db->beginTransaction();
+
+            // 2. Insert vào bảng businessmen
+            $stmt = $db->db->prepare("
+            INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
+            VALUES (:user_id, :birth_year, :nationality, :education, :position)
+        ");
+            $stmt->execute([
+                ':user_id' => $user_id,
+                ':birth_year' => $birth_year,
+                ':nationality' => $nationality,
+                ':education' => $education,
+                ':position' => $position
+            ]);
+
+            // 3. Update role của user trong bảng users
+            $stmt2 = $db->db->prepare("UPDATE users SET role = 'businessmen' WHERE id = :user_id");
+            $stmt2->execute([':user_id' => $user_id]);
+
+            // Commit transaction
+            $db->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->db->rollBack();
+            return false;
+        }
+    }
+
+    // =============== Cập nhật thông tin doanh nhân ===============
+    public static function updateBusiness($user_id, $birth_year, $nationality, $education, $position)
+    {
+        $db = new connect();
+        $sql = "UPDATE businessmen 
+                SET birth_year = :birth_year, nationality = :nationality, education = :education, position = :position 
+                WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([
             ':user_id' => $user_id,
@@ -33,22 +76,16 @@ class businessmenModel
             ':position' => $position
         ]);
     }
-    // =============== Cập nhật thông tin doanh nhân ===============
-    public static function updateBusiness($user_id, $birth_year, $nationality, $education, $position)
+
+    public static function existsByUserId($user_id)
     {
         $db = new connect();
-        $sql = "UPDATE businessmen 
-                SET birth_year = :birth, nationality = :nationality, education = :education, position = :position 
-                WHERE user_id = :user_id";
+        $sql = "SELECT COUNT(*) FROM businessmen WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
-        return $stmt->execute([
-            ':user_id' => $user_id,
-            ':birth' => $birth_year,
-            ':nationality' => $nationality,
-            ':education' => $education,
-            ':position' => $position
-        ]);
+        $stmt->execute([':user_id' => $user_id]);
+        return $stmt->fetchColumn() > 0;
     }
+
 
     // =============== Xóa thông tin doanh nhân ===============
     public static function deleteBusiness($user_id)
@@ -286,5 +323,35 @@ class businessmenModel
             'following' => $followingCount,
             'likes' => $likesCount
         ];
+    }
+    public static function approveBusiness($user_id)
+    {
+        $db = new connect();
+
+        try {
+            $db->db->beginTransaction();
+
+            // 1. Update status doanh nhân sang 'approved'
+            $stmt = $db->db->prepare("
+            UPDATE businessmen 
+            SET status = 'approved' 
+            WHERE user_id = :user_id
+        ");
+            $stmt->execute([':user_id' => $user_id]);
+
+            // 2. Update role của user nếu chưa phải doanh nhân
+            $stmt2 = $db->db->prepare("
+            UPDATE users 
+            SET role = 'businessmen' 
+            WHERE id = :user_id AND role != 'businessmen'
+        ");
+            $stmt2->execute([':user_id' => $user_id]);
+
+            $db->db->commit();
+            return true;
+        } catch (Exception $e) {
+            $db->db->rollBack();
+            return false;
+        }
     }
 }

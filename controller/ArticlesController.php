@@ -136,35 +136,41 @@ class ArticlesController
         require_once __DIR__ . '/../model/article/articlesmodel.php';
         require_once __DIR__ . '/../model/user/userModel.php';
         require_once __DIR__ . '/../model/ArticleSavesModel.php';
-        require_once __DIR__ . '/../model/mediamodel.php';
+        // require_once __DIR__ . '/../model/mediamodel.php'; // Không cần nếu view không gọi trực tiếp
 
-        $currentUserId = null;
-        if (isset($_SESSION['user']['id'])) {
-            $currentUserId = $_SESSION['user']['id'];
-        }
-        //$mediaItems = MediaModel::getMediaByArticle($articleId);
-        $save=new ArticleSavesModel();
-        $saved = $save->isSavedbySlug($slug, $currentUserId);
-        $iconClass = $saved ? 'fas' : 'far';
-        // Lấy dữ liệu từ model
+        $currentUserId = $_SESSION['user']['id'] ?? null;
+
+        // 1) Lấy bài viết (đã bao gồm sections + media theo thiết kế mới)
         $article = ArticlesModel::getArticleBySlug($slug, $currentUserId);
-        $authorId = UserModel::getUserById($article['author_id']);
-        $user = UserModel::getUserById($authorId['id']);
-
-        // Lấy bài viết liên quan
-        $relatedArticles = ArticlesModel::getRelatedArticles($article['topic_id'], $article['id'], 5);
-
         if (!$article) {
             require_once __DIR__ . '/../view/errors/404.php';
             return;
         }
 
-        // Nạp view
+        // 2) Tác giả
+        $author = UserModel::getUserById($article['author_id']);
+
+        // 3) Trạng thái đã lưu (chỉ check khi đăng nhập)
+        $saved = false;
+        if ($currentUserId) {
+            $save = new ArticleSavesModel();
+            $saved = $save->isSavedbySlug($slug, $currentUserId);
+        }
+        $iconClass = $saved ? 'fas' : 'far';
+
+        // 4) Bài viết liên quan
+        $relatedArticles = ArticlesModel::getRelatedArticles($article['topic_id'], $article['id'], 5);
+
+        // 5) (Tuỳ chọn) tăng view_count
+        if (method_exists('ArticlesModel', 'incrementViewCount')) {
+            //ArticlesModel::incrementViewCount($article['id']);
+        }
+
+        // 6) Render
         ob_start();
         require_once __DIR__ . '/../view/page/details_Blog.php';
         $content = ob_get_clean();
 
-        // Layout chính
         $profile = false;
         require_once __DIR__ . '/../view/layout/main.php';
     }

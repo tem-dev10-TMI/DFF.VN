@@ -12,182 +12,6 @@ a {
     /* thêm cuộn dọc */
 }
 
-/*================ KOL =================*/
-.box-kol-section .c-note {
-    font-size: 0.9em;
-    color: #c00;
-    /* màu đỏ giống doanh nhân */
-}
-
-.kol-card {
-    border: 1px solid #e6e6e6;
-    border-radius: 12px;
-    min-width: 190px;
-    transition: transform .2s, box-shadow .2s;
-}
-
-.kol-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
-}
-
-.kol-card .card-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100%;
-    padding: 1rem;
-}
-
-.kol-card .card-body>* {
-    margin: 4px 0;
-}
-
-.kol-carousel .item {
-    margin-right: 10px;
-    padding: 5px;
-}
-
-.kol-carousel .owl-nav {
-    position: absolute;
-    top: 50%;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    transform: translateY(-50%);
-    pointer-events: none;
-    /* để tránh đè vùng click */
-}
-
-.kol-carousel .owl-nav button {
-    background: #f1f1f1;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    pointer-events: auto;
-    /* cho phép click */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-    color: #333;
-    transition: all 0.2s ease;
-}
-
-.kol-carousel .owl-nav button:hover {
-    background: #e2e2e2;
-    color: #000;
-}
-
-.card-body .card-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #0866ff;
-    margin-bottom: 5px;
-}
-
-
-.card-body .text-muted {
-    font-size: 13px;
-    color: #555;
-    margin-bottom: 5px;
-}
-
-.card-body .folloewrs {
-    font-size: 13px;
-    /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
-
-    /* Hiệu ứng gradient cho chữ */
-    display: inline-block;
-    /* Cần thiết để background-clip hoạt động đúng */
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    /* Định nghĩa màu và kích thước cho gradient */
-    background-image: linear-gradient(to right,
-            #372f6a,
-            /* Tím vũ trụ */
-            #a73737,
-            /* Đỏ hoàng hôn */
-            #f09819,
-            /* Cam mặt trời */
-            #a73737,
-            /* Đỏ hoàng hôn */
-            #372f6a
-            /* Tím vũ trụ (lặp lại) */
-        );
-    background-size: 400% 400%;
-
-    /* Animation */
-    animation: smoothGradientAnimation 15s linear infinite;
-
-    margin-bottom: 5px;
-}
-
-.card-body .likes {
-    font-size: 13px;
-    /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
-
-    /* Hiệu ứng gradient cho chữ */
-    display: inline-block;
-    /* Cần thiết để background-clip hoạt động đúng */
-    color: transparent;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    /* Định nghĩa màu và kích thước cho gradient */
-    background-image: linear-gradient(to right,
-            #372f6a,
-            /* Tím vũ trụ */
-            #a73737,
-            /* Đỏ hoàng hôn */
-            #f09819,
-            /* Cam mặt trời */
-            #a73737,
-            /* Đỏ hoàng hôn */
-            #372f6a
-            /* Tím vũ trụ (lặp lại) */
-        );
-    background-size: 400% 400%;
-
-    /* Animation */
-    animation: smoothGradientAnimation 15s linear infinite;
-
-    /* Đừng quên keyframes animation */
-
-}
-
-@keyframes smoothGradientAnimation {
-    0% {
-        background-position: 0% 50%;
-    }
-
-    25% {
-        background-position: 50% 0%;
-    }
-
-    50% {
-        background-position: 100% 50%;
-    }
-
-    75% {
-        background-position: 50% 100%;
-    }
-
-    100% {
-        background-position: 0% 50%;
-    }
-}
-
-
-/*================ End KOL =================*/
 .article-image {
     width: 100%;
     max-width: 450px;
@@ -349,6 +173,58 @@ a {
 
 .comment-card-actions a:hover {
     text-decoration: underline;
+}
+
+/* Violation indicator */
+.comment-card.violation {
+    border-left: 4px solid var(--violation);
+    background: rgba(255, 71, 87, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0 -16px;
+}
+
+.comment-card.violation::before {
+    content: "⚠️";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 16px;
+}
+
+.comment-card.checking {
+    border-left: 4px solid #ffc107;
+    background: rgba(255, 193, 7, 0.05);
+    border-radius: 8px;
+    padding: 16px;
+    margin: 0 -16px;
+}
+
+.comment-card.checking::before {
+    content: "🔄";
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 16px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+/* Warning text */
+.simple-warning-text {
+    color: var(--violation);
+    font-weight: 500;
+    font-size: 14px;
+    margin-top: 8px;
 }
 
 /* Khi chưa có comment */
@@ -1177,12 +1053,10 @@ ul {
 ul li {
     float: left;
 }
-
-.topic-logo {
+.topic-logo{
     height: 50px;
-
+    
 }
-
 a:hover {
     text-decoration: none;
     color: #124889;
@@ -1664,7 +1538,7 @@ textarea.form-control {
 }
 
 .modal-title {
-    font-size: 18px;
+    font-size: 20px;
 }
 
 .modal-title span.core-popup-title {
@@ -3126,8 +3000,8 @@ article .accordion-button {
 .accordion-button:focus,
 .accordion-button:active,
 .accordion-button:focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 
@@ -3631,7 +3505,6 @@ article p a {
     background-color: #fff;
     font-size: 21px;
 }
-
 .modal-header {
     display: flex;
     flex-shrink: 0;
@@ -4695,7 +4568,7 @@ div[data-notify="container"] .close {
 }
 
 .top-stock {
-    width: 100%;
+   width: 100%;
     background: #fefefe;
     overflow: hidden;
     box-sizing: border-box;
@@ -7552,16 +7425,11 @@ ul.timeline .left-arrow:after {
     .left-sidebar {
         position: relative;
     }
-
     .cover-img {
-        width: 100%;
-        /* Chiếm toàn bộ chiều rộng của div cha */
-        height: 100%;
-        /* Chiếm toàn bộ chiều cao của div cha */
-        object-fit: cover;
-        /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
-        border-radius: 8px;
-        /* Bo góc giống với div cha */
+        width: 100%;           /* Chiếm toàn bộ chiều rộng của div cha */
+        height: 100%;          /* Chiếm toàn bộ chiều cao của div cha */
+        object-fit: cover;     /* Cắt ảnh để vừa vặn mà không làm méo ảnh */
+        border-radius: 8px;    /* Bo góc giống với div cha */
     }
 }
 
@@ -7607,78 +7475,105 @@ ul.timeline .left-arrow:after {
     }
 
 }
-
 /* Chỉ cuộn dọc, tuyệt đối chặn ngang */
-.notice-list {
-    max-height: 320px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
+.notice-list { max-height: 320px; overflow-y: auto; overflow-x: hidden; }
 
 /* Item gọn, không tràn */
 .notice-item {
     display: flex;
-    align-items: start;
-    /* Sửa thành 'start' để căn lề trên, giải quyết lỗi lệch hàng */
+    align-items: start; /* Sửa thành 'start' để căn lề trên, giải quyết lỗi lệch hàng */
     gap: 12px;
-    padding: 1rem;
-    /* Tăng padding lên 1rem ở cả 4 cạnh, giải quyết lỗi "chạm đáy" */
-}
+    padding: 1rem;     /* Tăng padding lên 1rem ở cả 4 cạnh, giải quyết lỗi "chạm đáy" */
+  }
 
 /* Icon cố định kích thước */
-.notice-icon {
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    flex: 0 0 40px;
-}
+.notice-icon { width: 40px; height: 40px; border-radius: 999px; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 40px; }
 
 /* Vùng text co giãn, cho phép cắt/bẻ từ */
-.notice-text {
-    flex: 1 1 auto;
-    min-width: 0;
-}
+.notice-text { flex: 1 1 auto; min-width: 0; }
 
 /* Tiêu đề: tối đa 2 dòng, không tràn ngang, bẻ từ cứng */
-.notice-title {
-    margin: 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    /* 2 dòng */
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    white-space: normal;
-    word-break: break-word;
-    /* bẻ từ nếu không có khoảng trắng */
-    overflow-wrap: anywhere;
-    /* ưu tiên bẻ bất cứ đâu để khỏi tạo scrollbar */
+.notice-title{
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;           /* 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;          /* bẻ từ nếu không có khoảng trắng */
+  overflow-wrap: anywhere;         /* ưu tiên bẻ bất cứ đâu để khỏi tạo scrollbar */
 }
 
 /* Thời gian nhỏ, không bắt buộc nowrap để khỏi đẩy ngang */
-.notice-time {
-    font-size: .8125rem;
-}
-
+.notice-time { font-size: .8125rem; }
 .left-sidebar {
-    width: 250px;
-    /* Desktop */
-    max-width: 100%;
-    /* Mobile không vượt màn hình */
-    height: 100vh;
-    /* Cao full màn hình */
-    overflow-y: auto;
-    /* Cho cuộn dọc */
-    overflow-x: hidden;
-    /* Chặn cuộn ngang */
-    box-sizing: border-box;
-    border-right: 1px solid rgb(212, 211, 211);
+  width: 250px;              /* Desktop */
+  max-width: 100%;           /* Mobile không vượt màn hình */
+  height: 100vh;             /* Cao full màn hình */
+  overflow-y: auto;          /* Cho cuộn dọc */
+  overflow-x: hidden;        /* Chặn cuộn ngang */
+  box-sizing: border-box;
+  border-right: 1px solid rgb(212, 211, 211);
 }
-
 /* Bảo đảm con không tràn ra ngoài */
 .left-sidebar * {
+
     max-width: 100%;
     box-sizing: border-box;
 }
+/* --- TÙY CHỈNH MODAL TRÊN MOBILE --- */
+
+/* Chỉ áp dụng cho màn hình nhỏ (đi điện thoại) */
+/* --- CSS CHO MODAL TRÀN VIỀN TRÊN DI ĐỘNG --- */
+@media (max-width: 767.98px) {
+    .modal-fullscreen-mobile {
+        /* Ghi đè align-items của Bootstrap để đẩy modal lên sát cạnh trên */
+        align-items: flex-start;
+    }
+
+    .modal-fullscreen-mobile .modal-dialog {
+        /* Đảm bảo chiếm toàn bộ chiều rộng và chiều cao */
+        width: 100vw; /* Chiếm 100% chiều rộng của viewport */
+        max-width: none; /* Bỏ giới hạn chiều rộng tối đa */
+        height: 100vh; /* Chiếm 100% chiều cao của viewport */
+        margin: 0; /* Bỏ margin xung quanh */
+        transform: none; /* Bỏ mọi transform dịch chuyển trước đó */
+
+        /* Nếu bạn muốn hiệu ứng trượt từ dưới lên, hãy thêm animation */
+        animation: slideInUpFullScreen 0.3s ease-out forwards;
+    }
+
+    .modal-fullscreen-mobile.show .modal-dialog {
+        animation: slideInUpFullScreen 0.3s ease-out forwards;
+    }
+
+    .modal-fullscreen-mobile .modal-content {
+        height: 100%; /* Đảm bảo content chiếm hết chiều cao dialog */
+        max-height: none; /* Bỏ giới hạn chiều cao tối đa */
+        border-radius: 0; /* Bỏ bo góc để tạo hiệu ứng tràn viền */
+        box-shadow: none; /* Bỏ bóng đổ */
+        border: none; /* Bỏ viền */
+    }
+
+    .modal-fullscreen-mobile .modal-header {
+        border-bottom: 1px solid #eee; /* Có thể thêm lại đường viền header */
+        padding: 1rem;
+    }
+
+    .modal-fullscreen-mobile .modal-body {
+        padding: 1rem;
+        /* Nếu nội dung tràn, body sẽ scroll */
+        overflow-y: auto; 
+    }
+
+    /* Hiệu ứng trượt lên (có thể tái sử dụng hoặc tinh chỉnh) */
+    @keyframes slideInUpFullScreen {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+}
+

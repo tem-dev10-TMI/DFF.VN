@@ -154,60 +154,108 @@ class UserModel
         $stmt->execute([':author_id' => $author_id]);
         return $stmt->fetchAll();
     }
-    // ===================== Google login =====================
-    // Kiểm tra user theo email
-    public static function getUserByEmail($email)
-    {
-        $db = new connect();
-        $stmt = $db->db->prepare("SELECT * FROM users WHERE email = :email");
-        $stmt->execute([':email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+// ===================== Google login =====================
+
+// Kiểm tra user theo email
+public static function getUserByEmail($email)
+{
+    $db = new connect();
+    $stmt = $db->db->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt->execute([':email' => $email]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+// Kiểm tra username đã tồn tại chưa
+public static function checkUsernameExists($username)
+{
+    $db = new connect();
+    $stmt = $db->db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+    $stmt->execute([':username' => $username]);
+    return $stmt->fetchColumn() > 0;
+}
+
+// Tạo username unique từ name
+public static function generateUniqueUsername($name)
+{
+    // Bỏ dấu, chuyển về lowercase, thay ký tự đặc biệt bằng "_"
+    $username = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
+    $username = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '_', $username));
+    $username = trim($username, '_');
+
+    if (empty($username)) {
+        $username = 'user';
     }
 
-    public static function loginOrRegisterGoogleUser($name, $email, $avatar_url = null)
-    {
-        $user = self::getUserByEmail($email);
+    // Nếu trùng thì thêm số
+    $base = $username;
+    $i = 1;
+    while (self::checkUsernameExists($username)) {
+        $username = $base . "_" . $i;
+        $i++;
+    }
 
-        if ($user) {
-            // Cập nhật avatar nếu chưa có hoặc khác
-            if ($avatar_url && $user['avatar_url'] !== $avatar_url) {
-                $db = new connect();
-                $stmt = $db->db->prepare("UPDATE users SET avatar_url = :avatar_url WHERE id = :id");
-                $stmt->execute([
-                    ':avatar_url' => $avatar_url,
-                    ':id' => $user['id']
-                ]);
-            }
-            // Fetch lại user từ DB để chắc chắn avatar_url là link
-            return self::getUserByEmail($email);
-        } else {
-            // Nếu chưa có user -> tạo mới
+    return $username;
+}
+
+// Đăng nhập hoặc đăng ký user từ Google
+public static function loginOrRegisterGoogleUser($name, $email, $avatar_url = null)
+{
+    $user = self::getUserByEmail($email);
+
+    if ($user) {
+        // Nếu có avatar mới thì update
+        if ($avatar_url && $user['avatar_url'] !== $avatar_url) {
             $db = new connect();
-
-            // Tạo username từ name, nếu trùng thì thêm số random
-            $baseUsername = preg_replace('/\s+/', '', strtolower($name));
-            $username = $baseUsername;
-            $i = 1;
-            while (self::checkUsernameOrEmailExists($username, $email)) {
-                $username = $baseUsername . rand(100, 999);
-                $i++;
-                if ($i > 10)
-                    break; // phòng lặp vô hạn
-            }
-
-            $sql = "INSERT INTO users (name, username, email, avatar_url, role) 
-                VALUES (:name, :username, :email, :avatar_url, 'user')";
-            $stmt = $db->db->prepare($sql);
+            $stmt = $db->db->prepare("UPDATE users 
+                                      SET avatar_url = :avatar_url, updated_at = NOW() 
+                                      WHERE id = :id");
             $stmt->execute([
-                ':name' => $name,
-                ':username' => $username,
-                ':email' => $email,
-                ':avatar_url' => $avatar_url
+                ':avatar_url' => $avatar_url,
+                ':id' => $user['id']
             ]);
-
-            return self::getUserByEmail($email);
         }
+        return self::getUserByEmail($email);
+    } else {
+        $db = new connect();
+
+        // Gọi hàm generateUniqueUsername
+        $username = self::generateUniqueUsername($name);
+
+        $sql = "INSERT INTO users (name, username, email, avatar_url, role, created_at, updated_at) 
+                VALUES (:name, :username, :email, :avatar_url, 'user', NOW(), NOW())";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([
+            ':name' => $name,
+            ':username' => $username,
+            ':email' => $email,
+            ':avatar_url' => $avatar_url
+        ]);
+
+        return self::getUserByEmail($email);
     }
+}
+// Kiểm tra username đã tồn tại chưa
+public static function usernameExists($username)
+{
+    $db = new connect();
+    $stmt = $db->db->prepare("SELECT COUNT(*) FROM users WHERE username = :username");
+    $stmt->execute([':username' => $username]);
+    return $stmt->fetchColumn() > 0;
+}
+
+// Cập nhật username cho user
+public static function updateUsername($userId, $username)
+{
+    $db = new connect();
+    $stmt = $db->db->prepare("UPDATE users 
+                              SET username = :username, updated_at = NOW() 
+                              WHERE id = :id");
+    return $stmt->execute([
+        ':username' => $username,
+        ':id' => $userId
+    ]);
+}
+// ===================== Facebook login =====================
     public static function loginOrRegisterFacebookUser($name, $avatarUrl = null)
     {
         $db = new connect();
@@ -280,4 +328,5 @@ class UserModel
         $stmt->execute([':id' => $userId, ':token' => $token]);
         return $stmt->fetchColumn() > 0;
     }
+    
 }
