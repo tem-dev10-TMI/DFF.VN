@@ -182,10 +182,43 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </div>
 
 
+        <!-- KOL -->
+        <div class="block-k box-kol-section">
+            <h5 class="d-flex justify-content-between align-items-center">
+                <span><a href="#">Top KOL</a></span>
+                <span class="c-note"><i class="fas fa-chart-line"></i> Được theo dõi nhiều nhất</span>
+            </h5>
 
+            <!-- Slider -->
+            <div class="owl-carousel kol-carousel">
+                <?php if (!empty($topKOLs)): ?>
+                    <?php foreach ($topKOLs as $kol): ?>
 
+                        <div class="item">
+                            <div class="card text-center shadow-sm kol-card">
+                                <img src="<?= htmlspecialchars($kol['avatar_url'] ?? 'https://via.placeholder.com/150', ENT_QUOTES, 'UTF-8') ?>"
+                                    alt="<?= htmlspecialchars(($kol['name'] ?? '') ?: ($kol['username'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                    class="card-img-top rounded-circle mx-auto mt-4"
+                                    style="width:70px;height:70px;object-fit:cover;">
+                                <div class="card-body">
+                                    <h6 class="card-title mb-1">
+                                        <?= htmlspecialchars(($kol['name'] ?? '') ?: ($kol['username'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
+                                    </h6>
+                                    <p class="text-muted small mb-2">@<?= htmlspecialchars($kol['username'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                                    <div class="folloewrs"><i class="fas fa-user-friends"></i> <?= (int)($kol['followers'] ?? 0) ?> follower</div>
+                                    <div class="likes"><i class="fas fa-thumbs-up"></i> <?= (int)($kol['likes'] ?? 0) ?> lượt thích</div>
+                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= urlencode($kol['user_id']) ?>" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
+                                </div>
+                            </div>
+                        </div>
 
-
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p class="text-muted">Chưa có KOL nào.</p>
+                <?php endif; ?>
+            </div>
+        </div>
+        <!-- END KOL -->
 
         <!-- ///////////////////////////// -->
 
@@ -251,8 +284,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             ?>
 
                             <div class="title">
+
                                 <a href="<?= BASE_URL .'/details_blog/' . $article['slug'] ?>"
                                     target="_self">
+
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
@@ -288,7 +323,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         <span data-bs-toggle="dropdown">Chia sẻ</span>
                                         <ul class="dropdown-menu">
                                             <?php
+
                                                 $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
+
                                             ?>
                                             <li><a class="dropdown-item copylink"
                                                     data-url="<?= $shareUrl ?>"
@@ -448,15 +485,17 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
         <script>
-                //// Đừng có xóa dòng này mấy cha
-                document.querySelectorAll(".btn-follow").forEach(btn => {
-                    btn.addEventListener("click", function () {
-                        const userId = this.getAttribute("data-user");
-                        const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+            //// Đừng có xóa dòng này mấy cha
+            document.querySelectorAll(".btn-follow").forEach(btn => {
+                btn.addEventListener("click", function() {
+                    const userId = this.getAttribute("data-user");
+                    const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
-                        fetch("api/follow", {
+                    fetch("api/follow", {
                             method: "POST",
-                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
                             body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
                             credentials: "include"
                         })
@@ -759,7 +798,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        
+
 
 
 
@@ -857,6 +896,32 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     }
                 });
             });
+
+            /*================ KOL =================*/
+
+            $('.owl-carousel.kol-carousel').owlCarousel({
+                loop: false,
+                margin: 20,
+                nav: true,
+                dots: false,
+                navText: [
+                    '<i class="fa fa-chevron-left"></i>',
+                    '<i class="fa fa-chevron-right"></i>'
+                ],
+                responsive: {
+                    0: {
+                        items: 1
+                    },
+                    500: {
+                        items: 2
+                    },
+                    1000: {
+                        items: 3
+                    }
+                }
+            });
+
+            /*================ End KOL =================*/
         </script>
 
 
