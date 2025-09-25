@@ -31,8 +31,13 @@ class businessmenController
 
         $role = $_SESSION['user']['role'];
         if ($role === 'businessmen') {
-            $business = $modelBusiness->getBusinessByUserId($userId);
+            $businessData = $modelBusiness->getBusinessByUserId($userId);
             $stats = $modelBusiness->getBusinessStats($userId);
+            
+            // Merge dữ liệu từ bảng users và businessmen
+            $business = array_merge($user, $businessData ?: []);
+            $profileUser = $business; // Tương thích với Profile.php
+            
             //Load view
             ob_start();
             $profile_category = 'businessmen';

@@ -280,6 +280,13 @@
   </div>
   <div class="mt-5"></div>
 
+  <!-- Hidden data for JavaScript -->
+  <div id="profileData" 
+       data-category="<?= htmlspecialchars($profile_category) ?>" 
+       data-user-id="<?= htmlspecialchars($_SESSION['user']['id'] ?? '') ?>"
+       style="display: none;">
+  </div>
+
   <div class="row mt-5">
     <!-- Sidebar -->
 
