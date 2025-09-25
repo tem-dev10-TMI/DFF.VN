@@ -1,3 +1,14 @@
+<!-- Lâm Phương Khánh logic lượt truy cập -->
+ <?php
+require_once __DIR__ . '/../../TRACK/track.php'; // ghi nhận mỗi lần mở trang
+
+// Lấy số liệu
+$metrics = json_decode(file_get_contents(__DIR__ . '/../../TRACK/metrics.php'), true) ?: [
+  'totalVisitors'=>0,'onlineVisitors'=>0,'totalViews'=>0
+];
+?>
+<!-- Lâm Phương Khánh END logic lượt truy cập -->
+
 <?php require_once __DIR__ . '/../../helpers/cache_helper.php';
 require_once __DIR__ . '/_sidebar_content.php'; ?>
 <!DOCTYPE html>
@@ -163,6 +174,79 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
 <body>
+    <!-- TOKEN lượt truy cập Lâm Phương Khánh -->
+     <!-- Live Counter - bottom-left -->
+<!-- Floating Live Counter -->
+<div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
+  <div class="lc-inner d-flex align-items-center">
+    <span class="lc-dot" id="onlineDot" aria-hidden="true"></span>
+    <span class="lc-text">
+      <span class="lc-line">
+        <i class="bi bi-people-fill me-1"></i>
+        Đang truy cập: <strong id="onlineCount">--</strong>
+      </span>
+      <span class="lc-line lc-sub">
+        <i class="bi bi-eye me-1"></i>
+        Tổng: <strong id="totalViews">--</strong>
+      </span>
+    </span>
+  </div>
+</div>
+
+<script>
+  // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+  window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+</script>
+
+<script>
+(function () {
+  const onlineEl = document.getElementById('onlineCount');
+  const totalEl  = document.getElementById('totalViews');
+  const dotEl    = document.getElementById('onlineDot');
+
+  async function updateCounter() {
+    try {
+     // trong JS
+const base = window.BASE_URL || '';
+const metricsUrl = base + '/TRACK/metrics.php';
+// console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
+
+const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+
+      onlineEl.textContent = (data?.onlineVisitors ?? 0);
+      if (totalEl) totalEl.textContent = (data?.totalViews ?? 0);
+
+      // hiệu ứng chớp nhẹ khi cập nhật
+      dotEl.textContent = '•';
+    } catch (e) {
+      // lỗi thì giữ số cũ, chấm chuyển x
+      dotEl.textContent = '×';
+    }
+    // chuyển lại dấu chấm sau 1s cho gọn
+    setTimeout(() => { dotEl.textContent = '•'; }, 1000);
+  }
+
+  // cập nhật ngay khi tải trang
+  updateCounter();
+
+  // cập nhật mỗi 15 giây
+  let timer = setInterval(updateCounter, 15000);
+
+  // tiết kiệm tài nguyên khi tab bị ẩn
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      clearInterval(timer);
+    } else {
+      updateCounter();
+      timer = setInterval(updateCounter, 15000);
+    }
+  });
+})();
+</script>
+<!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
 
     <!-- Preloader Framework -->
     <style>
