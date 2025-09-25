@@ -19,7 +19,8 @@
           <td><?= $article['published_at'] ?></td>
           <td>
             <button class="btn btn-view" onclick="toggleDetail(<?= $article['id'] ?>)">Xem</button>
-            <a href="admin.php?route=article&action=reviewAction&id=<?= $article['id'] ?>&do=approved" class="btn btn-approve">Duyệt</a>
+            <a href="admin.php?route=article&action=reviewAction&id=<?= $article['id'] ?>&do=approved"
+              class="btn btn-approve">Duyệt</a>
             <button class="btn btn-reject" onclick="openRejectModal(<?= $article['id'] ?>)">Từ chối</button>
           </td>
         </tr>
@@ -36,7 +37,9 @@
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
-      <tr><td colspan="4" class="text-center">Không có bài viết chờ duyệt</td></tr>
+      <tr>
+        <td colspan="4" class="text-center">Không có bài viết chờ duyệt</td>
+      </tr>
     <?php endif; ?>
   </tbody>
 </table>
@@ -65,8 +68,8 @@
           <td><?= htmlspecialchars($r['admin_name']) ?></td>
           <td>
             <?= $r['action'] === 'approved'
-                ? '<span class="badge bg-success">Đã duyệt</span>'
-                : '<span class="badge bg-danger">Từ chối</span>' ?>
+              ? '<span class="badge bg-success">Đã duyệt</span>'
+              : '<span class="badge bg-danger">Từ chối</span>' ?>
           </td>
           <td><?= $r['reviewed_at'] ?></td>
           <td><?= htmlspecialchars($r['reason'] ?? '-') ?></td>
@@ -88,7 +91,9 @@
         </tr>
       <?php endforeach; ?>
     <?php else: ?>
-      <tr><td colspan="7" class="text-center">Chưa có bài nào được duyệt</td></tr>
+      <tr>
+        <td colspan="7" class="text-center">Chưa có bài nào được duyệt</td>
+      </tr>
     <?php endif; ?>
   </tbody>
 </table>
@@ -107,78 +112,99 @@
 </div>
 
 <script>
-let currentRejectId = null;
+  let currentRejectId = null;
 
-function toggleDetail(id) {
-  const row = document.getElementById("detail-" + id);
-  if (row && row.style.display === "table-row") {
-    row.style.display = "none";
-    return;
+  function toggleDetail(id) {
+    const row = document.getElementById("detail-" + id);
+    if (row && row.style.display === "table-row") {
+      row.style.display = "none";
+      return;
+    }
+    document.querySelectorAll("[id^='detail-']").forEach(el => el.style.display = "none");
+    if (row) row.style.display = "table-row";
   }
-  document.querySelectorAll("[id^='detail-']").forEach(el => el.style.display = "none");
-  if (row) row.style.display = "table-row";
-}
 
-function openRejectModal(articleId) {
-  currentRejectId = articleId;
-  document.getElementById("rejectModal").style.display = "block";
-  document.getElementById("rejectForm").action = `admin.php?route=article&action=reviewAction&id=${articleId}&do=rejected`;
-}
+  function openRejectModal(articleId) {
+    currentRejectId = articleId;
+    document.getElementById("rejectModal").style.display = "block";
+    document.getElementById("rejectForm").action =
+      `admin.php?route=article&action=reviewAction&id=${articleId}&do=rejected`;
+  }
 
-function closeRejectModal() {
-  document.getElementById("rejectModal").style.display = "none";
-}
+  function closeRejectModal() {
+    document.getElementById("rejectModal").style.display = "none";
+  }
 </script>
 
 <style>
-.detail-box {
-  padding: 15px;
-  background: #f9f9f9;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-}
+  .detail-box {
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
 
-/* Nút */
-.btn { 
-  padding: 6px 14px; 
-  border: none; 
-  border-radius: 4px; 
-  margin-right: 6px; 
-  cursor: pointer; 
-  transition: transform 0.1s ease, opacity 0.2s;
-}
-.btn:hover { transform: scale(1.05); opacity: 0.9; }
-.btn-view { background: #17a2b8; color: #fff; }
-.btn-approve { background: #28a745; color: #fff; }
-.btn-reject { background: #dc3545; color: #fff; }
+  /* Nút */
+  .btn {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 6px;
+    cursor: pointer;
+    transition: transform 0.1s ease, opacity 0.2s;
+  }
 
-/* Modal */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-.modal-content {
-  background: #fff;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 6px;
-  width: 400px;
-}
-.close {
-  float: right;
-  font-size: 20px;
-  cursor: pointer;
-}
-textarea {
-  width: 100%;
-  height: 80px;
-  margin-top: 10px;
-  padding: 8px;
-}
+  .btn:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+
+  .btn-view {
+    background: #17a2b8;
+    color: #fff;
+  }
+
+  .btn-approve {
+    background: #28a745;
+    color: #fff;
+  }
+
+  .btn-reject {
+    background: #dc3545;
+    color: #fff;
+  }
+
+  /* Modal */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }
+
+  .modal-content {
+    background: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 6px;
+    width: 400px;
+  }
+
+  .close {
+    float: right;
+    font-size: 20px;
+    cursor: pointer;
+  }
+
+  textarea {
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+    padding: 8px;
+  }
 </style>
 
 <?php include __DIR__ . '/../layout/footer.php'; ?>

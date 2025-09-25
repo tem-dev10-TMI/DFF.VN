@@ -33,11 +33,11 @@ class businessmenController
         if ($role === 'businessmen') {
             $businessData = $modelBusiness->getBusinessByUserId($userId);
             $stats = $modelBusiness->getBusinessStats($userId);
-            
+
             // Merge dữ liệu từ bảng users và businessmen
             $business = array_merge($user, $businessData ?: []);
             $profileUser = $business; // Tương thích với Profile.php
-            
+
             //Load view
             ob_start();
             $profile_category = 'businessmen';
@@ -197,6 +197,9 @@ class businessmenController
             }
 
             if ($successUser && $successBusiness) {
+
+
+
                 // --- BẮT ĐẦU CẬP NHẬT LẠI SESSION ---
                 $updatedUser = $modelUser->getUserById($userId);
                 if ($updatedUser) {
@@ -212,7 +215,7 @@ class businessmenController
                         'cover_photo' => $updatedUser['cover_photo'] ?? null,
                         'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
-                    
+
                     // Cập nhật các session variables riêng lẻ để tương thích với header
                     $_SESSION['user_id'] = $updatedUser['id'];
                     $_SESSION['user_name'] = $updatedUser['name'];
@@ -224,7 +227,10 @@ class businessmenController
                     $_SESSION['user_cover_photo'] = $updatedUser['cover_photo'] ?? null;
                 }
                 // --- KẾT THÚC CẬP NHẬT LẠI SESSION ---
-                
+
+
+
+
                 header('Location: ' . BASE_URL . '/profile_business?msg=business_updated');
                 exit;
             } else {
@@ -273,39 +279,39 @@ class businessmenController
         require_once __DIR__ . '/../../model/user/businessmenModel.php';
         $modelBusiness = new businessmenModel();
 
-            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                // Lấy businessman_id từ CSDL
-                $businessData = $modelBusiness->getBusinessByUserId($userId);
-                if (!$businessData || !isset($businessData['businessman_id'])) {
-                    header('Location: ' . BASE_URL . '/profile_business?msg=no_business_profile');
-                    exit;
-                }
-                $businessmen_id = $businessData['businessman_id'];
-
-                // Lấy dữ liệu từ form
-                $career_id = $_POST['career_id'] ?? null;
-                $start_year = filter_var($_POST['start_year'] ?? null, FILTER_VALIDATE_INT);
-                $end_year = filter_var($_POST['end_year'] ?? null, FILTER_VALIDATE_INT);
-                $position = htmlspecialchars($_POST['position'] ?? '');
-                $company = htmlspecialchars($_POST['company'] ?? '');
-                $description = htmlspecialchars($_POST['description'] ?? '');
-
-                if ($career_id) {
-                    // Cập nhật quá trình công tác hiện có
-                    $result = $modelBusiness->updateBusinessmenCareers($career_id, $start_year, $end_year, $position, $company, $description);
-                } else {
-                    // Thêm mới quá trình công tác
-                    $result = $modelBusiness->addBusinessmenCareers($businessmen_id, $start_year, $end_year, $position, $company, $description);
-                }                
-
-                if ($result) {
-                    header('Location: ' . BASE_URL . '/profile_business?msg=career_updated');
-                    exit;
-                } else {
-                    header('Location: ' . BASE_URL . '/profile_business?msg=career_failed');
-                    exit;
-                }
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Lấy businessman_id từ CSDL
+            $businessData = $modelBusiness->getBusinessByUserId($userId);
+            if (!$businessData || !isset($businessData['businessman_id'])) {
+                header('Location: ' . BASE_URL . '/profile_business?msg=no_business_profile');
+                exit;
             }
+            $businessmen_id = $businessData['businessman_id'];
+
+            // Lấy dữ liệu từ form
+            $career_id = $_POST['career_id'] ?? null;
+            $start_year = filter_var($_POST['start_year'] ?? null, FILTER_VALIDATE_INT);
+            $end_year = filter_var($_POST['end_year'] ?? null, FILTER_VALIDATE_INT);
+            $position = htmlspecialchars($_POST['position'] ?? '');
+            $company = htmlspecialchars($_POST['company'] ?? '');
+            $description = htmlspecialchars($_POST['description'] ?? '');
+
+            if ($career_id) {
+                // Cập nhật quá trình công tác hiện có
+                $result = $modelBusiness->updateBusinessmenCareers($career_id, $start_year, $end_year, $position, $company, $description);
+            } else {
+                // Thêm mới quá trình công tác
+                $result = $modelBusiness->addBusinessmenCareers($businessmen_id, $start_year, $end_year, $position, $company, $description);
+            }
+
+            if ($result) {
+                header('Location: ' . BASE_URL . '/profile_business?msg=career_updated');
+                exit;
+            } else {
+                header('Location: ' . BASE_URL . '/profile_business?msg=career_failed');
+                exit;
+            }
+        }
 
         // Xử lý GET, có thể lấy danh sách các quá trình công tác để hiển thị
         $business = $modelBusiness->getBusinessByUserId($userId);
