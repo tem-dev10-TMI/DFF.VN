@@ -353,55 +353,60 @@ if ($profile_category == 'user' && $user_id) {
     </div>
   </div>
   <style>
-        /* Định nghĩa animation cho hiệu ứng gradient */
-        .user-gradient-name-profile {
-            /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
-            
-            /* Hiệu ứng gradient cho chữ */
-            display: inline-block; /* Cần thiết để background-clip hoạt động đúng */
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            
-            /* Định nghĩa màu và kích thước cho gradient */
-            background-image: linear-gradient(to right,
-                #372f6a, /* Tím vũ trụ */
-                #a73737, /* Đỏ hoàng hôn */
-                #f09819, /* Cam mặt trời */
-                #a73737, /* Đỏ hoàng hôn */
-                #372f6a  /* Tím vũ trụ (lặp lại) */
-            );
-            background-size: 400% 400%;
+    /* Định nghĩa animation cho hiệu ứng gradient */
+    .user-gradient-name-profile {
+      /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
 
-            /* Animation */
-            animation: smoothGradientAnimation 15s linear infinite;
-        }
+      /* Hiệu ứng gradient cho chữ */
+      display: inline-block;
+      /* Cần thiết để background-clip hoạt động đúng */
+      color: transparent;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
 
-        /* Đừng quên keyframes animation */
-        @keyframes smoothGradientAnimation {
-            0% {
-                background-position: 0% 50%;
-            }
+      /* Định nghĩa màu và kích thước cho gradient */
+      background-image: linear-gradient(to right,
+          #372f6a,
+          /* Tím vũ trụ */
+          #a73737,
+          /* Đỏ hoàng hôn */
+          #f09819,
+          /* Cam mặt trời */
+          #a73737,
+          /* Đỏ hoàng hôn */
+          #372f6a
+          /* Tím vũ trụ (lặp lại) */
+        );
+      background-size: 400% 400%;
 
-            25% {
-                background-position: 50% 0%;
-            }
+      /* Animation */
+      animation: smoothGradientAnimation 15s linear infinite;
+    }
 
-            50% {
-                background-position: 100% 50%;
-            }
+    /* Đừng quên keyframes animation */
+    @keyframes smoothGradientAnimation {
+      0% {
+        background-position: 0% 50%;
+      }
 
-            75% {
-                background-position: 50% 100%;
-            }
+      25% {
+        background-position: 50% 0%;
+      }
 
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-        
-    </style>
+      50% {
+        background-position: 100% 50%;
+      }
+
+      75% {
+        background-position: 50% 100%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+  </style>
   <div class="text-center" style="margin-top: -20px;">
     <h4 class="fw-bold mb-0 user-gradient-name-profile">
       <?= htmlspecialchars($_SESSION['user']['name'] ?? 'Tên người dùng') ?>
@@ -409,7 +414,7 @@ if ($profile_category == 'user' && $user_id) {
         <i class="fas fa-check-circle text-primary" title="Tài khoản doanh nhân đã xác minh"></i>
       <?php endif; ?>
     </h4>
-    
+
     <p class="text-muted mb-3">
       @<?= htmlspecialchars($_SESSION['user']['username'] ?? 'username') ?>
     </p>
@@ -487,8 +492,9 @@ if ($profile_category == 'user' && $user_id) {
         </div>
         <!-- Input hidden -->
         <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-        <input type="file" id="postImage" class="d-none" accept="image/*" onchange="previewImage(event)">
-        <input type="file" id="postVideo" class="d-none" accept="video/*" onchange="previewVideo(event)">
+        <input type="file" id="postImage" class="d-none" accept="image/*" multiple onchange="previewImage(event)">
+        <input type="file" id="postVideo" class="d-none" accept="video/*" multiple onchange="previewVideo(event)">
+
       </div>
 
       <!-- Preview ảnh -->
