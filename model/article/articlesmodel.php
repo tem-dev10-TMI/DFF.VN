@@ -114,11 +114,21 @@ class ArticlesModel
         $db = new connect();
 
         // Bắt đầu câu SQL
-        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url, t.name AS topic_name
-            FROM articles a
-            LEFT JOIN users u ON a.author_id = u.id
-            LEFT JOIN topics t ON a.topic_id = t.id
-            WHERE a.slug = :slug";
+        $sql = "SELECT 
+                  a.*,
+                  u.name  AS author_name,
+                  u.avatar_url,
+                  t.name  AS topic_name,
+                  m.id        AS media_id,
+                  m.media_url,
+                  m.media_type,
+                  m.caption,
+                  m.created_at AS media_created_at
+                FROM articles a
+                LEFT JOIN users  u ON a.author_id = u.id
+                LEFT JOIN topics t ON a.topic_id  = t.id
+                LEFT JOIN media m ON m.article_id = a.id
+                WHERE a.slug = :slug";
 
         // Mảng chứa các tham số để bind
         $params = [':slug' => $slug];

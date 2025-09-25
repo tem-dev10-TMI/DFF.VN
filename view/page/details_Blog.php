@@ -12,8 +12,19 @@
     $summary = nl2br(htmlspecialchars($article['summary'] ?? ''));
     $content = nl2br(htmlspecialchars($article['content'] ?? ''));
     $mainImage = $article['main_image_url'] ?? '';
-    ?>
+    $videoUrl = $article['media_url'] ?? '';
 
+    ?>
+<?php
+require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+$db = new connect();
+$pdo = $db->db;
+$followModel = new UserFollowModel($pdo);
+
+// Đảm bảo có authorId
+$authorId = isset($authorId) ? intval($authorId) : 0;
+$totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
+?>
     <main class="main-content">
         <div class="block-k">
 
@@ -30,8 +41,9 @@
                     </div>
                 </div>
 
-                <div class="follower-r f-right" style="font-size: 13px;"><b class="total-fol">0</b> Người theo dõi</div>
-            </div>
+<div class="follower-r f-right" style="font-size: 13px;">
+    <b class="total-fol"><?= intval($totalFollowers) ?></b> Người theo dõi
+</div>            </div>
 
             <div class="detail">
                 <div class="line"></div>
@@ -47,10 +59,18 @@
                         <?php if (!empty($mainImage)): ?>
                             <figure><img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= $title ?>"></figure>
                         <?php endif; ?>
-
+                        <?php if (!empty($videoUrl)): ?>
+                            <div class="video-wrapper" style="margin: 20px 0;">
+                                <video width="100%" height="auto" controls>
+                                    <source src="<?= htmlspecialchars($videoUrl) ?>" type="video/mp4">
+                                    Trình duyệt của bạn không hỗ trợ video.
+                                </video>
+                            </div>
+                        <?php endif; ?>
                         <?php if (!empty($content)): ?>
                             <p><?= $content ?></p>
                         <?php endif; ?>
+
 
                         <div class="bysource"></div>
                     </div>
