@@ -276,4 +276,15 @@ class businessmenController
 
         require_once __DIR__."/../../view/page/profileUser.php";
     }
+////////top doanh nhân
+    public static function top()
+{
+    require_once __DIR__ . '/../../model/user/businessmenModel.php';
+
+    $topBusinessmen = businessmenModel::getTopBusinessmen(10); // Lấy top 10
+
+    // Load view
+    require_once __DIR__ . '/../../view/page/topBusinessmen.php';
+}
+
 }

@@ -6,10 +6,18 @@ class UserFollowModel {
         $this->db = $pdo;
     }
 
-    public function follow($followerId, $followingId) {
-        $stmt = $this->db->prepare("INSERT INTO user_follows (follower_id, following_id) VALUES (?, ?)");
-        return $stmt->execute([$followerId, $followingId]);
+   public function follow($followerId, $followingId) {
+    // chỉ insert nếu chưa tồn tại
+    $stmt = $this->db->prepare("SELECT COUNT(*) FROM user_follows WHERE follower_id = ? AND following_id = ?");
+    $stmt->execute([$followerId, $followingId]);
+    if ($stmt->fetchColumn() > 0) {
+        return false; // đã tồn tại
     }
+
+    $stmt = $this->db->prepare("INSERT INTO user_follows (follower_id, following_id) VALUES (?, ?)");
+    return $stmt->execute([$followerId, $followingId]);
+}
+
 
     public function unfollow($followerId, $followingId) {
         $stmt = $this->db->prepare("DELETE FROM user_follows WHERE follower_id = ? AND following_id = ?");

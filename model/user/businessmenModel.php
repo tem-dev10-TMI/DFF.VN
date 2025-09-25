@@ -274,4 +274,41 @@ class businessmenModel
             'likes' => $likesCount
         ];
     }
+
+    public static function getTopBusinessmen($limit = 10)
+{
+    $db = new connect();
+    $limit = max(1, (int)$limit);
+
+    $sql = "
+        SELECT 
+            u.id AS user_id,
+            u.name,
+            u.avatar_url,
+            COALESCE(f.followers, 0) AS followers,
+            COALESCE(l.likes, 0) AS likes
+        FROM businessmen b
+        JOIN users u ON u.id = b.user_id
+        LEFT JOIN (
+            SELECT following_id AS user_id, COUNT(*) AS followers
+            FROM user_follows
+            GROUP BY following_id
+        ) f ON f.user_id = u.id
+        LEFT JOIN (
+            SELECT a.author_id AS user_id, COUNT(al.id) AS likes
+            FROM articles a
+            LEFT JOIN article_likes al ON al.article_id = a.id
+            GROUP BY a.author_id
+        ) l ON l.user_id = u.id
+        ORDER BY followers DESC, likes DESC
+        LIMIT :limit
+    ";
+
+    $stmt = $db->db->prepare($sql);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }

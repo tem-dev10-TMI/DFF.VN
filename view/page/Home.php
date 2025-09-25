@@ -97,89 +97,79 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             });
         </script>
 
-        <!-- ////////////////////// -->
-        <div class="block-k box-company-label">
-            <h5>
-                <span><a href="#">Top doanh nhân</a></span>
-                <span class="c-note">
-                    <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
-                </span>
-            </h5>
+       <!-- ////////////////////// -->
+<div class="block-k box-company-label">
+    <h5>
+        <span><a href="#">Top doanh nhân</a></span>
+        <span class="c-note">
+            <i class="fas fa-chart-line"></i> Được tìm kiếm nhiều nhất
+        </span>
+    </h5>
 
-
-            <div class="owl-slider">
-                <div class="owl-carousel box-company owl-loaded owl-drag">
-                    <div class="owl-stage-outer owl-height" style="height: 256px;">
-
-                        <div class="owl-stage"
-                            style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
-                            <?php if (!empty($topBusinessmen)): ?>
-                                <?php //var_dump($topBusinessmen);
-                                ?>
-
-                                <?php foreach ($topBusinessmen as $biz): ?>
-                                    <?php
-                                    $isFollowing = false;
-                                    if (isset($_SESSION['user']['id'])) {
-                                        require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-                                        $db = new connect();
-                                        $pdo = $db->db;
-                                        $followModel = new UserFollowModel($pdo);
-                                        $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
-                                    }
-                                    ?>
-                                    <div class="owl-item active" style="width: 182.667px; margin-right: 10px;">
-                                        <div class="item">
-                                            <ul>
-                                                <li>
-                                                    <img class="logo"
-                                                        alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
-                                                        src="<?= htmlspecialchars($biz['avatar_url'] ?? 'https://via.placeholder.com/150') ?>">
-                                                </li>
-                                                <li class="alias">
-                                                    <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
-                                                </li>
-                                                <li class="name">
-                                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
-                                                        <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
-                                                    </a>
-                                                </li>
-                                                <li class="f-folw">
-                                                    <a class="btn-follow" href="javascript:void(0)"
-                                                        data-user="<?= $biz['user_id'] ?>">
-                                                        <span
-                                                            class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
-                                                    </a>
-
-
-                                                </li>
-
-
-                                            </ul>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <p>Chưa có doanh nhân nào.</p>
-                            <?php endif; ?>
-                        </div>
-                    </div>
-
-                    <div class="owl-nav">
-
-                        <button type="button" role="presentation" class="owl-prev disabled">
-                            <i class="fa fa-chevron-left"></i>
-                        </button>
-                        <button type="button" role="presentation" class="owl-next">
-                            <i class="fa fa-chevron-right"></i>
-                        </button>
-
-                    </div>
-                    <div class="owl-dots disabled"></div>
+    <div class="owl-slider">
+        <div class="owl-carousel box-company owl-loaded owl-drag">
+            <div class="owl-stage-outer">
+                <div class="owl-stage"
+                     style="width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
+                     
+                    <?php if (!empty($topBusinessmen)): ?>
+                        <?php foreach ($topBusinessmen as $biz): ?>
+                            <?php
+                            $isFollowing = false;
+                            if (isset($_SESSION['user']['id'])) {
+                                require_once __DIR__ . '/../../model/user/UserFollowModel.php';
+                                $db = new connect();
+                                $pdo = $db->db;
+                                $followModel = new UserFollowModel($pdo);
+                                $isFollowing = $followModel->isFollowing($_SESSION['user']['id'], $biz['user_id']);
+                            }
+                            ?>
+                            <div class="owl-item" style="width:182.667px; margin-right:10px;">
+                                <div class="item">
+                                    <ul>
+                                        <li>
+                                            <img class="logo"
+                                                 alt="<?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>"
+                                                 src="<?= htmlspecialchars($biz['avatar_url'] ?? '/vendor/dffvn/content/img/user.svg') ?>">
+                                        </li>
+                                        <li class="alias">
+                                            <?= htmlspecialchars($biz['position'] ?? 'Doanh nhân') ?>
+                                        </li>
+                                        <li class="name">
+                                            <a href="<?= BASE_URL ?>/view_profile?id=<?= $biz['user_id'] ?>">
+                                                <?= htmlspecialchars($biz['username'] ?? $biz['name']) ?>
+                                            </a>
+                                        </li>
+                                        <li class="f-folw">
+                                            <a class="btn-follow" href="javascript:void(0)"
+                                               data-user="<?= $biz['user_id'] ?>">
+                                                <span class="follow-text">
+                                                    <?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?>
+                                                </span>
+                                                <span class="number">
+                                                    <?= intval($biz['followers'] ?? 0) ?>
+                                                </span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>Chưa có doanh nhân nào.</p>
+                    <?php endif; ?>
                 </div>
             </div>
+
+            <div class="owl-nav">
+                <button type="button" role="presentation" class="owl-prev"><i class="fa fa-chevron-left"></i></button>
+                <button type="button" role="presentation" class="owl-next"><i class="fa fa-chevron-right"></i></button>
+            </div>
+            <div class="owl-dots disabled"></div>
         </div>
+    </div>
+</div>
+
 
 
         <!-- KOL -->
