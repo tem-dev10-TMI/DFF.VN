@@ -124,6 +124,13 @@ $currentUserIdForView = $_SESSION['user']['id'] ?? null;
                                     title="<?= htmlspecialchars($article['title']) ?>" alt="<?= htmlspecialchars($article['title']) ?>" border="0">
                             <?php endif; ?>
 
+                            <?php if (!empty($article['video_url'])) : ?>
+                                <video controls style="width: 100%; border-radius: 8px; margin-top: 10px;">
+                                    <source src="<?= htmlspecialchars($article['video_url']) ?>" type="video/mp4">
+                                    Trình duyệt của bạn không hỗ trợ thẻ video.
+                                </video>
+                            <?php endif; ?>
+
                             <div class="item-bottom">
 
 
@@ -276,6 +283,7 @@ $currentUserIdForView = $_SESSION['user']['id'] ?? null;
             <a href="${articleLink}" class="d-more">Xem thêm</a>
         </div>
         ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" title="${article.title}" alt="${article.title}" border="0">` : ''}
+        ${article.video_url ? `<video controls style="width: 100%; border-radius: 8px; margin-top: 10px;"><source src="${article.video_url}" type="video/mp4">Trình duyệt của bạn không hỗ trợ thẻ video.</video>` : ''}
     </div>`;
             return div;
         }

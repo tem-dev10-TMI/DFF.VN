@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 [DB Queries] Execution Time: 575ms
+=======
+[DB Queries] Execution Time: 2124ms
+>>>>>>> deloy_new

@@ -2,24 +2,22 @@
 // metrics.php
 require_once __DIR__ . '/../config/db.php';
 require_once __DIR__ . '/../config/config.php';
-$db = new connect();                // giữ nguyên file db.php như bạn đang có
+$db = new connect();
 $pdo = $db->db;
 
-// Tổng visitor duy nhất (distinct token)
-$totalVisitors = (int)$pdo->query("SELECT COUNT(*) FROM visits")->fetchColumn();
-
-// Đang online (ví dụ: hoạt động trong 5 phút gần nhất)
-$onlineVisitors = (int)$pdo->query("
-  SELECT COUNT(*) FROM visits
-  WHERE last_seen >= (NOW() - INTERVAL 5 MINUTE)
+// đang trực tuyến = những token đã login (is_logged_in=1)
+$online = (int) $pdo->query("
+  SELECT COUNT(*)
+  FROM visits
+  WHERE is_logged_in = 1
+    AND last_seen >= (NOW() - INTERVAL 30 MINUTE)
 ")->fetchColumn();
 
-// Tổng page views
-$totalViews = (int)$pdo->query("SELECT views FROM stats WHERE id = 1")->fetchColumn();
+// tổng lượt xem vẫn từ stats
+$totalViews = (int) $pdo->query("SELECT views FROM stats WHERE id = 1")->fetchColumn();
 
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
 echo json_encode([
-  'totalVisitors'  => $totalVisitors,
-  'onlineVisitors' => $onlineVisitors,
-  'totalViews'     => $totalViews,
+  'onlineVisitors' => $online,
+  'totalViews' => $totalViews
 ]);
