@@ -41,7 +41,8 @@
         <h5 class="card-title">Duyệt bài đăng</h5>
         <?php $pendingArticles = $pdo->query("SELECT COUNT(*) FROM articles WHERE status = 'pending'")->fetchColumn(); ?>
         <p class="display-6 fw-bold"><?= intval($pendingArticles) ?></p>
-        <a href="<?= BASE_URL ?>/admin.php?route=article&action=reviewList" class="btn btn-outline-warning btn-sm">Quản lý</a>
+        <a href="<?= BASE_URL ?>/admin.php?route=article&action=reviewList" class="btn btn-outline-warning btn-sm">Quản
+          lý</a>
       </div>
     </div>
   </div>
@@ -60,30 +61,69 @@
       </div>
     </div>
   </div>
-</div>
 
-<!-- Duyệt tài khoản -->
-<div class="col-md-3">
-  <div class="card shadow-sm border-0 h-100">
-    <div class="card-body text-center">
-      <div class="mb-2 text-danger">
-        <i class="bi bi-person-check-fill" style="font-size:2.5rem;"></i>
-      </div>
-      <h5 class="card-title">Duyệt tài khoản</h5>
-      <?php 
-        $pendingAccounts = $pdo->query("
+
+  <div class="row g-4">
+    <!-- Duyệt tài khoản -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <div class="mb-2 text-primary">
+            <i class="bi bi-person-check-fill" style="font-size:2.5rem;"></i>
+          </div>
+          <h5 class="card-title">Duyệt tài khoản doanh nhân</h5>
+          <?php
+          $pendingAccounts = $pdo->query("
             SELECT COUNT(*) 
             FROM businessmen b 
             JOIN users u ON b.user_id = u.id 
             WHERE u.role = 'user'
-        ")->fetchColumn(); 
-      ?>
-      <p class="display-6 fw-bold"><?= intval($pendingAccounts) ?></p>
-      <a href="<?= BASE_URL ?>/admin.php?route=accounts&action=reviewList" 
-         class="btn btn-outline-danger btn-sm">Quản lý</a>
+        ")->fetchColumn();
+          ?>
+          <p class="display-6 fw-bold"><?= intval($pendingAccounts) ?></p>
+          <a href="<?= BASE_URL ?>/admin.php?route=accounts&action=reviewList"
+            class="btn btn-outline-danger btn-sm">Quản
+            lý</a>
+        </div>
+      </div>
     </div>
+    <!-- Tổng lượt truy cập -->
+    <?php
+    $ROOT = realpath(__DIR__ . '/../../..');
+    require_once $ROOT . '/model/admin/VisitsModel.php';
+    require_once $ROOT . '/model/admin/StatsModel.php';
+    $totalViews = StatsModel::totalViews($pdo);
+    $online = VisitsModel::onlineCount($pdo);
+    ?>
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <div class="mb-2 text-primary">
+            <i class="bi bi-eye-fill" style="font-size:2.5rem;"></i>
+          </div>
+          <h5 class="card-title">Tổng lượt truy cập</h5>
+          <p class="display-6 fw-bold">
+            <span id="totalViews"><?= number_format($totalViews) ?></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Đang trực tuyến (5 phút gần nhất) -->
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body text-center">
+          <div class="mb-2 text-primary">
+            <i class="bi bi-activity" style="font-size:2.5rem;"></i>
+          </div>
+          <h5 class="card-title">Đang trực tuyến</h5>
+          <p class="display-6 fw-bold">
+            <span id="onlineCount"><?= (int) $online ?></span>
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
-</div>
 
-
-<?php include __DIR__ . '/layout/footer.php'; ?>
+  <?php include __DIR__ . '/layout/footer.php'; ?>
