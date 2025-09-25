@@ -180,202 +180,442 @@
             </div>
         </div>
 
-
+        <script>
+            window.CURRENT_USER_ID = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+            window.CURRENT_USER_NAME = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn đọc') ?>;
+        </script>
 
 
         <script>
             (function() {
-                // Tránh khởi tạo trùng nếu script bị load 2 lần
+                // ===== Guard tránh khởi tạo trùng =====
                 const section = document.querySelector(".comment-section");
                 if (!section || section.dataset.inited === "1") return;
                 section.dataset.inited = "1";
 
-                document.addEventListener("DOMContentLoaded", function() {
-                    const articleId = document.getElementById("submit-comment").dataset.id;
-                    const btnSend = document.getElementById("submit-comment");
-                    const textarea = document.getElementById("new-comment");
+                // ===== Dom refs =====
+                const articleId = document.getElementById("submit-comment").dataset.id;
+                const btnSend = document.getElementById("submit-comment");
+                const textarea = document.getElementById("new-comment");
 
-                    let isSubmitting = false; // chặn gửi trùng
+                const listEl = document.getElementById("comment-items");
+                const emptyEl = document.getElementById("comment-empty");
+                const countEl = document.getElementById("comments-count");
 
-                    // ---- Load list ban đầu
-                    loadComments(articleId);
+                // ===== State =====
+                const comments = []; // mảng hiển thị tại chỗ (trộn DB + local vừa gửi)
+                let isSubmitting = false;
 
-                    // ---- Gửi comment
-                    async function sendComment() {
-                        const content = textarea.value.trim();
-                        if (!content) {
-                            alert("Vui lòng nhập nội dung bình luận!");
-                            return;
-                        }
-                        if (isSubmitting) return; // chặn double-click
-                        isSubmitting = true;
-                        btnSend.disabled = true;
+                // ===== Utils =====
+                function nowIso() {
+                    return new Date().toLocaleString('vi-VN');
+                }
 
-                        try {
-                            const res = await fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
-                                method: "POST",
-                                headers: {
-                                    "Content-Type": "application/x-www-form-urlencoded"
-                                },
-                                body: "article_id=" + encodeURIComponent(articleId) +
-                                    "&content=" + encodeURIComponent(content) +
-                                    "&user_id=" + encodeURIComponent(<?= $_SESSION['user']['id'] ?? '0' ?>)
-                            });
-                            const data = await res.json();
+                function autoGrow(el) {
+                    el.style.height = 'auto';
+                    el.style.height = Math.min(el.scrollHeight, 160) + 'px';
+                }
 
-                            if (data.status === "success") {
-                                textarea.value = "";
-                                await loadComments(articleId);
-                            } else {
-                                alert(data.message || "Lỗi khi gửi bình luận!");
-                            }
-                        } catch (err) {
-                            console.error("Fetch lỗi:", err);
-                            alert("Không thể gửi bình luận. Vui lòng thử lại.");
-                        } finally {
-                            isSubmitting = false;
-                            btnSend.disabled = false;
-                        }
-                    }
+                function escapeHtml(str) {
+                    return (str || '')
+                        .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+                        .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+                }
 
-                    // ---- Gắn sự kiện 1 lần
-                    btnSend.addEventListener("click", sendComment, {
-                        once: false
-                    });
+                function avatarByName(name) {
+                    const base = 'https://ui-avatars.com/api/?background=random&color=fff&name=';
+                    return base + encodeURIComponent(name || 'User');
+                }
 
-                    // Enter để gửi, Shift+Enter xuống dòng
-                    textarea.addEventListener("keydown", function(e) {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            sendComment();
-                        }
-                    });
-                });
-
-                // ====== Helpers ======
-                function renderComments(comments) {
-                    const list = document.getElementById("comment-items");
-                    const empty = document.getElementById("comment-empty");
-                    const countSpan = document.getElementById("comments-count");
-
-                    list.innerHTML = "";
-
-                    if (!comments || comments.length === 0) {
-                        empty.style.display = "block";
-                        countSpan.textContent = "(0)";
+                // ===== Render =====
+                function renderComments(items) {
+                    listEl.innerHTML = '';
+                    if (!items || !items.length) {
+                        emptyEl.style.display = 'block';
+                        countEl.textContent = '(0)';
                         return;
                     }
+                    emptyEl.style.display = 'none';
+                    countEl.textContent = '(' + items.length + ')';
 
-                    empty.style.display = "none";
-                    countSpan.textContent = "(" + comments.length + ")";
+                    items.forEach(c => {
+                        const li = document.createElement('li');
+                        li.className = 'comment-card';
+                        // Chỉ thêm class violation khi có vi phạm, ẩn các trạng thái khác
+                        if (c.ai && !c.ai.isChecking && c.ai.isViolation) {
+                            li.classList.add('violation');
+                        }
 
-                    comments.forEach(c => {
-                        const li = document.createElement("li");
-                        li.classList.add("comment-card");
+                        const name = c.name || 'Ẩn danh';
+                        const time = c.time || (c.created_at ? new Date(c.created_at).toLocaleString("vi-VN") : nowIso());
+                        const avatar = c.avatar_url || avatarByName(name);
+
+                        // Chỉ hiển thị thông báo vi phạm đơn giản
+                        let analysisInfo = '';
+                        if (c.ai && !c.ai.isChecking && c.ai.isViolation) {
+                            analysisInfo = `
+                                <div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 6px; margin: 4px 0; font-size: 12px; color: #856404;">
+                                    ⚠️ Bạn đã vi phạm quy tắc cộng đồng
+                                </div>
+                            `;
+                        }
+                        // Ẩn phần "Đang kiểm tra" và "Nội dung phù hợp"
+
                         li.innerHTML = `
-            <img src="${c.avatar_url}" class="comment-card-avatar">
-            <div class="comment-card-body">
-            <div class="comment-card-meta">
-                <span class="comment-card-name">${c.name || "Ẩn danh"}</span>
-                <span class="comment-card-time">${new Date(c.created_at).toLocaleString("vi-VN")}</span>
-            </div>
-            <div class="comment-card-content">${c.content}</div>
-            <div class="comment-card-actions">
-                <a href="javascript:void(0)" onclick="replyComment('${c.name || ""}')">Trả lời</a>
-            </div>
-            </div>`;
-                        list.appendChild(li);
+        <img src="${avatar}" class="comment-card-avatar">
+        <div class="comment-card-body">
+          <div class="comment-card-meta">
+            <span class="comment-card-name">${escapeHtml(name)}</span>
+            <span class="comment-card-time">${escapeHtml(time)}</span>
+          </div>
+          <div class="comment-card-content">${escapeHtml(c.content || c.text || '')}</div>
+          ${analysisInfo}
+          <div class="comment-card-actions">
+            <a href="javascript:void(0)" onclick="replyComment('${escapeHtml(name)}')">Trả lời</a>
+          </div>
+        </div>
+      `;
+                        listEl.appendChild(li);
                     });
                 }
 
-                async function loadComments(articleId) {
+                // ===== Load comments từ DB như cũ rồi ghép vào state local =====
+                async function loadCommentsFromDB() {
                     try {
-                        const res = await fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + articleId);
+                        const res = await fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + encodeURIComponent(articleId));
                         const data = await res.json();
                         if (data.status === "success") {
-                            renderComments(data.comments);
+                            // map DB -> model hiển thị
+                            const mapped = (data.comments || []).map(c => ({
+                                id: 'db-' + c.id,
+                                name: c.name || 'Ẩn danh',
+                                avatar_url: c.avatar_url || '',
+                                content: c.content || '',
+                                created_at: c.created_at,
+                                // Load thông tin AI check từ database
+                                ai: c.ai_checked ? {
+                                    isViolation: !!c.ai_violation,
+                                    isChecking: false,
+                                    details: c.ai_details?.details || '',
+                                    violationType: c.ai_details?.violationType || null,
+                                    severity: c.ai_details?.severity || null,
+                                    confidence: c.ai_details?.confidence || null,
+                                    analysisMethod: c.ai_details?.analysisMethod || null,
+                                } : null
+                            }));
+                            // reset & nạp
+                            comments.length = 0;
+                            mapped.forEach(x => comments.push(x));
+                            renderComments(comments);
                         }
                     } catch (err) {
-                        console.error("Lỗi fetch:", err);
+                        console.error('Lỗi fetch:', err);
                     }
                 }
 
-                // đặt replyComment lên window để onclick dùng được
-                window.replyComment = function(name) {
-                    const input = document.getElementById("new-comment");
-                    input.value = (name ? "@" + name + " " : "") + input.value;
-                    input.focus();
-                };
-            })();
-            //Like/Dislike
-            document.addEventListener("DOMContentLoaded", function() {
-                const comLike = document.querySelector(".com-like");
-                if (!comLike) return;
-
-                const articleId = comLike.dataset.id;
-                const btnUp = comLike.querySelector(".for-up");
-                const btnDown = comLike.querySelector(".for-down");
-                const valueSpan = comLike.querySelector(".value");
-
-                let isVoting = false;
-
-                function updateLikeUI(likeCount, userLiked) {
-                    valueSpan.textContent = likeCount;
-                    btnUp.classList.toggle("active", userLiked === true);
-                    // btnDown chỉ để hủy like nên active khi user đã like
-                    btnDown.classList.toggle("active", userLiked === true);
-                }
-
-                async function loadLikeStatus() {
-                    try {
-                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=get&article_id=${articleId}`);
-                        const data = await res.json();
-                        if (data.status === "success") {
-                            // data.like = số like
-                            // data.user_vote = "like" hoặc ""
-                            updateLikeUI(data.like, data.user_vote === "like");
-                        }
-                    } catch (err) {
-                        console.error("Lỗi load like:", err);
+                // ===== Gửi comment: vừa lưu DB như cũ, vừa gọi AI async =====
+                async function sendComment() {
+                    const content = textarea.value.trim();
+                    if (!content) {
+                        alert("Vui lòng nhập nội dung bình luận!");
+                        return;
                     }
-                }
+                    if (isSubmitting) return;
+                    isSubmitting = true;
+                    btnSend.disabled = true;
 
-                async function handleVote(type) {
-                    const userId = <?= $_SESSION['user']['id'] ?? 0 ?>;
-                    if (!userId) return alert("Bạn cần đăng nhập để thực hiện thao tác này!");
-                    if (isVoting) return;
+                    // 1) Đẩy vào UI ngay (trạng thái đang kiểm tra)
+                    const tempId = 'local-' + Date.now();
+                    const currentUser = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn đọc') ?>;
+                    const temp = {
+                        id: tempId,
+                        name: currentUser || 'Bạn đọc',
+                        avatar_url: '',
+                        text: content,
+                        time: nowIso(),
+                        commentId: null, // Sẽ được cập nhật sau khi lưu DB
+                        ai: {
+                            isViolation: false,
+                            isChecking: true,
+                            details: 'Đang kiểm tra...'
+                        }
+                    };
+                    comments.push(temp);
+                    renderComments(comments);
 
-                    isVoting = true;
+                    // Xóa form
+                    textarea.value = '';
+                    autoGrow(textarea);
 
+                    // 2) Gọi AI check (không chặn UI)
+                    checkCommentAsync(tempId, content, content);
+
+                    // 3) Lưu DB và lấy comment ID để cập nhật AI result
                     try {
-                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=toggle`, {
+                        const res = await fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
                             method: "POST",
                             headers: {
                                 "Content-Type": "application/x-www-form-urlencoded"
                             },
-                            body: `article_id=${encodeURIComponent(articleId)}&type=${encodeURIComponent(type)}&user_id=${encodeURIComponent(userId)}`
+                            body: "article_id=" + encodeURIComponent(articleId) +
+                                "&content=" + encodeURIComponent(content) +
+                                "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
                         });
-
                         const data = await res.json();
-
                         if (data.status === "success") {
-                            // data.like = số like mới
-                            // data.user_vote = 'like' hoặc ''
-                            updateLikeUI(data.like, data.user_vote === "like");
+                            console.log('Comment saved to database successfully');
+                            // Lưu comment ID để cập nhật AI result sau này
+                            temp.commentId = data.comment_id || null;
+                            console.log('Comment ID saved:', temp.commentId);
                         } else {
-                            alert(data.msg || "Có lỗi xảy ra khi gửi vote.");
+                            console.warn(data.message || "Lỗi khi gửi bình luận!");
                         }
                     } catch (err) {
-                        console.error("Lỗi khi gửi vote:", err);
+                        console.error("Fetch lỗi:", err);
                     } finally {
-                        isVoting = false;
+                        isSubmitting = false;
+                        btnSend.disabled = false;
                     }
                 }
 
-                btnUp.addEventListener("click", () => handleVote("like"));
-                btnDown.addEventListener("click", () => handleVote("dislike"));
+                // ===== AI check bất đồng bộ =====
+                async function checkCommentAsync(localId, rawText, originalText = null) {
+                    try {
+                        console.log('Starting AI check for comment:', rawText);
 
-                loadLikeStatus();
-            });
+                        const res = await fetch('<?= BASE_URL ?>/checkCmt/check_comment.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                comment: rawText
+                            })
+                        });
+
+                        console.log('AI check response status:', res.status);
+
+                        if (!res.ok) {
+                            const errText = await res.text();
+                            console.error('AI check HTTP error:', errText);
+                            throw new Error('HTTP ' + res.status + ': ' + errText);
+                        }
+
+                        const data = await res.json();
+                        console.log('AI check response data:', data);
+
+                        const result = data.result || {
+                            isViolation: false
+                        };
+
+                        console.log('AI check result:', result);
+                        result.originalText = originalText || rawText;
+                        applyAIResult(localId, result);
+
+                        // Lưu kết quả AI check vào database ngay lập tức
+                        saveAIResultToDatabase(localId, result);
+
+                        // Nếu có vi phạm, log thông báo đặc biệt
+                        if (result.isViolation) {
+                            console.log('🚨 VIOLATION DETECTED - Auto-updating database');
+                        }
+                    } catch (e) {
+                        console.error('AI check error:', e);
+                        applyAIResult(localId, {
+                            isViolation: false,
+                            details: 'Lỗi khi kiểm tra: ' + e.message,
+                            isChecking: false
+                        });
+                    }
+                }
+
+                function applyAIResult(localId, result) {
+                    console.log('Applying AI result for comment:', localId, result);
+                    console.log('Current comments array:', comments);
+
+                    const idx = comments.findIndex(c => c.id === localId);
+                    if (idx === -1) {
+                        console.error('Comment not found for localId:', localId);
+                        console.log('Available comment IDs:', comments.map(c => c.id));
+
+                        // Thử tìm comment theo content hoặc timestamp gần nhất
+                        const recentComment = comments.find(c =>
+                            (c.text === result.originalText) ||
+                            (c.content === result.originalText) ||
+                            (c.ai && c.ai.isChecking)
+                        );
+
+                        if (recentComment) {
+                            console.log('Found comment by content/timestamp:', recentComment);
+                            const foundIdx = comments.findIndex(c => c.id === recentComment.id);
+                            if (foundIdx !== -1) {
+                                comments[foundIdx] = {
+                                    ...comments[foundIdx],
+                                    ai: {
+                                        isViolation: !!result.isViolation,
+                                        isChecking: false,
+                                        details: result.details || '',
+                                        violationType: result.violationType || null,
+                                        severity: result.severity || null,
+                                        confidence: result.confidence ?? null,
+                                        analysisMethod: result.analysisMethod || null,
+                                    }
+                                };
+                                console.log('Updated comment by fallback method:', comments[foundIdx]);
+                                renderComments(comments);
+                            }
+                        } else {
+                            // Nếu không tìm thấy comment nào, tạo một comment mới với kết quả AI
+                            console.log('Creating new comment with AI result');
+                            const currentUser = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn đọc') ?>;
+                            const newComment = {
+                                id: 'ai-result-' + Date.now(),
+                                name: currentUser || 'Bạn đọc',
+                                avatar_url: '',
+                                content: result.originalText || 'Comment đã được kiểm tra',
+                                time: nowIso(),
+                                ai: {
+                                    isViolation: !!result.isViolation,
+                                    isChecking: false,
+                                    details: result.details || '',
+                                    violationType: result.violationType || null,
+                                    severity: result.severity || null,
+                                    confidence: result.confidence ?? null,
+                                    analysisMethod: result.analysisMethod || null,
+                                }
+                            };
+                            comments.push(newComment);
+                            console.log('Added new comment with AI result:', newComment);
+                            renderComments(comments);
+                        }
+                        return;
+                    }
+
+                    const prev = comments[idx];
+                    comments[idx] = {
+                        ...prev,
+                        ai: {
+                            isViolation: !!result.isViolation,
+                            isChecking: false,
+                            details: result.details || '',
+                            violationType: result.violationType || null,
+                            severity: result.severity || null,
+                            confidence: result.confidence ?? null,
+                            analysisMethod: result.analysisMethod || null,
+                        }
+                    };
+
+                    console.log('Updated comment with AI result:', comments[idx]);
+                    renderComments(comments);
+                }
+
+                // ===== Lưu kết quả AI check vào database =====
+                async function saveAIResultToDatabase(localId, aiResult) {
+                    try {
+                        // Tìm comment trong mảng comments để lấy comment ID
+                        const comment = comments.find(c => c.id === localId);
+                        let commentId = null;
+
+                        if (comment && comment.commentId) {
+                            // Sử dụng comment ID đã lưu
+                            commentId = comment.commentId;
+                        } else {
+                            // Fallback: lấy comment mới nhất của user
+                            const currentUser = <?= json_encode($_SESSION['user']['id'] ?? 0) ?>;
+                            const res = await fetch(`<?= BASE_URL ?>/?url=comment&action=getLatestComment&user_id=${currentUser}&article_id=${articleId}`);
+                            const data = await res.json();
+                            commentId = data.comment_id;
+                        }
+
+                        if (commentId) {
+                            console.log('Saving AI result for comment ID:', commentId, 'Result:', aiResult);
+
+                            // Lưu kết quả AI check
+                            const saveRes = await fetch('<?= BASE_URL ?>/controller/updateAIresultController.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({
+                                    comment_id: commentId,
+                                    ai_result: aiResult
+                                })
+                            });
+
+                            const saveData = await saveRes.json();
+                            console.log('AI result saved to database:', saveData);
+
+                            if (saveData.success) {
+                                console.log('✅ AI violation automatically updated in database');
+
+                                // Hiển thị thông báo trong UI nếu có vi phạm
+                                if (aiResult.isViolation) {
+                                    // Có thể thêm toast notification ở đây nếu muốn
+                                    console.log('🔔 User will see violation warning in UI');
+                                }
+                            }
+                        } else {
+                            console.error('Could not find comment ID to save AI result');
+                        }
+                    } catch (error) {
+                        console.error('Error saving AI result to database:', error);
+                    }
+                }
+
+                // ===== Events =====
+                btnSend.addEventListener("click", sendComment);
+                textarea.addEventListener("keydown", function(e) {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                        e.preventDefault();
+                        sendComment();
+                    }
+                });
+                textarea.addEventListener('input', () => autoGrow(textarea));
+
+                // đặt replyComment lên window cho onclick
+                window.replyComment = function(name) {
+                    const pre = name ? '@' + name + ' ' : '';
+                    textarea.value = pre + textarea.value;
+                    textarea.focus();
+                    autoGrow(textarea);
+                };
+
+                // ===== Khởi tạo =====
+                document.addEventListener('DOMContentLoaded', () => {
+                    loadCommentsFromDB(); // nạp từ DB như cũ
+                });
+
+            })();
         </script>
+
+        <style>
+            /* AI Comment Check Styles - Simplified */
+            .ai-violation-warning {
+                animation: fadeIn 0.3s ease-in;
+            }
+
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-5px);
+                }
+
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .comment-card.violation {
+                border-left: 4px solid #ffc107;
+                background-color: #fffbf0;
+            }
+
+            /* Ẩn các trạng thái checking và safe */
+            .comment-card.checking,
+            .comment-card.safe {
+                /* Không có styling đặc biệt */
+            }
+        </style>
+
     </main>

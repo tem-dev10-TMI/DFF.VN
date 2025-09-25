@@ -39,9 +39,33 @@ if ($action === "addComment") {
 
     $ok = $model->insert($article_id, $user_id, $content);
     if ($ok) {
-        echo json_encode(["status" => "success", "message" => "Đã thêm bình luận"]);
+        // Lấy comment ID vừa thêm
+        $comment_id = $model->getLastInsertId();
+        echo json_encode([
+            "status" => "success", 
+            "message" => "Đã thêm bình luận",
+            "comment_id" => $comment_id
+        ]);
     } else {
         echo json_encode(["status" => "error", "message" => "Lỗi khi thêm bình luận"]);
+    }
+    exit;
+}
+
+if ($action === "getLatestComment") {
+    $user_id = intval($_GET['user_id'] ?? 0);
+    $article_id = intval($_GET['article_id'] ?? 0);
+    
+    if ($user_id <= 0 || $article_id <= 0) {
+        echo json_encode(["status" => "error", "message" => "Thiếu dữ liệu"]);
+        exit;
+    }
+
+    $latestComment = $model->getLatestCommentByUser($user_id, $article_id);
+    if ($latestComment) {
+        echo json_encode(["status" => "success", "comment_id" => $latestComment['id']]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Không tìm thấy comment"]);
     }
     exit;
 }
