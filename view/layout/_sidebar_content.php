@@ -125,9 +125,7 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
 
         <div class="line"></div>
         <ul class="nav nav-second-level h-info">
-            <li>TEAM TIM (DEV - K25)</li>
-            <li>Viện Phát triển Đào tạo và Quản lý (TMI)</li>
-            <li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
+            <li class="w-100 text-center">POWERED BY</li>
             <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
             <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
         </ul>
