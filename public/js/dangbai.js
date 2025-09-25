@@ -177,73 +177,156 @@ function displayPosts(posts) {
 // Tạo element bài viết theo cấu trúc Home
 
 
-// Hàm xóa bài viết mới
+// Hàm xóa bài viết (giữ cấu trúc cũ, thêm fallback theo ID)
 function deletePost(postId, buttonElement) {
   if (!confirm('Bạn có chắc chắn muốn xóa bài viết này không? Hành động này không thể hoàn tác.')) {
     return;
   }
 
-  // Tìm phần tử cha để xóa khỏi giao diện
-  const postElement = buttonElement.closest('.block-k');
+  const $btn = buttonElement;
 
-  // Lấy token từ biến global đã được tạo trong view
-  const token = window.userSessionToken || '';
+  // ===== Tìm container bài viết =====
+  // 1) Ưu tiên theo id="post-<id>"
+  const byIdEl = document.getElementById(`post-${postId}`);
+  // 2) Fallback: ancestor theo các class cũ
+  const byClosestEl =
+    $btn.closest(`[data-post-id="${postId}"]`) ||
+    $btn.closest('[data-post-id]') ||
+    $btn.closest('.post-item, .article-item, .view-carde, .block-k');
+
+  // Chọn phần tử sẽ xoá: ưu tiên #post-<id> nếu có
+  const postElement = byIdEl || byClosestEl;
+
+  // ===== Lấy session token =====
+  let token = window.userSessionToken || '';
+  if (!token) {
+    const nearForm = $btn.closest('form');
+    const nearInput = nearForm && nearForm.querySelector('input[name="session_token"]');
+    if (nearInput && nearInput.value) token = nearInput.value;
+  }
+  if (!token) {
+    const anyInput = document.querySelector('input[name="session_token"]');
+    if (anyInput && anyInput.value) token = anyInput.value;
+  }
+  if (!token) {
+    const meta = document.querySelector('meta[name="session-token"]');
+    if (meta && meta.content) token = meta.content;
+  }
+  if (!token) {
+    alert('Phiên làm việc không hợp lệ. Vui lòng tải lại trang.');
+    return;
+  }
+
+  // ===== Khóa nút khi đang xoá =====
+  const oldHtml = $btn.innerHTML;
+  const hadDisabledProp = Object.prototype.hasOwnProperty.call($btn, 'disabled') || ('disabled' in $btn);
+  const oldDisabled = hadDisabledProp ? $btn.disabled : undefined;
+  if (hadDisabledProp) $btn.disabled = true;
+  $btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Đang xóa...';
+
+  const body = new URLSearchParams();
+  body.set('post_id', String(postId));
+  body.set('session_token', token);
 
   fetch('api/deletePost', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Requested-With': 'XMLHttpRequest'
     },
-    body: `post_id=${postId}&session_token=${token}`
+    body: body.toString()
   })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        // Xóa bài viết khỏi giao diện một cách mượt mà
-        postElement.style.transition = 'opacity 0.5s ease';
+    .then(async (res) => {
+      if (res.status === 204) return { success: true };
+      let data = null;
+      try { data = await res.json(); } catch (_) {}
+      if (!res.ok) {
+        throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
+      }
+      return data || { success: true };
+    })
+    .then((data) => {
+      const ok =
+        data === true ||
+        data?.success === true ||
+        data?.success === 'true' ||
+        data?.status === 'success' ||
+        data?.code === 0 ||
+        data?.result === 'ok';
+
+      if (!ok) throw new Error(data?.message || 'Không thể xóa bài viết.');
+
+      // Xoá khỏi UI (ưu tiên phần tử theo id="post-<id>")
+      if (postElement) {
+        postElement.style.transition = 'opacity .4s ease';
         postElement.style.opacity = '0';
-        setTimeout(() => {
-          postElement.remove();
-        }, 500);
-        // Bạn có thể thêm thông báo thành công ở đây, ví dụ: alert('Đã xóa bài viết thành công!');
+        setTimeout(() => postElement.remove(), 400);
       } else {
-        alert('Lỗi: ' + data.message);
+        // Trường hợp hiếm: không tìm thấy container => thử xoá thẳng theo ID lần nữa
+        const fallbackEl = document.getElementById(`post-${postId}`);
+        if (fallbackEl) fallbackEl.remove();
       }
     })
-    .catch(error => {
-      console.error('Error:', error);
-      alert('Đã xảy ra lỗi kết nối. Vui lòng thử lại.');
+    .catch((err) => {
+      console.error('deletePost error:', err);
+      alert('Lỗi: ' + err.message);
+    })
+    .finally(() => {
+      if (hadDisabledProp) $btn.disabled = oldDisabled;
+      $btn.innerHTML = oldHtml;
     });
 }
 
 
+
+
 function createPostElement(post) {
-    const profileDataElement = document.getElementById('profileData');
-    const userId = profileDataElement ? profileDataElement.dataset.userId : null;
+  const profileDataElement = document.getElementById('profileData');
+  const userId = profileDataElement ? profileDataElement.dataset.userId : null;
 
-    const postDiv = document.createElement('div');
-    postDiv.className = 'block-k article-item';
-    postDiv.setAttribute('id', `post-${post.id}`);
+  const postDiv = document.createElement('div');
+  postDiv.className = 'block-k article-item';
+  postDiv.setAttribute('id', `post-${post.id}`);
 
-    const safeContent = post.content || '';
-    const safeTitle = post.title || safeContent.substring(0, 70);
-    const articleLink = `details_blog/${post.slug}`;
+  const safeContent = post.content || '';
+  const safeTitle  = post.title || safeContent.substring(0, 70);
 
-    let statusBadgeHtml = '';
-    if (userId && post.author_id == userId && post.status) {
-        let badgeClass = '';
-        let badgeText = '';
-        switch (post.status) {
-            case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
-            case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
-        }
-        if (badgeText) {
-            statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
-        }
+  // ===== FIX slug undefined (giữ cấu trúc hiển thị) =====
+  // Ưu tiên các key hay gặp từ API, nếu vẫn trống thì tự slugify từ title
+  const rawSlug =
+    (post && (post.slug || post.article_slug || post.seo_slug)) || '';
+
+  const slugify = (s) => {
+    return String(s || '')
+      .normalize('NFD').replace(/[\u0300-\u036f]/g, '')   // bỏ dấu
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')                       // thay non-word = '-'
+      .replace(/^-+|-+$/g, '')                           // bỏ '-' đầu/cuối
+      .substring(0, 120);
+  };
+
+  const slug = (rawSlug && String(rawSlug).trim()) || slugify(safeTitle);
+
+  // Nếu có slug => /details_blog/<slug>, không thì fallback route theo id
+  const articleLink = slug
+    ? `details_blog/${encodeURIComponent(slug)}`
+    : `/post-${post.id}.html`;
+
+  let statusBadgeHtml = '';
+  if (userId && post.author_id == userId && post.status) {
+    let badgeClass = '';
+    let badgeText = '';
+    switch (post.status) {
+      case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+      case 'public':  badgeClass = 'bg-success';            badgeText = 'Công khai'; break;
     }
+    if (badgeText) {
+      statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
+    }
+  }
 
-    const deleteButtonHtml = (userId && post.author_id == userId)
-        ? `<div class="post-actions">
+  const deleteButtonHtml = (userId && post.author_id == userId)
+    ? `<div class="post-actions">
                <span class="delete-post-btn" onclick="deletePost(${post.id}, this)" title="Xóa bài viết">
                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"/>
@@ -251,9 +334,9 @@ function createPostElement(post) {
                    </svg>
                </span>
            </div>`
-        : '';
+    : '';
 
-    postDiv.innerHTML = `
+  postDiv.innerHTML = `
     <div class="view-carde f-frame">
         <div class="provider">
             <img class="logo" alt="Avatar" src="${post.avatar || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}">
@@ -277,25 +360,16 @@ function createPostElement(post) {
             ${(safeContent && safeContent.length > 100) ? `<a href="${articleLink}" class="d-more">Xem thêm</a>` : ''}
         </div>
 
-        ${post.video_url ? `
-        <div class="mt-2 mb-2">
-            <video controls style="width: 100%; border-radius: 8px; background-color: #000;">
-                <source src="${post.video_url}" type="video/mp4">
-                Trình duyệt của bạn không hỗ trợ thẻ video.
-            </video>
-        </div>
-        ` : ''}
-
         ${post.image ? `<img class="h-img" src="${post.image}" title="${escapeHtml(safeTitle)}" alt="${escapeHtml(safeTitle)}" border="0">` : ''}
 
         <div class="item-bottom">
             <div class="bt-cover com-like" data-id="${post.id}">
                 <span class="for-up" onclick="toggleLike(${post.id})"><svg rpl="" data-voted="false" data-type="up" fill="currentColor" height="16" icon-name="upvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.706 8.953 10.834.372A1.123 1.123 0 0 0 10 0a1.128 1.128 0 0 0-.833.368L1.29 8.957a1.249 1.249 0 0 0-.171 1.343 1.114 1.114 0 0 0 1.007.7H6v6.877A1.125 1.125 0 0 0 7.123 19h5.754A1.125 1.125 0 0 0 14 17.877V11h3.877a1.114 1.114 0 0 0 1.005-.7 1.251 1.251 0 0 0-.176-1.347Z"></path></svg></span>
                 <span class="value" data-old="${post.likes_count || 0}">${post.likes_count || 0}</span>
-                <span class="for-down" onclick="toggleDislike(${post.id})"><svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16" icon-name="downvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0 0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z"></path></svg></span>
+                <span class="for-down" onclick="toggleDislike(${post.id})"><svg rpl="" data-voted="false" data-type="down" fill="currentColor" height="16" icon-name="downvote-fill" viewBox="0 0 20 20" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M18.88 9.7a1.114 1.114 0 0 0-1.006-.7H14V2.123A1.125 1.125 0 0 0 12.877 1H7.123A1.125 1.125 0  0 0 6 2.123V9H2.123a1.114 1.114 0 0 0-1.005.7 1.25 1.25 0 0 0 .176 1.348l7.872 8.581a1.124 1.124 0 0 0 1.667.003l7.876-8.589A1.248 1.248 0 0 0 18.88 9.7Z"></path></svg></span>
             </div>
             <div class="button-ar">
-                <a href="/post-${post.id}.html#anc_comment" onclick="showComments(${post.id})"><svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor" height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0 0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z"></path></svg>
+                <a href="/post-${post.id}.html#anc_comment" onclick="showComments(${post.id})"><svg rpl="" aria-hidden="true" class="icon-comment" fill="currentColor" height="15" icon-name="comment-outline" viewBox="0 0 20 20" width="15" xmlns="http://www.w3.org/2000/svg"><path d="M7.725 19.872a.718.718 0 0 1-.607-.328.725.725 0 0 1-.118-.397V16H3.625A2.63 2.63 0 0 1 1 13.375v-9.75A2.629 2.629 0 0 1 3.625 1h12.75A2.63 2.63 0 0 1 19 3.625v9.75A2.63 2.63 0 0 1 16.375 16h-4.161l-4 3.681a.725.725 0 0 1-.489.191ZM3.625 2.25A1.377 1.377 0 0 0 2.25 3.625v9.75a1.377 1.377 0 0 0 1.375 1.375h4a.625.625 0 0 1 .625.625v2.575l3.3-3.035a.628.628 0  0 1 .424-.165h4.4a1.377 1.377 0 0 0 1.375-1.375v-9.75a1.377 1.377 0 0 0-1.374-1.375H3.625Z"></path></svg>
                 <span>${post.comments_count || 0}</span></a>
             </div>
             <div class="button-ar">
@@ -310,8 +384,9 @@ function createPostElement(post) {
         </div>
     </div>
   `;
-    return postDiv;
+  return postDiv;
 }
+
 
 function renderStatusText(status) {
   var s = (status || '').toLowerCase();
@@ -344,81 +419,167 @@ function escapeHtml(str) {
 }
 
 // Submit bài viết mới
-function addPost() {
-  var postTitle = document.getElementById('postTitle').value.trim();
-  var postSummary = document.getElementById('postSummary').value.trim();
-  var postContent = document.getElementById('newPost').value.trim();
-  var postTopic = document.getElementById('topicSelect').value;
+(function attachSubmit() {
+  const submitBtn = document.querySelector('.post-box button.btn-success.rounded-pill');
+  if (submitBtn) submitBtn.addEventListener('click', addPost);
+})();
+let __isPosting = false;
 
-  if (!postTitle || !postContent || !postTopic) {
-    showNotification('Vui lòng nhập tiêu đề, nội dung và chọn chủ đề!', 'warning');
-    return;
+function addPost(e) {
+  if (e && typeof e.preventDefault === 'function') e.preventDefault();
+
+  // Lấy input trước, VALIDATE NGAY
+  const formEl   = document.getElementById('postForm'); // có thể null ở profile
+  const title    = (document.getElementById('postTitle')?.value || '').trim();
+  const summary  = (document.getElementById('postSummary')?.value || '').trim();
+  const topicId  = (document.getElementById('topicSelect')?.value || '').trim();
+
+  // Gộp content từ sections để đảm bảo có nội dung (nếu bạn đang dùng UI sections)
+  const sectionNodes = document.querySelectorAll('#sectionsWrap .section-item');
+  const contentParts = [];
+  sectionNodes.forEach(node => {
+    const t = (node.querySelector('input[type="text"]')?.value || '').trim();
+    const c = (node.querySelector('textarea')?.value || '').trim();
+    if (t) contentParts.push(t);
+    if (c) contentParts.push(c);
+  });
+  const combinedContent = contentParts.join('\n\n');
+
+  // ---- VALIDATION SỚM (return ngay, không làm gì thêm) ----
+  if (!title || !summary || !topicId) {
+    showNotification('Vui lòng nhập tiêu đề, tóm tắt và chọn chủ đề!', 'warning');
+    return false; // đảm bảo dừng hẳn
+  }
+  if (!combinedContent || combinedContent.length < 10) {
+    showNotification('Vui lòng nhập nội dung cho các phần (tối thiểu 10 ký tự).', 'warning');
+    return false;
+  }
+  if (__isPosting) return false;
+
+  // Lấy nút submit an toàn (profile trước, modal sau)
+  const submitBtn = document.getElementById('btnSubmitPost')
+                   || document.querySelector('.post-box button.btn-success.rounded-pill');
+  const original  = submitBtn ? submitBtn.innerHTML : '';
+
+  // BẮT ĐẦU chuẩn bị request sau khi đã validate
+  __isPosting = true;
+  if (submitBtn) {
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang đăng...';
+    submitBtn.disabled = true;
   }
 
-  var submitBtn = document.querySelector('.post-box .btn-primary');
-  var originalText = submitBtn.innerHTML;
-  submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang đăng...';
-  submitBtn.disabled = true;
+  const fd = new FormData();
 
-  var formData = new FormData();
-  // Lấy token từ form, đảm bảo nó luôn được gửi đi
-  const formElement = document.querySelector('#createPostModal form') || document.querySelector('.post-box'); // Tìm form ở modal hoặc trang profile
-  if (formElement) {
-      const tokenInput = formElement.querySelector('input[name="session_token"]');
-      if (tokenInput) {
-          formData.append('session_token', tokenInput.value);
-      }
+  // session token (nếu có)
+  const tokenInput = formEl?.querySelector('input[name="session_token"]')
+                   || document.querySelector('input[name="session_token"]');
+  if (tokenInput) fd.append('session_token', tokenInput.value);
+
+  // Gửi fields bắt buộc
+  fd.append('title', title);
+  fd.append('summary', summary);
+  fd.append('topic_id', topicId);
+  fd.append('content', combinedContent);
+
+  // Gửi cấu trúc sections (nếu UI có)
+  const sections = [];
+  sectionNodes.forEach((node, idx) => {
+    const position = idx + 1;
+    const titleS   = (node.querySelector('input[type="text"]')?.value || '').trim();
+    const contentS = (node.querySelector('textarea')?.value || '').trim();
+    sections.push({ position, title: titleS, content: contentS });
+
+    const fileInput = node.querySelector('input.section-file');
+    if (fileInput?.files?.length) {
+      Array.from(fileInput.files).forEach(f => {
+        fd.append(`section_media_${position}[]`, f);
+      });
+    }
+  });
+  if (sections.length) {
+    fd.append('sections_json', JSON.stringify(sections));
   }
-  formData.append('title', postTitle);
-  formData.append('summary', postSummary);
-  formData.append('content', postContent);
-  formData.append('topic_id', postTopic);
 
-  // Thêm tất cả ảnh
-  var imageFiles = document.getElementById('postImage').files;
-  Array.from(imageFiles).forEach((file, idx) => {
-    
-    formData.append(`images[${idx}]`, file);
-  });
+  // Ảnh cover (nếu có trường cover)
+  const coverEl = document.getElementById('postCoverImage');
+  if (coverEl?.files?.[0]) {
+    fd.append('main_image_url', coverEl.files[0]);
+  }
 
-  // Thêm tất cả video
-  var videoFiles = document.getElementById('postVideo').files;
-  Array.from(videoFiles).forEach((file, idx) => {
-    formData.append(`videos[${idx}]`, file);
-  });
-
-  fetch('api/addPost', {
-    method: 'POST',
-    body: formData
-  })
-    .then(response => response.json())
+  fetch('api/addPost', { method: 'POST', body: fd })
+    .then(r => r.json())
     .then(data => {
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
+      if (submitBtn) {
+        submitBtn.innerHTML = original;
+        submitBtn.disabled = false;
+      }
+      __isPosting = false;
 
       if (data && data.success) {
+        // reset form tuỳ ý
         document.getElementById('postTitle').value = '';
         document.getElementById('postSummary').value = '';
-        document.getElementById('newPost').value = '';
         document.getElementById('topicSelect').value = '';
-        document.getElementById('postImage').value = '';
-        document.getElementById('postVideo').value = '';
-        document.getElementById('imagePreview').innerHTML = '';
-        document.getElementById('videoPreview').innerHTML = '';
+        if (coverEl) coverEl.value = '';
 
-        loadPosts();
+        // reset sections (giữ 1 phần trống)
+        const wrap = document.getElementById('sectionsWrap');
+        if (wrap) {
+          wrap.innerHTML = `
+            <div class="card border-0 shadow-sm section-item" data-index="1">
+              <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">1</span>
+                  <strong>Phần 1</strong>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+                    <i class="fas fa-image me-1"></i> Ảnh
+                  </button>
+                  <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+                    <i class="fas fa-video me-1"></i> Video
+                  </button>
+                  <button type="button" class="btn btn-outline-danger btn-sm d-none section-remove">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label fw-semibold">Tiêu đề phần 1</label>
+                  <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." required>
+                </div>
+                <div class="mb-3">
+                  <input type="file" class="d-none section-file" accept="image/*,video/*">
+                  <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+                </div>
+                <div class="mb-2">
+                  <label class="form-label fw-semibold">Nội dung phần 1</label>
+                  <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required></textarea>
+                </div>
+              </div>
+            </div>`;
+        }
+
+        if (typeof loadPosts === 'function') loadPosts();
         showNotification(data.message || 'Đăng bài thành công!', 'success');
       } else {
-        showNotification('Lỗi: ' + (data && data.message ? data.message : 'Không xác định'), 'danger');
+        showNotification('Lỗi: ' + ((data && data.message) ? data.message : 'Không xác định'), 'danger');
       }
     })
-    .catch(error => {
-      submitBtn.innerHTML = originalText;
-      submitBtn.disabled = false;
-      console.error("Fetch error:", error);
-      showNotification("Có lỗi xảy ra khi gửi request!", "danger");
+    .catch(err => {
+      if (submitBtn) {
+        submitBtn.innerHTML = original;
+        submitBtn.disabled = false;
+      }
+      __isPosting = false;
+      console.error('Fetch error:', err);
+      showNotification('Có lỗi xảy ra khi gửi request!', 'danger');
     });
+
+  return false; // để chắc chắn không submit mặc định
 }
+
 
 // Preview nhiều ảnh
 function previewImage(event) {
@@ -501,8 +662,8 @@ function removeFileFromInput(inputId, fileToRemove) {
   const input = document.getElementById(inputId);
   const dt = new DataTransfer();
   Array.from(input.files)
-       .filter(f => f !== fileToRemove)
-       .forEach(f => dt.items.add(f));
+    .filter(f => f !== fileToRemove)
+    .forEach(f => dt.items.add(f));
   input.files = dt.files;
 }
 
@@ -603,7 +764,7 @@ function showNotification(message, type = 'info') {
 document.addEventListener('DOMContentLoaded', function () {
   // Auto-load bài viết khi trang load
   const profileDataElement = document.getElementById('profileData');
-  if(!profileDataElement){
+  if (!profileDataElement) {
     return;
   }
   loadPosts();

@@ -122,163 +122,230 @@ class profileUserController
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
 
-        // Chỉ chấp nhận POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Phương thức không được hỗ trợ!'
-            ]);
-            exit;
+            echo json_encode(['success' => false, 'message' => 'Phương thức không được hỗ trợ!']);
+            return;
         }
 
-        // Kiểm tra đăng nhập và session token
         if (!isset($_SESSION['user']['id'])) {
             http_response_code(401);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Bạn cần đăng nhập để đăng bài!'
-            ]);
-            exit;
+            echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để đăng bài!']);
+            return;
         }
-        require_once __DIR__ . '/../../model/user/userModel.php';
+
         $submittedToken = $_POST['session_token'] ?? '';
         if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
             http_response_code(401);
-            echo json_encode([
-                'success' => false,
-                'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.'
-            ]);
-            exit;
+            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.']);
+            return;
         }
 
         $modelArticle = new ArticlesModel();
-        $debug_info = []; // Mảng chứa thông tin gỡ lỗi
+        $debug_info   = [];
 
-        // Lấy dữ liệu từ form
-        $title = isset($_POST['title']) ? trim($_POST['title']) : '';
-        $summary = isset($_POST['summary']) ? trim($_POST['summary']) : '';
-        $content = isset($_POST['content']) ? trim($_POST['content']) : '';
-        $topic_id = isset($_POST['topic_id']) ? intval($_POST['topic_id']) : null;
-        $author_id = $_SESSION['user']['id'];
+        // ====== LẤY INPUT CƠ BẢN ======
+        $title     = isset($_POST['title']) ? trim($_POST['title']) : '';
+        $summary   = isset($_POST['summary']) ? trim($_POST['summary']) : '';
+        $content   = isset($_POST['content']) ? trim($_POST['content']) : ''; // vẫn giữ để tương thích
+        $topic_id  = isset($_POST['topic_id']) ? intval($_POST['topic_id']) : null;
+        $author_id = (int)$_SESSION['user']['id'];
+
+        // ====== UPLOAD ẢNH COVER (main_image_url) ======
         $main_image_url = null;
-
-        // Xử lý upload ảnh nếu có
         if (isset($_FILES['main_image_url']) && $_FILES['main_image_url']['error'] === UPLOAD_ERR_OK) {
             $upload_dir = 'public/img/articles/';
-            if (!file_exists($upload_dir)) {
+            if (!is_dir($upload_dir)) {
                 mkdir($upload_dir, 0777, true);
             }
-
-            $file_extension = pathinfo($_FILES['main_image_url']['name'], PATHINFO_EXTENSION);
-            $file_name = 'article_' . time() . '_' . rand(1000, 9999) . '.' . $file_extension;
+            $ext       = pathinfo($_FILES['main_image_url']['name'], PATHINFO_EXTENSION);
+            $file_name = 'article_cover_' . time() . '_' . mt_rand(1000, 9999) . '.' . $ext;
             $file_path = $upload_dir . $file_name;
-
             if (move_uploaded_file($_FILES['main_image_url']['tmp_name'], $file_path)) {
-                $main_image_url = $file_path;
+                $main_image_url = $file_path; // path web tương đối
             }
         }
 
-        // Validation
+        // ====== NHẬN SECTIONS (JSON) TỪ FORM ======
+        // Frontend nên gửi "sections_json" (string) – mỗi phần: {position?, title?, content?, caption?, ...}
+        // và các file media theo khóa: section_media_1[], section_media_2[], ...
+        $sections_json = $_POST['sections_json'] ?? '[]';
+        $sections_in   = json_decode($sections_json, true);
+        if (!is_array($sections_in)) {
+            $sections_in = [];
+        }
+
+        // ====== VALIDATION CƠ BẢN ======
+        // Nếu không có content tổng, nhưng có sections => tạo content tổng bằng cách nối
+        if (empty($content) && !empty($sections_in)) {
+            $parts = [];
+            foreach ($sections_in as $sec) {
+                if (!empty($sec['title']))   $parts[] = trim($sec['title']);
+                if (!empty($sec['content'])) $parts[] = trim($sec['content']);
+            }
+            $content = trim(implode("\n\n", $parts));
+        }
         if (empty($title) || empty($content)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Vui lòng nhập đầy đủ tiêu đề và nội dung!'
-            ]);
-            exit;
+            echo json_encode(['success' => false, 'message' => 'Vui lòng nhập đầy đủ tiêu đề và nội dung!']);
+            return;
+        }
+        if (mb_strlen($content) < 10) {
+            echo json_encode(['success' => false, 'message' => 'Nội dung bài viết phải có ít nhất 10 ký tự!']);
+            return;
         }
 
-        if (strlen($content) < 10) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Nội dung bài viết phải có ít nhất 10 ký tự!'
-            ]);
-            exit;
-        }
+        // ====== CHUẨN HÓA SECTIONS + UPLOAD MEDIA TỪNG PHẦN ======
+        // Chuẩn input cho Model theo spec: mỗi section = ['position','title','content','media'=>[{'url','type','caption','position'}]]
+        $sections_for_model = [];
+        foreach ($sections_in as $idx => $sec) {
+            $pos     = isset($sec['position']) ? (int)$sec['position'] : ($idx + 1);
+            $titleS  = isset($sec['title'])   ? trim($sec['title'])   : null;
+            $contentS = isset($sec['content']) ? trim($sec['content']) : null;
 
-        // Thêm bài viết vào DB
-        $articleData = [
-            'title' => $title,
-            'summary' => $summary,
-            'content' => $content,
-            'main_image_url' => $main_image_url,
-            'author_id' => $author_id,
-            'topic_id' => $topic_id
-        ];
-        $newArticleId = $modelArticle->addArticleFromProfile($articleData);
+            $media_list = [];
 
-        if ($newArticleId) {
-            $video_message = 'Không có video nào được tải lên.';
-            // Kiểm tra xem có file video nào được gửi không
-            if (isset($_FILES['post_video'])) {
-                $video_file = $_FILES['post_video'];
-                // Kiểm tra lỗi tải lên
-                if ($video_file['error'] === UPLOAD_ERR_OK) {
-                    $uploadDir = __DIR__ . '/../../public/videos/';
+            // Bắt các file upload theo tên: section_media_{pos}[] (frontend cần đặt đúng name theo position hiển thị)
+            $key = 'section_media_' . $pos;
+            if (isset($_FILES[$key]) && is_array($_FILES[$key]['name'])) {
+                $total = count($_FILES[$key]['name']);
+                $uploadDir = 'public/uploads/articles/';
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
 
-                    // Kiểm tra và tạo thư mục
-                    if (!is_dir($uploadDir)) {
-                        if (!mkdir($uploadDir, 0777, true)) {
-                            $video_message = 'Lỗi: Không thể tạo thư mục videos. Vui lòng kiểm tra quyền ghi.';
-                        }
+                for ($i = 0; $i < $total; $i++) {
+                    $err = $_FILES[$key]['error'][$i];
+                    if ($err !== UPLOAD_ERR_OK) {
+                        continue;
                     }
 
-                    // Tiếp tục nếu thư mục tồn tại
-                    if (is_dir($uploadDir)) {
-                        $extension = strtolower(pathinfo($video_file['name'], PATHINFO_EXTENSION));
-                        $allowedTypes = ['mp4', 'webm', 'ogg', 'mov'];
+                    $tmp_name = $_FILES[$key]['tmp_name'][$i];
+                    $name     = $_FILES[$key]['name'][$i];
+                    $type     = $_FILES[$key]['type'][$i]; // MIME
 
-                        if (in_array($extension, $allowedTypes)) {
-                            $newFileName = 'video_' . $newArticleId . '_' . time() . '.' . $extension;
-                            $uploadPath = $uploadDir . $newFileName;
+                    $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
+                    $new  = 'sec_' . $pos . '_' . time() . '_' . mt_rand(1000, 9999) . '.' . $ext;
+                    $path = $uploadDir . $new;
 
-                            if (move_uploaded_file($video_file['tmp_name'], $uploadPath)) {
-                                $webPath = 'public/videos/' . $newFileName; // Đường dẫn web tương đối
-                                MediaModel::addMedia($newArticleId, $webPath, 'video', null);
-                                $video_message = 'Video đã được tải lên và lưu thành công.';
-                            } else {
-                                $video_message = 'Lỗi: Không thể di chuyển file đã tải lên. Vui lòng kiểm tra quyền ghi của thư mục videos.';
-                            }
-                        } else {
-                            $video_message = 'Lỗi: Định dạng video không hợp lệ. Chỉ chấp nhận: ' . implode(', ', $allowedTypes);
+                    if (move_uploaded_file($tmp_name, $path)) {
+                        // Xác định loại media
+                        $mtype = (strpos($type, 'image/') === 0) ? 'image' : ((strpos($type, 'video/') === 0) ? 'video' : null);
+                        if ($mtype) {
+                            $media_list[] = [
+                                'url'      => $path,
+                                'type'     => $mtype,                           // 'image' | 'video'
+                                'caption'  => $sec['caption'] ?? null,          // nếu UI có caption cho phần
+                                'position' => count($media_list) + 1
+                            ];
                         }
                     }
-                } else {
-                    // Cung cấp thông báo lỗi tải lên rõ ràng
-                    $upload_errors = [
-                        UPLOAD_ERR_INI_SIZE   => "File vượt quá dung lượng cho phép trong php.ini (upload_max_filesize).",
-                        UPLOAD_ERR_FORM_SIZE  => "File vượt quá dung lượng cho phép đã khai báo trong form HTML.",
-                        UPLOAD_ERR_PARTIAL    => "File chỉ được tải lên một phần.",
-                        UPLOAD_ERR_NO_FILE    => "Không có file nào được tải lên.",
-                        UPLOAD_ERR_NO_TMP_DIR => "Thiếu thư mục tạm.",
-                        UPLOAD_ERR_CANT_WRITE => "Không thể ghi file vào ổ đĩa.",
-                        UPLOAD_ERR_EXTENSION  => "Một tiện ích mở rộng của PHP đã dừng việc tải file.",
-                    ];
-                    $video_message = 'Lỗi tải lên: ' . ($upload_errors[$video_file['error']] ?? 'Lỗi không xác định');
                 }
             }
-            $debug_info['video_processing'] = $video_message;
 
-            echo json_encode([
-                'success' => true,
-                'message' => 'Đăng bài thành công!',
-                'article' => [
-                    'id' => $newArticleId,
-                    'title' => $title,
-                    'summary' => $summary,
-                    'content' => $content,
-                    'topic_id' => $topic_id,
-                    'author_id' => $author_id,
-                    'image' => $main_image_url
-                ],
-                'debug' => $debug_info // Thêm thông tin gỡ lỗi vào phản hồi
-            ]);
-        } else {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Lỗi khi thêm bài viết vào cơ sở dữ liệu!'
-            ]);
+            // Hỗ trợ cả trường hợp client gửi sẵn URL media (không qua upload)
+            if (!empty($sec['media']) && is_array($sec['media'])) {
+                $j = count($media_list);
+                foreach ($sec['media'] as $m) {
+                    if (!empty($m['url']) && !empty($m['type'])) {
+                        $media_list[] = [
+                            'url'      => $m['url'],
+                            'type'     => $m['type'],                          // 'image' | 'video'
+                            'caption'  => $m['caption'] ?? null,
+                            'position' => (++$j)
+                        ];
+                    }
+                    // cũng hỗ trợ media id sẵn có
+                    if (!empty($m['id'])) {
+                        $media_list[] = [
+                            'id'       => (int)$m['id'],
+                            'position' => (++$j)
+                        ];
+                    }
+                }
+            }
+
+            $sections_for_model[] = [
+                'position' => $pos,
+                'title'    => $titleS,
+                'content'  => $contentS,
+                'media'    => $media_list
+            ];
         }
+
+        // ====== LƯU BÀI VIẾT (articles + article_sections + media + article_section_media) ======
+        $articleData = [
+            'title'          => $title,
+            'summary'        => $summary,          // tóm tắt
+            'content'        => $content,          // nội dung tổng (phục vụ search/SEO)
+            'main_image_url' => $main_image_url,   // ảnh cover
+            'author_id'      => $author_id,
+            'topic_id'       => $topic_id
+        ];
+
+        // -> gọi model mới (đã có transaction + insert sections/media mapping)
+        $newArticleId = $modelArticle->addArticleFromProfile($articleData, $sections_for_model);
+
+        if (!$newArticleId) {
+            echo json_encode(['success' => false, 'message' => 'Lỗi khi thêm bài viết vào cơ sở dữ liệu!']);
+            return;
+        }
+
+        // ====== (TÙY CHỌN) LƯU VIDEO MỨC-BÀI (KHÔNG THUỘC SECTION) NHƯ CŨ ======
+        $video_message = 'Không có video nào được tải lên.';
+        if (isset($_FILES['post_video'])) {
+            $video_file = $_FILES['post_video'];
+            if ($video_file['error'] === UPLOAD_ERR_OK) {
+                $uploadDir = __DIR__ . '/../../public/videos/';
+                if (!is_dir($uploadDir) && !mkdir($uploadDir, 0777, true)) {
+                    $video_message = 'Lỗi: Không thể tạo thư mục videos.';
+                } else {
+                    $extension    = strtolower(pathinfo($video_file['name'], PATHINFO_EXTENSION));
+                    $allowedTypes = ['mp4', 'webm', 'ogg', 'mov'];
+                    if (in_array($extension, $allowedTypes, true)) {
+                        $newFileName = 'video_' . $newArticleId . '_' . time() . '.' . $extension;
+                        $uploadPath  = $uploadDir . $newFileName;
+                        if (move_uploaded_file($video_file['tmp_name'], $uploadPath)) {
+                            $webPath = 'public/videos/' . $newFileName;
+                            MediaModel::addMedia($newArticleId, $webPath, 'video', null);
+                            $video_message = 'Video đã được tải lên và lưu thành công.';
+                        } else {
+                            $video_message = 'Lỗi: Không thể di chuyển file đã tải lên.';
+                        }
+                    } else {
+                        $video_message = 'Lỗi: Định dạng video không hợp lệ. Chỉ chấp nhận: ' . implode(', ', $allowedTypes);
+                    }
+                }
+            } else {
+                $upload_errors = [
+                    UPLOAD_ERR_INI_SIZE   => "File vượt quá dung lượng cho phép trong php.ini (upload_max_filesize).",
+                    UPLOAD_ERR_FORM_SIZE  => "File vượt quá dung lượng cho phép đã khai báo trong form HTML.",
+                    UPLOAD_ERR_PARTIAL    => "File chỉ được tải lên một phần.",
+                    UPLOAD_ERR_NO_FILE    => "Không có file nào được tải lên.",
+                    UPLOAD_ERR_NO_TMP_DIR => "Thiếu thư mục tạm.",
+                    UPLOAD_ERR_CANT_WRITE => "Không thể ghi file vào ổ đĩa.",
+                    UPLOAD_ERR_EXTENSION  => "Một tiện ích mở rộng của PHP đã dừng việc tải file.",
+                ];
+                $video_message = 'Lỗi tải lên: ' . ($upload_errors[$video_file['error']] ?? 'Lỗi không xác định');
+            }
+        }
+        $debug_info['video_processing'] = $video_message;
+
+        // ====== PHẢN HỒI ======
+        echo json_encode([
+            'success' => true,
+            'message' => 'Đăng bài thành công!',
+            'article' => [
+                'id'        => $newArticleId,
+                'title'     => $title,
+                'summary'   => $summary,
+                'content'   => $content,
+                'topic_id'  => $topic_id,
+                'author_id' => $author_id,
+                'image'     => $main_image_url
+            ],
+            'debug' => $debug_info
+        ]);
     }
+
 
     public static function editArticle($id)
     {
@@ -463,6 +530,7 @@ class profileUserController
                         'phone' => $updatedUser['phone'],
                         'role' => $updatedUser['role'],
                         'avatar_url' => $updatedUser['avatar_url'] ?? null,
+                        'cover_photo' => $updatedUser['cover_photo'] ?? null,
                         'session_token' => $_SESSION['user']['session_token'] ?? null // Giữ lại session token
                     ];
                 }
@@ -675,14 +743,14 @@ class profileUserController
     }
     public static function deleteArticle()
     {
-        
+
         header('Content-Type: application/json');
 
         // Giả sử các file này đã được autoload hoặc require ở một nơi khác
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
         //require_once __DIR__ . '/../../model/connect.php';
-        
+
 
         // 1. Chỉ chấp nhận phương thức POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -697,7 +765,7 @@ class profileUserController
             exit;
         }
 
-        
+
 
         // 3. Lấy và xác thực dữ liệu đầu vào
         $postId = $_POST['post_id'] ?? null;

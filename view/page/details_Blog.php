@@ -12,19 +12,8 @@
     $summary = nl2br(htmlspecialchars($article['summary'] ?? ''));
     $content = nl2br(htmlspecialchars($article['content'] ?? ''));
     $mainImage = $article['main_image_url'] ?? '';
-    $videoUrl = $article['media_url'] ?? '';
-
     ?>
-<?php
-require_once __DIR__ . '/../../model/user/UserFollowModel.php';
-$db = new connect();
-$pdo = $db->db;
-$followModel = new UserFollowModel($pdo);
 
-// Đảm bảo có authorId
-$authorId = isset($authorId) ? intval($authorId) : 0;
-$totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
-?>
     <main class="main-content">
         <div class="block-k">
 
@@ -41,9 +30,8 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                     </div>
                 </div>
 
-<div class="follower-r f-right" style="font-size: 13px;">
-    <b class="total-fol"><?= intval($totalFollowers) ?></b> Người theo dõi
-</div>            </div>
+                <div class="follower-r f-right" style="font-size: 13px;"><b class="total-fol">0</b> Người theo dõi</div>
+            </div>
 
             <div class="detail">
                 <div class="line"></div>
@@ -59,18 +47,10 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         <?php if (!empty($mainImage)): ?>
                             <figure><img src="<?= htmlspecialchars($mainImage) ?>" alt="<?= $title ?>"></figure>
                         <?php endif; ?>
-                        <?php if (!empty($videoUrl)): ?>
-                            <div class="video-wrapper" style="margin: 20px 0;">
-                                <video width="100%" height="auto" controls>
-                                    <source src="<?= htmlspecialchars($videoUrl) ?>" type="video/mp4">
-                                    Trình duyệt của bạn không hỗ trợ video.
-                                </video>
-                            </div>
-                        <?php endif; ?>
+
                         <?php if (!empty($content)): ?>
                             <p><?= $content ?></p>
                         <?php endif; ?>
-
 
                         <div class="bysource"></div>
                     </div>
@@ -606,6 +586,77 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                 });
 
             })();
+
+            //Like/Dislike
+            document.addEventListener("DOMContentLoaded", function() {
+                const comLike = document.querySelector(".com-like");
+                if (!comLike) return;
+
+                const articleId = comLike.dataset.id;
+                const btnUp = comLike.querySelector(".for-up");
+                const btnDown = comLike.querySelector(".for-down");
+                const valueSpan = comLike.querySelector(".value");
+
+                let isVoting = false;
+
+                function updateLikeUI(likeCount, userLiked) {
+                    valueSpan.textContent = likeCount;
+                    btnUp.classList.toggle("active", userLiked === true);
+                    // btnDown chỉ để hủy like nên active khi user đã like
+                    btnDown.classList.toggle("active", userLiked === true);
+                }
+
+                async function loadLikeStatus() {
+                    try {
+                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=get&article_id=${articleId}`);
+                        const data = await res.json();
+                        if (data.status === "success") {
+                            // data.like = số like
+                            // data.user_vote = "like" hoặc ""
+                            updateLikeUI(data.like, data.user_vote === "like");
+                        }
+                    } catch (err) {
+                        console.error("Lỗi load like:", err);
+                    }
+                }
+
+                async function handleVote(type) {
+                    const userId = <?= $_SESSION['user']['id'] ?? 0 ?>;
+                    if (!userId) return alert("Bạn cần đăng nhập để thực hiện thao tác này!");
+                    if (isVoting) return;
+
+                    isVoting = true;
+
+                    try {
+                        const res = await fetch(`<?= BASE_URL ?>/?url=like&action=toggle`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: `article_id=${encodeURIComponent(articleId)}&type=${encodeURIComponent(type)}&user_id=${encodeURIComponent(userId)}`
+                        });
+
+                        const data = await res.json();
+
+                        if (data.status === "success") {
+                            // data.like = số like mới
+                            // data.user_vote = 'like' hoặc ''
+                            updateLikeUI(data.like, data.user_vote === "like");
+                        } else {
+                            alert(data.msg || "Có lỗi xảy ra khi gửi vote.");
+                        }
+                    } catch (err) {
+                        console.error("Lỗi khi gửi vote:", err);
+                    } finally {
+                        isVoting = false;
+                    }
+                }
+
+                btnUp.addEventListener("click", () => handleVote("like"));
+                btnDown.addEventListener("click", () => handleVote("dislike"));
+
+                loadLikeStatus();
+            });
         </script>
 
         <style>
