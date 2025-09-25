@@ -59,7 +59,9 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
                             href="<?= BASE_URL . '/details_topic/' . ($topic['slug'] ?? '') ?>">
                             <?= htmlspecialchars($topic['name'] ?? '') ?>
                         </a>
-                        <?php if (!$is_mobile): ?><i class="fas fa-plus icon-right"></i><?php endif; ?>
+                        <?php if (!$is_mobile): ?>
+                            <i class="fas fa-plus icon-right"></i>
+                        <?php endif; ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
@@ -80,6 +82,9 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
                                 href="<?= BASE_URL ?>/details_topic/<?= htmlspecialchars($topic['slug'] ?? '') ?>">
                                 <?= htmlspecialchars($topic['name'] ?? '') ?>
                             </a>
+                            <?php if (!$is_mobile): ?>
+                                <i class="fas fa-plus icon-right"></i>
+                            <?php endif; ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -125,7 +130,7 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
 
         <div class="line"></div>
         <ul class="nav nav-second-level h-info">
-            <li class="w-100 text-center">POWERED BY</li>
+            <li> POWERED BY </li>
             <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
             <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
         </ul>
