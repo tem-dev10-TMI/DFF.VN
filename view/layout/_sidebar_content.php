@@ -48,6 +48,24 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
             <label class="bg-tranparent">CHỦ ĐỀ</label>
         <?php endif; ?>
 
+        <?php if (!empty($topTopics)): ?>
+            <ul class="<?= $is_mobile ? 'top-item' : 'nav nav-second-level top-item' ?>">
+                <?php foreach ($topTopics as $topic): ?>
+                    <li>
+                        <img src="<?= $is_mobile ? htmlspecialchars($topic['icon_url'] ?? '') : BASE_URL . '/' . htmlspecialchars($topic['icon_url'] ?? '') ?>"
+                            title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
+                            alt="<?= htmlspecialchars($topic['name'] ?? '') ?>" <?= $is_mobile ? '' : 'border="0"' ?> />
+                        <a title="<?= htmlspecialchars($topic['name'] ?? '') ?>"
+                            href="<?= BASE_URL . '/details_topic/' . ($topic['slug'] ?? '') ?>">
+                            <?= htmlspecialchars($topic['name'] ?? '') ?>
+                        </a>
+                        <?php if (!$is_mobile): ?><i class="fas fa-plus icon-right"></i><?php endif; ?>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>Chưa có chủ đề nào</p>
+        <?php endif; ?>
 
         <?php if (!empty($moreTopics)): ?>
             <?php $collapse_id = $is_mobile ? 'm-collapseTopics' : 'flush-collapseOne'; ?>
@@ -88,28 +106,28 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
                     <?= $is_mobile ? 'Chính sách nội dung' : 'Thỏa thuận cung cấp và sử dụng dịch vụ MXH' ?></a>
             </li>
             <li>
-                <?php if ($is_mobile): ?>
-                    <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path
-                            d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z">
-                        </path>
-                        <path
-                            d="M6.617 10H.625a.625.625 0 0 0-.625.625 3.62 3.62 0 1 0 7.242 0A.625.625 0 0 0 6.617 10Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.58A2.376 2.376 0 0 1 3.621 13h-.004Z">
-                        </path>
-                        <path
-                            d="M19.375 10h-5.992a.624.624 0 0 0-.625.625 3.622 3.622 0 0 0 6.966 1.386c.182-.44.276-.91.276-1.386a.624.624 0 0 0-.625-.625Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.576A2.375 2.375 0 0 1 16.379 13h-.004Z">
-                        </path>
-                        <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
-                    </svg>
-                <?php endif; ?>
+                <svg rpl="" fill="currentColor" height="20" icon-name="topic-law-outline" viewBox="0 0 20 20" width="20"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M2.3 8.625 3.621 5.31l1.324 3.315h1.346L4.256 3.53a1.37 1.37 0 0 1 1.362-1.28h8.764a1.37 1.37 0 0 1 1.362 1.28l-2.035 5.1h1.346l1.324-3.32L17.7 8.625h1.346l-2.061-5.16A2.62 2.62 0 0 0 14.382 1H5.618a2.62 2.62 0 0 0-2.606 2.465L.951 8.625H2.3Z">
+                    </path>
+                    <path
+                        d="M6.617 10H.625a.625.625 0 0 0-.625.625 3.62 3.62 0 1 0 7.242 0A.625.625 0 0 0 6.617 10Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.58A2.376 2.376 0 0 1 3.621 13h-.004Z">
+                    </path>
+                    <path
+                        d="M19.375 10h-5.992a.624.624 0 0 0-.625.625 3.622 3.622 0 0 0 6.966 1.386c.182-.44.276-.91.276-1.386a.624.624 0 0 0-.625-.625Zm-3 3a2.376 2.376 0 0 1-2.288-1.75h4.576A2.375 2.375 0 0 1 16.379 13h-.004Z">
+                    </path>
+                    <path d="M10.625 5h-1.25v12.7H6.479v1.25h7.042V17.7h-2.896V5Z"></path>
+                </svg>
                 <a href="about#thuthap"> Chính sách riêng tư</a>
             </li>
         </ul>
 
         <div class="line"></div>
         <ul class="nav nav-second-level h-info">
-            <li class="w-100 text-center">POWERED BY</li>
+            <li>TEAM TIM (DEV - K25)</li>
+            <li>Viện Phát triển Đào tạo và Quản lý (TMI)</li>
+            <li>61 Mạc Đĩnh Chi, Phường Đa Kao, Quận 1, Thành phố Hồ Chí Minh</li>
             <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
             <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
         </ul>
