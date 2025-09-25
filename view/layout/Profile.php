@@ -330,23 +330,22 @@ if ($profile_category == 'user' && $user_id) {
 <div class="container mt-3">
   <!-- Cover -->
   <div class="cover">
-<<<<<<< HEAD
-    <?php
-    // Lấy cover photo từ session hoặc database
-    $coverUrl = $_SESSION['user']['cover_photo'] ?? $_SESSION['user_cover_photo'] ?? null;
-    if (!$coverUrl || trim($coverUrl) === '') {
-      // Nếu không có cover photo, giữ background gradient
-      $coverUrl = null;
-    }
-    ?>
-    
-    <?php if ($coverUrl): ?>
+
+      <?php
+      // Lấy cover photo từ session hoặc database
+      $coverUrl = $_SESSION['user']['cover_photo'] ?? $_SESSION['user_cover_photo'] ?? null;
+      if (!$coverUrl || trim($coverUrl) === '') {
+        // Nếu không có cover photo, giữ background gradient
+        $coverUrl = null;
+      }
+      ?>
+
+      <?php if ($coverUrl): ?>
       <!-- Cover Image -->
       <img src="<?= htmlspecialchars($coverUrl) ?>?t=<?= time() ?>" class="cover-img" alt="cover" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px; position: absolute; top: 0; left: 0;">
     <?php endif; ?>
 
-=======
->>>>>>> parent of ef01db3 (update_avatarbusiness)
+    
     <?php
     // Lấy avatar từ session nếu vừa upload, nếu không thì lấy từ database
     $avatarUrl = $_SESSION['user']['avatar_url'] ?? $user['avatar_url'] ?? '';
@@ -438,10 +437,10 @@ if ($profile_category == 'user' && $user_id) {
   </div>
 
   <!-- Hidden data for JavaScript -->
-  <div id="profileData" 
-       data-category="<?= htmlspecialchars($profile_category) ?>" 
-       data-user-id="<?= htmlspecialchars($_SESSION['user']['id'] ?? '') ?>"
-       style="display: none;">
+  <div id="profileData"
+    data-category="<?= htmlspecialchars($profile_category) ?>"
+    data-user-id="<?= htmlspecialchars($_SESSION['user']['id'] ?? '') ?>"
+    style="display: none;">
   </div>
 
   <div class="row mt-5">
@@ -456,7 +455,9 @@ if ($profile_category == 'user' && $user_id) {
     <!-- Main content -->
     <div class="col-md-9">
       <!-- Write post -->
-      <div class="post-box mb-3">
+      <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
+
+        <!-- Header tác giả -->
         <div class="d-flex align-items-center mb-3">
           <?php
           $avatarUrl = $user['avatar_url'] ?? null;
@@ -475,55 +476,260 @@ if ($profile_category == 'user' && $user_id) {
               }
               ?>
             </h6>
-            <small class="text-muted"><?php echo $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân'; ?></small>
+            <small class="text-muted"><?= $profile_category == 'businessmen' ? 'Doanh nghiệp' : 'Cá nhân' ?></small>
           </div>
         </div>
-        <!-- Tiêu đề -->
-        <input type="text" id="postTitle" class="form-control mb-2" placeholder="Nhập tiêu đề bài viết...">
 
-        <!-- Tóm tắt -->
-        <textarea id="postSummary" class="form-control mb-2" rows="2" placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+        <!-- FORM -->
+        <form id="postForm" class="needs-validation" novalidate enctype="multipart/form-data">
+          <!-- Tiêu đề -->
+          <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success"
+            placeholder="Nhập tiêu đề bài viết..." required>
 
-        <!-- Nội dung chính -->
-        <textarea id="newPost" class="form-control mb-3" rows="4" placeholder="Nội dung chính của bài viết..."></textarea>
+          <!-- Tóm tắt -->
+          <div class="mb-3">
+            <label for="postSummary" class="form-label fw-bold text-success">Tóm tắt bài viết</label>
+            <textarea id="postSummary" class="form-control border-success" rows="3"
+              placeholder="Nhập tóm tắt ngắn gọn..." required></textarea>
+          </div>
 
-        <div class="mb-2">
-          <label for="topicSelect" class="form-label">Chọn chủ đề:</label>
-          <select class="form-select" id="topicSelect" name="topic_id" required>
-            <option value="">-- Chọn chủ đề --</option>
-            <?php foreach ($topics as $topic): ?>
-              <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
-            <?php endforeach; ?>
-          </select>
-        </div>
+          <!-- Ảnh bìa (cover) -> addPost sẽ gửi lên dưới key main_image_url -->
+          <div class="mb-3">
+            <label for="postCoverImage" class="form-label fw-bold text-success">Ảnh bìa (cover)</label>
+            <input type="file" id="postCoverImage" class="form-control border-success" accept="image/*">
+            <div id="coverPreview" class="mt-2" style="min-height: 60px;"></div>
+          </div>
 
-        <!-- Thanh công cụ -->
-        <div class="d-flex justify-content-between align-items-center post-box">
-          <div class="d-flex gap-2">
-            <label class="btn btn-outline-secondary btn-sm mb-0" for="postImage">
-              <i class="fas fa-image me-1"></i> Hình ảnh
-            </label>
-            <label class="btn btn-outline-secondary btn-sm mb-0" for="postVideo">
-              <i class="fas fa-video me-1"></i> Video
-            </label>
-            <button class="btn btn-outline-secondary btn-sm" type="button">
-              <i class="fas fa-link me-1"></i> Link
+          <!-- Chủ đề -->
+          <div class="mb-3">
+            <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề</label>
+            <select class="form-select border-success" id="topicSelect" name="topic_id" required>
+              <option value="">-- Chọn chủ đề --</option>
+              <?php foreach ($topics as $topic): ?>
+                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+
+          <!-- Khu vực sections -->
+          <div id="sectionsWrap" class="d-flex flex-column gap-3">
+            <!-- Section 1 mặc định -->
+            <div class="card border-0 shadow-sm section-item" data-index="1">
+              <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-2">
+                  <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">1</span>
+                  <strong>Phần 1</strong>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+                    <i class="fas fa-image me-1"></i> Ảnh
+                  </button>
+                  <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+                    <i class="fas fa-video me-1"></i> Video
+                  </button>
+                  <button type="button" class="btn btn-outline-danger btn-sm d-none section-remove">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="mb-3">
+                  <label class="form-label fw-semibold">Tiêu đề phần 1</label>
+                  <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." required>
+                </div>
+
+                <div class="mb-3">
+                  <!-- addPost sẽ đọc input.section-file để gom file theo section -->
+                  <input type="file" class="d-none section-file" accept="image/*,video/*" multiple>
+                  <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+                </div>
+
+                <div class="mb-2">
+                  <label class="form-label fw-semibold">Nội dung phần 1</label>
+                  <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Toolbar -->
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <button type="button" id="btnAddSection" class="btn btn-outline-success">
+              <i class="fas fa-plus me-1"></i> Thêm phần
+            </button>
+            <!-- Giữ nguyên selector để addPost tìm đúng nút -->
+            <button type="button" class="btn btn-success px-4 rounded-pill" onclick="addPost()">
+              <i class="fas fa-paper-plane me-1"></i> Đăng bài
             </button>
           </div>
-          <button class="btn btn-primary m-2" onclick="addPost()">
-            <i class="fas fa-paper-plane me-1"></i> Đăng bài
-          </button>
-        </div>
-        <!-- Input hidden -->
-        <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-        <input type="file" id="postImage" class="d-none" accept="image/*" multiple onchange="previewImage(event)">
-        <input type="file" id="postVideo" class="d-none" accept="video/*" multiple onchange="previewVideo(event)">
 
+          <!-- Session token để addPost append -->
+          <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+        </form>
       </div>
+
+      <style>
+        .media-preview {
+          min-height: 120px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #f8f9fa;
+          flex-wrap: wrap;
+          gap: 8px;
+          text-align: center;
+        }
+
+        .media-preview img,
+        .media-preview video {
+          max-width: 100%;
+          max-height: 220px;
+          border-radius: 8px;
+        }
+      </style>
 
       <!-- Preview ảnh -->
       <div id="imagePreview" class="mt-2"></div>
       <div id="videoPreview" class="mt-2"></div>
+      <script>
+        (function() {
+          const sectionsWrap = document.getElementById('sectionsWrap');
+          const btnAddSection = document.getElementById('btnAddSection');
+          const coverInput = document.getElementById('postCoverImage');
+          const coverPreview = document.getElementById('coverPreview');
+
+          // Preview ảnh cover
+          if (coverInput) {
+            coverInput.addEventListener('change', e => {
+              coverPreview.innerHTML = '';
+              const f = e.target.files && e.target.files[0];
+              if (!f) return;
+              const url = URL.createObjectURL(f);
+              const img = document.createElement('img');
+              img.src = url;
+              img.style.maxWidth = '240px';
+              img.style.maxHeight = '140px';
+              img.alt = 'cover preview';
+              img.className = 'rounded border';
+              coverPreview.appendChild(img);
+            });
+          }
+
+          const nextIndex = () => {
+            const items = sectionsWrap.querySelectorAll('.section-item');
+            let max = 0;
+            items.forEach(i => max = Math.max(max, parseInt(i.dataset.index, 10)));
+            return max + 1;
+          };
+
+          const sectionHTML = (idx) => `
+    <div class="card border-0 shadow-sm section-item" data-index="${idx}">
+      <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">${idx}</span>
+          <strong>Phần ${idx}</strong>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+            <i class="fas fa-image me-1"></i> Ảnh
+          </button>
+          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+            <i class="fas fa-video me-1"></i> Video
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm section-remove">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Tiêu đề phần ${idx}</label>
+          <input type="text" class="form-control" placeholder="Nhập tiêu đề phần ${idx}..." required>
+        </div>
+
+        <div class="mb-3">
+          <input type="file" class="d-none section-file" accept="image/*,video/*" multiple>
+          <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label fw-semibold">Nội dung phần ${idx}</label>
+          <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần ${idx}..." required></textarea>
+        </div>
+      </div>
+    </div>`;
+
+          // Thêm phần
+          btnAddSection.addEventListener('click', () => {
+            const idx = nextIndex();
+            sectionsWrap.insertAdjacentHTML('beforeend', sectionHTML(idx));
+          });
+
+          // Chọn media / xoá phần (event delegation)
+          sectionsWrap.addEventListener('click', (e) => {
+            const addBtn = e.target.closest('.section-add-media');
+            if (addBtn) {
+              const card = addBtn.closest('.section-item');
+              const fileInput = card.querySelector('.section-file');
+              fileInput.setAttribute('accept', addBtn.dataset.type === 'image' ? 'image/*' : 'video/*');
+              fileInput.click();
+            }
+
+            const removeBtn = e.target.closest('.section-remove');
+            if (removeBtn) {
+              const all = sectionsWrap.querySelectorAll('.section-item');
+              if (all.length <= 1) return; // luôn giữ 1 phần
+              removeBtn.closest('.section-item').remove();
+              // Cập nhật lại số thứ tự hiển thị (không ảnh hưởng backend)
+              sectionsWrap.querySelectorAll('.section-item').forEach((node, i) => {
+                node.dataset.index = (i + 1);
+                node.querySelector('.badge').textContent = (i + 1);
+                node.querySelector('.card-header strong').textContent = 'Phần ' + (i + 1);
+                node.querySelectorAll('.form-label.fw-semibold')[0].textContent = 'Tiêu đề phần ' + (i + 1);
+                node.querySelectorAll('.form-label.fw-semibold')[1].textContent = 'Nội dung phần ' + (i + 1);
+              });
+            }
+          });
+
+          // Preview media theo từng section
+          sectionsWrap.addEventListener('change', (e) => {
+            if (!e.target.classList.contains('section-file')) return;
+            const files = e.target.files;
+            const preview = e.target.closest('.section-item').querySelector('.media-preview');
+            preview.innerHTML = '';
+            if (!files || !files.length) {
+              preview.textContent = 'Chưa chọn ảnh/video.';
+              return;
+            }
+            Array.from(files).forEach(file => {
+              const url = URL.createObjectURL(file);
+              if (file.type.startsWith('image/')) {
+                const img = document.createElement('img');
+                img.src = url;
+                img.alt = 'preview';
+                img.style.maxHeight = '180px';
+                preview.appendChild(img);
+              } else if (file.type.startsWith('video/')) {
+                const video = document.createElement('video');
+                video.src = url;
+                video.controls = true;
+                video.style.maxHeight = '180px';
+                preview.appendChild(video);
+              } else {
+                const span = document.createElement('span');
+                span.textContent = 'Định dạng không hỗ trợ.';
+                preview.appendChild(span);
+              }
+              ['postTitle', 'postSummary'].forEach(id => {
+  const el = document.getElementById(id);
+  el?.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) e.preventDefault();
+  });
+});
+            });
+          });
+        })();
+      </script>
 
       <!-- Posts -->
       <!-- Danh sách bài viết -->
