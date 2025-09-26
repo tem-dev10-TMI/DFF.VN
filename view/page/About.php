@@ -1,131 +1,74 @@
 <style>
-    /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
-    .about-scope ul {
-        list-style: disc;
-        padding-left: 18px;
-        margin: 1rem;
-    }
+  /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
+  .about-scope ul{list-style:disc;padding-left:18px;margin:1rem;}
+  .about-scope ol{list-style:decimal;padding-left:18px;}
+  .about-scope ul li{float:none !important;display:list-item;}
 
-    .about-scope ol {
-        list-style: decimal;
-        padding-left: 18px;
-    }
+  .about-scope .about-body{
+    line-height:1.8;
+    scroll-margin-top:120px;
+    text-align:justify;
+    text-justify:inter-word;
+  }
+  .about-scope .about-body p,
+  .about-scope .about-body li{
+    text-align:justify;text-justify:inter-word;margin-bottom:1em;
+  }
 
-    .about-scope ul li {
-        float: none !important;
-        display: list-item;
-    }
+  .about-scope .about-content h2{
+    color:#124889;font-size:32px;font-weight:700;letter-spacing:.5px;
+    text-transform:uppercase;line-height:1.4;margin:24px 0 16px;
+  }
 
-    .about-scope .about-body {
-        line-height: 1.8;
-        scroll-margin-top: 120px;
-        /* Canh đều toàn bộ nội dung */
-        text-align: justify;
-        text-justify: inter-word;
-    }
+  .about-scope .about-body h2,
+  .about-scope .about-body h3{
+    scroll-margin-top:120px;text-align:left;
+  }
 
-    .about-scope .about-body p,
-    .about-scope .about-body li {
-        text-align: justify;
-        text-justify: inter-word;
-        margin-bottom: 1em; /* khoảng cách giữa các đoạn */
-    }
-    .about-scope .about-content h2 {
-    color: #124889;
-    font-size: 32px;
-    font-weight: 700;           /* Giữ đậm vừa đủ */
-    letter-spacing: 0.5px;      /* Giãn nhẹ chữ cho đều */
-    text-transform: uppercase;  /* Giữ chữ hoa */
-    line-height: 1.4;           /* Khoảng cách hàng */
-    margin: 24px 0 16px 0;      /* Khoảng trên–dưới gọn gàng */
-}
+  .about-scope a{color:#124889;}
+  .about-scope a:hover{color:#124889;text-decoration:underline;}
 
-    .about-scope .about-body h2,
-    .about-scope .about-body h3 {
-        scroll-margin-top: 120px;
-        text-align: left; /* giữ tiêu đề căn trái */
-    }
+  /* Layout 2 cột: aside trái + nội dung phải */
+  .about-scope .about-grid{
+    display:grid;grid-template-columns:320px 1fr;gap:24px;
+  }
+  .about-scope .about-nav{
+    position:sticky;top:90px;align-self:start;border-right:1px solid #e5e5e5;padding-right:16px;
+  }
+  .about-scope .about-nav h3{font-size:22px;margin:0 0 12px;}
+  .about-scope .about-nav ul{list-style:none;padding-left:16px;margin:0 0 20px;}
+  .about-scope .about-nav ul li{position:relative;margin:10px 0;}
+  .about-scope .about-nav ul li::before{
+    content:"";width:8px;height:8px;border:2px solid #ff9900;border-radius:50%;
+    position:absolute;left:-16px;top:8px;
+  }
 
-    .about-scope a {
-        color: #124889;
-    }
+  /* BIẾN .about-content thành scroll container để JS cuộn trong khung */
+  .about-scope .about-content{
+    min-width:0;
+    max-height:calc(100vh - 140px); /* chỉnh tùy header của bạn */
+    overflow-y:auto;
+    scroll-behavior:smooth;
+    position:relative;
+  }
 
-    .about-scope a:hover {
-        color: #124889;
-        text-decoration: underline;
-    }
+  .about-scope .about-content h2{color:#124889;font-size:32px;}
+  .about-scope .about-content h3{color:#124889;font-size:22px;}
 
-    /* Layout 2 cột giống ảnh: aside trái + nội dung phải */
-    .about-scope .about-grid {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 24px;
-    }
+  /* ---- Các rule active/highlight đặt NGOÀI @media để chạy mọi kích thước ---- */
+  .about-scope .about-body section{scroll-margin-top:120px;}
+  .about-scope .about-nav a.active{color:#ff9900;font-weight:700;text-decoration:none;}
+  .about-scope .about-body section.highlight{animation:sectionHi 1.8s ease-out;}
+  @keyframes sectionHi{0%{background:rgba(255,223,128,.55);}100%{background:transparent;}}
 
-    .about-scope .about-nav {
-        position: sticky;
-        top: 90px;
-        align-self: start;
-        border-right: 1px solid #e5e5e5;
-        padding-right: 16px;
+  @media (max-width:992px){
+    .about-scope .about-grid{grid-template-columns:1fr;}
+    .about-scope .about-nav{
+      position:static;border-right:0;border-bottom:1px solid #e5e5e5;padding-bottom:10px;
     }
-
-    .about-scope .about-nav h3 {
-        font-size: 22px;
-        margin: 0 0 12px 0;
-    }
-
-    .about-scope .about-nav ul {
-        list-style: none;
-        padding-left: 16px;
-        margin: 0 0 20px 0;
-    }
-
-    .about-scope .about-nav ul li {
-        position: relative;
-        margin: 10px 0;
-    }
-
-    .about-scope .about-nav ul li::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border: 2px solid #ff9900;
-        border-radius: 50%;
-        position: absolute;
-        left: -16px;
-        top: 8px;
-    }
-
-    .about-scope .about-content {
-        min-width: 0;
-        /* bỏ chiều cao cố định để văn bản co dãn tự nhiên */
-        overflow-y: auto;
-        scroll-behavior: smooth;
-    }
-
-    .about-scope .about-content h2 {
-        color: #124889;
-        font-size: 32px;
-    }
-
-    .about-scope .about-content h3 {
-        color: #124889;
-        font-size: 22px;
-    }
-
-    @media (max-width: 992px) {
-        .about-scope .about-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .about-scope .about-nav {
-            position: static;
-            border-right: 0;
-            border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 10px;
-        }
-    }
+    /* Trên mobile, cho khung cao hơn chút */
+    .about-scope .about-content{max-height:calc(100vh - 180px);}
+  }
 </style>
 
 <div class="about-scope container" style="margin-top: 10%;">
@@ -150,7 +93,7 @@
     </aside>
 
     <div class="about-content">
-  <article class="about-body dcontent">
+      <article class="about-body dcontent">
 
     <!-- Giới thiệu -->
     <section id="gioithieu">
@@ -293,37 +236,73 @@
         <li>Trường hợp người sử dụng đăng ký sử dụng dịch vụ của bên thứ ba trên mạng xã hội, người sử dụng đồng ý cung cấp thông tin cá nhân, thông tin riêng và các thông tin có liên quan khác cho bên thứ ba thì phải tự chịu trách nhiệm về sự bảo mật cho các thông tin mà mình cung cấp. Nhà cung cấp không có nghĩa vụ đảm bảo tính an toàn, riêng tư cho thông tin cá nhân của người sử dụng trong trường hợp này.</li>
       </ol>
     </section>
-</article>
+  </article>
 
     </div>
   </div>
 </div>
+<script>
+(function () {
+  const scope = document.querySelector('.about-scope');
+  if (!scope) return;
 
-<!-- <script>
-    document.querySelectorAll('.about-nav a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
+  const container = scope.querySelector('.about-content');
+  const links = scope.querySelectorAll('.about-nav a[href^="#"]');
+  const sections = scope.querySelectorAll('.about-body section[id]');
+  const OFFSET = 80; // nếu header cố định cao hơn, tăng số này
 
-            const targetId = this.getAttribute('href').substring(1);
-            const targetElement = document.getElementById(targetId);
-            const scrollContainer = document.querySelector('.about-content');
+  // Helper: CSS.escape fallback (cho trình duyệt cũ)
+  const cssEscape = window.CSS && CSS.escape ? CSS.escape :
+    (s)=>String(s).replace(/[^a-zA-Z0-9_\u00A0-\uFFFF-]/g, "\\$&");
 
-            if (targetElement && scrollContainer) {
-                // Nếu có header cố định, bạn chỉnh offset cho phù hợp
-                const offset = 60; // ví dụ 60px, chỉnh theo header của bạn
+  // Click -> cuộn trong .about-content
+  links.forEach(a => {
+    a.addEventListener('click', function (e) {
+      e.preventDefault();
+      const id = decodeURIComponent(this.getAttribute('href').slice(1));
+      const target = scope.querySelector('#' + cssEscape(id));
+      if (!target || !container) return;
 
-                // Lấy vị trí top của phần tử mục tiêu so với container
-                const containerRect = scrollContainer.getBoundingClientRect();
-                const targetRect = targetElement.getBoundingClientRect();
+      const cRect = container.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      const top = container.scrollTop + (tRect.top - cRect.top) - OFFSET;
 
-                // Tính vị trí scroll mới trong container
-                const scrollTop = scrollContainer.scrollTop + (targetRect.top - containerRect.top) - offset;
+      container.scrollTo({ top, behavior: 'smooth' });
 
-                scrollContainer.scrollTo({
-                    top: scrollTop,
-                    behavior: 'smooth'
-                });
-            }
-        });
+      // Active + highlight ngắn
+      links.forEach(l => l.classList.toggle('active', l === this));
+      target.classList.add('highlight');
+      setTimeout(() => target.classList.remove('highlight'), 1800);
+
+      // Cập nhật hash mà không gây nhảy trang
+      history.replaceState(null, '', `#${id}`);
     });
-</script> -->
+  });
+
+  // Đánh dấu mục đang xem khi tự cuộn
+  if ('IntersectionObserver' in window && container) {
+    const io = new IntersectionObserver((entries) => {
+      const visible = entries
+        .filter(en => en.isIntersecting)
+        .sort((a,b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!visible) return;
+      const id = visible.target.id;
+      links.forEach(l => l.classList.toggle('active', l.getAttribute('href') === `#${id}`));
+    }, { root: container, threshold: [0.6] });
+
+    sections.forEach(s => io.observe(s));
+  }
+
+  // Nếu mở trang có sẵn #hash -> cuộn đúng vị trí
+  if (location.hash) {
+    const id = decodeURIComponent(location.hash.slice(1));
+    const target = scope.querySelector('#' + cssEscape(id));
+    if (target) {
+      const cRect = container.getBoundingClientRect();
+      const tRect = target.getBoundingClientRect();
+      const top = container.scrollTop + (tRect.top - cRect.top) - OFFSET;
+      container.scrollTo({ top });
+    }
+  }
+})();
+</script>
