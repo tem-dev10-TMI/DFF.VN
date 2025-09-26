@@ -25,7 +25,85 @@ $followModel = new UserFollowModel($pdo);
 $authorId    = isset($authorId) ? intval($authorId) : 0;
 $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 ?>
+<style>
+    /* ẢNH COVER (đang ổn – giữ nguyên) */
+    .dcontent>figure img {
+        width: 100%;
+        max-height: 420px;
+        display: block;
+        object-fit: cover;
+        border-radius: 14px;
+    }
 
+    /* ẢNH/VIDEO TRONG CÁC PHẦN -> TO NHƯ COVER */
+    .dcontent .section-media-grid {
+        display: block !important;
+        /* bỏ grid để ảnh chiếm full hàng */
+        margin: 16px 0 !important;
+    }
+
+    .dcontent .section-media-grid figure {
+        margin: 0 0 16px;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #f6f7f8;
+    }
+
+    /* ảnh full-width, cao như cover, cắt tràn đẹp */
+    .dcontent .section-media-grid img {
+        width: 100% !important;
+        height: 420px;
+        /* giống cover */
+        object-fit: cover;
+        display: block;
+        border-radius: 14px;
+    }
+
+    /* video cũng full-width như cover */
+    .dcontent .section-media-grid .video-wrapper {
+        margin: 8px 0;
+    }
+
+    .dcontent .section-media-grid video {
+        width: 100% !important;
+        height: 420px;
+        display: block;
+        object-fit: cover;
+        /* khung video thống nhất */
+        border-radius: 14px;
+    }
+
+    /* Fallback cho bài cũ dùng article-media-grid */
+    .dcontent .article-media-grid {
+        display: block !important;
+    }
+
+    .dcontent .article-media-grid figure {
+        margin: 0 0 16px;
+        border-radius: 14px;
+        overflow: hidden;
+    }
+
+    .dcontent .article-media-grid img,
+    .dcontent .article-media-grid video {
+        width: 100% !important;
+        height: 420px;
+        object-fit: cover;
+        display: block;
+        border-radius: 14px;
+    }
+
+    /* Mobile có thể hạ chiều cao chút cho đỡ dài */
+    @media (max-width:576px) {
+
+        .dcontent .section-media-grid img,
+        .dcontent .section-media-grid video,
+        .dcontent .article-media-grid img,
+        .dcontent .article-media-grid video {
+            height: 320px;
+        }
+    }
+</style>
 <main class="main-content">
     <div class="block-k">
 
@@ -595,7 +673,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         temp.commentId = data.comment_id || null;
                         console.log('Comment ID saved:', temp.commentId);
                         console.log('Updated temp object:', temp);
-                        
+
                         // Cập nhật comment trong mảng comments
                         const commentIndex = comments.findIndex(c => c.id === tempId);
                         if (commentIndex !== -1) {
@@ -874,7 +952,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
                     // TÌM COMMENT ID THẬT TRƯỚC KHI XÓA KHỎI MẢNG
                     const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
-                    
+
                     // Debug: Log tất cả comments trong mảng TRƯỚC KHI XÓA
                     console.log('📡 All comments in array (BEFORE DELETE):', comments.length);
                     comments.forEach((c, index) => {
@@ -885,15 +963,15 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                             content: c.content?.substring(0, 50) + '...'
                         });
                     });
-                    
+
                     // Tìm comment trong mảng để lấy comment ID thật
                     const commentFromArray = comments.find(c => c.id === commentId);
                     let realCommentId = null;
-                    
+
                     if (commentFromArray) {
                         console.log('📡 Comment from array:', commentFromArray);
                         console.log('📡 Comment user_id from array:', commentFromArray.user_id);
-                        
+
                         // Nếu comment có commentId (đã lưu DB), dùng nó
                         if (commentFromArray.commentId) {
                             realCommentId = commentFromArray.commentId;
@@ -902,7 +980,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                             // Fallback: xử lý ID như cũ
                             realCommentId = commentId.replace('db-', '').replace('local-', '');
                             console.log('📡 Using processed ID as fallback:', realCommentId);
-                            
+
                             // Kiểm tra nếu realCommentId là số hợp lệ
                             if (!realCommentId || isNaN(realCommentId) || realCommentId <= 0) {
                                 console.error('❌ Invalid realCommentId:', realCommentId);
@@ -915,7 +993,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         // Fallback: xử lý ID như cũ
                         realCommentId = commentId.replace('db-', '').replace('local-', '');
                         console.log('📡 Using processed ID as fallback:', realCommentId);
-                        
+
                         // Kiểm tra nếu realCommentId là số hợp lệ
                         if (!realCommentId || isNaN(realCommentId) || realCommentId <= 0) {
                             console.error('❌ Invalid realCommentId:', realCommentId);
@@ -923,12 +1001,12 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                             return;
                         }
                     }
-                    
+
                     console.log('📡 Calling delete API for comment:', realCommentId);
                     console.log('📡 Current user ID:', currentUserId);
                     console.log('📡 Original comment ID:', commentId);
                     console.log('📡 Final real comment ID:', realCommentId);
-                    
+
                     // BÂY GIỜ MỚI XÓA COMMENT KHỎI MẢNG VÀ RENDER UI
                     const commentIndex = comments.findIndex(c => c.id === commentId);
                     if (commentIndex !== -1) {
@@ -938,14 +1016,14 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
                     // Cập nhật UI
                     renderComments(comments);
-                    
+
                     // Debug: Log request body
                     const requestBody = "comment_id=" + encodeURIComponent(realCommentId) +
                         "&user_id=" + encodeURIComponent(currentUserId);
                     console.log('📡 Request body:', requestBody);
                     console.log('📡 Encoded realCommentId:', encodeURIComponent(realCommentId));
                     console.log('📡 Encoded currentUserId:', encodeURIComponent(currentUserId));
-                    
+
                     const response = await fetch("<?= BASE_URL ?>/?url=comment&action=deleteComment", {
                         method: "POST",
                         headers: {

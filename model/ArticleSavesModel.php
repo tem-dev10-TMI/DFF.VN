@@ -162,6 +162,20 @@ class ArticleSavesModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Lấy danh sách bài viết đã lưu với thông tin author
+    public function getSavedArticlesWithAuthor($user_id)
+    {
+        $stmt = $this->db->prepare("SELECT a.*, u.name AS author_name, u.avatar_url, u.username, t.name AS topic_name
+                                    FROM articles a
+                                    INNER JOIN article_saves s ON a.id = s.article_id
+                                    LEFT JOIN users u ON a.author_id = u.id
+                                    LEFT JOIN topics t ON a.topic_id = t.id
+                                    WHERE s.user_id = :user_id AND a.status = 'public'
+                                    ORDER BY s.created_at DESC");
+        $stmt->execute(['user_id' => $user_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     // Toggle lưu/huỷ bài viết
     public function toggleSave($article_id, $user_id)
     {
