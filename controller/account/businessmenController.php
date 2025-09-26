@@ -14,21 +14,21 @@ class businessmenController
             header("Location: " . BASE_URL . "/login");
             exit;
         }
-        
-        require_once __DIR__.'/../../model/user/userModel.php';
-        require_once __DIR__.'/../../model/user/businessmenModel.php';
-        require_once __DIR__.'/../../model/article/articlesmodel.php';
 
+        require_once __DIR__ . '/../../model/user/userModel.php';
+        require_once __DIR__ . '/../../model/user/businessmenModel.php';
+        require_once __DIR__ . '/../../model/article/articlesmodel.php';
+        require_once __DIR__ . '/../../model/article/topicsmodel.php';
         $modelArticle = new ArticlesModel();
         $modelUser = new UserModel();
         $modelBusiness = new businessmenModel();
-
+        $modelTopic = new TopicsModel();
         $userId = $_SESSION['user']['id'];
 
         $user = $modelUser->getUserById($userId);
 
         $articles = $modelArticle->getArticleById($userId);
-
+        $topics = $modelTopic->getAllTopics();
         $role = $_SESSION['user']['role'];
         if ($role === 'businessmen') {
             $business = $modelBusiness->getBusinessByUserId($userId);
