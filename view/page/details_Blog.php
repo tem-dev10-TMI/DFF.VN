@@ -265,7 +265,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
     <script>
         window.CURRENT_USER_ID = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
-        window.CURRENT_USER_NAME = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn đọc') ?>;
+        window.CURRENT_USER_NAME = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn cần đăng nhập để bình luận') ?>;
     </script>
 
 
@@ -429,6 +429,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
                                 const newComment = {
                                     id: 'db-' + c.id,
+                                    commentId: c.id, // Thêm commentId thật từ database
                                     name: c.name || 'Ẩn danh',
                                     avatar_url: c.avatar_url || '',
                                     content: c.content || '',
@@ -474,6 +475,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
                         const mapped = (data.comments || []).map(c => ({
                             id: 'db-' + c.id,
+                            commentId: c.id, // Thêm commentId thật từ database
                             name: c.name || 'Ẩn danh',
                             avatar_url: c.avatar_url || '',
                             content: c.content || '',
@@ -544,10 +546,15 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
                 // 1) Đẩy vào UI ngay (trạng thái đang kiểm tra)
                 const tempId = 'local-' + Date.now();
-                const currentUser = <?= json_encode($_SESSION['user']['name'] ?? 'Bạn đọc') ?>;
+                const currentUser = window.CURRENT_USER_NAME || 'Bạn cần đăng nhập để bình luận';
+
+                if (window.CURRENT_USER_ID === 0) {
+                    alert("Bạn cần đăng nhập để bình luận");
+                    return; // thoát, không cho tạo comment
+                }
                 const temp = {
                     id: tempId,
-                    name: currentUser || 'Bạn đọc',
+                    name: currentUser,
                     avatar_url: '',
                     text: content,
                     time: nowIso(),
@@ -587,8 +594,20 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         // Lưu comment ID để cập nhật AI result sau này
                         temp.commentId = data.comment_id || null;
                         console.log('Comment ID saved:', temp.commentId);
+                        console.log('Updated temp object:', temp);
+                        
+                        // Cập nhật comment trong mảng comments
+                        const commentIndex = comments.findIndex(c => c.id === tempId);
+                        if (commentIndex !== -1) {
+                            comments[commentIndex].commentId = temp.commentId;
+                            console.log('Updated comment in array:', comments[commentIndex]);
+                            console.log('✅ Comment ID successfully stored in comments array');
+                        } else {
+                            console.error('❌ Could not find comment in array to update commentId');
+                        }
                     } else {
                         console.warn(data.message || "Lỗi khi gửi bình luận!");
+                        console.error('❌ Comment was NOT saved to database');
                     }
                 } catch (err) {
                     console.error("Fetch lỗi:", err);
@@ -795,48 +814,165 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
             // ===== Function xóa comment vi phạm =====
             window.deleteViolationComment = async function(commentId) {
+                console.log('🗑️ Attempting to delete comment:', commentId);
+
                 if (!confirm('Bạn có chắc chắn muốn xóa bình luận vi phạm này?')) {
                     return;
                 }
 
                 try {
-                    // Xóa comment khỏi UI ngay lập tức
-                    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
-                    if (commentElement) {
-                        commentElement.remove();
+                    // Tìm comment element bằng nhiều cách
+                    let commentElement = null;
+
+                    // Cách 1: Tìm bằng data-comment-id
+                    commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    console.log('🔍 Method 1 - data-comment-id:', commentElement);
+
+                    // Cách 2: Tìm bằng data-id
+                    if (!commentElement) {
+                        commentElement = document.querySelector(`[data-id="${commentId}"]`);
+                        console.log('🔍 Method 2 - data-id:', commentElement);
                     }
 
-                    // Xóa comment khỏi mảng comments
+                    // Cách 3: Tìm bằng class comment-card và data-comment-id
+                    if (!commentElement) {
+                        commentElement = document.querySelector(`.comment-card[data-comment-id="${commentId}"]`);
+                        console.log('🔍 Method 3 - .comment-card[data-comment-id]:', commentElement);
+                    }
+
+                    // Cách 4: Tìm bằng onclick attribute
+                    if (!commentElement) {
+                        const allDeleteButtons = document.querySelectorAll('.delete-violation-btn');
+                        console.log('🔍 Found', allDeleteButtons.length, 'delete buttons');
+                        for (let btn of allDeleteButtons) {
+                            if (btn.onclick && btn.onclick.toString().includes(commentId)) {
+                                commentElement = btn.closest('.comment-card') || btn.closest('li');
+                                console.log('🔍 Method 4 - onclick attribute:', commentElement);
+                                break;
+                            }
+                        }
+                    }
+
+                    // Debug: List all elements with data-comment-id
+                    const allCommentElements = document.querySelectorAll('[data-comment-id]');
+                    console.log('🔍 All elements with data-comment-id:', allCommentElements.length);
+                    allCommentElements.forEach((el, index) => {
+                        console.log(`🔍 Element ${index}:`, el.dataset.commentId, el);
+                    });
+
+                    console.log('🔍 Found comment element:', commentElement);
+
+                    // Xóa comment khỏi UI ngay lập tức
+                    if (commentElement) {
+                        // Tìm li element chứa comment
+                        const liElement = commentElement.closest('li') || commentElement;
+                        liElement.remove();
+                        console.log('✅ Comment removed from UI');
+                    } else {
+                        console.warn('⚠️ Comment element not found in UI, but will still try to delete from database');
+                    }
+
+                    // TÌM COMMENT ID THẬT TRƯỚC KHI XÓA KHỎI MẢNG
+                    const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                    
+                    // Debug: Log tất cả comments trong mảng TRƯỚC KHI XÓA
+                    console.log('📡 All comments in array (BEFORE DELETE):', comments.length);
+                    comments.forEach((c, index) => {
+                        console.log(`📡 Comment ${index}:`, {
+                            id: c.id,
+                            commentId: c.commentId,
+                            user_id: c.user_id,
+                            content: c.content?.substring(0, 50) + '...'
+                        });
+                    });
+                    
+                    // Tìm comment trong mảng để lấy comment ID thật
+                    const commentFromArray = comments.find(c => c.id === commentId);
+                    let realCommentId = null;
+                    
+                    if (commentFromArray) {
+                        console.log('📡 Comment from array:', commentFromArray);
+                        console.log('📡 Comment user_id from array:', commentFromArray.user_id);
+                        
+                        // Nếu comment có commentId (đã lưu DB), dùng nó
+                        if (commentFromArray.commentId) {
+                            realCommentId = commentFromArray.commentId;
+                            console.log('📡 Using commentId from array:', realCommentId);
+                        } else {
+                            // Fallback: xử lý ID như cũ
+                            realCommentId = commentId.replace('db-', '').replace('local-', '');
+                            console.log('📡 Using processed ID as fallback:', realCommentId);
+                            
+                            // Kiểm tra nếu realCommentId là số hợp lệ
+                            if (!realCommentId || isNaN(realCommentId) || realCommentId <= 0) {
+                                console.error('❌ Invalid realCommentId:', realCommentId);
+                                alert('❌ Không thể xác định ID comment để xóa!');
+                                return;
+                            }
+                        }
+                    } else {
+                        console.log('📡 Comment not found in comments array');
+                        // Fallback: xử lý ID như cũ
+                        realCommentId = commentId.replace('db-', '').replace('local-', '');
+                        console.log('📡 Using processed ID as fallback:', realCommentId);
+                        
+                        // Kiểm tra nếu realCommentId là số hợp lệ
+                        if (!realCommentId || isNaN(realCommentId) || realCommentId <= 0) {
+                            console.error('❌ Invalid realCommentId:', realCommentId);
+                            alert('❌ Không thể xác định ID comment để xóa!');
+                            return;
+                        }
+                    }
+                    
+                    console.log('📡 Calling delete API for comment:', realCommentId);
+                    console.log('📡 Current user ID:', currentUserId);
+                    console.log('📡 Original comment ID:', commentId);
+                    console.log('📡 Final real comment ID:', realCommentId);
+                    
+                    // BÂY GIỜ MỚI XÓA COMMENT KHỎI MẢNG VÀ RENDER UI
                     const commentIndex = comments.findIndex(c => c.id === commentId);
                     if (commentIndex !== -1) {
                         comments.splice(commentIndex, 1);
+                        console.log('✅ Comment removed from comments array');
                     }
 
                     // Cập nhật UI
                     renderComments(comments);
-
-                    // Gọi API xóa comment khỏi database
-                    const realCommentId = commentId.replace('db-', '').replace('local-', '');
+                    
+                    // Debug: Log request body
+                    const requestBody = "comment_id=" + encodeURIComponent(realCommentId) +
+                        "&user_id=" + encodeURIComponent(currentUserId);
+                    console.log('📡 Request body:', requestBody);
+                    console.log('📡 Encoded realCommentId:', encodeURIComponent(realCommentId));
+                    console.log('📡 Encoded currentUserId:', encodeURIComponent(currentUserId));
+                    
                     const response = await fetch("<?= BASE_URL ?>/?url=comment&action=deleteComment", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: "comment_id=" + encodeURIComponent(realCommentId) +
-                            "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
+                        body: requestBody
                     });
 
+                    console.log('📡 Delete API response status:', response.status);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
+                    console.log('📡 Delete API response data:', data);
+
                     if (data.status === "success") {
                         console.log('✅ Comment vi phạm đã được xóa');
                     } else {
                         console.error('❌ Lỗi khi xóa comment:', data.message);
-                        alert('Có lỗi xảy ra khi xóa bình luận!');
+                        alert('❌ Có lỗi xảy ra khi xóa bình luận: ' + (data.message || 'Lỗi không xác định'));
                     }
 
                 } catch (error) {
                     console.error('❌ Lỗi khi xóa comment:', error);
-                    alert('Có lỗi xảy ra khi xóa bình luận!');
+                    alert('❌ Có lỗi xảy ra khi xóa bình luận: ' + error.message);
                 }
             };
 

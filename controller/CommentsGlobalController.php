@@ -97,7 +97,7 @@ if ($action === "deleteComment") {
         exit;
     }
 
-    $ok = CommentGlobalModel::delete($comment_id);
+    $ok = CommentGlobalModel::deleteComment($comment_id);
     if ($ok) {
         echo json_encode(["status" => "success", "message" => "Đã xóa bình luận"]);
     } else {
