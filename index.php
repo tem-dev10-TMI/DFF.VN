@@ -232,6 +232,11 @@ switch ($url) {
         $controller = new ArticleSaveController();
         $controller->toggle();
         exit;
+    case 'saved_articles':
+        require_once __DIR__ . '/controller/SavedArticlesController.php';
+        $controller = new SavedArticlesController();
+        $controller->index();
+        break;
 
         // ========== API ROUTES ==========
     case 'api/addPost':
@@ -251,9 +256,13 @@ switch ($url) {
         $controller->loadArticle();
         exit;
     case 'api/editPost':
-        require_once __DIR__ . '/controller/account/profileUserController.php';
-        $controller = new profileUserController();
-        $controller->editArticle();
+        require_once __DIR__ . '/controller/ArticlesController.php';
+        ArticlesController::editArticle(); // đọc $_GET['id'] hoặc $_GET['slug']
+        exit;
+        exit;
+    case 'api/getPostForEdit':
+        require_once __DIR__ . '/controller/ArticlesController.php';
+        ArticlesController::getPostForEdit(); // đọc $_GET['id'] hoặc $_GET['slug']
         exit;
 
     case 'api/toggle-like':

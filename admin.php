@@ -57,34 +57,28 @@ switch ($route) {
         $ctrl = new UserController($pdo);
         break;
 
-    case 'articles':
-        require_login();
-        require_role('admin');
-        $ctrl = new ArticleController($pdo);
-        break;
-
     case 'topics':
-        require_login();
-        require_role('admin');
-        $ctrl = new TopicController($pdo);
+        require_once __DIR__ . '/controller/admin/TopicController.php';  // CHÚ Ý: đường dẫn và chữ s
+        $controller = new TopicsController($pdo);
+
+        $action = $_GET['action'] ?? 'index';
+        if ($action === 'create') {
+            $controller->create();
+        } elseif ($action === 'edit') {
+            $controller->edit((int) ($_GET['id'] ?? 0));
+        } elseif ($action === 'store' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->store();
+        } elseif ($action === 'update' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->update((int) ($_GET['id'] ?? 0));
+        } else { // index (danh sách + phân trang)
+            $controller->index();
+        }
         break;
 
     case 'tags':
         require_login();
         require_role('admin');
         $ctrl = new TagController($pdo);
-        break;
-
-    case 'media':
-        require_login();
-        require_role('admin');
-        $ctrl = new MediaController($pdo);
-        break;
-
-    case 'comments':
-        require_login();
-        require_role('admin');
-        $ctrl = new CommentController($pdo);
         break;
 
     case 'article':

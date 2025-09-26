@@ -52,7 +52,7 @@
                 $notifCount = (isset($headerEvents) && is_array($headerEvents)) ? count($headerEvents) : 0;
                 ?>
                 <ul>
-                    <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li>
+                    <!-- <li><span><a href="#"><i class="fas fa-bars"></i></a></span> </li> -->
                     <li class="mnqtop"><span><a class="dropdown-toggle " data-bs-toggle="dropdown" aria-expanded="false"
                                 title="Tạo mới" href="javascript:void(0)"><i class="fas fa-plus"></i></a>
                             <?php if (isset($_SESSION['user_id'])): ?>

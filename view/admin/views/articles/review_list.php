@@ -134,6 +134,104 @@ function render_pagination(int $current, int $totalPages, string $paramName): vo
         <div class="card-header bg-success text-white d-flex align-items-center justify-content-between">
           <h4 class="mb-0"><i class="bi bi-check2-all me-2"></i>Bài viết đã duyệt / đã xử lý</h4>
         </div>
+        <div class="card-body pb-0">
+          <!-- FILTER REVIEWED -->
+          <?php $rf = $filtersReviewed ?? ['title' => '', 'admin' => '', 'status' => '', 'from' => '', 'to' => '']; ?>
+          <form class="filter-modern v2 mb-3" method="get" action="<?= BASE_URL ?>/admin.php">
+            <input type="hidden" name="route" value="article">
+            <input type="hidden" name="action" value="reviewList"><!-- tên action đúng với router của bạn -->
+            <!-- giữ trang pending hiện tại -->
+            <input type="hidden" name="p1" value="<?= (int) ($paging['pageP'] ?? 1) ?>">
+            <!-- luôn về trang 1 của reviewed khi lọc -->
+            <input type="hidden" name="p2" value="1">
+
+            <div class="fm-grid">
+              <div class="fm-field">
+                <label class="fm-label">Tiêu đề</label>
+                <div class="fm-input">
+                  <i class="bi bi-type"></i>
+                  <input name="r_title" value="<?= htmlspecialchars($rf['title']) ?>" placeholder="Nhập tiêu đề...">
+                </div>
+              </div>
+
+              <div class="fm-field">
+                <label class="fm-label">Admin duyệt</label>
+                <div class="fm-input">
+                  <i class="bi bi-person-check"></i>
+                  <input name="r_admin" value="<?= htmlspecialchars($rf['admin']) ?>" placeholder="Tên admin...">
+                </div>
+              </div>
+
+              <div class="fm-field">
+                <label class="fm-label">Trạng thái</label>
+                <div class="btn-group fm-segment" role="group">
+                  <?php $st = $rf['status']; ?>
+                  <input type="radio" class="btn-check" name="r_status" id="st-all" value="" <?= $st === '' ? 'checked' : '' ?>>
+                  <label class="btn" for="st-all"><i class="bi bi-grid"></i> Tất cả</label>
+
+                  <input type="radio" class="btn-check" name="r_status" id="st-ok" value="approved"
+                    <?= $st === 'approved' ? 'checked' : '' ?>>
+                  <label class="btn" for="st-ok"><i class="bi bi-check2-circle"></i> Đã duyệt</label>
+
+                  <input type="radio" class="btn-check" name="r_status" id="st-rej" value="rejected"
+                    <?= $st === 'rejected' ? 'checked' : '' ?>>
+                  <label class="btn" for="st-rej"><i class="bi bi-x-circle"></i> Từ chối</label>
+                </div>
+              </div>
+
+              <div class="fm-field">
+                <label class="fm-label">Từ ngày</label>
+                <input type="date" class="form-control" name="r_from" value="<?= htmlspecialchars($rf['from']) ?>">
+              </div>
+
+              <div class="fm-field">
+                <label class="fm-label">Đến ngày</label>
+                <input type="date" class="form-control" name="r_to" value="<?= htmlspecialchars($rf['to']) ?>">
+              </div>
+
+              <div class="fm-actions">
+                <button class="btn btn-primary fm-submit"><i class="bi bi-search me-1"></i>Lọc</button>
+                <a class="btn btn-outline-secondary fm-reset"
+                  href="<?= BASE_URL ?>/admin.php?route=article&action=reviewList">
+                  <i class="bi bi-x-circle me-1"></i>Xoá lọc
+                </a>
+              </div>
+            </div>
+
+            <?php $on = $rf['title'] || $rf['admin'] || $rf['status'] || $rf['from'] || $rf['to']; ?>
+            <?php if ($on): ?>
+              <div class="fm-chips">
+                <?php if ($rf['title']): ?>
+                  <a class="chip" href="<?= htmlspecialchars(build_url(['r_title' => '', 'p2' => 1])) ?>">
+                    <i class="bi bi-type"></i> “<?= htmlspecialchars($rf['title']) ?>” <span class="x">&times;</span>
+                  </a>
+                <?php endif; ?>
+                <?php if ($rf['admin']): ?>
+                  <a class="chip" href="<?= htmlspecialchars(build_url(['r_admin' => '', 'p2' => 1])) ?>">
+                    <i class="bi bi-person-check"></i> Admin: <?= htmlspecialchars($rf['admin']) ?> <span
+                      class="x">&times;</span>
+                  </a>
+                <?php endif; ?>
+                <?php if ($rf['status']): ?>
+                  <a class="chip" href="<?= htmlspecialchars(build_url(['r_status' => '', 'p2' => 1])) ?>">
+                    <i class="bi bi-tag"></i> <?= htmlspecialchars($rf['status']) ?> <span class="x">&times;</span>
+                  </a>
+                <?php endif; ?>
+                <?php if ($rf['from']): ?>
+                  <a class="chip" href="<?= htmlspecialchars(build_url(['r_from' => '', 'p2' => 1])) ?>">
+                    Từ: <?= htmlspecialchars($rf['from']) ?> <span class="x">&times;</span>
+                  </a>
+                <?php endif; ?>
+                <?php if ($rf['to']): ?>
+                  <a class="chip" href="<?= htmlspecialchars(build_url(['r_to' => '', 'p2' => 1])) ?>">
+                    Đến: <?= htmlspecialchars($rf['to']) ?> <span class="x">&times;</span>
+                  </a>
+                <?php endif; ?>
+              </div>
+            <?php endif; ?>
+          </form>
+        </div>
+
         <div class="card-body p-0">
           <div class="table-responsive">
             <table class="table align-middle mb-0">
@@ -164,16 +262,20 @@ function render_pagination(int $current, int $totalPages, string $paramName): vo
                         <?php endif; ?>
                       </td>
                       <td><?= htmlspecialchars($r['reviewed_at']) ?></td>
-                      <td class="text-end">
-                        <button class="btn btn-sm btn-info me-1" onclick="toggleDetail('r<?= (int) $r['id'] ?>')">
-                          <i class="bi bi-eye"></i> Xem
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger"
-                          onclick="openDeleteModal(<?= (int) $r['article_id'] ?>,'<?= htmlspecialchars(addslashes($r['title'])) ?>')">
-                          <i class="bi bi-trash"></i> Xoá bài
-                        </button>
-                      </td>
-                    </tr>
+                    <td class="text-end text-nowrap">
+  <div class="action-btns d-inline-flex align-items-center gap-2 flex-nowrap">
+    <button class="btn btn-sm btn-info"
+            onclick="toggleDetail('r<?= (int)$r['id'] ?>')">
+      <i class="bi bi-eye"></i> Xem
+    </button>
+
+    <button class="btn btn-sm btn-outline-danger"
+            onclick="openDeleteModal(<?= (int)$r['article_id'] ?>,'<?= htmlspecialchars(addslashes($r['title'])) ?>')">
+      <i class="bi bi-trash"></i> Xoá bài
+    </button>
+  </div>
+</td>
+
 
                     <?php
                     // detail giống pending (lấy sẵn từ controller)
@@ -304,7 +406,12 @@ function render_pagination(int $current, int $totalPages, string $paramName): vo
   .card-header h4 {
     font-weight: 700;
   }
-
+ .action-btns { gap: .5rem; }              /* đã có gap từ Bootstrap 5, đặt lại nếu muốn */
+  @media (max-width: 576px) {
+    /* nếu màn hình quá hẹp, cho phép xuống dòng mềm mại */
+    td.text-end.text-nowrap { white-space: normal !important; }
+    .action-btns { flex-wrap: wrap; }
+  }
   .dcontent img {
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, .06);
@@ -463,7 +570,28 @@ function render_pagination(int $current, int $totalPages, string $paramName): vo
       --pg-fz: 1.05rem;
     }
   }
+.filter-modern.v2{ background:#fff;border:1px solid #eef0f3;border-radius:16px;padding:16px;margin-bottom:12px;box-shadow:0 6px 24px rgba(2,6,23,.05);}
+.fm-grid{ display:grid; gap:14px; align-items:end; grid-template-columns: 1fr 1fr minmax(280px,1fr) 1fr auto; }
+.fm-field{ display:flex; flex-direction:column; }
+.fm-label{ font-weight:700; font-size:.95rem; color:#0f172a; margin-bottom:6px; }
+.fm-input{ display:flex; align-items:center; gap:10px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:12px; padding:11px 12px; min-height:48px;}
+.fm-input:focus-within{ border-color:#93c5fd; box-shadow:0 0 0 4px rgba(59,130,246,.15);}
+.fm-input i{ color:#64748b; font-size:1.05rem;}
+.fm-input input{ border:0; background:transparent; outline:none; width:100%; font-size:1rem; color:#0f172a;}
+.fm-segment{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; border:1px solid #e5e7eb; border-radius:12px; background:#f8fafc; padding:6px; min-height:48px;}
+.fm-segment .btn{ border:0; background:transparent; color:#1f2937; font-weight:600; border-radius:10px; padding:.44rem .66rem; display:flex; align-items:center; gap:.4rem; line-height:1; font-size:.95rem;}
+.fm-segment .btn:hover{ background:#eef2f7;}
+.fm-segment .btn-check:checked + .btn{ background:linear-gradient(180deg,#2563eb,#1d4ed8); color:#fff; box-shadow:0 6px 16px rgba(37,99,235,.25);}
+.fm-actions{ display:flex; gap:10px; align-items:stretch; justify-content:flex-end; }
+.fm-submit,.fm-reset{ border-radius:12px; padding:.6rem 1.1rem; font-weight:700;}
+.fm-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+.chip{ display:inline-flex; align-items:center; gap:.4rem; background:#f1f5f9; color:#0f172a; border:1px solid #e5e7eb; border-radius:999px; padding:.38rem .75rem; text-decoration:none; font-weight:600;}
+.chip:hover{ background:#e2e8f0;} .chip .x{ margin-left:.25rem; font-weight:800; color:#334155;}
+@media (max-width: 1200px){ .fm-grid{ grid-template-columns:1fr 1fr 1fr 1fr; } .fm-actions{ grid-column: 1 / -1; justify-content:stretch;} .fm-submit,.fm-reset{ width:100%; } }
+@media (max-width: 768px){ .fm-grid{ grid-template-columns:1fr 1fr; } }
+@media (max-width: 576px){ .fm-grid{ grid-template-columns:1fr; } }
 </style>
+
 
 
 <?php include __DIR__ . '/../layout/footer.php'; ?>

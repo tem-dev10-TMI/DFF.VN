@@ -1,190 +1,144 @@
 <?php
+// controller/admin/TopicsController.php
+class TopicsController
+{
+    private PDO $pdo;
+    private Topic $model;
 
-class TopicController {
-    
-     protected $pdo; protected $model;
-    public function __construct($pdo){ $this->pdo = $pdo; $this->model = new Topic($pdo); }
-    // protected $model;
-
-    // public function __construct() {
-    //     require_once __DIR__ . '/../../model/article/topicsmodel.php';
-    //     require_once __DIR__ . '/../../model/article/articlesmodel.php';
-    //     $this->model = new TopicsModel();
-    // }
-
-    // ===================== LIST =====================
-    public function admin(){ 
-        $topics = $this->model->all(200); 
-        include __DIR__ . '/../../view/admin/views/topics/list.php'; 
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+        $this->model = new Topic($pdo);
     }
 
-    // ===================== CREATE FORM =====================
-    public function create(){ 
-        include __DIR__ . '/../../view/admin/views/topics/form.php'; 
+    public function index()
+    {
+        // danh sách + phân trang, nếu bạn đã có rồi thì giữ nguyên
+        $perPage = 10;
+        $page = max(1, (int) ($_GET['page'] ?? 1));
+        $offset = ($page - 1) * $perPage;
+
+        $topics = $this->model->listPaged($perPage, $offset);
+        $total = $this->model->countAll();
+        $pages = max(1, (int) ceil($total / $perPage));
+
+        include __DIR__ . '/../../view/admin/views/topics/list.php';
     }
 
-    // ===================== STORE =====================
-    public function store(){ 
-        $data = $_POST;
+    public function create()
+    {
+        // hiển thị form rỗng
+        $topic = null;
+        include __DIR__ . '/../../view/admin/views/topics/form.php';
+    }
 
-        // Nếu chưa có slug thì tự tạo
-        if (empty($data['slug']) && !empty($data['name'])) {
-            $data['slug'] = $this->slugify($data['name']);
+    public function edit($id)
+    {
+        // lấy topic theo id (bạn có thể dùng TopicModel::getById nếu muốn)
+        $stmt = $this->pdo->prepare("SELECT * FROM topics WHERE id = :id LIMIT 1");
+        $stmt->execute([':id' => (int) $id]);
+        $topic = $stmt->fetch(PDO::FETCH_ASSOC);
+        include __DIR__ . '/../../view/admin/views/topics/form.php';
+    }
+
+    public function store()
+    {
+        try {
+            $payload = $this->buildPayloadFromRequest();
+            $this->model->create($payload);
+            flash('success', 'Tạo topic thành công');
+        } catch (Exception $e) {
+            flash('error', $e->getMessage());
+        }
+        header('Location: ' . BASE_URL . '/admin.php?route=topics&action=index');
+    }
+
+    public function update($id)
+    {
+        try {
+            $payload = $this->buildPayloadFromRequest();
+            $this->model->update((int) $id, $payload);
+            flash('success', 'Cập nhật topic thành công');
+            // → quay lại danh sách
+            header('Location: ' . BASE_URL . '/admin.php?route=topics&action=index');
+        } catch (Exception $e) {
+            flash('error', $e->getMessage());
+            // có lỗi thì ở lại trang edit để sửa tiếp
+            header('Location: ' . BASE_URL . '/admin.php?route=topics&action=edit&id=' . (int) $id);
+        }
+    }
+
+    /* ---------- Helpers ---------- */
+
+    private function buildPayloadFromRequest(): array
+    {
+        // name, slug, description từ POST
+        $name = trim($_POST['name'] ?? '');
+        if ($name === '')
+            throw new Exception('Tên topic không được để trống');
+
+        $slug = trim($_POST['slug'] ?? '');
+        if ($slug === '')
+            $slug = $this->slugify($name);
+
+        $description = trim($_POST['description'] ?? '');
+        $iconUrl = trim($_POST['icon_url'] ?? ''); // nếu người dùng tự nhập đường dẫn sẵn có
+
+        // Nếu có upload file -> ghi đè iconUrl bằng file mới
+        if (!empty($_FILES['icon_file']['name'] ?? '')) {
+            $iconUrl = $this->handleIconUpload($_FILES['icon_file']);
         }
 
-        // Upload icon (nếu có)
-        $icon = $this->uploadIcon('icon_file');
-        if ($icon) {
-            $data['icon_url'] = $icon; // ví dụ: /topic_img/abc.webp
-        }
-
-        $this->model->create($data); 
-        redirect(BASE_URL . '/admin.php?route=topics');
+        return [
+            'name' => $name,
+            'slug' => $slug,
+            'description' => $description,
+            'icon_url' => $iconUrl, // có thể rỗng nếu không nhập/không upload
+        ];
     }
 
-    // ===================== EDIT FORM =====================
-    public function edit($id){ 
-        $topic = $this->model->find($id); 
-        include __DIR__ . '/../../view/admin/views/topics/form.php'; 
-    }
-
-    // ===================== UPDATE =====================
-    public function update($id){ 
-        $data = $_POST;
-
-        $removeIcon = !empty($_POST['remove_icon']);
-        $oldIcon    = $_POST['icon_url_old'] ?? null;
-
-        // Upload icon mới nếu có
-        $newIcon = $this->uploadIcon('icon_file');
-
-        if ($removeIcon) {
-            $data['icon_url'] = null;
-            $this->deleteLocalFile($oldIcon);
-        } elseif ($newIcon) {
-            $data['icon_url'] = $newIcon;
-            $this->deleteLocalFile($oldIcon);
-        } else {
-            unset($data['icon_url']); // giữ nguyên icon cũ
-        }
-
-        // Nếu slug rỗng mà có name → tạo lại
-        if (array_key_exists('slug', $data) && empty($data['slug']) && !empty($data['name'])) {
-            $data['slug'] = $this->slugify($data['name']);
-        }
-
-        $this->model->update($id, $data); 
-        redirect(BASE_URL . '/admin.php?route=topics');
-    }
-
-    // ===================== DELETE =====================
-    public function delete($id){ 
-        $topic = $this->model->find($id);
-        if ($topic && !empty($topic['icon_url'])) {
-            $this->deleteLocalFile($topic['icon_url']);
-        }
-
-        $this->model->delete($id); 
-        redirect(BASE_URL . '/admin.php?route=topics');
-    }
-
-// ===================== DETAILS (theo slug) =====================
-public function details_topic($slug = null) {
-    if (!$slug) $slug = $_GET['slug'] ?? null;
-    if (!$slug) { echo "Thiếu slug!"; return; }
-
-    // Lấy danh sách bài viết theo slug chủ đề
-    $articles = ArticlesModel::getArticlesByTopicSlug($slug, 10);
-
-    // Nếu không có bài nào => coi như chủ đề không tồn tại
-    if (!$articles || count($articles) === 0) {
-        echo "Chủ đề không tồn tại!";
-        return;
-    }
-
-    // Chủ đề có thể lấy từ record đầu tiên trong $articles
-    $topic = [
-        'slug' => $slug,
-        'name' => $articles[0]['topic_name'] ?? 'Chưa đặt tên'
-    ];
-
-    ob_start();
-    require __DIR__ . '/../../view/page/DetailsTopic.php';
-    $content = ob_get_clean();
-
-    $profile = false; 
-    require __DIR__ . '/../../view/layout/main.php';
-}
-
-
-    // ===================== helpers =====================
-    private function slugify(string $str): string {
-        $s = @iconv('UTF-8','ASCII//TRANSLIT', $str);
+    private function slugify(string $str): string
+    {
+        $s = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $str);
         $s = preg_replace('~[^a-zA-Z0-9]+~', '-', $s);
-        $s = trim($s, '-');
-        return strtolower($s);
+        $s = strtolower(trim($s, '-'));
+        return $s ?: 'topic';
     }
 
-    // Gốc dự án: controller/admin/TopicController.php -> ../../
-    private function projectRoot(): string {
-        return realpath(__DIR__ . '/../../');
-    }
+    /** Upload file icon vào /public/topic_img và trả về icon_url tương đối: public/topic_img/xxx.ext */
+    private function handleIconUpload(array $file): string
+    {
+        if ($file['error'] !== UPLOAD_ERR_OK)
+            throw new Exception('Upload icon thất bại');
 
-    /**
-     * Upload icon vào public/topic_img, trả về URL tương đối (vd: /topic_img/abc.webp)
-     */
-   private function uploadIcon(string $field = 'icon_file'): ?string {
-    if (empty($_FILES[$field]) || $_FILES[$field]['error'] !== UPLOAD_ERR_OK) {
-        error_log("uploadIcon: no file or err=" . ($_FILES[$field]['error'] ?? 'n/a'));
-        return null;
-    }
-    $file = $_FILES[$field];
+        $allowed = ['image/png' => 'png', 'image/jpeg' => 'jpg', 'image/webp' => 'webp', 'image/svg+xml' => 'svg'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $mime = finfo_file($finfo, $file['tmp_name']);
+        finfo_close($finfo);
 
-    $allowExt = ['png','jpg','jpeg','webp','svg'];
-    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    if (!in_array($ext, $allowExt, true)) {
-        error_log("uploadIcon: invalid ext $ext");
-        return null;
-    }
+        if (!isset($allowed[$mime]))
+            throw new Exception('Định dạng ảnh không được hỗ trợ');
+        if ($mime !== 'image/svg+xml' && $file['size'] > 2 * 1024 * 1024)
+            throw new Exception('Ảnh vượt quá 2MB');
 
-    if ($ext !== 'svg') {
-        $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $mime  = $finfo->file($file['tmp_name']);
-        $allowMime = ['image/png','image/jpeg','image/webp'];
-        if (!in_array($mime, $allowMime, true)) {
-            error_log("uploadIcon: invalid mime $mime");
-            return null;
+        $ext = $allowed[$mime];
+        $ts = date('Ymd-His');
+        $rand = substr(bin2hex(random_bytes(4)), 0, 8);
+        $base = 'topic-' . $ts . '-' . $rand . '.' . $ext;
+
+        // Thư mục upload (đường dẫn vật lý)
+        $root = dirname(__DIR__, 2); // tới project root
+        $dir = $root . '/public/topic_img';
+        if (!is_dir($dir)) {
+            if (!mkdir($dir, 0775, true) && !is_dir($dir))
+                throw new Exception('Không tạo được thư mục upload');
         }
-        if ($file['size'] > 2 * 1024 * 1024) {
-            error_log("uploadIcon: file too large " . $file['size']);
-            return null;
-        }
+
+        $dest = $dir . '/' . $base;
+        if (!move_uploaded_file($file['tmp_name'], $dest))
+            throw new Exception('Không thể lưu file upload');
+
+        // Trả về đường dẫn tương đối để lưu DB
+        return 'public/topic_img/' . $base;
     }
-
-    $publicFsDir = $this->projectRoot() . DIRECTORY_SEPARATOR . 'public';
-    $destDir     = $publicFsDir . DIRECTORY_SEPARATOR . 'topic_img';
-    if (!is_dir($destDir)) { @mkdir($destDir, 0755, true); }
-
-    $safeBase = preg_replace('~[^a-z0-9_-]+~i', '-', pathinfo($file['name'], PATHINFO_FILENAME));
-    $filename = $safeBase . '-' . date('Ymd-His') . '-' . substr(sha1(random_bytes(8)),0,8) . '.' . $ext;
-    $destPath = $destDir . DIRECTORY_SEPARATOR . $filename;
-
-    if (!move_uploaded_file($file['tmp_name'], $destPath)) {
-        error_log("uploadIcon: move_uploaded_file failed");
-        return null;
-    }
-    return 'public/topic_img/' . $filename;
-}
-
-
-    /**
-     * Xoá file trong public/topic_img nếu relPath bắt đầu bằng /topic_img/
-     */
-  private function deleteLocalFile(?string $relPath): void {
-    if (!$relPath) return;
-    $rel = ltrim($relPath, '/'); // 'public/topic_img/...'
-    $full = $this->projectRoot() . DIRECTORY_SEPARATOR . $rel;
-    if (is_file($full)) @unlink($full);
-}
-
 }

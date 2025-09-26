@@ -542,9 +542,9 @@ class ArticlesModel
 
 
     public static function searchArticles($q)
-{
-    $db = new connect();
-    $sql = "SELECT a.*, u.name AS author_name
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name AS author_name
             FROM articles a
             LEFT JOIN users u ON a.author_id = u.id
             WHERE (a.title COLLATE utf8mb4_general_ci LIKE :q 
@@ -552,9 +552,24 @@ class ArticlesModel
                 OR u.username COLLATE utf8mb4_general_ci LIKE :q)
               AND a.status = 'public'   -- chỉ lấy bài đã public
             ORDER BY a.title ASC";
-    $stmt = $db->db->prepare($sql);
-    $stmt->execute([':q' => "%$q%"]);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
-
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute([':q' => "%$q%"]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    public static function getArticlesByAuthorIdLimit($authorId, $offset, $limit)
+    {
+        $db = new connect();
+        $sql = "SELECT a.*, u.name as author_name, u.avatar_url
+            FROM articles a
+            JOIN users u ON a.author_id = u.id
+            WHERE a.author_id = :author_id
+            ORDER BY a.created_at DESC
+            LIMIT :limit OFFSET :offset";
+        $stmt = $db->db->prepare($sql);
+        $stmt->bindValue(':author_id', $authorId, PDO::PARAM_INT);
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
