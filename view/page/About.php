@@ -1,132 +1,137 @@
 <style>
-    /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
-    .about-scope ul {
-        list-style: disc;
-        padding-left: 18px;
-        margin: 1rem;
-    }
-
-    .about-scope ol {
-        list-style: decimal;
-        padding-left: 18px;
-    }
-
-    .about-scope ul li {
-        float: none !important;
-        display: list-item;
-    }
-
-    .about-scope .about-body {
-        line-height: 1.8;
-        scroll-margin-top: 120px;
-        /* Canh đều toàn bộ nội dung */
-        text-align: justify;
-        text-justify: inter-word;
-    }
-
-    .about-scope .about-body p,
-    .about-scope .about-body li {
-        text-align: justify;
-        text-justify: inter-word;
-        margin-bottom: 1em; /* khoảng cách giữa các đoạn */
-    }
-    .about-scope .about-content h2 {
-    color: #124889;
-    font-size: 32px;
-    font-weight: 700;           /* Giữ đậm vừa đủ */
-    letter-spacing: 0.5px;      /* Giãn nhẹ chữ cho đều */
-    text-transform: uppercase;  /* Giữ chữ hoa */
-    line-height: 1.4;           /* Khoảng cách hàng */
-    margin: 24px 0 16px 0;      /* Khoảng trên–dưới gọn gàng */
+ /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
+.about-scope ul,
+.about-scope ol {
+    padding-left: 0;
+    list-style-position: inside;
+    margin: 1rem 0;
 }
 
-    .about-scope .about-body h2,
-    .about-scope .about-body h3 {
-        scroll-margin-top: 120px;
-        text-align: left; /* giữ tiêu đề căn trái */
-    }
+.about-scope ul li {
+    float: none !important;
+    display: list-item;
+}
 
-    .about-scope a {
-        color: #124889;
-    }
+.about-scope .about-body {
+    line-height: 1.6; /* gọn hơn */
+    scroll-margin-top: 120px;
+    text-align: justify; /* căn đều 2 bên */
+    text-justify: inter-word;
+}
 
-    .about-scope a:hover {
-        color: #124889;
-        text-decoration: underline;
-    }
+.about-scope .about-body p,
+.about-scope .about-body li {
+    text-align: justify;
+    text-justify: inter-word;
+    margin-bottom: 1em;
+}
 
-    /* Layout 2 cột giống ảnh: aside trái + nội dung phải */
+/* --- Tiêu đề chính --- */
+.about-scope .about-content h2.page-title {
+    color: #124889;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.4;
+    margin: 24px 0 16px 0;
+}
+
+/* --- Tiêu đề phụ --- */
+.about-scope .about-body h2,
+.about-scope .about-body h3 {
+    scroll-margin-top: 120px;
+    text-align: left;
+    color: #124889;
+    font-weight: 600;
+    margin-top: 2rem;
+}
+
+.about-scope .about-body h2 {
+    font-size: 18px;
+}
+
+.about-scope .about-body h3 {
+    font-size: 18px;
+}
+
+.about-scope a {
+    color: #124889;
+}
+
+.about-scope a:hover {
+    color: #124889;
+    text-decoration: underline;
+}
+
+/* --- Layout --- */
+.about-scope .about-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+}
+
+.about-scope .about-nav {
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    border-right: 1px solid #e5e5e5;
+    padding-right: 16px;
+}
+
+.about-scope .about-nav h3 {
+    font-size: 16px;
+    margin: 0 0 12px 0;
+}
+
+.about-scope .about-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 20px 0;
+}
+
+/* --- Fix icon không che chữ --- */
+.about-scope .about-nav ul li {
+    position: relative;
+    margin: 10px 0;
+    padding-left: 20px; /* chừa chỗ cho icon */
+}
+
+.about-scope .about-nav ul li::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border: 2px solid #ff9900;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.about-scope .about-content {
+    min-width: 0;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+@media (max-width: 992px) {
     .about-scope .about-grid {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 24px;
+        grid-template-columns: 1fr;
     }
 
     .about-scope .about-nav {
-        position: sticky;
-        top: 90px;
-        align-self: start;
-        border-right: 1px solid #e5e5e5;
-        padding-right: 16px;
+        position: static;
+        border-right: 0;
+        border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 10px;
+        margin-bottom: 24px;
     }
-
-    .about-scope .about-nav h3 {
-        font-size: 22px;
-        margin: 0 0 12px 0;
-    }
-
-    .about-scope .about-nav ul {
-        list-style: none;
-        padding-left: 16px;
-        margin: 0 0 20px 0;
-    }
-
-    .about-scope .about-nav ul li {
-        position: relative;
-        margin: 10px 0;
-    }
-
-    .about-scope .about-nav ul li::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border: 2px solid #ff9900;
-        border-radius: 50%;
-        position: absolute;
-        left: -16px;
-        top: 8px;
-    }
-
-    .about-scope .about-content {
-        min-width: 0;
-        /* bỏ chiều cao cố định để văn bản co dãn tự nhiên */
-        overflow-y: auto;
-        scroll-behavior: smooth;
-    }
-
-    .about-scope .about-content h2 {
-        color: #124889;
-        font-size: 32px;
-    }
-
-    .about-scope .about-content h3 {
-        color: #124889;
-        font-size: 22px;
-    }
-
-    @media (max-width: 992px) {
-        .about-scope .about-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .about-scope .about-nav {
-            position: static;
-            border-right: 0;
-            border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 10px;
-        }
-    }
+}
 </style>
+
+
+
 
 <div class="about-scope container" style="margin-top: 10%;">
   <div class="about-grid">
