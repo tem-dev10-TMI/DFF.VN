@@ -2008,10 +2008,19 @@ textarea.form-control {
     overflow: auto;
 }
 
-.m-menu-i {
-    padding: 20px;
-    z-index: 9999;
+@media (max-width: 768px) {
+  .m-menu-i {
     position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;s
+    bottom: 0;          /* quan trọng: chiếm hết chiều cao màn hình */
+    width: 100%;
+    background: #fff;
+    z-index: 9999;
+    padding: 20px;
+    overflow-y: auto;   /* cho phép cuộn khi nội dung dài */
+  }
 }
 
 .m-menu-i label {
