@@ -91,7 +91,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         </div>
         <script>
             document.querySelector(".openModalcreatePost").addEventListener("click", function() {
-                <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if (isset($_SESSION['user']['id'])): ?>
+
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
                     myModal.show();
@@ -482,41 +483,90 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        <script>
-            //// Đừng có xóa dòng này mấy cha
-            document.querySelectorAll(".btn-follow").forEach(btn => {
-                btn.addEventListener("click", function() {
-                    const userId = this.getAttribute("data-user");
-                    const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+<script>
+(() => {
+  if (window._smoothFollowBound) return;
+  window._smoothFollowBound = true;
 
-                    fetch("api/follow", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
-                            },
-                            body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
-                            credentials: "include"
-                        })
-                        .then(res => res.json())
-                        .then(data => {
-                            if (data.success) {
-                                // cập nhật text nút
-                                this.querySelector(".follow-text").innerText =
-                                    data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+  const BASE = <?= json_encode(BASE_URL) ?>;
+  const token = <?= json_encode($_SESSION['user']['session_token'] ?? '') ?>;
+  const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
-                                // cập nhật số follower
-                                this.querySelector(".number").innerText = data.followers;
-                            } else {
-                                alert(data.message);
-                            }
-                        })
-                        .catch(err => {
-                            console.error(err);
-                            alert("Không thể kết nối đến server!");
-                        });
-                });
-            });
-        </script>
+  // Khoá theo từng user_id tránh race-condition
+  const busyByTarget = new Map();
+
+  function animateNumber(el, to) {
+    const from = parseInt(el.textContent.replace(/\D/g,'')) || 0;
+    to = parseInt(to) || 0;
+    if (from === to) return;
+
+    const start = performance.now();
+    const dur = 220; // ms
+    const ease = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+
+    function step(ts){
+      const p = Math.min(1, (ts - start)/dur);
+      const v = Math.round(from + (to-from)*ease(p));
+      el.textContent = v;
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  function syncAllButtons(targetId, action, followers){
+    document.querySelectorAll(`.btn-follow[data-user="${targetId}"]`).forEach(el=>{
+      const t = el.querySelector('.follow-text');
+      const n = el.querySelector('.number');
+      if (t) t.textContent = (action === 'follow') ? 'Đang theo dõi' : 'Theo dõi';
+      if (n)  animateNumber(n, followers);
+      el.setAttribute('aria-pressed', action === 'follow' ? 'true':'false');
+    });
+  }
+
+  document.addEventListener('click', async (e)=>{
+    const btn = e.target.closest('.btn-follow');
+    if (!btn) return;
+    if (!currentUserId) { alert('Bạn cần đăng nhập để theo dõi'); return; }
+
+    const targetId = btn.getAttribute('data-user');
+    if (busyByTarget.get(targetId)) return; // đang xử lý req trước
+    busyByTarget.set(targetId, true);
+
+    // UI feedback nhỏ
+    btn.classList.add('is-loading');
+
+    try {
+      const res = await fetch(`${BASE}/api/follow`, {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded', 'Cache-Control':'no-store'},
+        credentials:'include',
+        body:`user_id=${encodeURIComponent(targetId)}&session_token=${encodeURIComponent(token)}`
+      });
+      const data = await res.json();
+
+      if (!data.success) {
+        alert(data.message || 'Có lỗi xảy ra, thử lại.');
+      } else {
+        syncAllButtons(targetId, data.action, data.followers);
+        // cập nhật badge chuông nếu API có trả
+        if (typeof data.bell_count === 'number') {
+          const bell = document.querySelector('.func-mobile i.fa-bell')?.closest('a');
+          const num  = bell?.querySelector('.number');
+          if (num) num.textContent = data.bell_count;
+        }
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Mạng chập chờn, thử lại nhé.');
+    } finally {
+      busyByTarget.set(targetId, false);
+      btn.classList.remove('is-loading');
+    }
+  });
+})();
+</script>
+
+
 
 
 
