@@ -187,7 +187,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             <span class="lc-text">
                 <div class="lc-line">
                     <i class="bi bi-people-fill me-1"></i>
-                    Đang truy cập: <strong id="onlineCount">--</strong>
+                    Đang truy cập: <strong id="onlineCount" data-role="online-count">--</strong>
                 </div>
                 <div class="lc-line">
                     <i class="bi bi-eye me-1"></i>
@@ -197,129 +197,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </div>
     </div>
 
-    <script>
-        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
-        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
-    </script>
 
-    <script>
-        (function() {
-            const onlineEl = document.getElementById('onlineCount');
-            const totalEl = document.getElementById('totalViews');
-            const dotEl = document.getElementById('onlineDot');
 
-            async function updateCounter() {
-                try {
-                    // trong JS
-                    const base = window.BASE_URL || '';
-                    const metricsUrl = base + '/TRACK/metrics.php';
-                    // console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
-
-                    const res = await fetch(metricsUrl, {
-                        cache: 'no-store',
-                        credentials: 'same-origin'
-                    });
-
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const data = await res.json();
-
-                    onlineEl.textContent = (data?.onlineVisitors ?? 0);
-                    if (totalEl) totalEl.textContent = (data?.totalViews ?? 0);
-
-                    // hiệu ứng chớp nhẹ khi cập nhật
-                    dotEl.textContent = '•';
-                } catch (e) {
-                    // lỗi thì giữ số cũ, chấm chuyển x
-                    dotEl.textContent = '×';
-                }
-                // chuyển lại dấu chấm sau 1s cho gọn
-                setTimeout(() => {
-                    dotEl.textContent = '•';
-                }, 1000);
-            }
-
-            // cập nhật ngay khi tải trang
-            updateCounter();
-
-            // cập nhật mỗi 15 giây
-            let timer = setInterval(updateCounter, 15000);
-
-            // tiết kiệm tài nguyên khi tab bị ẩn
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    clearInterval(timer);
-                } else {
-                    updateCounter();
-                    timer = setInterval(updateCounter, 15000);
-                }
-            });
-        })();
-    </script>
-    <!-- ====== HEADER (đặt trong navbar) ====== -->
-    <nav class="navbar navbar-light bg-light px-2">
-        <a class="navbar-brand" href="#">Logo</a>
-
-        <!-- Counter badge: CHỈ hiện trên mobile -->
-        <div class="ms-auto d-sm-none" id="navCounter" role="status" aria-live="polite">
-            <span class="counter-badge">
-                <i class="bi bi-people-fill"></i>
-                <strong data-counter="online">--</strong>
-            </span>
-        </div>
-    </nav>
-    <!-- ====== BASE_URL (giữ nguyên như bạn đang dùng) ====== -->
-    <script>
-        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
-        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
-    </script>
-
-    <!-- ====== JS cập nhật cho cả header & floating ====== -->
-    <script>
-        (function () {
-            const dotEl = document.getElementById('onlineDot');
-
-            function setAllCounters(selector, value) {
-                document.querySelectorAll(selector).forEach(el => el.textContent = value);
-            }
-
-            async function updateCounter() {
-                try {
-                    const base = window.BASE_URL || '';
-                    const metricsUrl = base + '/TRACK/metrics.php';
-                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const data = await res.json();
-
-                    const online = data?.onlineVisitors ?? 0;
-                    const total = data?.totalViews ?? 0;
-
-                    setAllCounters('[data-counter="online"]', online);
-                    setAllCounters('[data-counter="total"]', total);
-
-                    if (dotEl) dotEl.textContent = '•';
-                } catch (e) {
-                    if (dotEl) dotEl.textContent = '×';
-                }
-                if (dotEl) setTimeout(() => { dotEl.textContent = '•'; }, 1000);
-            }
-
-            // cập nhật ngay khi tải
-            updateCounter();
-
-            // cập nhật mỗi 15 giây
-            let timer = setInterval(updateCounter, 15000);
-
-            // tiết kiệm tài nguyên khi tab bị ẩn
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    clearInterval(timer);
-                } else {
-                    updateCounter();
-                    timer = setInterval(updateCounter, 15000);
-                }
-            });
-        })();
-    </script>
 
     <!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
 
@@ -449,11 +328,68 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     ?>
 
+    <!-- m-top-info Lâm Phương Khánh-->
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
-        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name">
-                <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
+        <span class="t-right">
+            <div class="lc-line">
+                <i class="bi bi-people-fill me-1"></i>
+                Đang truy cập: <strong id="onlineCountHeader" data-role="online-count">--</strong>
+            </div>
+        </span>
     </div>
+    <script>
+        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+    </script>
+
+    <script>
+        (function () {
+            const onlineTargets = document.querySelectorAll('[data-role="online-count"], #onlineCount, #onlineCountHeader');
+            const totalEl = document.getElementById('totalViews');
+            const dotEl = document.getElementById('onlineDot'); // có thể không tồn tại
+
+            async function updateCounter() {
+                try {
+                    const base = window.BASE_URL || '';
+                    const metricsUrl = base + '/TRACK/metrics.php';
+
+                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                    const data = await res.json();
+                    const online = (data?.onlineVisitors ?? 0);
+                    const total = (data?.totalViews ?? 0);
+
+                    // cập nhật tất cả nơi hiển thị online
+                    onlineTargets.forEach(el => el.textContent = online);
+
+                    // tổng lượt xem (nếu có)
+                    if (totalEl) totalEl.textContent = total;
+
+                    // hiệu ứng chấm
+                    if (dotEl) dotEl.textContent = '•';
+                } catch (e) {
+                    if (dotEl) dotEl.textContent = '×';
+                }
+                setTimeout(() => { if (dotEl) dotEl.textContent = '•'; }, 1000);
+            }
+
+            // chạy ngay và lặp
+            updateCounter();
+            let timer = setInterval(updateCounter, 15000);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(timer);
+                } else {
+                    updateCounter();
+                    timer = setInterval(updateCounter, 15000);
+                }
+            });
+        })();
+    </script>
+    <!-- End Lâm Phương Khánh -->
     <!-- header start -->
 
     <?php require_once __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
@@ -463,7 +399,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function() {
+        $(function () {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -474,7 +410,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function() {
+                    marqueeInterval = setInterval(function () {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -540,7 +476,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 9998;">
+    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true"
+        tabindex="-1" style="z-index: 9998;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
@@ -612,7 +549,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </style>
 
     <script>
-        (function() {
+        (function () {
             var modalEl = document.getElementById('mobileModal');
             var modalBody = document.getElementById('mobileModalBody');
             var modalTitle = document.getElementById('mobileModalLabel');
@@ -651,12 +588,12 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 document.body.style.overflow = '';
             }
 
-            modalEl && modalEl.addEventListener('click', function(e) {
+            modalEl && modalEl.addEventListener('click', function (e) {
                 if (e.target === modalEl) closeMobileModal();
             });
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                a.addEventListener('click', function(e) {
+            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
+                a.addEventListener('click', function (e) {
                     var type = this.getAttribute('data-mobile-modal');
                     if (!type) return;
 
@@ -685,10 +622,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                                                                            echo 'profile_user';
-                                                                        } else {
-                                                                            //echo 'profile_business';
-                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
+                      echo 'profile_user';
+                  } else {
+                      //echo 'profile_business';
+                  } ?>"><i class="fas fa-user"></i> Trang cá
                         nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
@@ -708,7 +645,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     <script>
         // Bọc trong IIFE để tránh xung đột
-        (function() {
+        (function () {
             // Chỉ lấy element, không khởi tạo modal ở đây
             const modalEl = document.getElementById('mobileModal');
             if (!modalEl) return; // Nếu không có element thì dừng luôn
@@ -731,7 +668,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             }
 
             // Hàm mở modal, giờ sẽ an toàn hơn
-            window.openMobileModal = function(title, html, modalClass) {
+            window.openMobileModal = function (title, html, modalClass) {
                 const bsModal = getModalInstance();
                 if (!bsModal) return;
 
@@ -752,8 +689,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             // Gắn sự kiện vào các nút bấm chỉ một lần
             // Dùng một cờ để đảm bảo code này chỉ chạy 1 lần duy nhất
             if (!window.mobileModalListenerAttached) {
-                document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                    a.addEventListener('click', function(e) {
+                document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
+                    a.addEventListener('click', function (e) {
                         e.preventDefault();
                         const type = this.getAttribute('data-mobile-modal');
                         if (!type) return;
@@ -931,7 +868,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function() {
+            $(function () {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -971,14 +908,14 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function() {
+                $('.mb-chat').click(function () {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function() {
+                $('.cover-chat .cclose').click(function () {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function(e) {
+                $('.cm-more').on('click', function (e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -989,7 +926,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </script>
 
         <script>
-            $(function() {
+            $(function () {
                 type = 3;
             });
         </script>
@@ -1011,11 +948,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
     <script>
-        $(function() {
+        $(function () {
             Page.registerModule(document);
 
 
-            $(window).scroll(function() {
+            $(window).scroll(function () {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");
@@ -1130,10 +1067,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             document.body.style.overflow = 'auto';
         }
 
-        window.onload = function() {
+        window.onload = function () {
             const preloader = document.getElementById('preloader');
             if (preloader) {
-                setTimeout(function() {
+                setTimeout(function () {
                     preloader.classList.add('hidden');
                 }, 500); // 500ms = 0.5 giây
             }
