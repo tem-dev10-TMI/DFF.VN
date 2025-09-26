@@ -2013,7 +2013,7 @@ textarea.form-control {
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;s
+    right: 0;
     bottom: 0;          /* quan trọng: chiếm hết chiều cao màn hình */
     width: 100%;
     background: #fff;
