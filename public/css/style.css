@@ -7962,5 +7962,180 @@ ul.timeline .left-arrow:after {
   box-shadow: none !important;        /* Bỏ viền xanh focus */
 }
 
-  
+  /* ===== Notification Bottom Sheet (Mobile) ===== */
+@media (max-width: 576px) {
+  /* Tăng z-index để nằm trên các nút nổi */
+  #notifyModal.modal {
+    z-index: 3000;
+    background: rgba(0,0,0,.35); /* mờ nền */
+  }
 
+  /* Ép dialog ôm sát đáy, bỏ mọi margin mặc định của Bootstrap */
+  #notifyModal .modal-dialog {
+    margin: 0 !important;
+    max-width: 100%;
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    transform: none !important;
+  }
+
+  /* Bo tròn phần trên như bottom sheet */
+  #notifyModal .modal-content {
+    border-radius: 16px 16px 0 0;
+    border: 0;
+    box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+  }
+
+  /* Header dính trên khi cuộn */
+  #notifyModal .modal-header {
+    position: sticky;
+    top: 0;
+    background: #fff;
+    z-index: 1;
+  }
+
+  /* Chiều cao thân + cuộn mượt, chừa safe-area iOS */
+  #notifyModal .modal-body {
+    max-height: 70dvh;                  /* dùng dvh để fix thanh địa chỉ mobile */
+    overflow: auto;
+    padding-bottom: calc(env(safe-area-inset-bottom) + 12px);
+    overscroll-behavior: contain;
+  }
+
+  /* Nếu có list thông báo, tránh dính sát mép */
+  #notifyModal .notify-list {
+    padding: 8px 12px 16px;
+  }
+}
+
+/* Nếu bạn có thanh nút tròn nổi bên phải, nhớ thấp hơn z-index của modal */
+.floating-social,
+.fab-sticky {
+  z-index: 2500; /* < 3000 của modal */
+}
+
+@media (max-width: 576px) {
+  .modal { padding: 0 !important; }                /* bỏ khoảng trống mặc định */
+  .modal.show .modal-dialog {
+    margin: 0 !important;
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    width: 100%;
+    transform: none !important;                    /* không căn giữa dọc */
+  }
+  .modal.show .modal-content {
+    border: 0;
+    border-radius: 16px 16px 0 0;
+    max-height: 80vh;                              /* scroll trong khay */
+    overflow: auto;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+  }
+}
+
+
+/* Bottom-sheet cho #mobileModal – hết khoảng trắng dưới */
+@media (max-width: 576px) {
+  /* bỏ padding mặc định của Bootstrap modal */
+  #mobileModal.modal { padding: 0 !important; }
+
+  /* đưa dialog dính SÁT đáy, bỏ căn giữa dọc */
+  #mobileModal .modal-dialog {
+    margin: 0 !important;
+    position: absolute; left: 0; right: 0; bottom: 0; width: 100%;
+    transform: none !important;
+  }
+  /* nếu còn class .modal-dialog-centered thì ép nó bám đáy */
+  #mobileModal .modal-dialog-centered { align-items: flex-end !important; }
+
+  /* hộp nội dung: không bị ép min/max-height gây khoảng trắng */
+  #mobileModal .modal-content {
+    border: 0;
+    border-radius: 16px 16px 0 0;
+    height: auto !important;
+    min-height: unset !important;
+    max-height: 80vh;          /* tổng chiều cao khay */
+    overflow: hidden;          /* body sẽ quản lý scroll */
+    box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+  }
+
+  /* header dính trên cùng khi cuộn */
+  #mobileModal .modal-header {
+    position: sticky; top: 0; z-index: 1; background: #fff;
+  }
+
+  /* body chỉ cuộn khi dài, không kéo giãn tạo vùng trắng */
+  #mobileModal .modal-body {
+    max-height: calc(80vh - 56px); /* 56px ~ cao header; chỉnh nếu khác */
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* vô hiệu hoá kiểu scrollable mặc định của BS */
+  #mobileModal .modal-dialog-scrollable .modal-content { max-height: none !important; }
+  #mobileModal .modal-dialog-scrollable .modal-body { overflow: auto !important; }
+}
+
+
+@media (max-width: 576px) {
+  /* Modal dính sát đáy, chiếm full bề ngang */
+  #mobileModal.modal { padding: 0 !important; z-index: 1060 !important; }
+  #mobileModal .modal-dialog {
+    margin: 0 !important;
+    position: fixed; left: 0; right: 0; bottom: 0; width: 100%;
+    transform: none !important;
+  }
+  /* nếu vẫn còn class centered/scrollable thì ép về đáy */
+  #mobileModal .modal-dialog-centered { align-items: flex-end !important; }
+  #mobileModal .modal-dialog-scrollable .modal-content { max-height: none !important; }
+
+  #mobileModal .modal-content {
+    border: 0; border-radius: 16px 16px 0 0;
+    height: auto !important; min-height: unset !important;
+    max-height: calc(100vh - env(safe-area-inset-top,0px));
+    overflow: hidden; box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+  }
+  #mobileModal .modal-header { position: sticky; top: 0; background: #fff; z-index: 1; }
+
+  /* Body cuộn khi dài */
+  #mobileModal .modal-body {
+    max-height: calc(100vh - 64px - env(safe-area-inset-bottom,0px)); /* 64px ~ header */
+    overflow: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom,0px));
+  }
+
+  /* Đặt backdrop & modal cao hơn menu đáy */
+  .modal-backdrop.show { z-index: 1050 !important; }
+  .func-mobile { z-index: 1040 !important; } /* thấp hơn modal/backdrop */
+}
+
+/* Ẩn scroll nền khi mở modal */
+body.modal-open { overflow: hidden; }
+
+
+
+
+@media (max-width: 576px) {
+  /* Chỉ profile sheet mới bị ràng dưới stock */
+  #mobileModal.modal--under-stock .modal-dialog{
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    margin: 0 !important;
+    transform: none !important;
+    top: var(--under-stock-top, 56px); /* fallback 56px nếu chưa đo được */
+    width: 100%;
+  }
+  #mobileModal.modal--under-stock .modal-content{
+    border-radius: 16px 16px 0 0;
+    height: 100%;
+    overflow: hidden;
+  }
+  #mobileModal.modal--under-stock .modal-header{
+    position: sticky; top: 0; background:#fff; z-index:1;
+  }
+  #mobileModal.modal--under-stock .modal-body{
+    overflow: auto; -webkit-overflow-scrolling: touch;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom,0px));
+  }
+}

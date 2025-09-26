@@ -478,7 +478,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- Mobile Modal -->
     <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true"
         tabindex="-1" style="z-index: 9998;">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog">
+
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
@@ -1266,6 +1267,36 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         };
         setTimeout(hideLoader, 5000);
     </script>
+
+
+
+<script>
+  // nút "Tôi"
+  const btnProfile = document.querySelector('.js-mobile-modal[data-mobile-modal="profile"]');
+  // nút "Thông báo"
+  const btnAlerts  = document.querySelector('.js-mobile-modal[data-mobile-modal="alerts"]');
+  const modal      = document.getElementById('mobileModal');
+
+  function applyUnderStock() {
+    const stock = document.querySelector('.top-stock');
+    const h = stock ? Math.ceil(stock.getBoundingClientRect().height) : 56; // fallback
+    modal.classList.add('modal--under-stock');
+    // truyền giá trị xuống CSS qua biến custom
+    modal.style.setProperty('--under-stock-top', h + 'px');
+  }
+  function removeUnderStock() {
+    modal.classList.remove('modal--under-stock');
+    modal.style.removeProperty('--under-stock-top');
+  }
+
+  btnProfile?.addEventListener('click', applyUnderStock);
+  btnAlerts?.addEventListener('click', removeUnderStock);
+
+  // khi modal đóng thì reset
+  modal?.addEventListener('hidden.bs.modal', removeUnderStock);
+</script>
+
+
 </body>
 
 
