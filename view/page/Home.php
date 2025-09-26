@@ -310,7 +310,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
 
-                            
+
 
                             <!-- Giữ nguyên phần like, comment, share -->
                             <div class="item-bottom">
@@ -532,8 +532,33 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             <div class="block-k cover-chat ">
                 <h5 class="bg-success"><i class="fas fa-comments"></i> Hi! TMI - DEV K25</h5>
                 <ul class="list_comment">
-                    <?php foreach ($comments as $c): ?>
-                        <li class="chat-item <?= ($c['ai_checked'] && $c['ai_violation']) ? 'violation' : '' ?>" data-id="<?= $c['id'] ?>">
+                    <?php
+                    // Lọc comments: ẩn comment vi phạm khỏi các user khác
+                    $currentUserId = $_SESSION['user']['id'] ?? 0;
+                    $filteredComments = array_filter($comments, function ($c) use ($currentUserId) {
+                        // Nếu comment có vi phạm
+                        if ($c['ai_checked'] && $c['ai_violation']) {
+                            // Chỉ hiển thị cho user đã viết comment đó
+                            return $c['user_id'] == $currentUserId;
+                        }
+                        // Comment bình thường hiển thị cho tất cả
+                        return true;
+                    });
+
+                    foreach ($filteredComments as $c):
+                        // Thay nội dung comment bằng cảnh báo vi phạm
+                        $commentContent = nl2br(preg_replace('/@(\w+)/u', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content'])));
+                        $deleteButton = '';
+
+                        if ($c['ai_checked'] && $c['ai_violation']) {
+                            // Thay nội dung comment bằng cảnh báo vi phạm
+                            $commentContent = '<div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 8px; margin: 4px 0; font-size: 13px; color: #856404; font-style: italic;">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>';
+
+                            // Thêm nút xóa cho comment vi phạm
+                            $deleteButton = '<button class="delete-violation-btn" onclick="deleteViolationComment(' . $c['id'] . ')"><i class="fas fa-trash"></i> Xóa</button>';
+                        }
+                    ?>
+                        <li class="chat-item <?= ($c['ai_checked'] && $c['ai_violation']) ? 'violation' : '' ?>" data-id="<?= $c['id'] ?>" data-comment-id="<?= $c['id'] ?>">
                             <div class="chat-avatar">
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
@@ -548,18 +573,15 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <span class="chat-time"><?= timeAgo($c['created_at']) ?></span>
                                 </div>
                                 <div class="chat-content">
-                                    <?= nl2br(preg_replace('/@(\w+)/u', '<span style="color: #007bff; font-weight: bold;">@$1</span>', htmlspecialchars($c['content']))) ?>
+                                    <?= $commentContent ?>
                                 </div>
-
-                                <?php if ($c['ai_checked'] && $c['ai_violation']): ?>
-                                    <div class="ai-violation-warning">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>
-                                <?php endif; ?>
 
                                 <div class="chat-actions">
                                     <button>⬆</button>
                                     <span class="vote-count"><?= (int) $c['upvotes'] ?></span>
                                     <button>⬇</button>
                                     <a href="#" class="chat-reply">Trả lời</a>
+                                    <?= $deleteButton ?>
                                 </div>
                             </div>
                             <input type="hidden" id="parent_id" name="parent_id" value="">
@@ -659,9 +681,17 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             }
 
             @keyframes pulse {
-                0% { transform: scale(1); }
-                50% { transform: scale(1.02); }
-                100% { transform: scale(1); }
+                0% {
+                    transform: scale(1);
+                }
+
+                50% {
+                    transform: scale(1.02);
+                }
+
+                100% {
+                    transform: scale(1);
+                }
             }
 
             /* Comment với vi phạm */
@@ -679,6 +709,81 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 /* Ẩn hoàn toàn phần "Đang kiểm tra..." */
                 display: none;
             }
+
+            /* Styling cho nút xóa comment vi phạm - Cải thiện */
+            .delete-violation-btn {
+                background: linear-gradient(135deg, #dc3545, #c82333) !important;
+                color: white !important;
+                border: none !important;
+                padding: 8px 12px !important;
+                border-radius: 6px !important;
+                font-size: 12px !important;
+                font-weight: 600 !important;
+                cursor: pointer !important;
+                margin-left: 10px !important;
+                box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3) !important;
+                transition: all 0.3s ease !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                min-width: 70px !important;
+                justify-content: center !important;
+            }
+
+            .delete-violation-btn:hover {
+                background: linear-gradient(135deg, #c82333, #a71e2a) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4) !important;
+                opacity: 1 !important;
+            }
+
+            .delete-violation-btn:active {
+                transform: translateY(0) !important;
+                box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3) !important;
+            }
+
+            .delete-violation-btn i {
+                font-size: 11px !important;
+            }
+
+            .chat-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            /* Ẩn nút xóa mặc định, chỉ hiện khi hover */
+            .chat-item .delete-violation-btn {
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .chat-item:hover .delete-violation-btn {
+                opacity: 0.9;
+            }
+
+            .chat-item.violation .delete-violation-btn {
+                opacity: 0.9;
+                /* Luôn hiện cho comment vi phạm */
+            }
+
+            /* Animation cho nút xóa khi xuất hiện */
+            .delete-violation-btn {
+                animation: slideInRight 0.3s ease-out;
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+
+                to {
+                    opacity: 0.9;
+                    transform: translateX(0);
+                }
+            }
         </style>
 
         <script>
@@ -693,24 +798,24 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             document.getElementById("send-comment").addEventListener("click", () => {
                 const textarea = document.getElementById("comment-content");
                 const content = textarea.value.trim();
-                
+
                 // Kiểm tra user có login không
                 const userId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
                 if (userId <= 0) {
                     alert("Vui lòng đăng nhập để gửi bình luận!");
                     return;
                 }
-                
+
                 if (!content) {
                     alert("Vui lòng nhập nội dung bình luận!");
                     return;
                 }
-                
+
                 console.log("🚀 User ID:", userId, "Content:", content);
 
                 // Tạo temp ID cho comment
                 const tempId = "temp-" + Date.now();
-                
+
                 // Tạo comment element tạm thời
                 const tempComment = {
                     id: tempId,
@@ -719,7 +824,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     content: content,
                     time_ago: "Vừa xong",
                     upvotes: 0,
-                    ai: { isChecking: true }
+                    ai: {
+                        isChecking: true
+                    }
                 };
 
                 console.log("🔍 Creating temp comment:", tempComment);
@@ -730,18 +837,18 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     console.error("❌ Không tìm thấy .list_comment");
                     return;
                 }
-                
+
                 const li = createCommentElementWithAI(tempComment);
                 console.log("🔍 Created temp element:", li);
-                
+
                 ul.prepend(li);
                 ul.scrollTop = 0;
-                
+
                 console.log("✅ Temp comment displayed");
 
                 // Gửi comment với AI check
                 sendCommentWithAI(content, tempId, userId);
-                
+
                 // Clear textarea
                 textarea.value = "";
             });
@@ -768,10 +875,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 // Kiểm tra comment đã tồn tại chưa (bao gồm cả temp comment)
                                 const existingElement = document.querySelector(`.chat-item[data-id="${c.id}"]`);
                                 const tempElement = document.querySelector(`.chat-item[data-id*="temp-"]`);
-                                
+
                                 if (!existingElement && !tempElement) {
                                     console.log("🆕 New comment found:", c.id, c.content);
-                                    
+
                                     // Thêm thông tin AI vào comment
                                     if (c.ai_checked) {
                                         c.ai = {
@@ -781,7 +888,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         };
                                         console.log("🤖 AI info added:", c.ai);
                                     }
-                                    
+
+                                    // Thêm user_id để kiểm tra quyền
+                                    c.user_id = c.user_id || null;
+
                                     const li = createCommentElementWithAI(c);
 
                                     // ✅ cũng append lên đầuđầu
@@ -808,40 +918,40 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // setInterval(loadNewComments, 2000);
 
             // ========== AI CHECK FUNCTIONS ==========
-            
+
             // Function gửi comment với AI check
             async function sendCommentWithAI(content, tempId, userId) {
                 try {
                     console.log("🚀 Sending comment to server:", content, "User ID:", userId);
-                    
+
                     // 1. Gửi comment vào database
                     const res = await fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=addComment", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: "user_id=" + encodeURIComponent(userId) + 
-                              "&content=" + encodeURIComponent(content)
+                        body: "user_id=" + encodeURIComponent(userId) +
+                            "&content=" + encodeURIComponent(content)
                     });
-                    
+
                     console.log("📡 Server response status:", res.status);
-                    
+
                     const data = await res.json();
                     console.log("📡 Server response data:", data);
-                    
+
                     if (data.status === "success") {
                         console.log("✅ Comment saved to database. ID:", data.comment_id);
-                        
+
                         // Thay thế temp comment bằng real comment
                         const tempElement = document.querySelector(`[data-id="${tempId}"]`);
                         if (tempElement) {
                             tempElement.dataset.id = data.comment_id;
                             console.log("🔄 Replaced temp comment with real ID:", data.comment_id);
                         }
-                        
+
                         // 2. AI check comment
                         checkCommentWithAI(tempId, content, data.comment_id);
-                        
+
                         if (data.comment_id > lastId) lastId = data.comment_id;
                     } else {
                         console.error("❌ Lỗi khi thêm comment:", data.message);
@@ -861,8 +971,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             async function checkCommentWithAI(tempId, content, commentId) {
                 try {
                     console.log("🔍 Bắt đầu AI check cho comment:", content);
-                    
-                    const response = await fetch("<?= BASE_URL ?>/checkCmt/check_comment.php", {
+
+                    const response = await fetch("<?= BASE_URL ?>/checkCmt/check_content.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
@@ -881,7 +991,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                     // Cập nhật UI với kết quả AI
                     updateCommentWithAIResult(tempId, result);
-                    
+
                     // Lưu kết quả AI vào database
                     saveAIResultToDatabase(commentId, result);
 
@@ -898,7 +1008,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // Function cập nhật UI với kết quả AI
             function updateCommentWithAIResult(tempId, aiResult) {
                 console.log("🔄 Updating UI with AI result for tempId:", tempId);
-                
+
                 // Tìm element bằng tempId
                 let element = document.querySelector(`[data-id="${tempId}"]`);
                 if (!element) {
@@ -910,7 +1020,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         console.log("🔄 Using latest comment element instead");
                     }
                 }
-                
+
                 if (!element) {
                     console.error("❌ Không thể tìm thấy element để cập nhật");
                     return;
@@ -922,29 +1032,30 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 // Debug AI result
                 console.log("🤖 AI Result:", aiResult);
                 console.log("🤖 isViolation:", aiResult.isViolation);
-                
+
                 // Nếu có vi phạm, thêm cảnh báo
                 if (aiResult.isViolation) {
                     console.log("🚨 VIOLATION DETECTED - Adding warning to UI");
                     element.classList.add("violation");
-                    
-                    // Thêm message cảnh báo
-                    const chatBody = element.querySelector(".chat-body");
-                    if (chatBody) {
-                        // Kiểm tra xem đã có cảnh báo chưa
-                        if (!chatBody.querySelector(".ai-violation-warning")) {
-                            const warningDiv = document.createElement("div");
-                            warningDiv.className = "ai-violation-warning";
-                            warningDiv.innerHTML = "⚠️ Bạn đã vi phạm quy tắc cộng đồng";
-                            chatBody.appendChild(warningDiv);
-                            console.log("✅ Violation warning added to UI");
-                        } else {
-                            console.log("⚠️ Violation warning already exists");
-                        }
-                    } else {
-                        console.error("❌ Cannot find chat-body to add warning");
+
+                    // Thay nội dung comment bằng cảnh báo vi phạm
+                    const chatContent = element.querySelector(".chat-content");
+                    if (chatContent) {
+                        chatContent.innerHTML = '<div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 8px; margin: 4px 0; font-size: 13px; color: #856404; font-style: italic;">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>';
+                        console.log("✅ Comment content replaced with violation warning");
                     }
-                    
+
+                    // Thêm nút xóa
+                    const chatActions = element.querySelector(".chat-actions");
+                    if (chatActions && !chatActions.querySelector(".delete-violation-btn")) {
+                        const deleteBtn = document.createElement("button");
+                        deleteBtn.className = "delete-violation-btn";
+                        deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Xóa';
+                        deleteBtn.onclick = () => deleteViolationComment(element.dataset.id);
+                        chatActions.appendChild(deleteBtn);
+                        console.log("✅ Delete button added");
+                    }
+
                     console.log("🚨 VIOLATION DETECTED - Auto-updating database");
                     console.log("🚨 Violation details:", aiResult);
                 } else {
@@ -974,7 +1085,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         if (aiResult.isViolation) {
                             console.log("🚨 User will see violation warning in UI");
                         }
-                        
+
                         // Không cần load comment mới vì đã cập nhật UI trực tiếp
                         // setTimeout(() => {
                         //     loadNewComments();
@@ -992,7 +1103,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const li = document.createElement("li");
                 li.className = "chat-item";
                 li.dataset.id = c.id;
-                
+                li.dataset.commentId = c.id;
+
+                // Kiểm tra quyền hiển thị comment vi phạm
+                const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                if (c.ai && c.ai.isViolation && !c.ai.isChecking && c.user_id !== currentUserId) {
+                    // Ẩn comment vi phạm khỏi user khác
+                    li.style.display = 'none';
+                    return li;
+                }
+
                 // Thêm class dựa trên AI result
                 if (c.ai) {
                     if (c.ai.isChecking) {
@@ -1001,12 +1121,19 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         li.classList.add("violation");
                     }
                 }
-                
-                let aiWarning = "";
+
+                // Thay nội dung comment bằng cảnh báo vi phạm
+                let commentContent = c.content.replace(/@([\p{L}\p{N}_]+)/gu, '<span style="color: #007bff; font-weight: bold;">@$1</span>');
+                let deleteButton = '';
+
                 if (c.ai && c.ai.isViolation && !c.ai.isChecking) {
-                    aiWarning = '<div class="ai-violation-warning">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>';
+                    // Thay nội dung comment bằng cảnh báo vi phạm
+                    commentContent = '<div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 8px; margin: 4px 0; font-size: 13px; color: #856404; font-style: italic;">⚠️ Bạn đã vi phạm quy tắc cộng đồng</div>';
+
+                    // Thêm nút xóa cho comment vi phạm
+                    deleteButton = '<button class="delete-violation-btn" onclick="deleteViolationComment(' + c.id + ')"><i class="fas fa-trash"></i> Xóa</button>';
                 }
-                
+
                 li.innerHTML = `
         <div class="chat-avatar">
             ${c.avatar_url
@@ -1018,17 +1145,54 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 <span class="chat-name">${c.username}</span>
                 <span class="chat-time">${c.time_ago}</span>
             </div>
-            <div class="chat-content">${c.content.replace(/@([\p{L}\p{N}_]+)/gu, '<span style="color: #007bff; font-weight: bold;">@$1</span>')}</div>
-            ${aiWarning}
+            <div class="chat-content">${commentContent}</div>
             <div class="chat-actions">
                 <button>⬆</button>
                 <span class="vote-count">${c.upvotes || 0}</span>
                 <button>⬇</button>
                 <a href="#" class="chat-reply">Trả lời</a>
+                ${deleteButton}
             </div>
         </div>`;
                 return li;
             }
+
+            // Function xóa comment vi phạm
+            window.deleteViolationComment = async function(commentId) {
+                if (!confirm('Bạn có chắc chắn muốn xóa bình luận vi phạm này?')) {
+                    return;
+                }
+
+                try {
+                    // Xóa comment khỏi UI ngay lập tức
+                    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                    if (commentElement) {
+                        commentElement.remove();
+                    }
+
+                    // Gọi API xóa comment khỏi database
+                    const response = await fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=deleteComment", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: "comment_id=" + encodeURIComponent(commentId) +
+                            "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
+                    });
+
+                    const data = await response.json();
+                    if (data.status === "success") {
+                        console.log('✅ Comment vi phạm đã được xóa');
+                    } else {
+                        console.error('❌ Lỗi khi xóa comment:', data.message);
+                        alert('Có lỗi xảy ra khi xóa bình luận!');
+                    }
+
+                } catch (error) {
+                    console.error('❌ Lỗi khi xóa comment:', error);
+                    alert('Có lỗi xảy ra khi xóa bình luận!');
+                }
+            };
         </script>
 
         <div class="adv block-k">

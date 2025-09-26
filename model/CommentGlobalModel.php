@@ -213,4 +213,13 @@ class CommentGlobalModel
     {
         return self::addComment($user_id, $content, $parent_id);
     }
+
+    // Xóa comment
+    public static function delete($comment_id)
+    {
+        $db = new connect();
+        $sql = "DELETE FROM comment_global WHERE id = :comment_id";
+        $stmt = $db->db->prepare($sql);
+        return $stmt->execute([':comment_id' => $comment_id]);
+    }
 }

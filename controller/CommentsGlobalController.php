@@ -81,6 +81,31 @@ if ($action === "getLatestComment") {
     exit;
 }
 
+if ($action === "deleteComment") {
+    $comment_id = intval($_POST['comment_id'] ?? 0);
+    $user_id = intval($_POST['user_id'] ?? 0);
+    
+    if ($comment_id <= 0 || $user_id <= 0) {
+        echo json_encode(["status" => "error", "message" => "Thiếu dữ liệu"]);
+        exit;
+    }
+
+    // Kiểm tra quyền: chỉ cho phép xóa comment của chính mình
+    $comment = CommentGlobalModel::getById($comment_id);
+    if (!$comment || $comment['user_id'] != $user_id) {
+        echo json_encode(["status" => "error", "message" => "Không có quyền xóa comment này"]);
+        exit;
+    }
+
+    $ok = CommentGlobalModel::delete($comment_id);
+    if ($ok) {
+        echo json_encode(["status" => "success", "message" => "Đã xóa bình luận"]);
+    } else {
+        echo json_encode(["status" => "error", "message" => "Lỗi khi xóa bình luận"]);
+    }
+    exit;
+}
+
 echo json_encode(["status" => "error", "message" => "Action không hợp lệ"]);
 
 function timeAgo($datetime) {

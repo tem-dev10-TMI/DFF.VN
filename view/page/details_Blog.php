@@ -235,12 +235,32 @@
                         countEl.textContent = '(0)';
                         return;
                     }
+                    
+                    // Lọc comments: ẩn comment vi phạm khỏi các user khác
+                    const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                    const filteredItems = items.filter(c => {
+                        // Nếu comment có vi phạm
+                        if (c.ai && !c.ai.isChecking && c.ai.isViolation) {
+                            // Chỉ hiển thị cho user đã viết comment đó
+                            return c.user_id === currentUserId;
+                        }
+                        // Comment bình thường hiển thị cho tất cả
+                        return true;
+                    });
+                    
+                    if (!filteredItems.length) {
+                        emptyEl.style.display = 'block';
+                        countEl.textContent = '(0)';
+                        return;
+                    }
+                    
                     emptyEl.style.display = 'none';
-                    countEl.textContent = '(' + items.length + ')';
+                    countEl.textContent = '(' + filteredItems.length + ')';
 
-                    items.forEach(c => {
+                    filteredItems.forEach(c => {
                         const li = document.createElement('li');
                         li.className = 'comment-card';
+                        li.setAttribute('data-comment-id', c.id); // Thêm data attribute để xóa
                         // Chỉ thêm class violation khi có vi phạm, ẩn các trạng thái khác
                         if (c.ai && !c.ai.isChecking && c.ai.isViolation) {
                             li.classList.add('violation');
@@ -250,16 +270,25 @@
                         const time = c.time || (c.created_at ? new Date(c.created_at).toLocaleString("vi-VN") : nowIso());
                         const avatar = c.avatar_url || avatarByName(name);
 
-                        // Chỉ hiển thị thông báo vi phạm đơn giản
-                        let analysisInfo = '';
+                        // Thay nội dung comment bằng cảnh báo vi phạm
+                        let commentContent = escapeHtml(c.content || c.text || '');
+                        let deleteButton = '';
+                        
                         if (c.ai && !c.ai.isChecking && c.ai.isViolation) {
-                            analysisInfo = `
-                                <div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 6px; margin: 4px 0; font-size: 12px; color: #856404;">
+                            // Thay nội dung comment bằng cảnh báo vi phạm
+                            commentContent = `
+                                <div class="ai-violation-warning" style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; padding: 8px; margin: 4px 0; font-size: 13px; color: #856404; font-style: italic;">
                                     ⚠️ Bạn đã vi phạm quy tắc cộng đồng
                                 </div>
                             `;
+                            
+                            // Thêm nút xóa cho comment vi phạm
+                            deleteButton = `
+                                <button class="delete-violation-btn" onclick="deleteViolationComment('${c.id}')">
+                                    <i class="fas fa-trash"></i> Xóa
+                                </button>
+                            `;
                         }
-                        // Ẩn phần "Đang kiểm tra" và "Nội dung phù hợp"
 
                         li.innerHTML = `
         <img src="${avatar}" class="comment-card-avatar">
@@ -268,10 +297,10 @@
             <span class="comment-card-name">${escapeHtml(name)}</span>
             <span class="comment-card-time">${escapeHtml(time)}</span>
           </div>
-          <div class="comment-card-content">${escapeHtml(c.content || c.text || '')}</div>
-          ${analysisInfo}
+          <div class="comment-card-content">${commentContent}</div>
           <div class="comment-card-actions">
             <a href="javascript:void(0)" onclick="replyComment('${escapeHtml(name)}')">Trả lời</a>
+            ${deleteButton}
           </div>
         </div>
       `;
@@ -292,6 +321,7 @@
                                 avatar_url: c.avatar_url || '',
                                 content: c.content || '',
                                 created_at: c.created_at,
+                                user_id: c.user_id || null, // Thêm user_id để kiểm tra quyền
                                 // Load thông tin AI check từ database
                                 ai: c.ai_checked ? {
                                     isViolation: !!c.ai_violation,
@@ -301,15 +331,43 @@
                                     severity: c.ai_details?.severity || null,
                                     confidence: c.ai_details?.confidence || null,
                                     analysisMethod: c.ai_details?.analysisMethod || null,
-                                } : null
+                                } : {
+                                    // Comment cũ chưa được AI check - sẽ check sau
+                                    isViolation: false,
+                                    isChecking: false,
+                                    details: '',
+                                    violationType: null,
+                                    severity: null,
+                                    confidence: null,
+                                    analysisMethod: null,
+                                    needsCheck: true // Flag để biết cần check
+                                }
                             }));
                             // reset & nạp
                             comments.length = 0;
                             mapped.forEach(x => comments.push(x));
                             renderComments(comments);
+                            
+                            // AI check các comment cũ chưa được check
+                            checkOldComments();
                         }
                     } catch (err) {
                         console.error('Lỗi fetch:', err);
+                    }
+                }
+
+                // ===== AI check các comment cũ chưa được check =====
+                async function checkOldComments() {
+                    const commentsToCheck = comments.filter(c => c.ai && c.ai.needsCheck);
+                    console.log('Found', commentsToCheck.length, 'old comments to check');
+                    
+                    for (const comment of commentsToCheck) {
+                        try {
+                            console.log('Checking old comment:', comment.content);
+                            await checkCommentAsync(comment.id, comment.content, comment.content);
+                        } catch (error) {
+                            console.error('Error checking old comment:', error);
+                        }
                     }
                 }
 
@@ -333,6 +391,7 @@
                         avatar_url: '',
                         text: content,
                         time: nowIso(),
+                        user_id: <?= (int)($_SESSION['user']['id'] ?? 0) ?>, // Thêm user_id
                         commentId: null, // Sẽ được cập nhật sau khi lưu DB
                         ai: {
                             isViolation: false,
@@ -502,6 +561,7 @@
                             severity: result.severity || null,
                             confidence: result.confidence ?? null,
                             analysisMethod: result.analysisMethod || null,
+                            needsCheck: false // Đã check xong
                         }
                     };
 
@@ -520,11 +580,9 @@
                             // Sử dụng comment ID đã lưu
                             commentId = comment.commentId;
                         } else {
-                            // Fallback: lấy comment mới nhất của user
-                            const currentUser = <?= json_encode($_SESSION['user']['id'] ?? 0) ?>;
-                            const res = await fetch(`<?= BASE_URL ?>/?url=comment&action=getLatestComment&user_id=${currentUser}&article_id=${articleId}`);
-                            const data = await res.json();
-                            commentId = data.comment_id;
+                            // Fallback: lấy comment ID từ localId (cho comment cũ)
+                            const realCommentId = localId.replace('db-', '').replace('local-', '');
+                            commentId = realCommentId;
                         }
 
                         if (commentId) {
@@ -561,6 +619,53 @@
                         console.error('Error saving AI result to database:', error);
                     }
                 }
+
+                // ===== Function xóa comment vi phạm =====
+                window.deleteViolationComment = async function(commentId) {
+                    if (!confirm('Bạn có chắc chắn muốn xóa bình luận vi phạm này?')) {
+                        return;
+                    }
+                    
+                    try {
+                        // Xóa comment khỏi UI ngay lập tức
+                        const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+                        if (commentElement) {
+                            commentElement.remove();
+                        }
+                        
+                        // Xóa comment khỏi mảng comments
+                        const commentIndex = comments.findIndex(c => c.id === commentId);
+                        if (commentIndex !== -1) {
+                            comments.splice(commentIndex, 1);
+                        }
+                        
+                        // Cập nhật UI
+                        renderComments(comments);
+                        
+                        // Gọi API xóa comment khỏi database
+                        const realCommentId = commentId.replace('db-', '').replace('local-', '');
+                        const response = await fetch("<?= BASE_URL ?>/?url=comment&action=deleteComment", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: "comment_id=" + encodeURIComponent(realCommentId) +
+                                  "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
+                        });
+                        
+                        const data = await response.json();
+                        if (data.status === "success") {
+                            console.log('✅ Comment vi phạm đã được xóa');
+                        } else {
+                            console.error('❌ Lỗi khi xóa comment:', data.message);
+                            alert('Có lỗi xảy ra khi xóa bình luận!');
+                        }
+                        
+                    } catch (error) {
+                        console.error('❌ Lỗi khi xóa comment:', error);
+                        alert('Có lỗi xảy ra khi xóa bình luận!');
+                    }
+                };
 
                 // ===== Events =====
                 btnSend.addEventListener("click", sendComment);
@@ -660,7 +765,7 @@
         </script>
 
         <style>
-            /* AI Comment Check Styles - Simplified */
+            /* AI Comment Check Styles - Enhanced */
             .ai-violation-warning {
                 animation: fadeIn 0.3s ease-in;
             }
@@ -686,6 +791,79 @@
             .comment-card.checking,
             .comment-card.safe {
                 /* Không có styling đặc biệt */
+            }
+
+            /* Styling cho nút xóa comment vi phạm - Cải thiện */
+            .delete-violation-btn {
+                background: linear-gradient(135deg, #dc3545, #c82333) !important;
+                color: white !important;
+                border: none !important;
+                padding: 8px 12px !important;
+                border-radius: 6px !important;
+                font-size: 12px !important;
+                font-weight: 600 !important;
+                cursor: pointer !important;
+                margin-left: 10px !important;
+                box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3) !important;
+                transition: all 0.3s ease !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 4px !important;
+                min-width: 70px !important;
+                justify-content: center !important;
+            }
+
+            .delete-violation-btn:hover {
+                background: linear-gradient(135deg, #c82333, #a71e2a) !important;
+                transform: translateY(-1px) !important;
+                box-shadow: 0 4px 8px rgba(220, 53, 69, 0.4) !important;
+                opacity: 1 !important;
+            }
+
+            .delete-violation-btn:active {
+                transform: translateY(0) !important;
+                box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3) !important;
+            }
+
+            .delete-violation-btn i {
+                font-size: 11px !important;
+            }
+
+            .comment-card-actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            /* Ẩn nút xóa mặc định, chỉ hiện khi hover */
+            .comment-card .delete-violation-btn {
+                opacity: 0;
+                transition: all 0.3s ease;
+            }
+
+            .comment-card:hover .delete-violation-btn {
+                opacity: 0.9;
+            }
+
+            .comment-card.violation .delete-violation-btn {
+                opacity: 0.9; /* Luôn hiện cho comment vi phạm */
+            }
+
+            /* Animation cho nút xóa khi xuất hiện */
+            .delete-violation-btn {
+                animation: slideInRight 0.3s ease-out;
+            }
+
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(20px);
+                }
+                to {
+                    opacity: 0.9;
+                    transform: translateX(0);
+                }
             }
         </style>
 
