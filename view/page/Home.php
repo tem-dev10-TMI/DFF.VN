@@ -535,13 +535,20 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <?php
                     // Lọc comments: ẩn comment vi phạm khỏi các user khác
                     $currentUserId = $_SESSION['user']['id'] ?? 0;
+                    
                     $filteredComments = array_filter($comments, function ($c) use ($currentUserId) {
                         // Nếu comment có vi phạm
                         if ($c['ai_checked'] && $c['ai_violation']) {
                             // Chỉ hiển thị cho user đã viết comment đó
                             return $c['user_id'] == $currentUserId;
                         }
-                        // Comment bình thường hiển thị cho tất cả
+                        
+                        // Nếu comment chưa được AI check, chỉ hiển thị cho user đã viết comment đó
+                        if (!$c['ai_checked']) {
+                            return $c['user_id'] == $currentUserId;
+                        }
+                        
+                        // Comment đã được AI check và không vi phạm - hiển thị cho tất cả
                         return true;
                     });
 
@@ -824,6 +831,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     content: content,
                     time_ago: "Vừa xong",
                     upvotes: 0,
+                    user_id: userId,
+                    ai_checked: false, // Chưa được AI check
                     ai: {
                         isChecking: true
                     }
@@ -863,48 +872,63 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 }
             });
 
-            // Load comment mới
+            // Load comment mới - chỉ load comment của người khác đã được AI check và không vi phạm
             function loadNewComments() {
+                const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                
                 fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=getComments&last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === "success") {
                             console.log("📥 Loaded new comments:", data.comments.length);
                             const ul = document.querySelector(".list_comment");
+                            let hasNewComments = false;
+                            
                             data.comments.forEach(c => {
-                                // Kiểm tra comment đã tồn tại chưa (bao gồm cả temp comment)
+                                // Chỉ load comment của người khác (không phải của user hiện tại)
+                                if (c.user_id == currentUserId) {
+                                    console.log("⏭️ Skipping own comment:", c.id);
+                                    return;
+                                }
+                                
+                                // CHỈ load comment đã được AI check và KHÔNG vi phạm
+                                if (!c.ai_checked || c.ai_violation == 1) {
+                                    console.log("⏭️ Skipping comment - not AI checked or violation:", c.id, "ai_checked:", c.ai_checked, "ai_violation:", c.ai_violation);
+                                    return;
+                                }
+                                
+                                // Kiểm tra comment đã tồn tại chưa
                                 const existingElement = document.querySelector(`.chat-item[data-id="${c.id}"]`);
-                                const tempElement = document.querySelector(`.chat-item[data-id*="temp-"]`);
-
-                                if (!existingElement && !tempElement) {
-                                    console.log("🆕 New comment found:", c.id, c.content);
+                                
+                                if (!existingElement) {
+                                    console.log("🆕 New SAFE comment from others:", c.id, c.content);
 
                                     // Thêm thông tin AI vào comment
-                                    if (c.ai_checked) {
-                                        c.ai = {
-                                            isViolation: c.ai_violation == 1,
-                                            isChecking: false,
-                                            details: c.ai_details
-                                        };
-                                        console.log("🤖 AI info added:", c.ai);
-                                    }
+                                    c.ai = {
+                                        isViolation: false,
+                                        isChecking: false,
+                                        details: c.ai_details
+                                    };
 
                                     // Thêm user_id để kiểm tra quyền
                                     c.user_id = c.user_id || null;
 
                                     const li = createCommentElementWithAI(c);
 
-                                    // ✅ cũng append lên đầuđầu
+                                    // Thêm comment mới vào đầu danh sách
                                     ul.prepend(li);
-
-                                    // ✅ scroll xuống  lên đàu khi có comment mới
-                                    ul.scrollTop = 0;
+                                    hasNewComments = true;
 
                                     if (c.id > lastId) lastId = c.id;
                                 } else {
-                                    console.log("⏭️ Comment already exists or temp comment present:", c.id);
+                                    console.log("⏭️ Comment already exists:", c.id);
                                 }
                             });
+                            
+                            // Chỉ scroll lên đầu nếu có comment mới
+                            if (hasNewComments) {
+                                ul.scrollTop = 0;
+                            }
                         } else {
                             console.log("❌ Failed to load comments:", data);
                         }
@@ -914,8 +938,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     });
             }
 
-            // Auto refresh (tạm thời tắt để tránh duplicate)
-            // setInterval(loadNewComments, 2000);
+            // Auto refresh - chỉ load comment mới của người khác
+            setInterval(loadNewComments, 3000);
 
             // ========== AI CHECK FUNCTIONS ==========
 
@@ -972,13 +996,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 try {
                     console.log("🔍 Bắt đầu AI check cho comment:", content);
 
-                    const response = await fetch("<?= BASE_URL ?>/checkCmt/check_content.php", {
+                    const response = await fetch("<?= BASE_URL ?>/checkCmt/check_comment.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/json"
                         },
                         body: JSON.stringify({
-                            content: content
+                            comment: content
                         })
                     });
 
@@ -989,11 +1013,15 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     const result = await response.json();
                     console.log("🤖 AI check result:", result);
 
+                    // Extract actual result from response
+                    const aiResult = result.result || result;
+                    console.log("🤖 Extracted AI result:", aiResult);
+
                     // Cập nhật UI với kết quả AI
-                    updateCommentWithAIResult(tempId, result);
+                    updateCommentWithAIResult(tempId, aiResult);
 
                     // Lưu kết quả AI vào database
-                    saveAIResultToDatabase(commentId, result);
+                    saveAIResultToDatabase(commentId, aiResult);
 
                 } catch (error) {
                     console.error("❌ Lỗi AI check:", error);
@@ -1056,10 +1084,10 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         console.log("✅ Delete button added");
                     }
 
-                    console.log("🚨 VIOLATION DETECTED - Auto-updating database");
+                    console.log("🚨 VIOLATION DETECTED - Comment will be hidden from other users");
                     console.log("🚨 Violation details:", aiResult);
                 } else {
-                    console.log("✅ Comment is safe, no violation detected");
+                    console.log("✅ Comment is safe, will be visible to all users");
                 }
 
                 console.log("✅ AI result applied to UI");
@@ -1105,10 +1133,17 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 li.dataset.id = c.id;
                 li.dataset.commentId = c.id;
 
-                // Kiểm tra quyền hiển thị comment vi phạm
+                // Kiểm tra quyền hiển thị comment
                 const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                
+                // Ẩn comment vi phạm khỏi user khác
                 if (c.ai && c.ai.isViolation && !c.ai.isChecking && c.user_id !== currentUserId) {
-                    // Ẩn comment vi phạm khỏi user khác
+                    li.style.display = 'none';
+                    return li;
+                }
+                
+                // Ẩn comment chưa được AI check khỏi user khác
+                if (!c.ai_checked && c.user_id !== currentUserId) {
                     li.style.display = 'none';
                     return li;
                 }
