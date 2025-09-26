@@ -250,6 +250,11 @@ switch ($url) {
         $controller = new profileUserController();
         $controller->loadArticle();
         exit;
+    case 'api/editPost':
+        require_once __DIR__ . '/controller/account/profileUserController.php';
+        $controller = new profileUserController();
+        $controller->editArticle();
+        exit;
 
     case 'api/toggle-like':
         require_once __DIR__ . '/controller/account/profileUserController.php';

@@ -150,6 +150,10 @@ function loadPosts() {
     });
 }
 
+
+// Cache bài viết để mở modal edit nhanh
+window.__postCache = window.__postCache || {};
+
 // Hiển thị danh sách bài viết
 function displayPosts(posts) {
   var postsContainer = document.getElementById('posts');
@@ -169,6 +173,9 @@ function displayPosts(posts) {
   }
 
   posts.forEach(function (post) {
+    // Lưu cache
+    window.__postCache[post.id] = post;
+
     var postElement = createPostElement(post);
     postsContainer.appendChild(postElement);
   });
@@ -239,7 +246,7 @@ function deletePost(postId, buttonElement) {
     .then(async (res) => {
       if (res.status === 204) return { success: true };
       let data = null;
-      try { data = await res.json(); } catch (_) {}
+      try { data = await res.json(); } catch (_) { }
       if (!res.ok) {
         throw new Error((data && (data.message || data.error)) || ('HTTP ' + res.status));
       }
@@ -289,7 +296,7 @@ function createPostElement(post) {
   postDiv.setAttribute('id', `post-${post.id}`);
 
   const safeContent = post.content || '';
-  const safeTitle  = post.title || safeContent.substring(0, 70);
+  const safeTitle = post.title || safeContent.substring(0, 70);
 
   // ===== FIX slug undefined (giữ cấu trúc hiển thị) =====
   // Ưu tiên các key hay gặp từ API, nếu vẫn trống thì tự slugify từ title
@@ -318,7 +325,7 @@ function createPostElement(post) {
     let badgeText = '';
     switch (post.status) {
       case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
-      case 'public':  badgeClass = 'bg-success';            badgeText = 'Công khai'; break;
+      case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
     }
     if (badgeText) {
       statusBadgeHtml = `<div class="article-status-badge" style="margin-bottom: 8px; margin-top: 5px;"><span class="badge ${badgeClass}">${badgeText}</span></div>`;
@@ -335,7 +342,23 @@ function createPostElement(post) {
                </span>
            </div>`
     : '';
-
+    const editButtonHtml = (userId && post.author_id == userId)
+    ? `<span class="edit-post-btn ms-2" onclick="openEditPost(${post.id}, this)" title="Sửa bài viết">
+         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+              class="bi bi-pencil-square" viewBox="0 0 16 16">
+           <path d="M15.502 1.94a.5.5 0 0 1 0 .706l-1 
+                    1a.5.5 0 0 1-.708 0L13 3.207l1-1a.5.5 
+                    0 0 1 .707 0l.795.733z"/>
+           <path fill-rule="evenodd" 
+                 d="M1 13.5V16h2.5l7.086-7.086-2.5-2.5L1 13.5zm11.854-8.146a.5.5 0 0 0-.708-.708l-1 
+                 1a.5.5 0 1 0 .708.708l1-1z"/>
+           <path fill-rule="evenodd" 
+                 d="M1 4.5A1.5 1.5 0 0 1 2.5 3h6a.5.5 0 0 1 0 1h-6A.5.5 0 0 0 2 4.5v9A.5.5 0 0 0 2.5 14h9a.5.5 0 0 0 
+                 .5-.5v-6a.5.5 0 0 1 1 0v6A1.5 1.5 0 0 1 11.5 15h-9A1.5 1.5 0 0 1 1 13.5v-9z"/>
+         </svg>
+       </span>`
+    : '';
+  
   postDiv.innerHTML = `
     <div class="view-carde f-frame">
         <div class="provider">
@@ -347,6 +370,7 @@ function createPostElement(post) {
                 <span class="date">${post.time_ago || ''}</span>
             </div>
             ${deleteButtonHtml}
+            ${editButtonHtml}
         </div>
 
         ${statusBadgeHtml}
@@ -429,10 +453,10 @@ function addPost(e) {
   if (e && typeof e.preventDefault === 'function') e.preventDefault();
 
   // Lấy input trước, VALIDATE NGAY
-  const formEl   = document.getElementById('postForm'); // có thể null ở profile
-  const title    = (document.getElementById('postTitle')?.value || '').trim();
-  const summary  = (document.getElementById('postSummary')?.value || '').trim();
-  const topicId  = (document.getElementById('topicSelect')?.value || '').trim();
+  const formEl = document.getElementById('postForm'); // có thể null ở profile
+  const title = (document.getElementById('postTitle')?.value || '').trim();
+  const summary = (document.getElementById('postSummary')?.value || '').trim();
+  const topicId = (document.getElementById('topicSelect')?.value || '').trim();
 
   // Gộp content từ sections để đảm bảo có nội dung (nếu bạn đang dùng UI sections)
   const sectionNodes = document.querySelectorAll('#sectionsWrap .section-item');
@@ -458,8 +482,8 @@ function addPost(e) {
 
   // Lấy nút submit an toàn (profile trước, modal sau)
   const submitBtn = document.getElementById('btnSubmitPost')
-                   || document.querySelector('.post-box button.btn-success.rounded-pill');
-  const original  = submitBtn ? submitBtn.innerHTML : '';
+    || document.querySelector('.post-box button.btn-success.rounded-pill');
+  const original = submitBtn ? submitBtn.innerHTML : '';
 
   // BẮT ĐẦU chuẩn bị request sau khi đã validate
   __isPosting = true;
@@ -472,7 +496,7 @@ function addPost(e) {
 
   // session token (nếu có)
   const tokenInput = formEl?.querySelector('input[name="session_token"]')
-                   || document.querySelector('input[name="session_token"]');
+    || document.querySelector('input[name="session_token"]');
   if (tokenInput) fd.append('session_token', tokenInput.value);
 
   // Gửi fields bắt buộc
@@ -485,7 +509,7 @@ function addPost(e) {
   const sections = [];
   sectionNodes.forEach((node, idx) => {
     const position = idx + 1;
-    const titleS   = (node.querySelector('input[type="text"]')?.value || '').trim();
+    const titleS = (node.querySelector('input[type="text"]')?.value || '').trim();
     const contentS = (node.querySelector('textarea')?.value || '').trim();
     sections.push({ position, title: titleS, content: contentS });
 
@@ -782,3 +806,231 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+// ======= Modal Edit: tạo 1 lần khi cần =======
+function ensureEditModal() {
+  if (document.getElementById('editPostModal')) return;
+
+  const modalHtml = `
+  <div class="modal fade" id="editPostModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Sửa bài viết</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+        </div>
+        <div class="modal-body">
+          <form id="editPostForm" class="needs-validation" novalidate enctype="multipart/form-data">
+            <input type="hidden" id="editPostId">
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Tiêu đề</label>
+              <input type="text" id="editPostTitle" class="form-control" placeholder="Tiêu đề..." required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Tóm tắt</label>
+              <textarea id="editPostSummary" class="form-control" rows="3" placeholder="Tóm tắt ngắn..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Chủ đề</label>
+              <select id="editTopicSelect" class="form-select" required></select>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Ảnh bìa (cover)</label>
+              <input type="file" id="editPostCover" class="form-control" accept="image/*">
+              <div id="editCoverPreview" class="mt-2" style="min-height:60px;"></div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Nội dung</label>
+              <textarea id="editPostContent" class="form-control" rows="6" placeholder="Nội dung..."></textarea>
+            </div>
+
+            <!-- giữ token để gọi API -->
+            <input type="hidden" name="session_token"
+                   value="${(document.querySelector('input[name="session_token"]')?.value || '')}">
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Huỷ</button>
+          <button type="button" id="btnSaveEditPost" class="btn btn-primary">
+            <i class="fas fa-save me-1"></i> Lưu thay đổi
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  document.body.insertAdjacentHTML('beforeend', modalHtml);
+
+  // Preview cover trong modal edit
+  const coverInput = document.getElementById('editPostCover');
+  const coverPreview = document.getElementById('editCoverPreview');
+  if (coverInput) {
+    coverInput.addEventListener('change', (e) => {
+      coverPreview.innerHTML = '';
+      const f = e.target.files && e.target.files[0];
+      if (!f) return;
+      const url = URL.createObjectURL(f);
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.maxWidth = '240px';
+      img.style.maxHeight = '140px';
+      img.alt = 'cover preview';
+      img.className = 'rounded border';
+      coverPreview.appendChild(img);
+    });
+  }
+
+  // Lưu bài viết
+  document.getElementById('btnSaveEditPost').addEventListener('click', submitEditPost);
+}
+
+// ======= Mở modal + nạp dữ liệu vào form =======
+function openEditPost(postId, btnEl) {
+  ensureEditModal();
+
+  // Lấy post từ cache; nếu không có bạn có thể tự fetch chi tiết
+  const post = (window.__postCache && window.__postCache[postId]) ? window.__postCache[postId] : null;
+
+  // Nếu không có cache, tạo khung trống để user tự sửa (hoặc bạn có thể fetch api/getPost ở đây)
+  fillEditForm(postId, post);
+
+  const modal = new bootstrap.Modal(document.getElementById('editPostModal'));
+  modal.show();
+}
+
+function fillEditForm(postId, post) {
+  const idEl      = document.getElementById('editPostId');
+  const titleEl   = document.getElementById('editPostTitle');
+  const sumEl     = document.getElementById('editPostSummary');
+  const topicSel  = document.getElementById('editTopicSelect');
+  const contentEl = document.getElementById('editPostContent');
+  const coverPrev = document.getElementById('editCoverPreview');
+
+  idEl.value      = postId;
+  titleEl.value   = (post?.title || '').trim();
+  sumEl.value     = (post?.summary || '').trim();
+  contentEl.value = (post?.content || '').trim();
+
+  // Clone options từ #topicSelect sẵn có ở form tạo bài viết (để đúng danh mục)
+  topicSel.innerHTML = '';
+  const srcSel = document.getElementById('topicSelect');
+  if (srcSel) {
+    topicSel.innerHTML = srcSel.innerHTML;
+    // set value nếu có
+    if (post?.topic_id) topicSel.value = String(post.topic_id);
+  } else {
+    // fallback nếu không có select gốc
+    const opt = document.createElement('option');
+    opt.value = post?.topic_id || '';
+    opt.textContent = post?.topic_name || 'Chủ đề hiện tại';
+    topicSel.appendChild(opt);
+    if (post?.topic_id) topicSel.value = String(post.topic_id);
+  }
+
+  // Hiện ảnh cover hiện tại nếu có
+  coverPrev.innerHTML = '';
+  const currentCover = post?.image || post?.main_image_url;
+  if (currentCover) {
+    const img = document.createElement('img');
+    img.src = currentCover;
+    img.style.maxWidth = '240px';
+    img.style.maxHeight = '140px';
+    img.alt = 'current cover';
+    img.className = 'rounded border';
+    coverPrev.appendChild(img);
+  }
+}
+
+// ======= Gửi form edit lên backend =======
+// Bạn CHƯA có controller, nên tui để endpoint 'api/updatePost' (fallback 'api/editPost')
+// Backend nên nhận: post_id, title, summary, topic_id, content, main_image_url (file), session_token
+function submitEditPost() {
+  const modalEl  = document.getElementById('editPostModal');
+  const formEl   = document.getElementById('editPostForm');
+
+  const postId   = document.getElementById('editPostId').value.trim();
+  const title    = document.getElementById('editPostTitle').value.trim();
+  const summary  = document.getElementById('editPostSummary').value.trim();
+  const topicId  = document.getElementById('editTopicSelect').value.trim();
+  const content  = document.getElementById('editPostContent').value.trim();
+  const coverEl  = document.getElementById('editPostCover');
+
+  if (!postId || !title || !summary || !topicId) {
+    showNotification('Vui lòng nhập đủ Tiêu đề, Tóm tắt và Chủ đề!', 'warning');
+    return;
+  }
+  // KHÔNG bắt buộc content ở FE nữa (BE đã fallback). Nhưng nhắc nhẹ:
+  if (!content || content.length < 10) {
+    console.warn('Nội dung đang trống hoặc ngắn; backend sẽ giữ nguyên content cũ.');
+  }
+
+  // token
+  let token = window.userSessionToken || (formEl.querySelector('input[name="session_token"]')?.value || '');
+  if (!token) {
+    const anyInput = document.querySelector('input[name="session_token"]');
+    if (anyInput && anyInput.value) token = anyInput.value;
+  }
+  if (!token) {
+    showNotification('Phiên làm việc không hợp lệ. Vui lòng tải lại trang.', 'danger');
+    return;
+  }
+
+  const btn = document.getElementById('btnSaveEditPost');
+  const oldHtml = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Đang lưu...';
+
+  const fd = new FormData();
+  fd.append('post_id', postId);
+  fd.append('title', title);
+  fd.append('summary', summary);
+  fd.append('topic_id', topicId);
+  fd.append('content', content);
+  fd.append('session_token', token);
+  if (coverEl?.files?.[0]) {
+    fd.append('main_image_url', coverEl.files[0]);
+  }
+
+  // Thử nhiều endpoint để phù hợp router hiện tại
+  const tryEndpoints = ['api/editArticle', 'api/editPost', 'api/updatePost'];
+
+  (function tryNext(i) {
+    if (i >= tryEndpoints.length) throw new Error('Không tìm thấy endpoint cập nhật bài viết.');
+
+    fetch(tryEndpoints[i], { method: 'POST', body: fd })
+      .then(async (res) => {
+        let data = null;
+        try { data = await res.json(); } catch(_) {}
+        if (!res.ok) {
+          if (res.status === 404) return tryNext(i + 1);
+          const msg = (data && (data.message || data.error)) || ('HTTP ' + res.status);
+          throw new Error(msg);
+        }
+        return data || { success: true };
+      })
+      .then((data) => {
+        const ok = data === true || data?.success === true || data?.success === 'true'
+          || data?.status === 'success' || data?.code === 0 || data?.result === 'ok';
+        if (!ok) throw new Error(data?.message || 'Cập nhật thất bại.');
+
+        const inst = bootstrap.Modal.getInstance(modalEl);
+        if (inst) inst.hide();
+
+        showNotification('Đã cập nhật bài viết!', 'success');
+        if (typeof loadPosts === 'function') loadPosts();
+      })
+      .catch((err) => {
+        showNotification('Lỗi: ' + err.message, 'danger');
+        console.error('editPost error:', err);
+      })
+      .finally(() => {
+        btn.disabled = false;
+        btn.innerHTML = oldHtml;
+      });
+  })(0);
+}
+
