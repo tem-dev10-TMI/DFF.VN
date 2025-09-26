@@ -46,13 +46,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
-                        <div class="cover-hover" style="">
+                        <div class="cover-hover">
                             <?php if (!empty($article['main_image_url'])): ?>
                                 <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     title="<?= htmlspecialchars($article['title']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
                             <?php else: ?>
-                                <div class="mmavatar" style="height: 157px; display: flex; align-items: center; justify-content: center; background-color:rgb(110, 130, 160);">
+                                <div class="mmavatar">
                                     <span>Người dùng này chưa thêm ảnh</span>
                                 </div>
                             <?php endif; ?>

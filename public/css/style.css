@@ -1939,6 +1939,7 @@ textarea.form-control {
     border-radius: 12px;
     width: 100%;
     height: 157px;
+    object-fit: cover;
 }
 
 .home-slider .owl-item .item .text,
@@ -1982,6 +1983,43 @@ textarea.form-control {
 .news-photo .owl-item .item .text h4 a:hover,
 .news-photo .owl-item .item .text p a:hover {
     color: #fff !important;
+}
+
+/* Cố định kích thước cho tất cả item trong slider */
+.home-slider .owl-item {
+    height: 200px !important;
+}
+
+.home-slider .owl-item .item {
+    height: 200px !important;
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.home-slider .owl-item .item .cover-hover {
+    height: 200px !important;
+    overflow: hidden;
+    position: relative;
+}
+
+.home-slider .owl-item .item .cover-hover img {
+    width: 100% !important;
+    height: 200px !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    border-radius: 12px;
+    display: block;
+}
+
+.home-slider .owl-item .item .cover-hover .mmavatar {
+    width: 100% !important;
+    height: 200px !important;
+    border-radius: 12px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: rgb(110, 130, 160) !important;
 }
 
 .navbar-collapse {
@@ -7295,9 +7333,12 @@ ul.timeline .left-arrow:after {
     }
 
     .home-slider .owl-carousel .owl-item img {
-        border-radius: 0;
+        border-radius: 12px;
         width: 100%;
-        height: auto;
+        height: 200px;
+        object-fit: cover;
+        object-position: center;
+        display: block;
     }
 
     .home-slider .owl-item .item .text {
@@ -7305,7 +7346,7 @@ ul.timeline .left-arrow:after {
     }
 
     .home-slider .owl-item {
-        height: auto;
+        height: 200px !important;
     }
 
     .view-card .i-right img {
