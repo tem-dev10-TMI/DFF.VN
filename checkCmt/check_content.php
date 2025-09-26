@@ -14,14 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 $input = file_get_contents('php://input');
 $data = json_decode($input, true);
-if (!$data || (!isset($data['comment']))) {
+if (!$data || (!isset($data['comment']) && !isset($data['content']))) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Invalid payload']);
+    exit;
+}
+
+if (!$data || !isset($data['content'])) {
     http_response_code(400);
     echo json_encode(['error' => 'Invalid payload']);
     exit;
 }
 
 // Support both 'comment' and 'content' fields
-$comment = trim((string)($data['comment']));
+$comment = trim((string)($data['comment'] ?? $data['content'] ?? ''));
 
 // Check if comment is empty
 if (empty($comment)) {
@@ -91,7 +97,7 @@ if ($initialAnalysisResult['isViolation']) {
     $result['analysisMethod'] = 'No Violation Found';
 }
 
-echo json_encode(['result' => $result]);
+echo json_encode($result);
 
 function loadViolationPatterns()
 {
