@@ -64,6 +64,9 @@
         data-bs-target="#editProfileModal">
         <i class="fas fa-edit me-1"></i> Chỉnh sửa thông tin
       </button>
+      <button class="btn btn-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#savedArticlesModal">
+        <i class="fas fa-bookmark me-1"></i> Bài viết đã lưu
+      </button>
       <button class="btn btn-outline-success btn-sm w-100 mb-2">
         <i class="fas fa-chart-line me-1"></i> Xem thống kê
       </button>

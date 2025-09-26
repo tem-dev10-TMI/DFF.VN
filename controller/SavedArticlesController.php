@@ -32,7 +32,7 @@ class SavedArticlesController {
         $stats = $modelProfile->getUserStats($userId);
         
         // Các biến cần thiết cho ProfileUser layout
-        $profile_category = 'user';
+        $profile_category = 'save';
         $hasBusinessRequest = false;
         
         // Load view sử dụng layout Profile.php

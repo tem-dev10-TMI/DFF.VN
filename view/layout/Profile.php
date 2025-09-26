@@ -297,6 +297,7 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // kết nối DB
 require_once __DIR__ . '/../../config/db.php';
+require_once __DIR__ . '/../../time.php';
 $db = new connect();
 $pdo = $db->db;
 
@@ -325,6 +326,30 @@ if ($profile_category == 'user' && $user_id) {
     error_log("Lỗi khi kiểm tra businessmen_requests: " . $e->getMessage());
   }
 }
+
+// Lấy danh sách bài viết đã lưu
+$savedArticles = [];
+if ($user_id) {
+    try {
+        // Sử dụng câu lệnh SQL chính xác từ model, có join author và check status
+        $stmt = $pdo->prepare("
+            SELECT 
+                a.id, a.title, a.slug, a.summary, a.main_image_url, a.created_at,
+                u.id as author_id, u.name as author_name, u.avatar_url
+            FROM article_saves as av
+            JOIN articles as a ON av.article_id = a.id
+            LEFT JOIN users as u ON a.author_id = u.id
+            WHERE av.user_id = ? AND a.status = 'public'
+            ORDER BY av.created_at DESC
+        ");
+        $stmt->execute([$user_id]);
+        $savedArticles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (PDOException $e) {
+        error_log("Lỗi khi lấy bài viết đã lưu: " . $e->getMessage());
+        $savedArticles = []; // Đảm bảo là mảng rỗng khi có lỗi
+    }
+}
+
 ?>
 
 <div class="container mt-3">
@@ -1066,3 +1091,153 @@ if ($profile_category == 'user' && $user_id) {
     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
   </script>
 <?php endif; ?>
+
+<!-- Modal Bài viết đã lưu -->
+<div class="modal fade" id="savedArticlesModal" tabindex="-1" aria-labelledby="savedArticlesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="savedArticlesModalLabel"><i class="fas fa-bookmark me-2"></i>Bài viết đã lưu</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body bg-light">
+        <?php if (!empty($savedArticles)): ?>
+          <div id="saved-articles-list-modal">
+            <?php foreach ($savedArticles as $article): ?>
+              <div class="card article-item mb-3 shadow-sm" data-article-id-modal="<?= $article['id'] ?>">
+                <div class="card-body">
+                  <div class="d-flex align-items-center mb-3">
+                    <?php $authorAvatar = $article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'; ?>
+                    <img class="rounded-circle" src="<?= htmlspecialchars($authorAvatar) ?>" style="width: 40px; height: 40px; object-fit: cover;" alt="Avatar tác giả">
+                    <div class="ms-2">
+                      <a href="<?= BASE_URL ?>/view_profile?id=<?= $article['author_id'] ?>" class="fw-bold text-dark text-decoration-none">
+                        <?= htmlspecialchars($article['author_name']) ?>
+                      </a>
+                      <div class="text-muted small"><?= timeAgo($article['created_at']) ?></div>
+                    </div>
+                  </div>
+
+                  <?php if (!empty($article['main_image_url'])) : ?>
+                    <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>" target="_blank">
+                      <img class="img-fluid rounded mb-3" src="<?= htmlspecialchars($article['main_image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                    </a>
+                  <?php endif; ?>
+
+                  <h5 class="card-title mb-2">
+                    <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>" target="_blank" class="text-dark text-decoration-none">
+                      <?= htmlspecialchars($article['title']) ?>
+                    </a>
+                  </h5>
+                  <p class="card-text text-muted small">
+                    <?= htmlspecialchars($article['summary']) ?>
+                  </p>
+                </div>
+                <div class="card-footer bg-white d-flex justify-content-end align-items-center">
+                  <div class="dropdown">
+                    <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fas fa-share-alt me-1"></i> Chia sẻ
+                    </button>
+                    <ul class="dropdown-menu">
+                      <?php $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']); ?>
+                      <li><a class="dropdown-item copylink" href="javascript:void(0)" data-url="<?= $shareUrl ?>">Sao chép link</a></li>
+                      <li><a class="dropdown-item sharefb" href="javascript:void(0)" data-url="<?= $shareUrl ?>">Chia sẻ lên Facebook</a></li>
+                    </ul>
+                  </div>
+                  <button class="btn btn-sm btn-danger ms-2 unsave-article-modal" data-article-id="<?= $article['id'] ?>">
+                    <i class="fas fa-trash-alt me-1"></i> Bỏ lưu
+                  </button>
+                </div>
+              </div>
+            <?php endforeach; ?>
+          </div>
+        <?php else: ?>
+          <div class="text-center p-4">
+            <i class="fas fa-bookmark fa-3x text-muted mb-3"></i>
+            <h5>Chưa có bài viết nào được lưu</h5>
+            <p class="text-muted">Hãy lưu những bài viết bạn quan tâm để xem lại sau này.</p>
+            <a href="<?= BASE_URL ?>" class="btn btn-primary">Khám phá bài viết</a>
+          </div>
+        <?php endif; ?>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Xử lý sự kiện click cho nút "Bỏ lưu" trong modal
+    document.getElementById('savedArticlesModal').addEventListener('click', function(event) {
+        const target = event.target.closest('.unsave-article-modal');
+        if (!target) return;
+
+        const articleId = target.getAttribute('data-article-id');
+        if (!articleId) return;
+
+        if (confirm('Bạn có chắc chắn muốn bỏ lưu bài viết này?')) {
+            fetch('<?= BASE_URL ?>/controller/ArticleSaveController.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'article_id=' + encodeURIComponent(articleId)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const articleItem = document.querySelector(`.article-item[data-article-id-modal='${articleId}']`);
+                    if (articleItem) {
+                        articleItem.remove();
+                    }
+                    
+                    const remainingArticles = document.querySelectorAll('#saved-articles-list-modal .article-item');
+                    if (remainingArticles.length === 0) {
+                        const listContainer = document.getElementById('saved-articles-list-modal');
+                        listContainer.innerHTML = `
+                            <div class="text-center p-4">
+                                <i class="fas fa-bookmark fa-3x text-muted mb-3"></i>
+                                <h5>Chưa có bài viết nào được lưu</h5>
+                                <p class="text-muted">Hãy lưu những bài viết bạn quan tâm để xem lại sau này.</p>
+                                <a href="<?= BASE_URL ?>" class="btn btn-primary">Khám phá bài viết</a>
+                            </div>`;
+                    }
+                    // alert('Đã bỏ lưu bài viết'); // Có thể bỏ alert để trải nghiệm mượt hơn
+                } else {
+                    alert('Có lỗi xảy ra: ' + (data.msg || 'Không thể bỏ lưu'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Có lỗi xảy ra khi kết nối tới máy chủ.');
+            });
+        }
+    });
+
+    // Xử lý chia sẻ (copylink và sharefb)
+    document.getElementById('savedArticlesModal').addEventListener('click', function(event) {
+        const target = event.target;
+
+        if (target.classList.contains('copylink')) {
+            event.preventDefault();
+            const urlToCopy = target.getAttribute('data-url');
+            if (urlToCopy) {
+                navigator.clipboard.writeText(urlToCopy).then(() => {
+                    alert('Đã sao chép link!');
+                }).catch(err => {
+                    console.error('Lỗi khi sao chép: ', err);
+                    alert('Không thể sao chép link.');
+                });
+            }
+        }
+
+        if (target.classList.contains('sharefb')) {
+            event.preventDefault();
+            const urlToShare = target.getAttribute('data-url');
+            if (urlToShare) {
+                const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+            }
+        }
+    });
+});
+</script>

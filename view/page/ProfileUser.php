@@ -89,9 +89,9 @@
 
       <?php endif; ?>
 
-      <a href="<?= BASE_URL ?>/saved_articles" class="btn btn-primary btn-sm w-100 mb-2">
+      <button class="btn btn-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#savedArticlesModal">
         <i class="fas fa-bookmark me-1"></i> Bài viết đã lưu
-      </a>
+      </button>
 
       <button class="btn btn-outline-info btn-sm w-100">
         <i class="fas fa-cog me-1"></i> Cài đặt
