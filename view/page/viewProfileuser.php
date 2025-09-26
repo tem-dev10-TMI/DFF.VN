@@ -68,7 +68,7 @@
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
-                <span><a href="#">Người dùng</a></span>
+                <span><a href="javascript:void(0);">Người dùng</a></span>
                 <span class="c-note">
                     <i class="fas fa-user"></i> <?= htmlspecialchars($user['name'] ?? 'Không rõ') ?>
                 </span>
@@ -84,7 +84,7 @@
 
                         </li>
                         <li class="name">
-                            <a href="#"><?= htmlspecialchars($user['name'] ?? 'Không rõ') ?></a>
+                            <a href="javascript:void(0);"><?= htmlspecialchars($user['name'] ?? 'Không rõ') ?></a>
                         </li>
                         <li class="f-folw">
                             <a class="btn-follow" href="javascript:void(0)"

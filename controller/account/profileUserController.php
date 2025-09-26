@@ -346,7 +346,7 @@ class profileUserController
         ]);
     }
 
-
+    // Trường nói là cái hàm này phiên bản v1 có lẽ sẽ hong dùng nhiều trong tương lại, hàm mới nhất nó nằm ở ArticlesController.php
     public static function editArticle()
     {
         header('Content-Type: application/json');

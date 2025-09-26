@@ -2,7 +2,7 @@
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
-                <span><a href="#">Chủ đề</a></span>
+                <span><a href="javascript:void(0);">Chủ đề</a></span>
                 <span class="c-note"><i class="fas fa-tag"></i> <?= htmlspecialchars($topic['name']) ?></span>
             </h5>
             <div class="box-company">
@@ -14,7 +14,9 @@
                         </li>
                         <li class="alias">Chủ đề</li>
                         <li class="name">
-                            <a href="/topic-<?= $topic['slug'] ?>-t<?= $topic['slug'] ?>.html"><?= htmlspecialchars($topic['name']) ?></a>
+                            <a href="<?= BASE_URL ?>/details_topic/<?= $topic['slug'] ?>">
+                                <?= htmlspecialchars($topic['name']) ?>
+                            </a>
                         </li>
                         <li class="f-folw">
                             <a href="javascript:void(0)" class="follow-btn" data-topic-id="<?= (int)($topic['id'] ?? 0) ?>">
