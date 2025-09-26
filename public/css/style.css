@@ -3519,13 +3519,15 @@ article p a {
 .modal-content {
     border-radius: 15px;
 }
-
 div[data-notify="container"] {
-    top: 300px !important;
+    top: auto !important;
     z-index: 9999 !important;
     background-color: #f0f0f0;
     border: 1px solid #b2aeae;
     text-align: center;
+    transform: translateX(-50%);
+    overflow-y: auto;
+    left: 50% ;
 }
 
 div[data-notify="container"] .close {
@@ -7576,4 +7578,23 @@ ul.timeline .left-arrow:after {
         }
     }
 }
+/* Reset margin & padding toàn cục */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
 
+/* Navbar không dư khoảng trắng */
+.navbar {
+  margin: 0 !important;
+  padding: 0 !important;
+  min-height: auto !important;
+  line-height: 1 !important; /* tránh khoảng dư do line-height */
+}
+
+/* Giữ đồng nhất cả mobile và desktop */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 8px !important; /* có thể thêm padding ngang nếu cần thoáng */
+  }
+}

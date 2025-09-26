@@ -256,9 +256,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         })();
     </script>
     <!-- ====== HEADER (đặt trong navbar) ====== -->
-    <nav class="navbar navbar-light bg-light px-2">
-        <a class="navbar-brand" href="#">Logo</a>
-
+    <nav class="navbar navbar-light bg-light fixed-top"></nav>
+        <a class="container-flud" href="#">Logo</a>
         <!-- Counter badge: CHỈ hiện trên mobile -->
         <div class="ms-auto d-sm-none" id="navCounter" role="status" aria-live="polite">
             <span class="counter-badge">
