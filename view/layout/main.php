@@ -615,7 +615,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             margin: 0 0 8px;
         }
     </style>
-
+    <script></script>
     <script>
         (function() {
             // Dữ liệu sự kiện từ PHP
