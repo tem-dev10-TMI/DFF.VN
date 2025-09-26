@@ -535,19 +535,19 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <?php
                     // Lọc comments: ẩn comment vi phạm khỏi các user khác
                     $currentUserId = $_SESSION['user']['id'] ?? 0;
-                    
+
                     $filteredComments = array_filter($comments, function ($c) use ($currentUserId) {
                         // Nếu comment có vi phạm
                         if ($c['ai_checked'] && $c['ai_violation']) {
                             // Chỉ hiển thị cho user đã viết comment đó
                             return $c['user_id'] == $currentUserId;
                         }
-                        
+
                         // Nếu comment chưa được AI check, chỉ hiển thị cho user đã viết comment đó
                         if (!$c['ai_checked']) {
                             return $c['user_id'] == $currentUserId;
                         }
-                        
+
                         // Comment đã được AI check và không vi phạm - hiển thị cho tất cả
                         return true;
                     });
@@ -875,7 +875,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // Load comment mới - chỉ load comment của người khác đã được AI check và không vi phạm
             function loadNewComments() {
                 const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
-                
+
                 fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=getComments&last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
                     .then(data => {
@@ -883,23 +883,23 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             console.log("📥 Loaded new comments:", data.comments.length);
                             const ul = document.querySelector(".list_comment");
                             let hasNewComments = false;
-                            
+
                             data.comments.forEach(c => {
                                 // Chỉ load comment của người khác (không phải của user hiện tại)
                                 if (c.user_id == currentUserId) {
                                     console.log("⏭️ Skipping own comment:", c.id);
                                     return;
                                 }
-                                
+
                                 // CHỈ load comment đã được AI check và KHÔNG vi phạm
                                 if (!c.ai_checked || c.ai_violation == 1) {
                                     console.log("⏭️ Skipping comment - not AI checked or violation:", c.id, "ai_checked:", c.ai_checked, "ai_violation:", c.ai_violation);
                                     return;
                                 }
-                                
+
                                 // Kiểm tra comment đã tồn tại chưa
                                 const existingElement = document.querySelector(`.chat-item[data-id="${c.id}"]`);
-                                
+
                                 if (!existingElement) {
                                     console.log("🆕 New SAFE comment from others:", c.id, c.content);
 
@@ -924,7 +924,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     console.log("⏭️ Comment already exists:", c.id);
                                 }
                             });
-                            
+
                             // Chỉ scroll lên đầu nếu có comment mới
                             if (hasNewComments) {
                                 ul.scrollTop = 0;
@@ -1135,13 +1135,13 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                 // Kiểm tra quyền hiển thị comment
                 const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
-                
+
                 // Ẩn comment vi phạm khỏi user khác
                 if (c.ai && c.ai.isViolation && !c.ai.isChecking && c.user_id !== currentUserId) {
                     li.style.display = 'none';
                     return li;
                 }
-                
+
                 // Ẩn comment chưa được AI check khỏi user khác
                 if (!c.ai_checked && c.user_id !== currentUserId) {
                     li.style.display = 'none';
@@ -1194,18 +1194,54 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Function xóa comment vi phạm
             window.deleteViolationComment = async function(commentId) {
+                console.log('🗑️ Attempting to delete comment:', commentId);
+
                 if (!confirm('Bạn có chắc chắn muốn xóa bình luận vi phạm này?')) {
                     return;
                 }
 
                 try {
+                    // Tìm comment element bằng nhiều cách
+                    let commentElement = null;
+
+                    // Cách 1: Tìm bằng data-comment-id
+                    commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
+
+                    // Cách 2: Tìm bằng data-id
+                    if (!commentElement) {
+                        commentElement = document.querySelector(`[data-id="${commentId}"]`);
+                    }
+
+                    // Cách 3: Tìm bằng class chat-item và data-id
+                    if (!commentElement) {
+                        commentElement = document.querySelector(`.chat-item[data-id="${commentId}"]`);
+                    }
+
+                    // Cách 4: Tìm bằng onclick attribute
+                    if (!commentElement) {
+                        const allDeleteButtons = document.querySelectorAll('.delete-violation-btn');
+                        for (let btn of allDeleteButtons) {
+                            if (btn.onclick && btn.onclick.toString().includes(commentId)) {
+                                commentElement = btn.closest('.chat-item') || btn.closest('li');
+                                break;
+                            }
+                        }
+                    }
+
+                    console.log('🔍 Found comment element:', commentElement);
+
                     // Xóa comment khỏi UI ngay lập tức
-                    const commentElement = document.querySelector(`[data-comment-id="${commentId}"]`);
                     if (commentElement) {
-                        commentElement.remove();
+                        // Tìm li element chứa comment
+                        const liElement = commentElement.closest('li') || commentElement;
+                        liElement.remove();
+                        console.log('✅ Comment removed from UI');
+                    } else {
+                        console.warn('⚠️ Comment element not found in UI, but will still try to delete from database');
                     }
 
                     // Gọi API xóa comment khỏi database
+                    console.log('📡 Calling delete API for comment:', commentId);
                     const response = await fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=deleteComment", {
                         method: "POST",
                         headers: {
@@ -1215,17 +1251,25 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
                     });
 
+                    console.log('📡 Delete API response status:', response.status);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
                     const data = await response.json();
+                    console.log('📡 Delete API response data:', data);
+
                     if (data.status === "success") {
                         console.log('✅ Comment vi phạm đã được xóa');
                     } else {
                         console.error('❌ Lỗi khi xóa comment:', data.message);
-                        alert('Có lỗi xảy ra khi xóa bình luận!');
+                        alert('❌ Có lỗi xảy ra khi xóa bình luận: ' + (data.message || 'Lỗi không xác định'));
                     }
 
                 } catch (error) {
                     console.error('❌ Lỗi khi xóa comment:', error);
-                    alert('Có lỗi xảy ra khi xóa bình luận!');
+                    alert('Có lỗi xảy ra khi xóa bình luận: ' + error.message);
                 }
             };
         </script>

@@ -74,22 +74,37 @@ if ($action === "deleteComment") {
     $comment_id = intval($_POST['comment_id'] ?? 0);
     $user_id = intval($_POST['user_id'] ?? 0);
     
+    // Debug logs
+    error_log("DEBUG deleteComment: comment_id=$comment_id, user_id=$user_id");
+    
     if ($comment_id <= 0 || $user_id <= 0) {
+        error_log("DEBUG deleteComment: Missing data - comment_id=$comment_id, user_id=$user_id");
         echo json_encode(["status" => "error", "message" => "Thiếu dữ liệu"]);
         exit;
     }
 
     // Kiểm tra quyền: chỉ cho phép xóa comment của chính mình
     $comment = $model->getById($comment_id);
-    if (!$comment || $comment['user_id'] != $user_id) {
+    error_log("DEBUG deleteComment: Found comment: " . json_encode($comment));
+    
+    if (!$comment) {
+        error_log("DEBUG deleteComment: Comment not found with ID: $comment_id");
+        echo json_encode(["status" => "error", "message" => "Không tìm thấy comment này"]);
+        exit;
+    }
+    
+    if ($comment['user_id'] != $user_id) {
+        error_log("DEBUG deleteComment: Permission denied - comment user_id={$comment['user_id']}, request user_id=$user_id");
         echo json_encode(["status" => "error", "message" => "Không có quyền xóa comment này"]);
         exit;
     }
 
     $ok = $model->delete($comment_id);
     if ($ok) {
+        error_log("DEBUG deleteComment: Successfully deleted comment ID: $comment_id");
         echo json_encode(["status" => "success", "message" => "Đã xóa bình luận"]);
     } else {
+        error_log("DEBUG deleteComment: Failed to delete comment ID: $comment_id");
         echo json_encode(["status" => "error", "message" => "Lỗi khi xóa bình luận"]);
     }
     exit;
