@@ -1,5 +1,8 @@
 <!doctype html>
 <html lang="vi">
+<?php
+$route = $_GET['route'] ?? 'dashboard';
+?>
 
 <head>
   <meta charset="utf-8">
@@ -41,25 +44,15 @@
               href="<?= BASE_URL ?>/admin.php?route=dashboard"><i class="bi bi-house-door me-1"></i> Dashboard</a></li>
           <li class="nav-item"><a class="nav-link <?= ($route == 'users' ? 'active' : '') ?>"
               href="<?= BASE_URL ?>/admin.php?route=users"><i class="bi bi-people me-1"></i> Users</a></li>
-          <li class="nav-item"><a class="nav-link <?= ($route == 'articles' ? 'active' : '') ?>"
-              href="<?= BASE_URL ?>/admin.php?route=articles"><i class="bi bi-file-earmark-text me-1"></i> Articles</a>
+          <li class="nav-item"><a class="nav-link <?= ($route == 'article' ? 'active' : '') ?>"
+              href="<?= BASE_URL ?>/admin.php?route=article&action=reviewList"><i
+                class="bi bi-file-earmark-text me-1"></i> Articles</a>
           </li>
           <li class="nav-item"><a class="nav-link <?= ($route == 'topics' ? 'active' : '') ?>"
               href="<?= BASE_URL ?>/admin.php?route=topics"><i class="bi bi-bookmarks me-1"></i> Topics</a></li>
           <li class="nav-item"><a class="nav-link <?= ($route == 'tags' ? 'active' : '') ?>"
               href="<?= BASE_URL ?>/admin.php?route=tags"><i class="bi bi-tags me-1"></i> Tags</a></li>
-          <li class="nav-item"><a class="nav-link <?= ($route == 'media' ? 'active' : '') ?>"
-              href="<?= BASE_URL ?>/admin.php?route=media"><i class="bi bi-images me-1"></i> Media</a></li>
-          <li class="nav-item"><a class="nav-link <?= ($route == 'comments' ? 'active' : '') ?>"
-              href="<?= BASE_URL ?>/admin.php?route=comments"><i class="bi bi-chat-dots me-1"></i> Comments</a></li>
         </ul>
-
-        <!-- Search -->
-        <form class="d-flex me-3" method="GET" action="<?= BASE_URL ?>/admin.php">
-          <input type="hidden" name="route" value="articles">
-          <input class="form-control form-control-sm me-2" name="q" type="search" placeholder="Tìm bài viết...">
-          <button class="btn btn-outline-primary btn-sm" type="submit"><i class="bi bi-search"></i></button>
-        </form>
 
         <!-- User info -->
         <?php if (!empty($_SESSION['user'])): ?>
