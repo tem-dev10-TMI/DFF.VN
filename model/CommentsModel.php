@@ -104,4 +104,11 @@ class CommentsModel {
         
         return $comment;
     }
+
+    // Xóa comment
+    public function delete($comment_id) {
+        $sql = "DELETE FROM comments WHERE id = :comment_id";
+        $stmt = $this->pdo->prepare($sql);
+        return $stmt->execute([':comment_id' => $comment_id]);
+    }
 }
