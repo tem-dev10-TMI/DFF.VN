@@ -736,7 +736,7 @@ body {
     line-height: 1;
     background-color: #f7f7f7;
     font: 13px;
-    color: #262626;
+    color: #ffffff;
     font-size: 14px;
     font-family: "Segoe UI", Arial, sans-serif;
 }
@@ -2008,11 +2008,19 @@ textarea.form-control {
     overflow: auto;
 }
 
-.m-menu-i {
-    padding: 20px;
-    z-index: 9999;
+@media (max-width: 768px) {
+  .m-menu-i {
     position: fixed;
-}
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;          /* quan trọng: chiếm hết chiều cao màn hình */
+    width: 100%;
+    background: #fff;
+    z-index: 9999;
+    padding: 20px;
+    overflow-y: auto;   /* cho phép cuộn khi nội dung dài */
+  }}
 
 .m-menu-i label {
     padding: 10px 0 0;
@@ -3520,12 +3528,16 @@ article p a {
     border-radius: 15px;
 }
 
-div[data-notify="container"] {
-    top: 300px !important;
+@media (max-width: 768px) {
+  div[data-notify="container"] {
+    position: fixed !important;
+    bottom: 70px !important;   /* chỉnh cao hơn menu (menu ~60px, để 70px an toàn) */
+    top: auto !important;      /* bỏ top để không dính trên */
+    left: 50% !important;
+    transform: translateX(-50%);
+    width: 90%;                /* co lại cho đẹp trên mobile */
     z-index: 9999 !important;
-    background-color: #f0f0f0;
-    border: 1px solid #b2aeae;
-    text-align: center;
+  }
 }
 
 div[data-notify="container"] .close {
@@ -3556,6 +3568,37 @@ div[data-notify="container"] .close {
 #back-top:hover {
     background: #8d8f93;
 }
+/*mxh nhỏ*/.floating-social {
+    position: fixed;
+    right: 4px;
+    bottom: 60px;   
+    display: flex;
+    flex-direction: column;
+    gap: 6px;        /* khoảng cách giữa icon */
+    z-index: 9999;
+}
+
+.floating-social a {
+    display: flex;
+    align-items: center;   /* căn giữa dọc */
+    justify-content: center; /* căn giữa ngang */
+    width: 30px;    /* vòng tròn nhỏ lại */
+    height: 30px;   
+    background: #2e2e2e;
+    color: #fff;
+    font-size: 18px;  /* icon to hơn */
+    border-radius: 50%;   
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3),
+                0 2px 6px 2px rgba(60, 64, 67, 0.3);
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.floating-social a:hover {
+    background: #8d8f93;
+    transform: scale(1.1); /* hover phóng to nhẹ */
+}
+/*End*/
 
 .profile-top img {
     border-radius: 50%;
@@ -7575,5 +7618,18 @@ ul.timeline .left-arrow:after {
             transform: translateY(0);
         }
     }
+}
+.btn-seach {
+  background-color: #fff !important;   /* Luôn trắng */
+  border: 1px solid #ccc;             /* Viền nhẹ */
+  color: #333;                        /* Icon màu tối */
+}
+
+.btn-seach:focus,
+.btn-seach:active,
+.btn-seach:hover {
+  background-color: #fff !important;  /* Khi click vẫn trắng */
+  color: #333 !important;
+  box-shadow: none !important;        /* Bỏ viền xanh focus */
 }
 
