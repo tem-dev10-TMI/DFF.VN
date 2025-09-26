@@ -100,73 +100,97 @@
             }
         }
     </style>
-<div class="container-fluid">
-    <div class="row">
-        <!-- CỘT TRÁI: APP-SHELL (VIDEO CHÍNH + ĐỀ XUẤT) -->
-        <div class="col-lg-8">
-            <div class="container-lg app-shell p-3 p-md-4">
-                <div class="row g-4">
-                    <!-- Cột TRÁI: danh sách video -->
-                    <div class="col-lg-8 col-md-7 video-main">
-                        <div class="vstack gap-4">
-                            <!-- Video #1 -->
-                            <div class="ratio-9x16 block rounded-2 overflow-hidden">
-                                <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                    allow="autoplay; fullscreen" 
-                                    allowfullscreen 
-                                    class="w-100 h-100 border-0">
-                                </iframe>
-                            </div>
+    <div class="container-fluid">
+        <div class="row">
+            <form action="javascript:seekTo(to)">
+                <label for="fname">Jump to (seconds)</label><br>
+                <input type="text" id="to" name="to" value="20"><br>
+            </form>
 
-                            <!-- Video #2 -->
-                            <div class="ratio-9x16 block rounded-2 overflow-hidden">
-                                <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                    allow="autoplay; fullscreen" 
-                                    allowfullscreen 
-                                    class="w-100 h-100 border-0">
-                                </iframe>
-                            </div>
+            <iframe height="300" width="400" src="https://www.tiktok.com/player/v1/6718335390845095173?&music_info=1&description=1" allow="fullscreen" title="test"></iframe>
+            <br />
 
-                            <!-- Video #3 -->
-                            <div class="ratio-9x16 block rounded-2 overflow-hidden">
-                                <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                    allow="autoplay; fullscreen" 
-                                    allowfullscreen 
-                                    class="w-100 h-100 border-0">
-                                </iframe>
+            <script>
+                // Receive messages 
+                window.addEventListener('message', (event) => {
+                    // do something
+                });
+
+                // Send messages
+                function seekTo(to) {
+                    const iframe = document.querySelector("iframe");
+                    iframe.contentWindow.postMessage({
+                        type: "seekTo",
+                        value: Number(to.value),
+                        "x-tiktok-player": true
+                    }, '*');
+                }
+            </script>
+            <!-- CỘT TRÁI: APP-SHELL (VIDEO CHÍNH + ĐỀ XUẤT) -->
+            <div class="col-lg-8">
+                <div class="container-lg app-shell p-3 p-md-4">
+                    <div class="row g-4">
+                        <!-- Cột TRÁI: danh sách video -->
+                        <div class="col-lg-8 col-md-7 video-main">
+                            <div class="vstack gap-4">
+                                <!-- Video #1 -->
+                                <div class="ratio-9x16 block rounded-2 overflow-hidden">
+                                    <iframe src="https://www.tiktok.com/oembed?url=https://www.tiktok.com/@dff.vn/video/7550913252214066433?is_from_webapp=1&sender_device=pc"
+                                        allow="autoplay; fullscreen"
+                                        allowfullscreen
+                                        class="w-100 h-100 border-0">
+                                    </iframe>
+                                </div>
+
+                                <!-- Video #2 -->
+                                <div class="ratio-9x16 block rounded-2 overflow-hidden">
+                                    <blockquote class="tiktok-embed" cite="https://www.tiktok.com/@letuankhang2002/video/7527258883841101073" data-video-id="7527258883841101073" style="max-width: 605px;min-width: 325px;">
+                                        <section> <a target="_blank" title="@letuankhang2002" href="https://www.tiktok.com/@letuankhang2002?refer=embed">@letuankhang2002</a> Tập cuối. <a title="letuankhang" target="_blank" href="https://www.tiktok.com/tag/letuankhang?refer=embed">#letuankhang</a> <a title="cellphones" target="_blank" href="https://www.tiktok.com/tag/cellphones?refer=embed">#Cellphones</a> <a target="_blank" title="♬ nhạc nền  - Lê Tuấn Khang" href="https://www.tiktok.com/music/nhạc-nền-Lê-Tuấn-Khang-7527259240907115281?refer=embed">♬ nhạc nền - Lê Tuấn Khang</a> </section>
+                                    </blockquote>
+                                    <script async src="https://www.tiktok.com/embed.js"></script>
+                                </div>
+
+                                <!-- Video #3 -->
+                                <div class="ratio-9x16 block rounded-2 overflow-hidden">
+                                    <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1"
+                                        allow="autoplay; fullscreen"
+                                        allowfullscreen
+                                        class="w-100 h-100 border-0">
+                                    </iframe>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Cột PHẢI: đề xuất (không bị kéo xuống) -->
-                    <div class="col-lg-4 col-md-5 d-none d-md-block video-suggest">
-                        <div class="suggest sticky-top" style="top:-38px">
-                            <div class="row row-cols-1 g-3">
-                                <div class="col">
-                                    <div class="ratio-9x16 suggest-card overflow-hidden">
-                                        <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                            allow="autoplay; fullscreen" 
-                                            allowfullscreen 
-                                            class="w-100 h-100 border-0">
-                                        </iframe>
+                        <!-- Cột PHẢI: đề xuất (không bị kéo xuống) -->
+                        <div class="col-lg-4 col-md-5 d-none d-md-block video-suggest">
+                            <div class="suggest sticky-top" style="top:-38px">
+                                <div class="row row-cols-1 g-3">
+                                    <div class="col">
+                                        <div class="ratio-9x16 suggest-card overflow-hidden">
+                                            <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1"
+                                                allow="autoplay; fullscreen"
+                                                allowfullscreen
+                                                class="w-100 h-100 border-0">
+                                            </iframe>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="ratio-9x16 suggest-card overflow-hidden">
-                                        <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                            allow="autoplay; fullscreen" 
-                                            allowfullscreen 
-                                            class="w-100 h-100 border-0">
-                                        </iframe>
+                                    <div class="col">
+                                        <div class="ratio-9x16 suggest-card overflow-hidden">
+                                            <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1"
+                                                allow="autoplay; fullscreen"
+                                                allowfullscreen
+                                                class="w-100 h-100 border-0">
+                                            </iframe>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col">
-                                    <div class="ratio-9x16 suggest-card overflow-hidden">
-                                        <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1" 
-                                            allow="autoplay; fullscreen" 
-                                            allowfullscreen 
-                                            class="w-100 h-100 border-0">
-                                        </iframe>
+                                    <div class="col">
+                                        <div class="ratio-9x16 suggest-card overflow-hidden">
+                                            <iframe src="https://www.tiktok.com/player/v1/7552024696007445761?&music_info=1&description=1"
+                                                allow="autoplay; fullscreen"
+                                                allowfullscreen
+                                                class="w-100 h-100 border-0">
+                                            </iframe>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -174,34 +198,33 @@
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- CỘT PHẢI: QUẢNG CÁO (DIV RIÊNG) -->
-        <div class="col-lg-3 ads-col">
-            <div class="content-right">
-                <div class="adv-banner mb-3">
-                    <a href="#" target="_blank" rel="nofollow">
-                        <img src="<?= BASE_URL ?>/public/img/banner/Post4.jpg" alt="Banner" class="img-fluid rounded-2" />
-                    </a>
-                </div>
-                <div class="adv-banner mb-3">
-                    <a href="#" target="_blank" rel="nofollow">
-                        <img src="<?= BASE_URL ?>/public/img/banner/Post3.jpg" alt="Banner" class="img-fluid rounded-2" />
-                    </a>
-                </div>
-                <div class="adv-banner mb-3">
-                    <a href="#" target="_blank" rel="nofollow">
-                        <img src="<?= BASE_URL ?>/public/img/banner/Post1.jpg" alt="Banner" class="img-fluid rounded-2" />
-                    </a>
-                </div>
-                <div class="adv-banner mb-3">
-                    <a href="#" target="_blank" rel="nofollow">
-                        <img src="<?= BASE_URL ?>/public/img/banner/Post2.jpg" alt="Banner" class="img-fluid rounded-2" />
-                    </a>
+            <!-- CỘT PHẢI: QUẢNG CÁO (DIV RIÊNG) -->
+            <div class="col-lg-3 ads-col">
+                <div class="content-right">
+                    <div class="adv-banner mb-3">
+                        <a href="#" target="_blank" rel="nofollow">
+                            <img src="<?= BASE_URL ?>/public/img/banner/Post4.jpg" alt="Banner" class="img-fluid rounded-2" />
+                        </a>
+                    </div>
+                    <div class="adv-banner mb-3">
+                        <a href="#" target="_blank" rel="nofollow">
+                            <img src="<?= BASE_URL ?>/public/img/banner/Post3.jpg" alt="Banner" class="img-fluid rounded-2" />
+                        </a>
+                    </div>
+                    <div class="adv-banner mb-3">
+                        <a href="#" target="_blank" rel="nofollow">
+                            <img src="<?= BASE_URL ?>/public/img/banner/Post1.jpg" alt="Banner" class="img-fluid rounded-2" />
+                        </a>
+                    </div>
+                    <div class="adv-banner mb-3">
+                        <a href="#" target="_blank" rel="nofollow">
+                            <img src="<?= BASE_URL ?>/public/img/banner/Post2.jpg" alt="Banner" class="img-fluid rounded-2" />
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 
 </main>

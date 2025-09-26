@@ -2,7 +2,7 @@
     <div class="content-left cover-page">
         <div class="block-k box-company-label">
             <h5>
-                <span><a href="#">Chủ đề</a></span>
+                <span><a href="javascript:void(0);">Chủ đề</a></span>
                 <span class="c-note"><i class="fas fa-tag"></i> <?= htmlspecialchars($topic['name']) ?></span>
             </h5>
             <div class="box-company">
