@@ -12,7 +12,7 @@
                     <div class="input-group" onkeypress="return OnEnter(event)">
                         <span class="input-group-append">
                             <button
-                                class="btn btn-outline-secondary bg-white border-bottom-0 border rounded-pill ms-n5 btn-seach"
+                                class="btn btn-seach rounded-pill ms-n5"
                                 type="button" onclick="doSearch()">
                                 <i class="fa fa-search"></i>
                             </button>
