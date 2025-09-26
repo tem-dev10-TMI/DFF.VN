@@ -190,9 +190,21 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                         </span>
                     </div>
 
-                    <div class="button-ar sharefb" data-url="/post-<?= htmlspecialchars($article['id'] ?? '') ?>.html">
-                        <i class="far fa-share-square "
-                            data-url="/post-<?= htmlspecialchars($article['id'] ?? '') ?>.html"></i><span>Chia sẻ</span>
+                    <div class="button-ar">
+                        <div class="dropdown home-item">
+                            <span data-bs-toggle="dropdown">Chia sẻ</span>
+                            <ul class="dropdown-menu">
+                                <?php
+                                $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
+                                ?>
+                                <li><a class="dropdown-item copylink"
+                                        data-url="<?= $shareUrl ?>"
+                                        href="javascript:void(0)">Copy link</a></li>
+                                <li><a class="dropdown-item sharefb"
+                                        data-url="<?= $shareUrl ?>"
+                                        href="javascript:void(0)">Share FB</a></li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="button-ar fc-saved">
                         <i title="copy link bài viết" class="fas fa-link copylink"
@@ -1074,9 +1086,101 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
 
             loadLikeStatus();
         });
+
+        // JS for Share & Copy Link
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+
+            // --- Toggle Dropdown ---
+            if (target.hasAttribute('data-bs-toggle') && target.getAttribute('data-bs-toggle') === 'dropdown') {
+                event.preventDefault();
+                const dropdown = target.closest('.home-item');
+                const menu = dropdown.querySelector('.dropdown-menu');
+                if (menu) {
+                    menu.classList.toggle('show');
+                }
+            }
+
+            // --- Copy Link ---
+            if (target.classList.contains('copylink')) {
+                event.preventDefault();
+                const urlToCopy = target.getAttribute('data-url');
+                if (urlToCopy) {
+                    navigator.clipboard.writeText(urlToCopy).then(() => {
+                        alert('Đã sao chép link!');
+                    }).catch(err => {
+                        console.error('Lỗi khi sao chép: ', err);
+                        alert('Không thể sao chép link.');
+                    });
+                }
+            }
+
+            // --- Share to Facebook ---
+            if (target.classList.contains('sharefb')) {
+                event.preventDefault();
+                const urlToShare = target.getAttribute('data-url');
+                if (urlToShare) {
+                    const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                    window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+                }
+            }
+
+            // --- Close dropdown when clicking outside ---
+            if (!target.closest('.home-item')) {
+                document.querySelectorAll('.home-item .dropdown-menu.show').forEach(menu => {
+                    menu.classList.remove('show');
+                });
+            }
+        });
     </script>
 
     <style>
+        /* Share Dropdown Styles */
+        .home-item {
+            position: relative;
+            display: inline-block;
+        }
+
+        .home-item .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            display: none;
+            min-width: 160px;
+            padding: 5px 0;
+            margin: 2px 0 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+        }
+
+        .home-item .dropdown-menu.show {
+            display: block;
+        }
+
+        .home-item .dropdown-item {
+            display: block;
+            width: 100%;
+            padding: 8px 16px;
+            clear: both;
+            font-weight: normal;
+            line-height: 1.42857143;
+            color: #333;
+            white-space: nowrap;
+            text-decoration: none;
+            background-color: transparent;
+            border: 0;
+        }
+
+        .home-item .dropdown-item:hover,
+        .home-item .dropdown-item:focus {
+            color: #262626;
+            text-decoration: none;
+            background-color: #f5f5f5;
+        }
+
         /* AI Comment Check Styles - Enhanced */
         .ai-violation-warning {
             animation: fadeIn 0.3s ease-in;

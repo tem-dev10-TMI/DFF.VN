@@ -7785,6 +7785,73 @@ ul.timeline .left-arrow:after {
 /* Chỉ áp dụng cho màn hình nhỏ (đi điện thoại) */
 /* --- CSS CHO MODAL TRÀN VIỀN TRÊN DI ĐỘNG --- */
 @media (max-width: 767.98px) {
+    /* CSS cho modal thông báo - nằm sát dưới cùng không hở */
+    .modal-mobile-custom {
+        /* Che phủ toàn bộ màn hình */
+        padding: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 9999;
+        margin: 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .modal-mobile-custom .modal-dialog {
+        /* Chiếm toàn bộ chiều rộng và nằm sát dưới cùng */
+        width: 100vw; /* Chiếm 100% chiều rộng của viewport */
+        max-width: none; /* Bỏ giới hạn chiều rộng tối đa */
+        height: 30vh; /* Chỉ chiếm 30% chiều cao viewport */
+        max-height: 30vh; /* Giới hạn tối đa 30% chiều cao */
+        margin: 0; /* Bỏ margin xung quanh */
+        transform: translateY(100%); /* Bắt đầu từ dưới màn hình */
+        /* Hiệu ứng trượt từ dưới lên */
+        animation: slideInUpFromBottom 0.3s ease-out forwards;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+    }
+
+    .modal-mobile-custom.show .modal-dialog {
+        animation: slideInUpFromBottom 0.3s ease-out forwards;
+    }
+
+    .modal-mobile-custom .modal-content {
+        height: 100%; /* Chiếm 100% chiều cao của modal dialog */
+        max-height: 30vh; /* Giới hạn tối đa 30% chiều cao viewport */
+        border-radius: 16px 16px 0 0; /* Bo góc trên lớn hơn cho footer style */
+        box-shadow: 0 -8px 32px rgba(0,0,0,0.2); /* Bóng đổ mạnh hơn */
+        border: none; /* Bỏ viền */
+        background: #fff;
+        border-top: 1px solid #e0e0e0; /* Viền nhẹ phía trên */
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-mobile-custom .modal-header {
+        border-bottom: 1px solid #eee; /* Có thể thêm lại đường viền header */
+        padding: 1rem;
+        background: #fff;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .modal-mobile-custom .modal-body {
+        padding: 1rem;
+        /* Nếu nội dung tràn, body sẽ scroll */
+        overflow-y: auto; 
+        background: #fff;
+        flex: 1; /* Chiếm phần còn lại của modal-content */
+        display: flex;
+        flex-direction: column;
+    }
+
     .modal-fullscreen-mobile {
         /* Ghi đè align-items của Bootstrap để đẩy modal lên sát cạnh trên */
         align-items: flex-start;
@@ -7825,6 +7892,22 @@ ul.timeline .left-arrow:after {
         overflow-y: auto; 
     }
 
+    /* Hiệu ứng trượt từ dưới lên cho modal thông báo */
+    @keyframes slideInUpFromBottom {
+        from {
+            transform: translateY(100%);
+        }
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    /* Khi modal hiện lên, nó sẽ nằm sát dưới cùng */
+    .modal-mobile-custom.show .modal-dialog {
+        transform: translateY(0) !important;
+        animation: slideInUpFromBottom 0.3s ease-out forwards;
+    }
+
     /* Hiệu ứng trượt lên (có thể tái sử dụng hoặc tinh chỉnh) */
     @keyframes slideInUpFullScreen {
         from {
@@ -7833,6 +7916,36 @@ ul.timeline .left-arrow:after {
         to {
             transform: translateY(0);
         }
+    }
+}
+
+/* CSS cho tablet và màn hình trung bình */
+@media (min-width: 768px) and (max-width: 1023px) {
+    .modal-mobile-custom .modal-dialog {
+        width: 90vw;
+        max-width: 600px;
+        height: 80vh;
+        margin: 10vh auto;
+    }
+    
+    .modal-mobile-custom .modal-content {
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+}
+
+/* CSS cho desktop */
+@media (min-width: 1024px) {
+    .modal-mobile-custom .modal-dialog {
+        width: 50vw;
+        max-width: 500px;
+        height: 70vh;
+        margin: 15vh auto;
+    }
+    
+    .modal-mobile-custom .modal-content {
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 }
 .btn-seach {
@@ -7848,4 +7961,6 @@ ul.timeline .left-arrow:after {
   color: #333 !important;
   box-shadow: none !important;        /* Bỏ viền xanh focus */
 }
+
+  
 
