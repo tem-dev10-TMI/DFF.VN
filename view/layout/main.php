@@ -187,7 +187,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             <span class="lc-text">
                 <div class="lc-line">
                     <i class="bi bi-people-fill me-1"></i>
-                    Đang truy cập: <strong id="onlineCount">--</strong>
+                    Đang truy cập: <strong id="onlineCount" data-role="online-count">--</strong>
                 </div>
                 <div class="lc-line">
                     <i class="bi bi-eye me-1"></i>
@@ -197,129 +197,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </div>
     </div>
 
-    <script>
-        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
-        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
-    </script>
 
-    <script>
-        (function() {
-            const onlineEl = document.getElementById('onlineCount');
-            const totalEl = document.getElementById('totalViews');
-            const dotEl = document.getElementById('onlineDot');
 
-            async function updateCounter() {
-                try {
-                    // trong JS
-                    const base = window.BASE_URL || '';
-                    const metricsUrl = base + '/TRACK/metrics.php';
-                    // console.log('metricsUrl =', metricsUrl); // kiểm tra trên Console
-
-                    const res = await fetch(metricsUrl, {
-                        cache: 'no-store',
-                        credentials: 'same-origin'
-                    });
-
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const data = await res.json();
-
-                    onlineEl.textContent = (data?.onlineVisitors ?? 0);
-                    if (totalEl) totalEl.textContent = (data?.totalViews ?? 0);
-
-                    // hiệu ứng chớp nhẹ khi cập nhật
-                    dotEl.textContent = '•';
-                } catch (e) {
-                    // lỗi thì giữ số cũ, chấm chuyển x
-                    dotEl.textContent = '×';
-                }
-                // chuyển lại dấu chấm sau 1s cho gọn
-                setTimeout(() => {
-                    dotEl.textContent = '•';
-                }, 1000);
-            }
-
-            // cập nhật ngay khi tải trang
-            updateCounter();
-
-            // cập nhật mỗi 15 giây
-            let timer = setInterval(updateCounter, 15000);
-
-            // tiết kiệm tài nguyên khi tab bị ẩn
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    clearInterval(timer);
-                } else {
-                    updateCounter();
-                    timer = setInterval(updateCounter, 15000);
-                }
-            });
-        })();
-    </script>
-    <!-- ====== HEADER (đặt trong navbar) ====== -->
-    <nav class="navbar navbar-light bg-light px-2">
-        <a class="navbar-brand" href="#">Logo</a>
-
-        <!-- Counter badge: CHỈ hiện trên mobile -->
-        <div class="ms-auto d-sm-none" id="navCounter" role="status" aria-live="polite">
-            <span class="counter-badge">
-                <i class="bi bi-people-fill"></i>
-                <strong data-counter="online">--</strong>
-            </span>
-        </div>
-    </nav>
-    <!-- ====== BASE_URL (giữ nguyên như bạn đang dùng) ====== -->
-    <script>
-        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
-        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
-    </script>
-
-    <!-- ====== JS cập nhật cho cả header & floating ====== -->
-    <script>
-        (function () {
-            const dotEl = document.getElementById('onlineDot');
-
-            function setAllCounters(selector, value) {
-                document.querySelectorAll(selector).forEach(el => el.textContent = value);
-            }
-
-            async function updateCounter() {
-                try {
-                    const base = window.BASE_URL || '';
-                    const metricsUrl = base + '/TRACK/metrics.php';
-                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
-                    if (!res.ok) throw new Error('HTTP ' + res.status);
-                    const data = await res.json();
-
-                    const online = data?.onlineVisitors ?? 0;
-                    const total = data?.totalViews ?? 0;
-
-                    setAllCounters('[data-counter="online"]', online);
-                    setAllCounters('[data-counter="total"]', total);
-
-                    if (dotEl) dotEl.textContent = '•';
-                } catch (e) {
-                    if (dotEl) dotEl.textContent = '×';
-                }
-                if (dotEl) setTimeout(() => { dotEl.textContent = '•'; }, 1000);
-            }
-
-            // cập nhật ngay khi tải
-            updateCounter();
-
-            // cập nhật mỗi 15 giây
-            let timer = setInterval(updateCounter, 15000);
-
-            // tiết kiệm tài nguyên khi tab bị ẩn
-            document.addEventListener('visibilitychange', () => {
-                if (document.hidden) {
-                    clearInterval(timer);
-                } else {
-                    updateCounter();
-                    timer = setInterval(updateCounter, 15000);
-                }
-            });
-        })();
-    </script>
 
     <!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
 
@@ -449,11 +328,68 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     ?>
 
+    <!-- m-top-info Lâm Phương Khánh-->
     <div class="m-top-info">
         <span class="t-left"><i class="far fa-clock"></i><span class="currentDate"> </span></span>
-        <span class="t-right"><i class="bi bi-text-indent-right"></i><a href="profile_user" class="user-gradient-name">
-                <?php echo htmlspecialchars($_SESSION['user']['name'] ?? 'Hello World'); ?> </a></span>
+        <span class="t-right">
+            <div class="lc-line">
+                <i class="bi bi-people-fill me-1"></i>
+                Đang truy cập: <strong id="onlineCountHeader" data-role="online-count">--</strong>
+            </div>
+        </span>
     </div>
+    <script>
+        // VD: nếu đang ở http://localhost/DFF.VN/ thì BASE_URL = "/DFF.VN"
+        window.BASE_URL = "<?= rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\') ?>";
+    </script>
+
+    <script>
+        (function () {
+            const onlineTargets = document.querySelectorAll('[data-role="online-count"], #onlineCount, #onlineCountHeader');
+            const totalEl = document.getElementById('totalViews');
+            const dotEl = document.getElementById('onlineDot'); // có thể không tồn tại
+
+            async function updateCounter() {
+                try {
+                    const base = window.BASE_URL || '';
+                    const metricsUrl = base + '/TRACK/metrics.php';
+
+                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+                    if (!res.ok) throw new Error('HTTP ' + res.status);
+
+                    const data = await res.json();
+                    const online = (data?.onlineVisitors ?? 0);
+                    const total = (data?.totalViews ?? 0);
+
+                    // cập nhật tất cả nơi hiển thị online
+                    onlineTargets.forEach(el => el.textContent = online);
+
+                    // tổng lượt xem (nếu có)
+                    if (totalEl) totalEl.textContent = total;
+
+                    // hiệu ứng chấm
+                    if (dotEl) dotEl.textContent = '•';
+                } catch (e) {
+                    if (dotEl) dotEl.textContent = '×';
+                }
+                setTimeout(() => { if (dotEl) dotEl.textContent = '•'; }, 1000);
+            }
+
+            // chạy ngay và lặp
+            updateCounter();
+            let timer = setInterval(updateCounter, 15000);
+
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden) {
+                    clearInterval(timer);
+                } else {
+                    updateCounter();
+                    timer = setInterval(updateCounter, 15000);
+                }
+            });
+        })();
+    </script>
+    <!-- End Lâm Phương Khánh -->
     <!-- header start -->
 
     <?php require_once __DIR__ . '/../layout/header.php'; // vị trí header nha cái này để hiện thị header ở phía trên  
@@ -463,7 +399,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function() {
+        $(function () {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -474,7 +410,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function() {
+                    marqueeInterval = setInterval(function () {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -540,15 +476,15 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </div>
 
     <!-- Mobile Modal -->
-    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true" tabindex="-1" style="z-index: 9998;">
+    <div class="modal fade" role="dialog" id="mobileModal" aria-labelledby="mobileModalLabel" aria-modal="true"
+        tabindex="-1" style="z-index: 9998;">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="mobileModalLabel">Menu</h5>
+                    <h4 class="modal-title" id="mobileModalLabel">Menu</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body" id="mobileModalBody">
-                </div>
+                <div class="modal-body" id="mobileModalBody" style="padding: 10px 15px; overflow-y: auto; "></div>
             </div>
         </div>
     </div>
@@ -610,9 +546,9 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             margin: 0 0 8px;
         }
     </style>
-
+    <script></script>
     <script>
-        (function() {
+        (function () {
             var modalEl = document.getElementById('mobileModal');
             var modalBody = document.getElementById('mobileModalBody');
             var modalTitle = document.getElementById('mobileModalLabel');
@@ -651,12 +587,12 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 document.body.style.overflow = '';
             }
 
-            modalEl && modalEl.addEventListener('click', function(e) {
+            modalEl && modalEl.addEventListener('click', function (e) {
                 if (e.target === modalEl) closeMobileModal();
             });
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                a.addEventListener('click', function(e) {
+            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
+                a.addEventListener('click', function (e) {
                     var type = this.getAttribute('data-mobile-modal');
                     if (!type) return;
 
@@ -685,10 +621,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                                                                            echo 'profile_user';
-                                                                        } else {
-                                                                            //echo 'profile_business';
-                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
+                      echo 'profile_user';
+                  } else {
+                      //echo 'profile_business';
+                  } ?>"><i class="fas fa-user"></i> Trang cá
                         nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
@@ -708,7 +644,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     <script>
         // Bọc trong IIFE để tránh xung đột
-        (function() {
+        (function () {
             // Chỉ lấy element, không khởi tạo modal ở đây
             const modalEl = document.getElementById('mobileModal');
             if (!modalEl) return; // Nếu không có element thì dừng luôn
@@ -731,7 +667,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             }
 
             // Hàm mở modal, giờ sẽ an toàn hơn
-            window.openMobileModal = function(title, html, modalClass) {
+            window.openMobileModal = function (title, html, modalClass) {
                 const bsModal = getModalInstance();
                 if (!bsModal) return;
 
@@ -752,8 +688,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             // Gắn sự kiện vào các nút bấm chỉ một lần
             // Dùng một cờ để đảm bảo code này chỉ chạy 1 lần duy nhất
             if (!window.mobileModalListenerAttached) {
-                document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
-                    a.addEventListener('click', function(e) {
+                document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
+                    a.addEventListener('click', function (e) {
                         e.preventDefault();
                         const type = this.getAttribute('data-mobile-modal');
                         if (!type) return;
@@ -776,6 +712,39 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 window.mobileModalListenerAttached = true; // Đánh dấu là đã gắn sự kiện
             }
         })();
+
+        document.querySelectorAll(".btn-follow").forEach(btn => {
+            btn.addEventListener("click", function() {
+                const userId = this.getAttribute("data-user");
+                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
+
+                fetch("api/follow", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/x-www-form-urlencoded"
+                        },
+                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                        credentials: "include"
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            // cập nhật text nút
+                            this.querySelector(".follow-text").innerText =
+                                data.action === "follow" ? "Đang theo dõi" : "Theo dõi";
+
+                            // cập nhật số follower
+                            this.querySelector(".number").innerText = data.followers;
+                        } else {
+                            alert(data.message);
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Không thể kết nối đến server!");
+                    });
+            });
+        });
     </script>
     <a module-load="boxIndex"></a>
 
@@ -817,102 +786,241 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                         <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
                             <!-- Header -->
-                            <div class="modal-header bg-success text-white">
+                            <div class="modal-header bg-success text-white justify-content-center position-relative">
                                 <h5 class="modal-title fw-bold" id="createPostModalLabel">
                                     <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                <button type="button" class="btn-close btn-close-white position-absolute top-50 end-0 translate-middle-y me-3" data-bs-dismiss="modal"
                                     aria-label="Đóng"></button>
                             </div>
 
                             <!-- Body -->
-                            <div class="modal-body bg-light p-10">
+                            <!-- Body -->
+                            <div class="modal-body bg-light p-4">
                                 <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
 
-                                    <!-- Avatar + tên -->
                                     <div class="d-flex align-items-center mb-3">
                                         <?php
-                                        $avatarUrl = $_SESSION['user']['avatar_url'] ?? null;
-                                        if (!$avatarUrl || trim($avatarUrl) === '') {
-                                            $avatarUrl = 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg';
+                                        $userName = htmlspecialchars($_SESSION['user']['name'] ?? 'Người dùng');
+                                        $userAvatar = htmlspecialchars($_SESSION['user']['avatar_url'] ?? 'public/img/avatar/default.png');
+                                        $userRole = $_SESSION['user']['role'] ?? 'user';
+                                        $roleText = 'Thành viên';
+                                        if ($userRole === 'businessmen') {
+                                            $roleText = 'Doanh nhân';
+                                        } elseif ($userRole === 'admin') {
+                                            $roleText = 'Quản trị viên';
                                         }
                                         ?>
-                                        <img src="<?= htmlspecialchars($avatarUrl) ?>"
-                                            class="rounded-circle border border-2 border-success me-2" alt="avatar"
-                                            style="width: 48px; height: 48px;">
+                                        <img src="<?= $userAvatar ?>" class="rounded-circle border border-2 border-success me-2" alt="avatar" style="width: 48px; height: 48px;" onerror="this.onerror=null;this.src='public/img/avatar/default.png';">
                                         <div>
-                                            <h6 class="mb-0 fw-bold text-dark">
-                                                <?php
-                                                echo htmlspecialchars($_SESSION['user']['name'] ?? 'Doanh nhân hoặc người dùng');
-                                                ?>
-                                            </h6>
-                                            <small class="text-muted">
-                                                <?= htmlspecialchars((($_SESSION['user']['role'] ?? '') === 'user') ? 'Người dùng' : 'Doanh nhân') ?>
-
-                                            </small>
-
+                                            <h6 class="mb-0 fw-bold text-dark" id="modalPostUserName"><?= $userName ?></h6>
+                                            <small class="text-muted" id="modalPostUserRole"><?= $roleText ?></small>
                                         </div>
                                     </div>
 
-                                    <!-- Tiêu đề -->
-                                    <input type="text" id="postTitle"
-                                        class="form-control form-control-lg mb-3 border-success"
-                                        placeholder="Nhập tiêu đề bài viết...">
+                                    <form id="postForm" class="needs-validation" novalidate>
+                                        <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+                                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success" placeholder="Nhập tiêu đề bài viết..." required>
 
-                                    <!-- Tóm tắt -->
-                                    <textarea id="postSummary" class="form-control mb-3 border-success" rows="2"
-                                        placeholder="Tóm tắt ngắn gọn nội dung..."></textarea>
+                                        <div class="mb-3">
+                                            <label for="postSummary" class="form-label fw-bold text-success">Tóm tắt bài viết:</label>
+                                            <textarea id="postSummary" class="form-control border-success" rows="3" placeholder="Nhập một đoạn tóm tắt ngắn gọn về nội dung bài viết..." required></textarea>
+                                        </div>
 
-                                    <!-- Nội dung chính -->
-                                    <textarea id="newPost" class="form-control mb-3 border-success" rows="5"
-                                        placeholder="Nội dung chính của bài viết..."></textarea>
+                                        <div class="mb-3">
+                                            <label for="postCoverImage" class="form-label fw-bold text-success">Ảnh bìa (cover):</label>
+                                            <input type="file" id="postCoverImage" class="form-control border-success" accept="image/*" required>
+                                        </div>
 
-                                    <!-- Chọn chủ đề -->
-                                    <div class="mb-3">
-                                        <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ
-                                            đề:</label>
-                                        <select class="form-select border-success" id="topicSelect" name="topic_id"
-                                            required>
-                                            <option value="">-- Chọn chủ đề --</option>
-                                            <?php foreach ($allTopics as $topic): ?>
-                                                <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?>
-                                                </option>
-                                            <?php endforeach; ?>
-                                        </select>
-                                    </div>
+                                        <div class="mb-3">
+                                            <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
+                                            <select class="form-select border-success" id="topicSelect" required>
+                                                <option value="">-- Chọn chủ đề --</option>
+                                                <?php if (!empty($allTopics)) : ?>
+                                                    <?php foreach ($allTopics as $topic) : ?>
+                                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                                    <?php endforeach; ?>
+                                                <?php else : ?>
+                                                    <option value="1" selected>Kinh doanh</option>
+                                                    <option value="2">Công nghệ</option>
+                                                    <option value="3">Đời sống</option>
+                                                <?php endif; ?>
+                                            </select>
+                                        </div>
 
-                                    <!-- Thanh công cụ -->
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="d-flex gap-2">
-                                            <label class="btn btn-outline-success btn-sm mb-0" for="postImage">
-                                                <i class="fas fa-image me-1"></i> Hình ảnh
-                                            </label>
-                                            <label class="btn btn-outline-success btn-sm mb-0" for="postVideo">
-                                                <i class="fas fa-video me-1"></i> Video
-                                            </label>
-                                            <button class="btn btn-outline-success btn-sm" type="button">
-                                                <i class="fas fa-link me-1"></i> Link
+                                        <div id="sectionsWrap" class="d-flex flex-column gap-3">
+
+                                            <div class="card border-0 shadow-sm section-item" data-index="1">
+                                                <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">1</span>
+                                                        <strong>Phần 1</strong>
+                                                    </div>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+                                                            <i class="fas fa-image me-1"></i> Ảnh
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+                                                            <i class="fas fa-video me-1"></i> Video
+                                                        </button>
+                                                        <button type="button" class="btn btn-outline-danger btn-sm d-none section-remove">
+                                                            <i class="fas fa-trash-alt"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label fw-semibold">Tiêu đề phần 1</label>
+                                                        <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." value="" required>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <input type="file" class="d-none section-file" accept="image/*,video/*">
+                                                        <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <label class="form-label fw-semibold">Nội dung phần 1</label>
+                                                        <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required></textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <button type="button" id="btnAddSection" class="btn btn-outline-success">
+                                                <i class="fas fa-plus me-1"></i> Thêm phần
+                                            </button>
+                                            <button type="submit" class="btn btn-success px-4 rounded-pill">
+                                                <i class="fas fa-paper-plane me-1"></i> Đăng bài
                                             </button>
                                         </div>
-                                        <button class="btn btn-primary btn-success px-4 rounded-pill" onclick="addPost()">
-                                            <i class="fas fa-paper-plane me-1"></i> Đăng bài
-                                        </button>
 
-                                    </div>
+                                    </form>
 
-                                    <!-- Input hidden -->
-                                    <input type="hidden" name="session_token"
-                                        value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
-                                    <input type="file" id="postImage" class="d-none" accept="image/*"
-                                        onchange="previewImage(event)">
-                                    <input type="file" id="postVideo" class="d-none" accept="video/*"
-                                        onchange="previewVideo(event)">
                                 </div>
-
-                                <!-- Preview ảnh / video -->
-                                <div id="imagePreview" class="mt-2 bt-4"></div>
-                                <div id="videoPreview" class="mt-2 bt-4"></div>
                             </div>
+
+                            <!-- Style nhẹ cho preview -->
+                            <style>
+                                .media-preview {
+                                    min-height: 140px;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    background: #f8f9fa
+                                }
+
+                                .media-preview img,
+                                .media-preview video {
+                                    max-width: 100%;
+                                    max-height: 320px
+                                }
+                            </style>
+                            <script>
+                                (function() {
+                                    const sectionsWrap = document.getElementById('sectionsWrap');
+                                    const btnAddSection = document.getElementById('btnAddSection');
+
+                                    // Lấy số thứ tự kế tiếp
+                                    const nextIndex = () => {
+                                        const items = sectionsWrap.querySelectorAll('.section-item');
+                                        let max = 0;
+                                        items.forEach(i => {
+                                            max = Math.max(max, parseInt(i.dataset.index, 10));
+                                        });
+                                        return max + 1;
+                                    };
+
+                                    // Tạo 1 block phần mới (UI fix cứng mẫu)
+                                    const sectionHTML = (idx) => `
+    <div class="card border-0 shadow-sm section-item" data-index="${idx}">
+      <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center gap-2">
+          <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">${idx}</span>
+          <strong>Phần ${idx}</strong>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+            <i class="fas fa-image me-1"></i> Ảnh
+          </button>
+          <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+            <i class="fas fa-video me-1"></i> Video
+          </button>
+          <button type="button" class="btn btn-outline-danger btn-sm section-remove">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Tiêu đề phần ${idx}</label>
+          <input type="text" class="form-control" placeholder="Nhập tiêu đề phần ${idx}..." value="" required>
+        </div>
+
+        <div class="mb-3">
+          <input type="file" class="d-none section-file" accept="image/*,video/*">
+          <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label fw-semibold">Nội dung phần ${idx}</label>
+          <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần ${idx}..." required></textarea>
+        </div>
+      </div>
+    </div>
+  `;
+
+                                    // Thêm phần mới
+                                    btnAddSection.addEventListener('click', () => {
+                                        const idx = nextIndex();
+                                        sectionsWrap.insertAdjacentHTML('beforeend', sectionHTML(idx));
+                                    });
+
+                                    // Uỷ quyền sự kiện: chọn media + xoá phần
+                                    sectionsWrap.addEventListener('click', (e) => {
+                                        const addBtn = e.target.closest('.section-add-media');
+                                        if (addBtn) {
+                                            const card = addBtn.closest('.section-item');
+                                            const fileInput = card.querySelector('.section-file');
+                                            fileInput.setAttribute('accept', addBtn.dataset.type === 'image' ? 'image/*' : 'video/*');
+                                            fileInput.click();
+                                        }
+
+                                        const removeBtn = e.target.closest('.section-remove');
+                                        if (removeBtn) {
+                                            const all = sectionsWrap.querySelectorAll('.section-item');
+                                            if (all.length <= 1) return; // ít nhất phải còn 1 phần
+                                            removeBtn.closest('.section-item').remove();
+                                        }
+                                    });
+
+                                    // Preview media (UI)
+                                    sectionsWrap.addEventListener('change', (e) => {
+                                        if (!e.target.classList.contains('section-file')) return;
+                                        const file = e.target.files?.[0];
+                                        const preview = e.target.closest('.section-item').querySelector('.media-preview');
+                                        preview.textContent = 'Chưa chọn ảnh/video.';
+                                        if (!file) return;
+                                        const url = URL.createObjectURL(file);
+                                        preview.innerHTML = '';
+                                        if (file.type.startsWith('image/')) {
+                                            const img = document.createElement('img');
+                                            img.src = url;
+                                            img.alt = 'preview';
+                                            preview.appendChild(img);
+                                        } else if (file.type.startsWith('video/')) {
+                                            const video = document.createElement('video');
+                                            video.src = url;
+                                            video.controls = true;
+                                            preview.appendChild(video);
+                                        } else {
+                                            preview.textContent = 'Định dạng không hỗ trợ.';
+                                        }
+                                    });
+                                })();
+                            </script>
+
                         </div>
                     </div>
                 </div>
@@ -922,7 +1030,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function() {
+            $(function () {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -962,14 +1070,14 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function() {
+                $('.mb-chat').click(function () {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function() {
+                $('.cover-chat .cclose').click(function () {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function(e) {
+                $('.cm-more').on('click', function (e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -980,7 +1088,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </script>
 
         <script>
-            $(function() {
+            $(function () {
                 type = 3;
             });
         </script>
@@ -1029,11 +1137,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
     <script>
-        $(function() {
+        $(function () {
             Page.registerModule(document);
 
 
-            $(window).scroll(function() {
+            $(window).scroll(function () {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");
@@ -1148,10 +1256,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             document.body.style.overflow = 'auto';
         }
 
-        window.onload = function() {
+        window.onload = function () {
             const preloader = document.getElementById('preloader');
             if (preloader) {
-                setTimeout(function() {
+                setTimeout(function () {
                     preloader.classList.add('hidden');
                 }, 500); // 500ms = 0.5 giây
             }

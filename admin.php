@@ -24,9 +24,9 @@ spl_autoload_register(function ($class) {
 });
 
 // Lấy tham số route/action/id
-$route  = $_GET['route'] ?? 'dashboard';
+$route = $_GET['route'] ?? 'dashboard';
 $action = $_GET['action'] ?? 'admin';
-$id     = $_GET['id'] ?? null;
+$id = $_GET['id'] ?? null;
 
 $ctrl = null;
 
@@ -100,46 +100,60 @@ switch ($route) {
         }
         exit;
 
-    case 'events':  
+    case 'events':
         require_login();
         require_role('admin');
         $ctrl = new EventController($pdo);
         break;
+    case 'metrics':
+        require_login();
+        require_role('admin');
+        require_once __DIR__ . '/controller/admin/MetricsController.php';
+        $action = $_GET['action'] ?? 'online';
+        if ($action === 'online') {
+            MetricsController::online();
+        } elseif ($action === 'totalViews') {
+            MetricsController::totalViews();
+        } else {
+            http_response_code(404);
+            echo 'Not found';
+        }
+        break;
 
-   case 'accounts': // ✅ duyệt tài khoản doanh nhân
-    require_login();
-    require_role('admin');
+    case 'accounts': // ✅ duyệt tài khoản doanh nhân
+        require_login();
+        require_role('admin');
 
-    if ($action === 'reviewList') {
-        include __DIR__ . '/view/admin/views/accounts/review_accounts.php';
-        exit;
-    }
-
-    if ($action === 'approve') {
-        $id = intval($_GET['id']);
-        $stmt = $pdo->prepare("SELECT user_id FROM businessmen WHERE id = ?");
-        $stmt->execute([$id]);
-        $user_id = $stmt->fetchColumn();
-
-        if ($user_id) {
-            // Cập nhật status = approved + đổi role
-            $pdo->prepare("UPDATE businessmen SET status = 'approved', updated_at = NOW() WHERE id = ?")
-                ->execute([$id]);
-            $pdo->prepare("UPDATE users SET role = 'businessmen' WHERE id = ?")
-                ->execute([$user_id]);
+        if ($action === 'reviewList') {
+            include __DIR__ . '/view/admin/views/accounts/review_accounts.php';
+            exit;
         }
 
-        header("Location: admin.php?route=accounts&action=reviewList");
-        exit;
-    }
+        if ($action === 'approve') {
+            $id = intval($_GET['id']);
+            $stmt = $pdo->prepare("SELECT user_id FROM businessmen WHERE id = ?");
+            $stmt->execute([$id]);
+            $user_id = $stmt->fetchColumn();
 
-    if ($action === 'reject') {
-        $id = intval($_GET['id']);
-        $pdo->prepare("DELETE FROM businessmen WHERE id=?")->execute([$id]);
-        header("Location: admin.php?route=accounts&action=reviewList");
-        exit;
-    }
-    break;
+            if ($user_id) {
+                // Cập nhật status = approved + đổi role
+                $pdo->prepare("UPDATE businessmen SET status = 'approved', updated_at = NOW() WHERE id = ?")
+                    ->execute([$id]);
+                $pdo->prepare("UPDATE users SET role = 'businessmen' WHERE id = ?")
+                    ->execute([$user_id]);
+            }
+
+            header("Location: admin.php?route=accounts&action=reviewList");
+            exit;
+        }
+
+        if ($action === 'reject') {
+            $id = intval($_GET['id']);
+            $pdo->prepare("DELETE FROM businessmen WHERE id=?")->execute([$id]);
+            header("Location: admin.php?route=accounts&action=reviewList");
+            exit;
+        }
+        break;
 
     default:
         require_login();
