@@ -1628,7 +1628,7 @@ textarea.form-control {
 }
 
 .header-logo .box-search input::placeholder {
-    color: #7b7676 !important;
+    color: #ffffff !important;
     font-weight: bold !important;
 }
 
@@ -7606,4 +7606,17 @@ html, body {
   .navbar {
     padding: 0 8px !important; /* có thể thêm padding ngang nếu cần thoáng */
   }
+}
+.btn-seach {
+  background-color: #fff !important;   /* Luôn trắng */
+  border: 1px solid #ccc;             /* Viền nhẹ */
+  color: #333;                        /* Icon màu tối */
+}
+
+.btn-seach:focus,
+.btn-seach:active,
+.btn-seach:hover {
+  background-color: #fff !important;  /* Khi click vẫn trắng */
+  color: #333 !important;
+  box-shadow: none !important;        /* Bỏ viền xanh focus */
 }
