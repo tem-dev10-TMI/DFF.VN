@@ -11,7 +11,182 @@ a {
     overflow-y: auto;
     /* thêm cuộn dọc */
 }
+/*================ KOL =================*/
+.box-kol-section .c-note {
+    font-size: 0.9em;
+    color: #c00;
+    /* màu đỏ giống doanh nhân */
+}
 
+.kol-card {
+    border: 1px solid #e6e6e6;
+    border-radius: 12px;
+    min-width: 190px;
+    transition: transform .2s, box-shadow .2s;
+}
+
+.kol-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, .12);
+}
+
+.kol-card .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    padding: 1rem;
+}
+
+.kol-card .card-body>* {
+    margin: 4px 0;
+}
+
+.kol-carousel .item {
+    margin-right: 10px;
+    padding: 5px;
+}
+
+.kol-carousel .owl-nav {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    transform: translateY(-50%);
+    pointer-events: none;
+    /* để tránh đè vùng click */
+}
+
+.kol-carousel .owl-nav button {
+    background: #f1f1f1;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    pointer-events: auto;
+    /* cho phép click */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.kol-carousel .owl-nav button:hover {
+    background: #e2e2e2;
+    color: #000;
+}
+
+.card-body .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0866ff;
+    margin-bottom: 5px;
+}
+
+
+.card-body .text-muted {
+    font-size: 13px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.card-body .folloewrs {
+    font-size: 13px;
+    /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
+
+    /* Hiệu ứng gradient cho chữ */
+    display: inline-block;
+    /* Cần thiết để background-clip hoạt động đúng */
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    /* Định nghĩa màu và kích thước cho gradient */
+    background-image: linear-gradient(to right,
+            #372f6a,
+            /* Tím vũ trụ */
+            #a73737,
+            /* Đỏ hoàng hôn */
+            #f09819,
+            /* Cam mặt trời */
+            #a73737,
+            /* Đỏ hoàng hôn */
+            #372f6a
+            /* Tím vũ trụ (lặp lại) */
+        );
+    background-size: 400% 400%;
+
+    /* Animation */
+    animation: smoothGradientAnimation 15s linear infinite;
+
+    margin-bottom: 5px;
+}
+
+.card-body .likes {
+    font-size: 13px;
+    /* Kích thước và trọng lượng chữ sẽ được kế thừa từ thẻ cha (H4) */
+
+    /* Hiệu ứng gradient cho chữ */
+    display: inline-block;
+    /* Cần thiết để background-clip hoạt động đúng */
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-image: linear-gradient(to right,
+            #372f6a,
+            /* Tím vũ trụ */
+            #a73737,
+            /* Đỏ hoàng hôn */
+            #f09819,
+            /* Cam mặt trời */
+            #a73737,
+            /* Đỏ hoàng hôn */
+            #372f6a
+            /* Tím vũ trụ (lặp lại) */
+        );
+    background-size: 400% 400%;
+
+    /* Animation */
+    animation: smoothGradientAnimation 15s linear infinite;
+
+    /* Đừng quên keyframes animation */
+
+}
+
+@keyframes smoothGradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    25% {
+        background-position: 50% 0%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    75% {
+        background-position: 50% 100%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/*================ End KOL =================*/
+
+    /* Định nghĩa màu và kích thước cho gradient */
 .article-image {
     width: 100%;
     max-width: 450px;
