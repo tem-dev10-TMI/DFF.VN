@@ -350,23 +350,23 @@ class profileUserController
     public static function editArticle()
     {
         header('Content-Type: application/json');
-    
+
         require_once __DIR__ . '/../../model/user/userModel.php';
         require_once __DIR__ . '/../../model/article/articlesmodel.php';
         require_once __DIR__ . '/../../model/mediamodel.php';
-    
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             echo json_encode(['success' => false, 'message' => 'Phương thức không được hỗ trợ!']);
             return;
         }
-    
+
         if (!isset($_SESSION['user']['id'])) {
             http_response_code(401);
             echo json_encode(['success' => false, 'message' => 'Bạn cần đăng nhập để sửa bài viết!']);
             return;
         }
         $currentUserId = (int)$_SESSION['user']['id'];
-    
+
         // Check token
         $submittedToken = $_POST['session_token'] ?? '';
         if (!UserModel::isTokenValid($currentUserId, $submittedToken)) {
@@ -374,14 +374,14 @@ class profileUserController
             echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.']);
             return;
         }
-    
+
         // Định danh bài
         $slug   = trim($_POST['slug'] ?? $_POST['post_slug'] ?? '');
         $postId = isset($_POST['post_id']) ? (int)$_POST['post_id'] : 0;
-    
+
         $db  = new connect();
         $pdo = $db->db;
-    
+
         try {
             // Lấy bài viết (lấy thêm title, summary, content, topic_id để fallback)
             if ($slug !== '') {
@@ -411,22 +411,22 @@ class profileUserController
                 echo json_encode(['success' => false, 'message' => 'Bạn không có quyền sửa bài viết này.']);
                 return;
             }
-    
+
             $articleId = (int)$article['id'];
             $oldCover  = $article['main_image_url'];
-    
+
             // ====== INPUT (giữ giống addArticle) ======
             $inTitle   = isset($_POST['title']) ? trim($_POST['title']) : '';
             $inSummary = isset($_POST['summary']) ? trim($_POST['summary']) : '';
             $inContent = isset($_POST['content']) ? trim($_POST['content']) : '';
             $inTopicId = isset($_POST['topic_id']) ? (int)$_POST['topic_id'] : null;
-    
+
             // sections_json: nếu có => thay sections
             $hasSectionsKey = array_key_exists('sections_json', $_POST);
             $sections_json  = $_POST['sections_json'] ?? '[]';
             $sections_in    = json_decode($sections_json, true);
             if ($hasSectionsKey && !is_array($sections_in)) $sections_in = [];
-    
+
             // Nếu content rỗng nhưng có sections_json => nối thành content
             if ($inContent === '' && $hasSectionsKey && !empty($sections_in)) {
                 $parts = [];
@@ -436,22 +436,22 @@ class profileUserController
                 }
                 $inContent = trim(implode("\n\n", $parts));
             }
-    
+
             // ====== FALLBACK: giữ lại giá trị cũ nếu field rỗng ======
             $title     = ($inTitle   !== '') ? $inTitle   : (string)$article['title'];
             $summary   = ($inSummary !== '') ? $inSummary : (string)$article['summary'];
             // Nếu không có sections_json và content rỗng => giữ content cũ
             $content   = ($inContent !== '' || ($hasSectionsKey && !empty($sections_in)))
-                        ? $inContent
-                        : (string)$article['content'];
+                ? $inContent
+                : (string)$article['content'];
             $topic_id  = ($inTopicId !== null) ? $inTopicId : (int)$article['topic_id'];
-    
+
             // VALIDATION (sau fallback)
             if ($title === '' || $content === '' || mb_strlen($content) < 10) {
                 echo json_encode(['success' => false, 'message' => 'Tiêu đề hoặc nội dung không hợp lệ!']);
                 return;
             }
-    
+
             // ====== UPLOAD COVER (nếu có) — giữ style như addArticle ======
             $newCoverPath = null;
             if (isset($_FILES['main_image_url']) && $_FILES['main_image_url']['error'] === UPLOAD_ERR_OK) {
@@ -466,10 +466,10 @@ class profileUserController
                     $newCoverPath = $file_path; // lưu DB giống addArticle
                 }
             }
-    
+
             // ====== TX: UPDATE + (optional) REPLACE SECTIONS ======
             $pdo->beginTransaction();
-    
+
             $sqlUpdate = "UPDATE articles
                           SET title = :title,
                               summary = :summary,
@@ -480,7 +480,7 @@ class profileUserController
                 ':title'   => $title,
                 ':summary' => $summary,
                 ':content' => $content,
-                ':topic_id'=> $topic_id,
+                ':topic_id' => $topic_id,
                 ':id'      => $articleId
             ];
             if ($newCoverPath !== null) {
@@ -489,20 +489,20 @@ class profileUserController
             }
             $sqlUpdate .= " WHERE id = :id";
             $pdo->prepare($sqlUpdate)->execute($params);
-    
+
             // Nếu FE gửi sections_json -> xóa & ghi lại toàn bộ sections/media mapping
             if ($hasSectionsKey) {
                 // Lấy section cũ
                 $qOld = $pdo->prepare("SELECT id FROM article_sections WHERE article_id = :aid");
                 $qOld->execute([':aid' => $articleId]);
                 $oldSecIds = $qOld->fetchAll(PDO::FETCH_COLUMN);
-    
+
                 if (!empty($oldSecIds)) {
                     $in = implode(',', array_fill(0, count($oldSecIds), '?'));
                     $pdo->prepare("DELETE FROM article_section_media WHERE section_id IN ($in)")->execute($oldSecIds);
                     $pdo->prepare("DELETE FROM article_sections WHERE id IN ($in)")->execute($oldSecIds);
                 }
-    
+
                 // Ghi lại sections
                 $insertSec   = $pdo->prepare("INSERT INTO article_sections (article_id, position, title, content)
                                               VALUES (:aid, :pos, :title, :content)");
@@ -510,12 +510,12 @@ class profileUserController
                                               VALUES (:aid, :path, :type, :cap)");
                 $insertMap   = $pdo->prepare("INSERT INTO article_section_media (section_id, media_id, position)
                                               VALUES (:sid, :mid, :pos)");
-    
+
                 foreach ($sections_in as $idx => $sec) {
                     $pos      = isset($sec['position']) ? (int)$sec['position'] : ($idx + 1);
                     $titleS   = isset($sec['title'])   ? trim($sec['title'])   : null;
                     $contentS = isset($sec['content']) ? trim($sec['content']) : null;
-    
+
                     // tạo section
                     $insertSec->execute([
                         ':aid'     => $articleId,
@@ -524,7 +524,7 @@ class profileUserController
                         ':content' => $contentS
                     ]);
                     $sectionId = (int)$pdo->lastInsertId();
-    
+
                     // Upload file theo key section_media_{pos}[]
                     $seq = 0;
                     $key = 'section_media_' . $pos;
@@ -539,11 +539,11 @@ class profileUserController
                             $tmp  = $_FILES[$key]['tmp_name'][$i];
                             $name = $_FILES[$key]['name'][$i];
                             $type = $_FILES[$key]['type'][$i];
-    
+
                             $ext  = strtolower(pathinfo($name, PATHINFO_EXTENSION));
                             $new  = 'sec_' . $pos . '_' . time() . '_' . mt_rand(1000, 9999) . '.' . $ext;
                             $path = $uploadDir . $new;
-    
+
                             if (move_uploaded_file($tmp, $path)) {
                                 $mtype = (strpos($type, 'image/') === 0) ? 'image' : ((strpos($type, 'video/') === 0) ? 'video' : null);
                                 if ($mtype) {
@@ -563,7 +563,7 @@ class profileUserController
                             }
                         }
                     }
-    
+
                     // Map media URL/id
                     if (!empty($sec['media']) && is_array($sec['media'])) {
                         foreach ($sec['media'] as $m) {
@@ -592,7 +592,7 @@ class profileUserController
                     }
                 }
             }
-    
+
             // (Tùy chọn) Video mức-bài
             $debug_info = [];
             $video_message = 'Không thêm video mới.';
@@ -633,16 +633,16 @@ class profileUserController
                 }
             }
             $debug_info['video_processing'] = $video_message;
-    
+
             // Commit
             $pdo->commit();
-    
+
             // Xóa cover cũ nếu đã up cover mới
             if ($newCoverPath !== null && !empty($oldCover)) {
                 $oldFs = __DIR__ . '/../../' . ltrim($oldCover, '/');
                 if (is_file($oldFs)) @unlink($oldFs);
             }
-    
+
             echo json_encode([
                 'success' => true,
                 'message' => 'Cập nhật bài viết thành công!',
@@ -653,7 +653,7 @@ class profileUserController
                     'summary'       => $summary,
                     'content'       => $content,
                     'topic_id'      => $topic_id,
-                    'main_image_url'=> $newCoverPath ?? $oldCover
+                    'main_image_url' => $newCoverPath ?? $oldCover
                 ],
                 'debug' => $debug_info
             ]);
@@ -663,11 +663,11 @@ class profileUserController
             echo json_encode(['success' => false, 'message' => 'Lỗi khi cập nhật bài viết.']);
         }
     }
-    
-    
-    
-    
-    
+
+
+
+
+
 
     // ========== Quản lý Hồ sơ ==========
     public static function addProfile()
@@ -1134,5 +1134,48 @@ class profileUserController
             error_log("Delete article error: " . $e->getMessage());
             echo json_encode(['success' => false, 'message' => 'Lỗi cơ sở dữ liệu. Vui lòng thử lại sau.']);
         }
+    }
+    public function loadMoreArticles()
+    {
+        header('Content-Type: application/json');
+
+        try {
+            require_once __DIR__ . '/../model/article/articlesmodel.php';
+
+            $authorId = isset($_GET['user_id']) ? intval($_GET['user_id']) : 0;
+            $offset   = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
+            $limit    = isset($_GET['limit']) ? min(20, max(1, intval($_GET['limit']))) : 5;
+
+            // Nếu authorId không hợp lệ, coi như hết bài
+            if ($authorId <= 0) {
+                $articles = [];
+            } else if (!class_exists('ArticlesModel') || !method_exists('ArticlesModel', 'getArticlesByAuthorIdLimit')) {
+                // Nếu class hoặc hàm không tồn tại, coi như hết bài
+                $articles = [];
+            } else {
+                // Lấy bài viết từ DB, nếu lỗi hoặc false -> coi như hết bài
+                $articles = ArticlesModel::getArticlesByAuthorIdLimit($authorId, $offset, $limit);
+                if (!$articles) $articles = [];
+            }
+
+            // Chuyển về mảng thuần
+            $articles = json_decode(json_encode($articles), true);
+
+            echo json_encode([
+                'success'    => true,             // luôn true
+                'items'      => $articles,        // mảng bài viết hoặc rỗng
+                'count'      => count($articles),
+                'nextOffset' => $offset + count($articles)
+            ]);
+        } catch (Throwable $e) {
+            // Bất kỳ lỗi nào cũng trả về mảng rỗng
+            echo json_encode([
+                'success'    => true,
+                'items'      => [],
+                'count'      => 0,
+                'nextOffset' => $offset
+            ]);
+        }
+        exit;
     }
 }
