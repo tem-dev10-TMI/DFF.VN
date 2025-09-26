@@ -1375,111 +1375,15 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-        <!-- Crypton Card -->
-<a class="crypton-card" href="<?= BASE_URL ?>/crypton" aria-label="Đi đến trang Crypton">
-  <img
-    class="crypton-card__img"
-    src="<?= BASE_URL ?>/public/img/Crypton.png"
-    alt="Crypto — đi đến trang Crypton"
-    loading="lazy"
-    width="1200" height="630"
-  />
+        <a target="_blank" href="<?= BASE_URL ?>/crypton">
+            <img src="<?= BASE_URL ?>/public/img/crypto.png" alt="Crypto" style="width:100px; height:auto;">
+        </a>
 
-  <div class="crypton-card__overlay" aria-hidden="true"></div>
 
-  <div class="crypton-card__content">
-    <h3 class="crypton-card__title">Crypton</h3>
-    <p class="crypton-card__desc">Tỷ giá • Biểu đồ • Tin tức</p>
-    <span class="crypton-card__cta">
-      Mở trang
-      <svg class="crypton-card__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </span>
-  </div>
-</a>
 
-<style>
-  .crypton-card {
-    --radius: 18px;
-    --shadow: 0 10px 30px rgba(0,0,0,.15);
-    --shadow-hover: 0 16px 40px rgba(0,0,0,.22);
-    position: relative;
-    display: block;
-    width: 100%;
-    max-width: 980px;
-    margin: 16px auto;
-    aspect-ratio: 21/9; /* Giữ tỉ lệ đẹp, responsive */
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    text-decoration: none;
-    color: inherit;
-    transition: transform .25s ease, box-shadow .25s ease;
-    background: #0b1020;
-  }
-  .crypton-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-  .crypton-card:active { transform: translateY(0); }
-
-  .crypton-card:focus-visible {
-    outline: 3px solid #70b5ff;
-    outline-offset: 4px;
-  }
-
-  .crypton-card__img {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    object-fit: cover;
-    filter: saturate(1.05) contrast(1.02);
-    transform: scale(1.02);
-  }
-
-  .crypton-card__overlay {
-    position: absolute; inset: 0;
-    background:
-      linear-gradient(180deg, rgba(4,6,20,.15) 0%, rgba(4,6,20,.55) 55%, rgba(4,6,20,.85) 100%),
-      radial-gradient(120% 120% at 100% 0%, rgba(0,140,255,.35) 0%, rgba(0,140,255,0) 60%);
-    pointer-events: none;
-  }
-
-  .crypton-card__content {
-    position: absolute; left: 24px; right: 24px; bottom: 22px;
-    display: grid; gap: 6px;
-    color: #eef3ff;
-  }
-
-  .crypton-card__title {
-    margin: 0;
-    font-size: clamp(20px, 3.2vw, 28px);
-    font-weight: 700;
-    letter-spacing: .2px;
-  }
-
-  .crypton-card__desc {
-    margin: 0 0 6px 0;
-    font-size: clamp(13px, 2vw, 15px);
-    opacity: .9;
-  }
-
-  .crypton-card__cta {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 14px;
-    font-weight: 600;
-    border-radius: 999px;
-    background: rgba(255,255,255,.1);
-    backdrop-filter: blur(4px);
-    transition: background .25s ease, gap .25s ease;
-    width: fit-content;
-  }
-  .crypton-card:hover .crypton-card__cta { background: rgba(255,255,255,.18); gap: 10px; }
-
-  .crypton-card__icon { transition: transform .25s ease; }
-  .crypton-card:hover .crypton-card__icon { transform: translateX(3px); }
-
-  @media (prefers-reduced-motion: reduce) {
-    .crypton-card, .crypton-card__icon { transition: none; }
-  }
-</style>
+        <div class="block-k bg-box-a">
+            <div class="box-follow"></div>
+        </div>
 
 
 

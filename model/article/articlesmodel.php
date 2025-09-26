@@ -542,16 +542,19 @@ class ArticlesModel
 
 
     public static function searchArticles($q)
-    {
-        $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name
-                FROM articles a
-                LEFT JOIN users u ON a.author_id = u.id
-               WHERE name COLLATE utf8mb4_general_ci LIKE :q 
-               OR username COLLATE utf8mb4_general_ci LIKE :q 
-            ORDER BY name ASC";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':q' => "%$q%"]);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+{
+    $db = new connect();
+    $sql = "SELECT a.*, u.name AS author_name
+            FROM articles a
+            LEFT JOIN users u ON a.author_id = u.id
+            WHERE (a.title COLLATE utf8mb4_general_ci LIKE :q 
+                OR u.name COLLATE utf8mb4_general_ci LIKE :q 
+                OR u.username COLLATE utf8mb4_general_ci LIKE :q)
+              AND a.status = 'public'   -- chỉ lấy bài đã public
+            ORDER BY a.title ASC";
+    $stmt = $db->db->prepare($sql);
+    $stmt->execute([':q' => "%$q%"]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
 }
