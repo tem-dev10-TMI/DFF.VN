@@ -70,22 +70,25 @@
                             </div>
 
                             <div class="title">
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
-                                    target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+
+                                <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>"
+                                    target="_self">
+
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
                             </div>
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= !empty($article['is_rss']) ? $article['link'] : 'details_blog?id=' . $article['id'] ?>"
-                                    class="d-more" target="<?= !empty($article['is_rss']) ? '_blank' : '_self' ?>">
+                                <a href="<?= 'details_blog/' . $article['slug'] ?>"
+                                    class="d-more" target="_self">
                                     Xem thêm
                                 </a>
                             </div>
 
-                            <?php if (!empty($article['main_image_url'])): ?>
-                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>" alt="<?= htmlspecialchars($article['title']) ?>">
+                            <?php if (!empty($article['main_image_url'])) : ?>
+                                <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                                    alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
                         </div>
                     </div>
