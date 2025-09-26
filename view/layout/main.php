@@ -833,11 +833,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                         <div class="modal-content shadow-lg border-0 rounded-3 mb-4">
 
                             <!-- Header -->
-                            <div class="modal-header bg-success text-white">
+                            <div class="modal-header bg-success text-white justify-content-center position-relative">
                                 <h5 class="modal-title fw-bold" id="createPostModalLabel">
                                     <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                <button type="button" class="btn-close btn-close-white position-absolute top-50 end-0 translate-middle-y me-3" data-bs-dismiss="modal"
                                     aria-label="Đóng"></button>
                             </div>
 
