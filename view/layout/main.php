@@ -847,10 +847,21 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                 <div class="post-box p-3 rounded-3 bg-white shadow-sm mb-3">
 
                                     <div class="d-flex align-items-center mb-3">
-                                        <img src="https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg" class="rounded-circle border border-2 border-success me-2" alt="avatar" style="width: 48px; height: 48px;">
+                                        <?php
+                                        $userName = htmlspecialchars($_SESSION['user']['name'] ?? 'Người dùng');
+                                        $userAvatar = htmlspecialchars($_SESSION['user']['avatar_url'] ?? 'public/img/avatar/default.png');
+                                        $userRole = $_SESSION['user']['role'] ?? 'user';
+                                        $roleText = 'Thành viên';
+                                        if ($userRole === 'businessmen') {
+                                            $roleText = 'Doanh nhân';
+                                        } elseif ($userRole === 'admin') {
+                                            $roleText = 'Quản trị viên';
+                                        }
+                                        ?>
+                                        <img src="<?= $userAvatar ?>" class="rounded-circle border border-2 border-success me-2" alt="avatar" style="width: 48px; height: 48px;" onerror="this.onerror=null;this.src='public/img/avatar/default.png';">
                                         <div>
-                                            <h6 class="mb-0 fw-bold text-dark">Khanh Lam</h6>
-                                            <small class="text-muted">Doanh nhân</small>
+                                            <h6 class="mb-0 fw-bold text-dark" id="modalPostUserName"><?= $userName ?></h6>
+                                            <small class="text-muted" id="modalPostUserRole"><?= $roleText ?></small>
                                         </div>
                                     </div>
 
@@ -907,7 +918,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                                 <div class="card-body">
                                                     <div class="mb-3">
                                                         <label class="form-label fw-semibold">Tiêu đề phần 1</label>
-                                                        <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." value="Tổng quan & mục tiêu" required>
+                                                        <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." value="" required>
                                                     </div>
 
                                                     <div class="mb-3">
@@ -917,11 +928,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
                                                     <div class="mb-2">
                                                         <label class="form-label fw-semibold">Nội dung phần 1</label>
-                                                        <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required>
-                                - Doanh thu mục tiêu: +25%
-                                - Tập trung sản phẩm chủ lực
-                                - Tối ưu kênh phân phối
-                            </textarea>
+                                                        <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -974,11 +981,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
                                     // Tạo 1 block phần mới (UI fix cứng mẫu)
                                     const sectionHTML = (idx) => `
-    <div class="card border-0 shadow-sm section-item" data-index="\${idx}">
+    <div class="card border-0 shadow-sm section-item" data-index="${idx}">
       <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
         <div class="d-flex align-items-center gap-2">
-          <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">\${idx}</span>
-          <strong>Phần \${idx}</strong>
+          <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">${idx}</span>
+          <strong>Phần ${idx}</strong>
         </div>
         <div class="d-flex align-items-center gap-2">
           <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
@@ -994,8 +1001,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
       </div>
       <div class="card-body">
         <div class="mb-3">
-          <label class="form-label fw-semibold">Tiêu đề phần \${idx}</label>
-          <input type="text" class="form-control" placeholder="Nhập tiêu đề phần \${idx}..." value="Tiêu đề phần \${idx}" required>
+          <label class="form-label fw-semibold">Tiêu đề phần ${idx}</label>
+          <input type="text" class="form-control" placeholder="Nhập tiêu đề phần ${idx}..." value="" required>
         </div>
 
         <div class="mb-3">
@@ -1004,8 +1011,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </div>
 
         <div class="mb-2">
-          <label class="form-label fw-semibold">Nội dung phần \${idx}</label>
-          <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần \${idx}..." required>Mô tả nội dung phần \${idx}...</textarea>
+          <label class="form-label fw-semibold">Nội dung phần ${idx}</label>
+          <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần ${idx}..." required></textarea>
         </div>
       </div>
     </div>
