@@ -10,7 +10,6 @@ $online = (int) $pdo->query("
   SELECT COUNT(*)
   FROM visits
   WHERE is_logged_in = 1
-    AND last_seen >= (NOW() - INTERVAL 30 MINUTE)
 ")->fetchColumn();
 
 // tổng lượt xem vẫn từ stats
