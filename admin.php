@@ -87,18 +87,32 @@ switch ($route) {
         $ctrl = new CommentController($pdo);
         break;
 
-    case 'article': // riêng cho bài viết (review, form, list)
-        $ctrl = new ArticleController($pdo);
-        if ($action === 'list') {
-            $ctrl->list();
-        } elseif ($action === 'form') {
-            $ctrl->form();
-        } elseif ($action === 'reviewList') {
-            $ctrl->reviewList();
-        } elseif ($action === 'reviewAction') {
-            $ctrl->reviewAction();
+    case 'article':
+        require_login();
+        require_role('admin');
+        require_once __DIR__ . '/controller/admin/ArticleAdminController.php';
+        $controller = new ArticleAdminController($pdo);
+
+        if ($action === 'reviewList') {
+            $controller->reviewList();
+            break;
         }
-        exit;
+
+        if ($action === 'reviewAction') {
+            $id = (int) ($_GET['id'] ?? 0);
+            $controller->reviewAction($id);
+            break;
+        }
+        if ($action === 'deleteAction') {
+            $id = (int) ($_GET['id'] ?? 0);
+            $controller->deleteAction($id);
+            break;
+        }
+
+        // fallback
+        http_response_code(404);
+        echo 'Not found';
+        break;
 
     case 'events':
         require_login();
