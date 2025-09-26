@@ -73,6 +73,7 @@
     </div>
   </div>
 </div>
+
 <!-- Modal chỉnh sửa thông tin doanh nhân -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg" style="max-width: 650px;">
@@ -110,15 +111,25 @@
             <div class="col-md-6">
               <label class="form-label">Ảnh đại diện</label>
               <input type="file" class="form-control" name="avatar_file">
-              <?php if (!empty($business['avatar_url'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($business['avatar_url']) ?>" target="_blank">Xem</a></small>
+              <?php 
+                $currentAvatar = $_SESSION['user']['avatar_url'] ?? $business['avatar_url'] ?? null;
+                if (!empty($currentAvatar)): ?>
+                  <div class="mt-2">
+                    <small class="text-muted">Ảnh hiện tại:</small><br>
+                    <img src="<?= htmlspecialchars($currentAvatar) ?>" alt="Avatar" class="img-thumbnail" width="80">
+                  </div>
               <?php endif; ?>
             </div>
             <div class="col-md-6">
               <label class="form-label">Ảnh bìa</label>
               <input type="file" class="form-control" name="cover_file">
-              <?php if (!empty($business['cover_photo'])): ?>
-                <small class="text-muted">Ảnh hiện tại: <a href="<?= htmlspecialchars($business['cover_photo']) ?>" target="_blank">Xem</a></small>
+              <?php 
+                $currentCover = $_SESSION['user']['cover_photo'] ?? $business['cover_photo'] ?? null;
+                if (!empty($currentCover)): ?>
+                  <div class="mt-2">
+                    <small class="text-muted">Ảnh hiện tại:</small><br>
+                    <img src="<?= htmlspecialchars($currentCover) ?>" alt="Cover photo" class="img-thumbnail" width="120">
+                  </div>
               <?php endif; ?>
             </div>
           </div>
@@ -156,6 +167,7 @@
     </div>
   </div>
 </div>
+
 
 <div class="modal fade" id="editCareersModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg">
