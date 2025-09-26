@@ -449,6 +449,9 @@ if ($profile_category == 'user' && $user_id) {
     <?php if ($profile_category == 'user') {
       require_once  __DIR__ . '/../page/ProfileUser.php';
     } ?>
+    <?php if ($profile_category == 'save') {
+      require_once  __DIR__ . '/../page/SavedArticles.php';
+    } ?>
     <?php if ($profile_category == 'businessmen') {
       require_once __DIR__ . '/../page/ProfileBusiness.php';
     } ?>
