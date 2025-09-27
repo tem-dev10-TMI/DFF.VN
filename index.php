@@ -232,6 +232,7 @@ switch ($url) {
         $controller = new ArticleSaveController();
         $controller->toggle();
         exit;
+    
     case 'saved_articles':
         require_once __DIR__ . '/controller/SavedArticlesController.php';
         $controller = new SavedArticlesController();
