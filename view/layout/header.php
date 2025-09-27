@@ -858,7 +858,7 @@ if (!isset($marketData)) {
             <div class="agent">
                 <div class="agent-avatar">🤖</div>
                 <div class="agent-info">
-                    <div class="agent-name">Chatbot TMI</div>
+                    <div class="agent-name">Chatbot MXH </div>
                     <div class="status" id="status">Sẵn sàng</div>
                 </div>
             </div>
@@ -870,9 +870,9 @@ if (!isset($marketData)) {
             <div class="msg">
                 <div class="avatar">🤖</div>
                 <div class="bubble">
-                    <div class="meta">Chatbot TMI</div>
+                    <div class="meta">Chatbot MXH</div>
                     <div class="content">
-                        Chào bạn! Tôi là Chatbot TMI. Tôi có thể giúp gì cho bạn?
+                        Chào bạn! Tôi là Chatbot MXH. Tôi có thể giúp gì cho bạn?
                     </div>
                 </div>
             </div>
