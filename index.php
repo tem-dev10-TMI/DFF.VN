@@ -232,14 +232,14 @@ switch ($url) {
         $controller = new ArticleSaveController();
         $controller->toggle();
         exit;
-    
+
     case 'saved_articles':
         require_once __DIR__ . '/controller/SavedArticlesController.php';
         $controller = new SavedArticlesController();
         $controller->index();
         break;
 
-        // ========== API ROUTES ==========
+    // ========== API ROUTES ==========
     case 'api/addPost':
         require_once __DIR__ . '/controller/account/profileUserController.php';
         $controller = new profileUserController();
@@ -270,12 +270,13 @@ switch ($url) {
         require_once __DIR__ . '/controller/account/profileUserController.php';
         break;
 
+
     default:
-        //404 page
-        /*         require_once 'controller/error/404Controller.php';
-    $controller = new NotFoundController;
-    require_once 'controller/error/404Controller.php';
-    //$controller = new NotFoundController;
-    $controller->index();
-    break; */
+
+        require_once 'controller/error/404Controller.php';
+        $controller = new NotFoundController();
+        
+        //$controller = new NotFoundController;
+        $controller->index();
+        break;
 }
