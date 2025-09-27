@@ -129,11 +129,13 @@ function render_sidebar_content($context = 'desktop', $topTopics = [], $moreTopi
         </ul>
 
         <div class="line"></div>
-        <ul class="nav nav-second-level h-info">
-            <li> POWERED BY </li>
-            <li>Chịu trách nhiệm nội dung: TEAM TMI (DEV - K25)</li>
-            <li>Hotline: 083 403 8128 - Email: tmigroup.vn</li>
-        </ul>
+      <ul class="nav nav-second-level h-info">
+  <li style="font-size:12px; font-weight:bold; text-transform:uppercase; letter-spacing:1px; color:#444;">
+    POWERED BY <span style="color:#000; font-weight:bold;">TEAM DEV - K25</span>
+  </li>
+  <li style="font-size:12px; color:#444; margin-top:2px;">
+    Hotline: 083 403 8128 - Email: tmigroup.vn
+  </li>
 
     </div>
 
