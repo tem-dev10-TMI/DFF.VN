@@ -514,9 +514,12 @@ class ArticlesController
         // 1) Lấy bài viết (đã bao gồm sections + media theo thiết kế mới)
         $article = ArticlesModel::getArticleBySlug($slug, $currentUserId);
         if (!$article) {
-            require_once __DIR__ . '/../view/errors/404.php';
-            return;
+            echo 'Bài viết không tồn tại.';
+            // exit;
         }
+
+        //
+        
 
         // 2) Tác giả
         $author = UserModel::getUserById($article['author_id']);
