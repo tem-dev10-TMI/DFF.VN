@@ -514,8 +514,9 @@ class ArticlesController
         // 1) Lấy bài viết (đã bao gồm sections + media theo thiết kế mới)
         $article = ArticlesModel::getArticleBySlug($slug, $currentUserId);
         if (!$article) {
-            echo 'Bài viết không tồn tại.';
-            // exit;
+            header('Location: ../error');
+            //
+            exit;
         }
 
         //

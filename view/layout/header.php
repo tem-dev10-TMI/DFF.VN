@@ -496,7 +496,7 @@
                             <div class="input-group">
                                 <div class="input-group-text"><i class="bi bi-lock"></i></div>
                                 <div class="password-input-group">
-                                    <input id="password" name="password" type="password"
+                                    <input id="register_password" name="password" type="password"
                                         class="form-control password-input password-register"
                                         placeholder="Nhập mật khẩu">
                                     <button type="button" class="password-toggle">

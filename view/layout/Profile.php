@@ -380,9 +380,7 @@ if ($user_id) {
 
     // Lấy cover từ session hoặc database
     $coverUrl = $_SESSION['user']['cover_photo'] ?? $user['cover_photo'] ?? '';
-    if (!$coverUrl || trim($coverUrl) === '') {
-      $coverUrl = 'https://via.placeholder.com/800x250?text=Default+Cover';
-    }
+    
     ?>
 
     <!-- Cover -->

@@ -37,7 +37,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <meta name="GOOGLEBOT" content="noarchive, max-image-preview:large, index, follow" />
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <!-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" /> -->
     <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
 
     <style>

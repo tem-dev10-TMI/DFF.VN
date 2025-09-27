@@ -1354,7 +1354,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             }
 
             .topic-showcase-card.hot-card {
-                background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+                background-image: linear-gradient(to top,rgb(128, 206, 131) 0%,rgb(69, 237, 69) 100%);
             }
 
             .topic-showcase-card.analysis-card {
@@ -1437,7 +1437,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach (array_slice($rssArticles3, 0, 5) as $article): ?>
                             <li>
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : 'details_blog/' . urlencode($article['slug']) ?>">
-                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : 'https://via.placeholder.com/48x48.png?text=DFF') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
+                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : '') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
                                     <span><?= htmlspecialchars($article['title']) ?></span>
                                 </a>
                             </li>
@@ -1458,7 +1458,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach (array_slice($rssArticles4, 0, 5) as $article): ?>
                             <li>
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= (!empty($article['is_rss']) && !empty($article['link'])) ? htmlspecialchars($article['link']) : 'details_blog/' . urlencode($article['slug']) ?>">
-                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : 'https://via.placeholder.com/48x48.png?text=DFF') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
+                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : '') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
                                     <span><?= htmlspecialchars($article['title']) ?></span>
                                 </a>
                             </li>
