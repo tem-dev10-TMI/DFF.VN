@@ -1,5 +1,23 @@
     <main class="main-content">
+<?php
+function timeAgo($datetime) {
+    if (!$datetime) return '';
+    $timestamp = strtotime($datetime);
+    $diff = time() - $timestamp;
 
+    if ($diff < 60) {
+        return 'vừa xong';
+    } elseif ($diff < 3600) {
+        return floor($diff / 60) . ' phút trước';
+    } elseif ($diff < 86400) {
+        return floor($diff / 3600) . ' giờ trước';
+    } elseif ($diff < 2592000) {
+        return floor($diff / 86400) . ' ngày trước';
+    } else {
+        return date('d/m/Y', $timestamp);
+    }
+}
+?>
 
 
         <?php
@@ -82,8 +100,7 @@
                     </div>
                 </div>
             </div>
-
-            <div class="box-history" bis_skin_checked="1">
+             <div class="box-history" bis_skin_checked="1">
                 <div class="persion-mmn" bis_skin_checked="1">
                     <ul>
 
@@ -154,7 +171,191 @@
                     </ul>
                 </div>
             </div>
+        
+            
+             <?php if (!empty($articles)): ?>
+    <?php $currentUserIdForView = $_SESSION['user']['id'] ?? null; ?>
+
+    <div id="articles-list">
+        <?php foreach ($articles as $article): ?>
+            <div class="block-k article-item">
+                <div class="view-carde f-frame">
+                    <!-- Avatar + tên doanh nhân -->
+                    <div class="provider">
+                        <img class="logo"
+                            alt="Avatar"
+                            src="<?= htmlspecialchars($article['avatar_url'] ?? 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg') ?>">
+                        <div class="p-covers">
+                            <span class="name">
+                                <a href="<?= BASE_URL ?>/profile_business?id=<?= $article['author_id'] ?>">
+                                    <?= htmlspecialchars($article['author_name']) ?>
+                                </a>
+                            </span>
+                            <span class="date"><?= timeAgo($article['created_at']) ?></span>
+                        </div>
+                    </div>
+
+                    <!-- Badge trạng thái (chỉ hiện cho chủ nhân) -->
+                    <?php if ($currentUserIdForView && $article['author_id'] == $currentUserIdForView): ?>
+                        <?php
+                        $badgeClass = '';
+                        $badgeText  = '';
+                        switch ($article['status']) {
+                            case 'pending':
+                                $badgeClass = 'bg-warning text-dark';
+                                $badgeText  = 'Chờ duyệt';
+                                break;
+                            case 'public':
+                                $badgeClass = 'bg-success';
+                                $badgeText  = 'Công khai';
+                                break;
+                        }
+                        ?>
+                        <?php if ($badgeText): ?>
+                            <div class="article-status-badge" style="margin:5px 0 8px;">
+                                <span class="badge <?= $badgeClass ?>"><?= $badgeText ?></span>
+                            </div>
+                        <?php endif; ?>
+                    <?php endif; ?>
+
+                    <!-- Tiêu đề bài viết / thành tựu -->
+                    <div class="title">
+                        <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>" target="_self">
+                            <?= htmlspecialchars($article['title']) ?>
+                        </a>
+                    </div>
+
+                    <!-- Mô tả ngắn -->
+                    <div class="sapo">
+                        <?= htmlspecialchars($article['summary']) ?>
+                        <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>" class="d-more" target="_self">
+                            Xem chi tiết
+                        </a>
+                    </div>
+
+                    <!-- Hình ảnh chính -->
+                    <?php if (!empty($article['main_image_url'])): ?>
+                        <img class="h-img"
+                            src="<?= htmlspecialchars($article['main_image_url']) ?>"
+                            alt="<?= htmlspecialchars($article['title']) ?>">
+                    <?php endif; ?>
+
+                    <!-- Chia sẻ -->
+                    <div class="item-bottom">
+                        <div class="button-ar">
+                            <div class="dropdown home-item">
+                                <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item copylink"
+                                           data-url="<?= BASE_URL ?>/details_blog/<?= urlencode($article['slug']) ?>"
+                                           href="javascript:void(0)">Copy link</a></li>
+                                    <li><a class="dropdown-item sharefb"
+                                           data-url="<?= BASE_URL ?>/details_blog/<?= urlencode($article['slug']) ?>"
+                                           href="javascript:void(0)">Share FB</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <div id="loading" style="text-align:center; display:none; margin:20px;">
+        <em>Đang tải thêm...</em>
+    </div>
+    <div id="load-more-container" class="text-center" style="display: none; margin: 20px;">
+        <button id="load-more-btn" class="btn btn-primary">Xem thêm</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+
+            function timeAgo(datetime) {
+                if (!datetime) return '';
+                const time = (Date.now() / 1000) - (new Date(datetime).getTime() / 1000);
+                if (time < 60) return 'vừa xong';
+                if (time < 3600) return Math.floor(time / 60) + ' phút trước';
+                if (time < 86400) return Math.floor(time / 3600) + ' giờ trước';
+                if (time < 2592000) return Math.floor(time / 86400) + ' ngày trước';
+                const d = new Date(datetime);
+                return `${d.getDate().toString().padStart(2,'0')}/${(d.getMonth()+1).toString().padStart(2,'0')}/${d.getFullYear()}`;
+            }
+
+            function renderHomepageArticle(article) {
+                let statusBadgeHtml = '';
+                if (currentUserId && article.author_id == currentUserId && article.status) {
+                    let badgeClass = '', badgeText = '';
+                    switch (article.status) {
+                        case 'pending': badgeClass = 'bg-warning text-dark'; badgeText = 'Chờ duyệt'; break;
+                        case 'public': badgeClass = 'bg-success'; badgeText = 'Công khai'; break;
+                    }
+                    if (badgeText) {
+                        statusBadgeHtml = `<div class="article-status-badge" style="margin:5px 0 8px;">
+                            <span class="badge ${badgeClass}">${badgeText}</span>
+                        </div>`;
+                    }
+                }
+
+                return `
+                <div class="block-k article-item">
+                  <div class="view-carde f-frame">
+                    <div class="provider">
+                      <img class="logo" src="${article.avatar_url || 'https://i.pinimg.com/1200x/83/0e/ea/830eea38f7a5d3d8e390ba560d14f39c.jpg'}" alt="">
+                      <div class="p-covers">
+                        <span class="name"><a href="/profile_business?id=${article.author_id}">${article.author_name || ''}</a></span>
+                        <span class="date">${timeAgo(article.created_at)}</span>
+                      </div>
+                    </div>
+                    ${statusBadgeHtml}
+                    <div class="title"><a href="/details_blog/${article.slug}" target="_self">${article.title || ''}</a></div>
+                    <div class="sapo">
+                      ${article.summary || ''}
+                      <a href="/details_blog/${article.slug}" class="d-more" target="_self">Xem chi tiết</a>
+                    </div>
+                    ${article.main_image_url ? `<img class="h-img" src="${article.main_image_url}" alt="${article.title || ''}">` : ''}
+                    <div class="item-bottom">
+                      <div class="button-ar">
+                        <div class="dropdown home-item">
+                          <span class="dropdown-toggle" data-bs-toggle="dropdown">Chia sẻ</span>
+                          <ul class="dropdown-menu">
+                            <li><a class="dropdown-item copylink" data-url="/details_blog/${article.slug}" href="javascript:void(0)">Copy link</a></li>
+                            <li><a class="dropdown-item sharefb" data-url="/details_blog/${article.slug}" href="javascript:void(0)">Share FB</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>`;
+            }
+
+            setupInfiniteScroll({
+                listElementId: 'articles-list',
+                loadingElementId: 'loading',
+                loadMoreContainerId: 'load-more-container',
+                loadMoreBtnId: 'load-more-btn',
+                apiUrl: '<?= BASE_URL ?>/api/loadMoreArticles?businessman_id=<?= $businessman['id'] ?>',
+                initialOffset: 5,
+                limit: 5,
+                renderItemFunction: renderHomepageArticle
+            });
+        });
+    </script>
+<?php else: ?>
+    <div class="block-k">
+        <div class="view-carde f-frame">
+            <div class="text-center p-4">
+                <p>Chưa có thành tựu/bài viết nào được thêm vào profile doanh nhân.</p>
+            </div>
         </div>
+    </div>    
+<?php endif; ?>
+</div>
+
+           
+       
+
 
         <!-- bài viết chính block end -->
 
