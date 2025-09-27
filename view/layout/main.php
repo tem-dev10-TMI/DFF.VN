@@ -179,30 +179,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
 
 <body>
-    <!-- TOKEN lượt truy cập Lâm Phương Khánh -->
-    <!-- Live Counter - bottom-left -->
-    <!-- Floating Live Counter -->
-    <div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
-        <div class="lc-inner d-flex align-items-center rongthem">
-            <span class="lc-text">
-                <div class="lc-line">
-                    <i class="bi bi-people-fill me-1"></i>
-                    Đang truy cập: <strong id="onlineCount" data-role="online-count">--</strong>
-                </div>
-                <div class="lc-line">
-                    <i class="bi bi-eye me-1"></i>
-                    Tổng lượt truy cập: <strong id="totalViews">--</strong>
-                </div>
-            </span>
-        </div>
-    </div>
 
-
-
-
-    <!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
-
-    <!-- Preloader Framework -->
     <style>
         #preloader {
             position: fixed;
@@ -289,6 +266,32 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             </div>
         </div>
     </div>
+
+    <!-- TOKEN lượt truy cập Lâm Phương Khánh -->
+    <!-- Live Counter - bottom-left -->
+    <!-- Floating Live Counter -->
+    <div class="live-counter position-fixed bottom-0 start-0 m-3" role="status" aria-live="polite">
+        <div class="lc-inner d-flex align-items-center rongthem">
+            <span class="lc-text">
+                <div class="lc-line">
+                    <i class="bi bi-people-fill me-1"></i>
+                    Đang truy cập: <strong id="onlineCount" data-role="online-count">--</strong>
+                </div>
+                <div class="lc-line">
+                    <i class="bi bi-eye me-1"></i>
+                    Tổng lượt truy cập: <strong id="totalViews">--</strong>
+                </div>
+            </span>
+        </div>
+    </div>
+
+
+
+
+    <!-- Kết thúc Token Lượt truy cập Lâm Phương Khánh -->
+
+    <!-- Preloader Framework -->
+
     <!-- End Preloader Framework -->
 
     <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v20.0"
@@ -344,7 +347,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </script>
 
     <script>
-        (function () {
+        (function() {
             const onlineTargets = document.querySelectorAll('[data-role="online-count"], #onlineCount, #onlineCountHeader');
             const totalEl = document.getElementById('totalViews');
             const dotEl = document.getElementById('onlineDot'); // có thể không tồn tại
@@ -354,7 +357,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                     const base = window.BASE_URL || '';
                     const metricsUrl = base + '/TRACK/metrics.php';
 
-                    const res = await fetch(metricsUrl, { cache: 'no-store', credentials: 'same-origin' });
+                    const res = await fetch(metricsUrl, {
+                        cache: 'no-store',
+                        credentials: 'same-origin'
+                    });
                     if (!res.ok) throw new Error('HTTP ' + res.status);
 
                     const data = await res.json();
@@ -372,7 +378,9 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 } catch (e) {
                     if (dotEl) dotEl.textContent = '×';
                 }
-                setTimeout(() => { if (dotEl) dotEl.textContent = '•'; }, 1000);
+                setTimeout(() => {
+                    if (dotEl) dotEl.textContent = '•';
+                }, 1000);
             }
 
             // chạy ngay và lặp
@@ -399,7 +407,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <!-- header end -->
     <!-- script chạy thị trường -->
     <script>
-        $(function () {
+        $(function() {
 
             function Marquee(selector, speed) {
                 const parentSelector = document.querySelector(selector);
@@ -410,7 +418,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 parentSelector.insertAdjacentHTML('beforeend', clone);
 
                 function startMarquee() {
-                    marqueeInterval = setInterval(function () {
+                    marqueeInterval = setInterval(function() {
                         firstElement.style.marginLeft = `-${i}px`;
                         /*var fwid = $('.top-stock').width();*/
                         fwid = 1500;
@@ -549,7 +557,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </style>
     <script></script>
     <script>
-        (function () {
+        (function() {
             var modalEl = document.getElementById('mobileModal');
             var modalBody = document.getElementById('mobileModalBody');
             var modalTitle = document.getElementById('mobileModalLabel');
@@ -588,12 +596,12 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 document.body.style.overflow = '';
             }
 
-            modalEl && modalEl.addEventListener('click', function (e) {
+            modalEl && modalEl.addEventListener('click', function(e) {
                 if (e.target === modalEl) closeMobileModal();
             });
 
-            document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
-                a.addEventListener('click', function (e) {
+            document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                a.addEventListener('click', function(e) {
                     var type = this.getAttribute('data-mobile-modal');
                     if (!type) return;
 
@@ -622,10 +630,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <ul class="list-group list-group-flush">
             <?php if (isset($_SESSION['user'])): ?>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/<?php if ($_SESSION['user']['role'] == 'user' || $_SESSION['user']['role'] == 'admin' || $_SESSION['user']['role'] == 'businessmen') {
-                      echo 'profile_user';
-                  } else {
-                      //echo 'profile_business';
-                  } ?>"><i class="fas fa-user"></i> Trang cá
+                                                                            echo 'profile_user';
+                                                                        } else {
+                                                                            //echo 'profile_business';
+                                                                        } ?>"><i class="fas fa-user"></i> Trang cá
                         nhân</a></li>
                 <li class="list-group-item"><a href="profile_user"><i class="fas fa-plus"></i> Viết bài</a></li>
                 <li class="list-group-item"><a href="<?= BASE_URL ?>/change_password"><i class="fas fa-unlock"></i> Đổi mật
@@ -645,7 +653,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     <script>
         // Bọc trong IIFE để tránh xung đột
-        (function () {
+        (function() {
             // Chỉ lấy element, không khởi tạo modal ở đây
             const modalEl = document.getElementById('mobileModal');
             if (!modalEl) return; // Nếu không có element thì dừng luôn
@@ -668,7 +676,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             }
 
             // Hàm mở modal, giờ sẽ an toàn hơn
-            window.openMobileModal = function (title, html, modalClass) {
+            window.openMobileModal = function(title, html, modalClass) {
                 const bsModal = getModalInstance();
                 if (!bsModal) return;
 
@@ -689,8 +697,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             // Gắn sự kiện vào các nút bấm chỉ một lần
             // Dùng một cờ để đảm bảo code này chỉ chạy 1 lần duy nhất
             if (!window.mobileModalListenerAttached) {
-                document.querySelectorAll('.js-mobile-modal').forEach(function (a) {
-                    a.addEventListener('click', function (e) {
+                document.querySelectorAll('.js-mobile-modal').forEach(function(a) {
+                    a.addEventListener('click', function(e) {
                         e.preventDefault();
                         const type = this.getAttribute('data-mobile-modal');
                         if (!type) return;
@@ -1031,7 +1039,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         <input type="hidden" id="hdd_id" value="24166" />
 
         <script>
-            $(function () {
+            $(function() {
 
                 jQuery("#home_slider").owlCarousel({
                     autoplay: false,
@@ -1071,14 +1079,14 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 var nid = $('#hdd_id').val();
                 Page.loadCm(0, $('.list_comment'), 0, nid)
 
-                $('.mb-chat').click(function () {
+                $('.mb-chat').click(function() {
                     $('.cover-chat').show();
                 });
-                $('.cover-chat .cclose').click(function () {
+                $('.cover-chat .cclose').click(function() {
                     $('.cover-chat').hide();
                 });
 
-                $('.cm-more').on('click', function (e) {
+                $('.cm-more').on('click', function(e) {
                     var id = $('.box_result:last').attr('data-ref');
                     Page.loadCm(0, $('.list_comment'), id, nid);
                 });
@@ -1089,7 +1097,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         </script>
 
         <script>
-            $(function () {
+            $(function() {
                 type = 3;
             });
         </script>
@@ -1132,17 +1140,17 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 </a>
         </div>
 
-        </div>
+    </div>
 
     </div>
 
 
     <script>
-        $(function () {
+        $(function() {
             Page.registerModule(document);
 
 
-            $(window).scroll(function () {
+            $(window).scroll(function() {
                 var rangeToTop = $(this).scrollTop();
                 if (rangeToTop > 500) {
                     $("#back-top").fadeIn("slow");
@@ -1162,6 +1170,37 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         // Make session token available to JS
         window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
     </script>
+
+
+
+
+    <script>
+        // nút "Tôi"
+        const btnProfile = document.querySelector('.js-mobile-modal[data-mobile-modal="profile"]');
+        // nút "Thông báo"
+        const btnAlerts = document.querySelector('.js-mobile-modal[data-mobile-modal="alerts"]');
+        const modal = document.getElementById('mobileModal');
+
+        function applyUnderStock() {
+            const stock = document.querySelector('.top-stock');
+            const h = stock ? Math.ceil(stock.getBoundingClientRect().height) : 56; // fallback
+            modal.classList.add('modal--under-stock');
+            // truyền giá trị xuống CSS qua biến custom
+            modal.style.setProperty('--under-stock-top', h + 'px');
+        }
+
+        function removeUnderStock() {
+            modal.classList.remove('modal--under-stock');
+            modal.style.removeProperty('--under-stock-top');
+        }
+
+        btnProfile?.addEventListener('click', applyUnderStock);
+        btnAlerts?.addEventListener('click', removeUnderStock);
+
+        // khi modal đóng thì reset
+        modal?.addEventListener('hidden.bs.modal', removeUnderStock);
+    </script>
+
     <script>
         // --- Kịch bản cho hiệu ứng 3D (Không đổi) ---
         const container = document.getElementById('globe-container');
@@ -1257,46 +1296,16 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             document.body.style.overflow = 'auto';
         }
 
-        window.onload = function () {
+        window.onload = function() {
             const preloader = document.getElementById('preloader');
             if (preloader) {
-                setTimeout(function () {
+                setTimeout(function() {
                     preloader.classList.add('hidden');
                 }, 500); // 500ms = 0.5 giây
             }
         };
         setTimeout(hideLoader, 5000);
     </script>
-
-
-
-<script>
-  // nút "Tôi"
-  const btnProfile = document.querySelector('.js-mobile-modal[data-mobile-modal="profile"]');
-  // nút "Thông báo"
-  const btnAlerts  = document.querySelector('.js-mobile-modal[data-mobile-modal="alerts"]');
-  const modal      = document.getElementById('mobileModal');
-
-  function applyUnderStock() {
-    const stock = document.querySelector('.top-stock');
-    const h = stock ? Math.ceil(stock.getBoundingClientRect().height) : 56; // fallback
-    modal.classList.add('modal--under-stock');
-    // truyền giá trị xuống CSS qua biến custom
-    modal.style.setProperty('--under-stock-top', h + 'px');
-  }
-  function removeUnderStock() {
-    modal.classList.remove('modal--under-stock');
-    modal.style.removeProperty('--under-stock-top');
-  }
-
-  btnProfile?.addEventListener('click', applyUnderStock);
-  btnAlerts?.addEventListener('click', removeUnderStock);
-
-  // khi modal đóng thì reset
-  modal?.addEventListener('hidden.bs.modal', removeUnderStock);
-</script>
-
-
 </body>
 
 
