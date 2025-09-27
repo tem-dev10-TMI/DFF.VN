@@ -26,7 +26,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
     <!-- mo modal khi sai mat khau -->
     <?php if (isset($_SESSION['login_error'])): ?>
         <script>
-            document.addEventListener("DOMContentLoaded", function() {
+            document.addEventListener("DOMContentLoaded", function () {
                 var myModal = new bootstrap.Modal(document.getElementById('div_modal'));
                 myModal.show();
             });
@@ -41,8 +41,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <div class="item">
                         <div class="" style="display: none">
                             <a title="<?= htmlspecialchars($article['title']) ?>"
-                                href="<?= 'details_blog/' . urlencode($article['slug']) ?>"
-                                target="_self">
+                                href="<?= 'details_blog/' . urlencode($article['slug']) ?>" target="_self">
                                 <div class="mmavatar"><?= htmlspecialchars($article['title']) ?></div>
                             </a>
                         </div>
@@ -90,8 +89,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 src="https://dff.vn/vendor/dffvn/content/img/img_small.jpg" width="30">
         </div>
         <script>
-            document.querySelector(".openModalcreatePost").addEventListener("click", function() {
-                    <?php if (isset($_SESSION['user']['id'])): ?>
+            document.querySelector(".openModalcreatePost").addEventListener("click", function () {
+                <?php if (isset($_SESSION['user']['id'])): ?>
 
                     // Nếu đã đăng nhập thì mở modal
                     var myModal = new bootstrap.Modal(document.getElementById('createPostModal'));
@@ -121,7 +120,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             style="transform: translate3d(0px, 0px, 0px); transition: all; width: <?= count($topBusinessmen) * 182.667 + (count($topBusinessmen) - 1) * 10 ?>px;">
                             <?php if (!empty($topBusinessmen)): ?>
                                 <?php //var_dump($topBusinessmen);
-                                ?>
+                                    ?>
 
                                 <?php foreach ($topBusinessmen as $biz): ?>
                                     <?php
@@ -210,10 +209,14 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                     <h6 class="card-title mb-1">
                                         <?= htmlspecialchars(($kol['name'] ?? '') ?: ($kol['username'] ?? ''), ENT_QUOTES, 'UTF-8') ?>
                                     </h6>
-                                    <p class="text-muted small mb-2">@<?= htmlspecialchars($kol['username'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                                    <div class="folloewrs"><i class="fas fa-user-friends"></i> <?= (int)($kol['followers'] ?? 0) ?> follower</div>
-                                    <div class="likes"><i class="fas fa-thumbs-up"></i> <?= (int)($kol['likes'] ?? 0) ?> lượt thích</div>
-                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= urlencode($kol['user_id']) ?>" class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
+                                    <p class="text-muted small mb-2">
+                                        @<?= htmlspecialchars($kol['username'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                                    <div class="folloewrs"><i class="fas fa-user-friends"></i>
+                                        <?= (int) ($kol['followers'] ?? 0) ?> follower</div>
+                                    <div class="likes"><i class="fas fa-thumbs-up"></i> <?= (int) ($kol['likes'] ?? 0) ?> lượt
+                                        thích</div>
+                                    <a href="<?= BASE_URL ?>/view_profile?id=<?= urlencode($kol['user_id']) ?>"
+                                        class="btn btn-sm btn-outline-primary mt-2">Xem thêm</a>
                                 </div>
                             </div>
                         </div>
@@ -278,7 +281,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                         $badgeClass = 'bg-success';
                                         $badgeText = 'Công khai';
                                         break;
-                                        // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
+                                    // Bạn có thể thêm các trường hợp khác như 'private', 'draft' ở đây
                                 }
 
                                 if ($badgeText) {
@@ -291,8 +294,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <div class="title">
 
-                                <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>"
-                                    target="_self">
+                                <a href="<?= BASE_URL . '/details_blog/' . $article['slug'] ?>" target="_self">
 
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
@@ -300,13 +302,12 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
                             <div class="sapo">
                                 <?= htmlspecialchars($article['summary']) ?>
-                                <a href="<?= 'details_blog/' . $article['slug'] ?>"
-                                    class="d-more" target="_self">
+                                <a href="<?= 'details_blog/' . $article['slug'] ?>" class="d-more" target="_self">
                                     Xem thêm
                                 </a>
                             </div>
 
-                            <?php if (!empty($article['main_image_url'])) : ?>
+                            <?php if (!empty($article['main_image_url'])): ?>
                                 <img class="h-img" src="<?= htmlspecialchars($article['main_image_url']) ?>"
                                     alt="<?= htmlspecialchars($article['title']) ?>">
                             <?php endif; ?>
@@ -326,11 +327,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                             $shareUrl = BASE_URL . '/details_blog/' . urlencode($article['slug']);
 
                                             ?>
-                                            <li><a class="dropdown-item copylink"
-                                                    data-url="<?= $shareUrl ?>"
+                                            <li><a class="dropdown-item copylink" data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Copy link</a></li>
-                                            <li><a class="dropdown-item sharefb"
-                                                    data-url="<?= $shareUrl ?>"
+                                            <li><a class="dropdown-item sharefb" data-url="<?= $shareUrl ?>"
                                                     href="javascript:void(0)">Share FB</a></li>
                                         </ul>
                                     </div>
@@ -351,7 +350,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             </div>
 
             <script>
-                document.addEventListener('DOMContentLoaded', function() {
+                document.addEventListener('DOMContentLoaded', function () {
                     const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
                     function timeAgo(datetime) {
@@ -439,7 +438,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     });
 
                     // JS for Share & Copy Link
-                    document.addEventListener('click', function(event) {
+                    document.addEventListener('click', function (event) {
                         const target = event.target;
 
                         // --- Copy Link ---
@@ -483,88 +482,88 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
 
-<script>
-(() => {
-  if (window._smoothFollowBound) return;
-  window._smoothFollowBound = true;
+        <script>
+            (() => {
+                if (window._smoothFollowBound) return;
+                window._smoothFollowBound = true;
 
-  const BASE = <?= json_encode(BASE_URL) ?>;
-  const token = <?= json_encode($_SESSION['user']['session_token'] ?? '') ?>;
-  const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
+                const BASE = <?= json_encode(BASE_URL) ?>;
+                const token = <?= json_encode($_SESSION['user']['session_token'] ?? '') ?>;
+                const currentUserId = <?= json_encode($_SESSION['user']['id'] ?? null) ?>;
 
-  // Khoá theo từng user_id tránh race-condition
-  const busyByTarget = new Map();
+                // Khoá theo từng user_id tránh race-condition
+                const busyByTarget = new Map();
 
-  function animateNumber(el, to) {
-    const from = parseInt(el.textContent.replace(/\D/g,'')) || 0;
-    to = parseInt(to) || 0;
-    if (from === to) return;
+                function animateNumber(el, to) {
+                    const from = parseInt(el.textContent.replace(/\D/g, '')) || 0;
+                    to = parseInt(to) || 0;
+                    if (from === to) return;
 
-    const start = performance.now();
-    const dur = 220; // ms
-    const ease = t => t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+                    const start = performance.now();
+                    const dur = 220; // ms
+                    const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 
-    function step(ts){
-      const p = Math.min(1, (ts - start)/dur);
-      const v = Math.round(from + (to-from)*ease(p));
-      el.textContent = v;
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
-  }
+                    function step(ts) {
+                        const p = Math.min(1, (ts - start) / dur);
+                        const v = Math.round(from + (to - from) * ease(p));
+                        el.textContent = v;
+                        if (p < 1) requestAnimationFrame(step);
+                    }
+                    requestAnimationFrame(step);
+                }
 
-  function syncAllButtons(targetId, action, followers){
-    document.querySelectorAll(`.btn-follow[data-user="${targetId}"]`).forEach(el=>{
-      const t = el.querySelector('.follow-text');
-      const n = el.querySelector('.number');
-      if (t) t.textContent = (action === 'follow') ? 'Đang theo dõi' : 'Theo dõi';
-      if (n)  animateNumber(n, followers);
-      el.setAttribute('aria-pressed', action === 'follow' ? 'true':'false');
-    });
-  }
+                function syncAllButtons(targetId, action, followers) {
+                    document.querySelectorAll(`.btn-follow[data-user="${targetId}"]`).forEach(el => {
+                        const t = el.querySelector('.follow-text');
+                        const n = el.querySelector('.number');
+                        if (t) t.textContent = (action === 'follow') ? 'Đang theo dõi' : 'Theo dõi';
+                        if (n) animateNumber(n, followers);
+                        el.setAttribute('aria-pressed', action === 'follow' ? 'true' : 'false');
+                    });
+                }
 
-  document.addEventListener('click', async (e)=>{
-    const btn = e.target.closest('.btn-follow');
-    if (!btn) return;
-    if (!currentUserId) { alert('Bạn cần đăng nhập để theo dõi'); return; }
+                document.addEventListener('click', async (e) => {
+                    const btn = e.target.closest('.btn-follow');
+                    if (!btn) return;
+                    if (!currentUserId) { alert('Bạn cần đăng nhập để theo dõi'); return; }
 
-    const targetId = btn.getAttribute('data-user');
-    if (busyByTarget.get(targetId)) return; // đang xử lý req trước
-    busyByTarget.set(targetId, true);
+                    const targetId = btn.getAttribute('data-user');
+                    if (busyByTarget.get(targetId)) return; // đang xử lý req trước
+                    busyByTarget.set(targetId, true);
 
-    // UI feedback nhỏ
-    btn.classList.add('is-loading');
+                    // UI feedback nhỏ
+                    btn.classList.add('is-loading');
 
-    try {
-      const res = await fetch(`${BASE}/api/follow`, {
-        method:'POST',
-        headers:{'Content-Type':'application/x-www-form-urlencoded', 'Cache-Control':'no-store'},
-        credentials:'include',
-        body:`user_id=${encodeURIComponent(targetId)}&session_token=${encodeURIComponent(token)}`
-      });
-      const data = await res.json();
+                    try {
+                        const res = await fetch(`${BASE}/api/follow`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Cache-Control': 'no-store' },
+                            credentials: 'include',
+                            body: `user_id=${encodeURIComponent(targetId)}&session_token=${encodeURIComponent(token)}`
+                        });
+                        const data = await res.json();
 
-      if (!data.success) {
-        alert(data.message || 'Có lỗi xảy ra, thử lại.');
-      } else {
-        syncAllButtons(targetId, data.action, data.followers);
-        // cập nhật badge chuông nếu API có trả
-        if (typeof data.bell_count === 'number') {
-          const bell = document.querySelector('.func-mobile i.fa-bell')?.closest('a');
-          const num  = bell?.querySelector('.number');
-          if (num) num.textContent = data.bell_count;
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Mạng chập chờn, thử lại nhé.');
-    } finally {
-      busyByTarget.set(targetId, false);
-      btn.classList.remove('is-loading');
-    }
-  });
-})();
-</script>
+                        if (!data.success) {
+                            alert(data.message || 'Có lỗi xảy ra, thử lại.');
+                        } else {
+                            syncAllButtons(targetId, data.action, data.followers);
+                            // cập nhật badge chuông nếu API có trả
+                            if (typeof data.bell_count === 'number') {
+                                const bell = document.querySelector('.func-mobile i.fa-bell')?.closest('a');
+                                const num = bell?.querySelector('.number');
+                                if (num) num.textContent = data.bell_count;
+                            }
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        alert('Mạng chập chờn, thử lại nhé.');
+                    } finally {
+                        busyByTarget.set(targetId, false);
+                        btn.classList.remove('is-loading');
+                    }
+                });
+            })();
+        </script>
 
 
 
@@ -614,8 +613,9 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             // Thêm nút xóa cho comment vi phạm
                             $deleteButton = '<button class="delete-violation-btn" onclick="deleteViolationComment(' . $c['id'] . ')"><i class="fas fa-trash"></i> Xóa</button>';
                         }
-                    ?>
-                        <li class="chat-item <?= ($c['ai_checked'] && $c['ai_violation']) ? 'violation' : '' ?>" data-id="<?= $c['id'] ?>" data-comment-id="<?= $c['id'] ?>">
+                        ?>
+                        <li class="chat-item <?= ($c['ai_checked'] && $c['ai_violation']) ? 'violation' : '' ?>"
+                            data-id="<?= $c['id'] ?>" data-comment-id="<?= $c['id'] ?>">
                             <div class="chat-avatar">
                                 <?php if ($c['avatar_url']): ?>
                                     <img src="<?= htmlspecialchars($c['avatar_url']) ?>">
@@ -644,7 +644,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             <input type="hidden" id="parent_id" name="parent_id" value="">
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -682,7 +682,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
 
                             <script>
-                                document.addEventListener('click', function(e) {
+                                document.addEventListener('click', function (e) {
                                     if (e.target.classList.contains('chat-reply')) {
                                         e.preventDefault();
 
@@ -857,7 +857,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 const content = textarea.value.trim();
 
                 // Kiểm tra user có login không
-                const userId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                const userId = <?= (int) ($_SESSION['user']['id'] ?? 0) ?>;
                 if (userId <= 0) {
                     alert("Vui lòng đăng nhập để gửi bình luận!");
                     return;
@@ -915,7 +915,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             // nhấn enter 
             const textarea = document.getElementById("comment-content");
 
-            textarea.addEventListener("keydown", function(e) {
+            textarea.addEventListener("keydown", function (e) {
                 if (e.key === "Enter" && !e.shiftKey) {
                     e.preventDefault(); // chặn xuống dòng
                     document.getElementById("send-comment").click(); // gọi nút gửi
@@ -924,7 +924,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
 
             // Load comment mới - chỉ load comment của người khác đã được AI check và không vi phạm
             function loadNewComments() {
-                const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                const currentUserId = <?= (int) ($_SESSION['user']['id'] ?? 0) ?>;
 
                 fetch("<?= BASE_URL ?>/controller/CommentsGlobalController.php?action=getComments&last_id=" + lastId + "&_=" + new Date().getTime())
                     .then(res => res.json())
@@ -1184,7 +1184,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 li.dataset.commentId = c.id;
 
                 // Kiểm tra quyền hiển thị comment
-                const currentUserId = <?= (int)($_SESSION['user']['id'] ?? 0) ?>;
+                const currentUserId = <?= (int) ($_SESSION['user']['id'] ?? 0) ?>;
 
                 // Ẩn comment vi phạm khỏi user khác
                 if (c.ai && c.ai.isViolation && !c.ai.isChecking && c.user_id !== currentUserId) {
@@ -1243,7 +1243,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
             }
 
             // Function xóa comment vi phạm
-            window.deleteViolationComment = async function(commentId) {
+            window.deleteViolationComment = async function (commentId) {
                 console.log('🗑️ Attempting to delete comment:', commentId);
 
                 if (!confirm('Bạn có chắc chắn muốn xóa bình luận vi phạm này?')) {
@@ -1298,7 +1298,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
                         body: "comment_id=" + encodeURIComponent(commentId) +
-                            "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
+                            "&user_id=" + encodeURIComponent(<?= (int) ($_SESSION['user']['id'] ?? 0) ?>)
                     });
 
                     console.log('📡 Delete API response status:', response.status);
@@ -1343,8 +1343,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles3 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -1387,8 +1387,8 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
                                 <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
+                                      ? htmlspecialchars($article['link'])
+                                      : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
                                 </a>
 
@@ -1403,128 +1403,298 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 </div>
             </div>
         <?php else: ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết phân tích nào.</p>
+            <div class="">
+                <!-- SDK Facebook (chèn 1 lần gần cuối <body>) -->
+                <style>
+                    /* Card bao ngoài cho đẹp */
+                    .fb-card {
+                        max-width: 520px;
+                        /* plugin FB max ~500px, thêm 20px cho padding */
+                        margin: 16px auto;
+                        padding: 12px;
+                        background: #ffffff;
+                        /* đổi sang #0d1117 nếu theme tối */
+                        border: 1px solid #e6e8eb;
+                        /* #2d333b (dark) */
+                        border-radius: 16px;
+                        box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+                    }
+
+                    .fb-card__head {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        gap: 8px;
+                        margin-bottom: 10px;
+                    }
+
+                    .fb-card__title {
+                        display: flex;
+                        align-items: center;
+                        gap: 10px;
+                        font-weight: 700;
+                        font-size: 16px;
+                        color: #111827;
+                    }
+
+                    .fb-card__title img {
+                        width: 28px;
+                        height: 28px;
+                        border-radius: 6px;
+                    }
+
+                    .fb-card__btn {
+                        appearance: none;
+                        border: 0;
+                        padding: 8px 12px;
+                        background: #1877f2;
+                        color: #fff;
+                        border-radius: 10px;
+                        font-weight: 600;
+                        cursor: pointer;
+                    }
+
+                    .fb-frame {
+                        display: block;
+                        width: 100%;
+                        border: none;
+                        overflow: hidden;
+                        border-radius: 12px;
+                    }
+
+                    /* Responsive: thu gọn card ở màn nhỏ */
+                    @media (max-width: 480px) {
+                        .fb-card {
+                            margin: 12px auto;
+                            padding: 10px;
+                            border-radius: 14px;
+                        }
+
+                        .fb-card__btn {
+                            padding: 7px 10px;
+                            border-radius: 8px;
+                            font-size: 14px;
+                        }
+                    }
+                </style>
+
+                <div class="fb-card" id="fbCard">
+                    <div class="fb-card__head">
+                        <div class="fb-card__title">
+                            <!-- Logo tuỳ bạn, có thể bỏ -->
+                            <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="">
+                            <span>Fanpage Facebook</span>
+                        </div>
+                        <!-- Nút dẫn thẳng tới page của bạn -->
+                        <a class="fb-card__btn" href="https://www.facebook.com/profile.php?id=61581524937452"
+                            target="_blank" rel="noopener">Theo dõi</a>
                     </div>
+
+                    <?php
+                    // URL fanpage của bạn:
+                    $fanpageUrl = 'https://www.facebook.com/profile.php?id=61581524937452';
+
+                    // Kích thước mặc định (sẽ được JS tự co theo khung — giữ tỉ lệ & hạn chế scrollbar)
+                    $defWidth = 340;
+                    $defHeight = 600; // tăng cao hơn mặc định để ít hiện scrollbar dọc
+                
+                    $params = [
+                        'href' => $fanpageUrl,
+                        'tabs' => 'timeline',          // có thể: timeline, events
+                        'width' => $defWidth,
+                        'height' => $defHeight,
+                        'small_header' => 'true',      // header gọn hơn => tổng thể “đẹp, thoáng”
+                        'adapt_container_width' => 'true',
+                        'hide_cover' => 'false',       // true nếu muốn bỏ ảnh cover cho tối giản
+                        'show_facepile' => 'false'     // false cho gọn; true nếu muốn thấy avatar người theo dõi
+                    ];
+                    $src = 'https://www.facebook.com/plugins/page.php?' . http_build_query($params);
+                    ?>
+
+                    <iframe id="fbFrame" class="fb-frame" src="<?= htmlspecialchars($src) ?>" width="<?= $defWidth ?>"
+                        height="<?= $defHeight ?>" scrolling="no" frameborder="0" allowfullscreen="true"
+                        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+                    </iframe>
                 </div>
+
+                <script>
+                    // Tự co theo khung: width = min(container, 500); height tỷ lệ + thêm biên độ để hạn chế scrollbar
+                    (function () {
+                        const card = document.getElementById('fbCard');
+                        const frame = document.getElementById('fbFrame');
+
+                        function applySize() {
+                            if (!card || !frame) return;
+                            const maxWidth = 500;                       // giới hạn của FB
+                            const w = Math.min(card.clientWidth, maxWidth) || 340;
+                            // Chiều cao “dễ nhìn”: lớn hơn chuẩn để ít thanh cuộn dọc
+                            // gợi ý ~ 1.6–1.9 × width tuỳ bạn muốn cao bao nhiêu
+                            const h = Math.round(w * 1.8);
+
+                            // cập nhật width/height ATTR + PARAM trong URL
+                            const url = new URL(frame.src);
+                            url.searchParams.set('width', String(w));
+                            url.searchParams.set('height', String(h));
+                            frame.width = w;
+                            frame.height = h;
+
+                            // chỉ reload khi đổi param
+                            if (frame.src !== url.toString()) frame.src = url.toString();
+                        }
+
+                        applySize();
+                        if ('ResizeObserver' in window) {
+                            new ResizeObserver(applySize).observe(card);
+                        } else {
+                            window.addEventListener('resize', applySize);
+                        }
+                    })();
+                </script>
+
+
             </div>
         <?php endif; ?>
 
 
 
 
-                    <!-- Crypton Card -->
-                    <a class="crypton-card" href="<?= BASE_URL ?>/crypton" aria-label="Đi đến trang Crypton">
-                    <img
-                        class="crypton-card__img"
-                        src="<?= BASE_URL ?>/public/img/Crypton.png"
-                        alt="Crypto — đi đến trang Crypton"
-                        loading="lazy"
-                        width="1200" height="630"
-                    />
+        <!-- Crypton Card -->
+        <a class="crypton-card" href="<?= BASE_URL ?>/crypton" aria-label="Đi đến trang Crypton">
+            <img class="crypton-card__img" src="<?= BASE_URL ?>/public/img/Crypton.png"
+                alt="Crypto — đi đến trang Crypton" loading="lazy" width="1200" height="630" />
 
-                    <div class="crypton-card__overlay" aria-hidden="true"></div>
+            <div class="crypton-card__overlay" aria-hidden="true"></div>
 
-                    <div class="crypton-card__content">
-                        <h3 class="crypton-card__title">Crypton</h3>
-                        <p class="crypton-card__desc">Tỷ giá • Biểu đồ • Tin tức</p>
-                        <span class="crypton-card__cta">
-                        Mở trang
-                        <svg class="crypton-card__icon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                            <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        </span>
-                    </div>
-                    </a>
+            <div class="crypton-card__content">
+                <h3 class="crypton-card__title">Crypton</h3>
+                <p class="crypton-card__desc">Tỷ giá • Biểu đồ • Tin tức</p>
+                <span class="crypton-card__cta">
+                    Mở trang
+                    <svg class="crypton-card__icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        aria-hidden="true">
+                        <path d="M5 12h14M13 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg>
+                </span>
+            </div>
+        </a>
 
-                    <style>
-                    .crypton-card {
-                        --radius: 18px;
-                        --shadow: 0 10px 30px rgba(0,0,0,.15);
-                        --shadow-hover: 0 16px 40px rgba(0,0,0,.22);
-                        position: relative;
-                        display: block;
-                        width: 100%;
-                        max-width: 980px;
-                        margin: 16px auto;
-                        aspect-ratio: 21/9; /* Giữ tỉ lệ đẹp, responsive */
-                        border-radius: var(--radius);
-                        overflow: hidden;
-                        box-shadow: var(--shadow);
-                        text-decoration: none;
-                        color: inherit;
-                        transition: transform .25s ease, box-shadow .25s ease;
-                        background: #0b1020;
-                    }
-                    .crypton-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
-                    .crypton-card:active { transform: translateY(0); }
+        <style>
+            .crypton-card {
+                --radius: 18px;
+                --shadow: 0 10px 30px rgba(0, 0, 0, .15);
+                --shadow-hover: 0 16px 40px rgba(0, 0, 0, .22);
+                position: relative;
+                display: block;
+                width: 100%;
+                max-width: 980px;
+                margin: 16px auto;
+                aspect-ratio: 21/9;
+                /* Giữ tỉ lệ đẹp, responsive */
+                border-radius: var(--radius);
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                text-decoration: none;
+                color: inherit;
+                transition: transform .25s ease, box-shadow .25s ease;
+                background: #0b1020;
+            }
 
-                    .crypton-card:focus-visible {
-                        outline: 3px solid #70b5ff;
-                        outline-offset: 4px;
-                    }
+            .crypton-card:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow-hover);
+            }
 
-                    .crypton-card__img {
-                        position: absolute; inset: 0;
-                        width: 100%; height: 100%;
-                        object-fit: cover;
-                        filter: saturate(1.05) contrast(1.02);
-                        transform: scale(1.02);
-                    }
+            .crypton-card:active {
+                transform: translateY(0);
+            }
 
-                    .crypton-card__overlay {
-                        position: absolute; inset: 0;
-                        background:
-                        linear-gradient(180deg, rgba(4,6,20,.15) 0%, rgba(4,6,20,.55) 55%, rgba(4,6,20,.85) 100%),
-                        radial-gradient(120% 120% at 100% 0%, rgba(0,140,255,.35) 0%, rgba(0,140,255,0) 60%);
-                        pointer-events: none;
-                    }
+            .crypton-card:focus-visible {
+                outline: 3px solid #70b5ff;
+                outline-offset: 4px;
+            }
 
-                    .crypton-card__content {
-                        position: absolute; left: 24px; right: 24px; bottom: 22px;
-                        display: grid; gap: 6px;
-                        color: #eef3ff;
-                    }
+            .crypton-card__img {
+                position: absolute;
+                inset: 0;
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                filter: saturate(1.05) contrast(1.02);
+                transform: scale(1.02);
+            }
 
-                    .crypton-card__title {
-                        margin: 0;
-                        font-size: clamp(20px, 3.2vw, 28px);
-                        font-weight: 700;
-                        letter-spacing: .2px;
-                    }
+            .crypton-card__overlay {
+                position: absolute;
+                inset: 0;
+                background:
+                    linear-gradient(180deg, rgba(4, 6, 20, .15) 0%, rgba(4, 6, 20, .55) 55%, rgba(4, 6, 20, .85) 100%),
+                    radial-gradient(120% 120% at 100% 0%, rgba(0, 140, 255, .35) 0%, rgba(0, 140, 255, 0) 60%);
+                pointer-events: none;
+            }
 
-                    .crypton-card__desc {
-                        margin: 0 0 6px 0;
-                        font-size: clamp(13px, 2vw, 15px);
-                        opacity: .9;
-                    }
+            .crypton-card__content {
+                position: absolute;
+                left: 24px;
+                right: 24px;
+                bottom: 22px;
+                display: grid;
+                gap: 6px;
+                color: #eef3ff;
+            }
 
-                    .crypton-card__cta {
-                        display: inline-flex; align-items: center; gap: 8px;
-                        padding: 10px 14px;
-                        font-weight: 600;
-                        border-radius: 999px;
-                        background: rgba(255,255,255,.1);
-                        backdrop-filter: blur(4px);
-                        transition: background .25s ease, gap .25s ease;
-                        width: fit-content;
-                    }
-                    .crypton-card:hover .crypton-card__cta { background: rgba(255,255,255,.18); gap: 10px; }
+            .crypton-card__title {
+                margin: 0;
+                font-size: clamp(20px, 3.2vw, 28px);
+                font-weight: 700;
+                letter-spacing: .2px;
+            }
 
-                    .crypton-card__icon { transition: transform .25s ease; }
-                    .crypton-card:hover .crypton-card__icon { transform: translateX(3px); }
+            .crypton-card__desc {
+                margin: 0 0 6px 0;
+                font-size: clamp(13px, 2vw, 15px);
+                opacity: .9;
+            }
 
-                    @media (prefers-reduced-motion: reduce) {
-                        .crypton-card, .crypton-card__icon { transition: none; }
-                    }
-                    </style>
+            .crypton-card__cta {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                padding: 10px 14px;
+                font-weight: 600;
+                border-radius: 999px;
+                background: rgba(255, 255, 255, .1);
+                backdrop-filter: blur(4px);
+                transition: background .25s ease, gap .25s ease;
+                width: fit-content;
+            }
+
+            .crypton-card:hover .crypton-card__cta {
+                background: rgba(255, 255, 255, .18);
+                gap: 10px;
+            }
+
+            .crypton-card__icon {
+                transition: transform .25s ease;
+            }
+
+            .crypton-card:hover .crypton-card__icon {
+                transform: translateX(3px);
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+
+                .crypton-card,
+                .crypton-card__icon {
+                    transition: none;
+                }
+            }
+        </style>
 
 
 
         <script>
-            $(document).ready(function() {
+            $(document).ready(function () {
                 $('.owl-carousel.box-company').owlCarousel({
                     loop: false,
                     margin: 10,
