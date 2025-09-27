@@ -38,6 +38,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5, user-scalable=1" />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="icon" href="favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="favicon.ico" />
     <meta name="google-site-verification" content="ZiVfvsyC2xTt_28WtjowgQZVnyfZY85dGo5J548z-P8" />
 
     <style>
