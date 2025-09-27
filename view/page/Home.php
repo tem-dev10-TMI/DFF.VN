@@ -1479,16 +1479,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                 </style>
 
                 <div class="fb-card" id="fbCard">
-                    <div class="fb-card__head">
-                        <div class="fb-card__title">
-                            <!-- Logo tuỳ bạn, có thể bỏ -->
-                            <img src="https://www.facebook.com/images/fb_icon_325x325.png" alt="">
-                            <span>Fanpage Facebook</span>
-                        </div>
-                        <!-- Nút dẫn thẳng tới page của bạn -->
-                        <a class="fb-card__btn" href="https://www.facebook.com/profile.php?id=61581524937452"
-                            target="_blank" rel="noopener">Theo dõi</a>
-                    </div>
+
 
                     <?php
                     // URL fanpage của bạn:
