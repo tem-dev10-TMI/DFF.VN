@@ -1383,10 +1383,11 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     <h2>
                         <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
                     </h2>
+                    <!-- Debug: <?= count($rssArticles4) ?> bài viết -->
                     <ul>
                         <?php foreach ($rssArticles4 as $article): ?>
                             <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
+                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= (!empty($article['is_rss']) && !empty($article['link']))
                                                                                                 ? htmlspecialchars($article['link'])
                                                                                                 : 'details_blog/' . urlencode($article['slug']) ?>">
                                     <?= htmlspecialchars($article['title']) ?>
