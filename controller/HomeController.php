@@ -58,7 +58,7 @@ class homeController
         $cache_key_slider = 'articles_slider';
         $dbArticlesForSlider = get_cache($cache_key_slider, 5);
         if ($dbArticlesForSlider === false) {
-            $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 6);
+            $dbArticlesForSlider = ArticlesModel::getArticlesPaged(0, 12); // Tăng lên 12 để có đủ cho cả 2 box
             set_cache($cache_key_slider, $dbArticlesForSlider);
         }
 
@@ -92,6 +92,11 @@ class homeController
         // Ở đây, chúng ta sẽ dùng tạm bài viết từ DB
         $rssArticlesForBox1 = array_slice($dbArticlesForSlider, 0, 6);
         $rssArticlesForBox2 = array_slice($dbArticlesForSlider, 6, 6);
+        
+        // Nếu không đủ dữ liệu cho box 2, lấy lại từ đầu với offset khác
+        if (empty($rssArticlesForBox2) && count($dbArticlesForSlider) > 0) {
+            $rssArticlesForBox2 = array_slice($dbArticlesForSlider, 0, 6);
+        }
 
         if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] == 'user') {
             $profile_category = "user";
