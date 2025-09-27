@@ -402,5 +402,63 @@
                     });
                 });
             });
+
+            // JavaScript for Share & Copy Link functionality
+            document.addEventListener('click', function(event) {
+                const target = event.target;
+
+                // Toggle Dropdown
+                if (target.hasAttribute('data-bs-toggle') && target.getAttribute('data-bs-toggle') === 'dropdown') {
+                    event.preventDefault();
+                    const dropdown = target.closest('.home-item');
+                    const menu = dropdown.querySelector('.dropdown-menu');
+                    if (menu) {
+                        menu.classList.toggle('show');
+                    }
+                }
+
+                // Copy Link
+                if (target.classList.contains('copylink')) {
+                    event.preventDefault();
+                    const urlToCopy = target.getAttribute('data-url');
+                    if (urlToCopy) {
+                        navigator.clipboard.writeText(urlToCopy).then(() => {
+                            alert('Đã sao chép link!');
+                        }).catch(err => {
+                            console.error('Lỗi khi sao chép: ', err);
+                            // Fallback for older browsers
+                            const textArea = document.createElement('textarea');
+                            textArea.value = urlToCopy;
+                            document.body.appendChild(textArea);
+                            textArea.select();
+                            try {
+                                document.execCommand('copy');
+                                alert('Đã sao chép link!');
+                            } catch (fallbackErr) {
+                                console.error('Fallback copy failed: ', fallbackErr);
+                                alert('Không thể sao chép link.');
+                            }
+                            document.body.removeChild(textArea);
+                        });
+                    }
+                }
+
+                // Share to Facebook
+                if (target.classList.contains('sharefb')) {
+                    event.preventDefault();
+                    const urlToShare = target.getAttribute('data-url');
+                    if (urlToShare) {
+                        const facebookShareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(urlToShare)}`;
+                        window.open(facebookShareUrl, 'facebook-share-dialog', 'width=800,height=600');
+                    }
+                }
+
+                // Close dropdown when clicking outside
+                if (!target.closest('.home-item')) {
+                    document.querySelectorAll('.dropdown-menu.show').forEach(menu => {
+                        menu.classList.remove('show');
+                    });
+                }
+            });
         </script>
 </main>

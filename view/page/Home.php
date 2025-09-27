@@ -927,7 +927,7 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                     .then(res => res.json())
                     .then(data => {
                         if (data.status === "success") {
-                            console.log("📥 Loaded new comments:", data.comments.length);
+                            // console.log("📥 Loaded new comments:", data.comments.length);
                             const ul = document.querySelector(".list_comment");
                             let hasNewComments = false;
 
