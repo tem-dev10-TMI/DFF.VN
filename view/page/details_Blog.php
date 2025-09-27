@@ -495,7 +495,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                     const data = await res.json();
 
                     if (data.status === "success") {
-                        console.log("📥 Loaded new comments:", data.comments.length);
+                        // console.log("📥 Loaded new comments:", data.comments.length);
                         let hasNewComments = false;
 
                         (data.comments || []).forEach(c => {
