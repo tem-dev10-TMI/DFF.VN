@@ -1,35 +1,38 @@
 <style>
-    /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
-    .about-scope ul {
-        list-style: disc;
-        padding-left: 18px;
-        margin: 1rem;
-    }
-
+   /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
+      .about-scope ul,
+      .about-scope ol {
+          padding-left: 0;
+          list-style-position: inside;
+          margin: 1rem 0;
+      }
     .about-scope ol {
         list-style: decimal;
         padding-left: 18px;
     }
 
-    .about-scope ul li {
-        float: none !important;
-        display: list-item;
-    }
-
     .about-scope .about-body {
-        line-height: 1.8;
-        scroll-margin-top: 120px;
-        /* Canh đều toàn bộ nội dung */
-        text-align: justify;
-        text-justify: inter-word;
-    }
+    line-height: 1.6; /* gọn hơn */
+    scroll-margin-top: 120px;
+    text-align: justify; /* căn đều 2 bên */
+    text-justify: inter-word;
+}
 
     .about-scope .about-body p,
-    .about-scope .about-body li {
-        text-align: justify;
-        text-justify: inter-word;
-        margin-bottom: 1em; /* khoảng cách giữa các đoạn */
-    }
+.about-scope .about-body li {
+    text-align: justify;
+    text-justify: inter-word;
+    margin-bottom: 1em;
+}
+/* --- Tiêu đề chính --- */
+.about-scope .about-content h2.page-title {
+  font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    line-height: 1.4;
+    margin: 24px 0 16px 0;
+}
     .about-scope .about-content h2 {
     color: #124889;
     font-size: 32px;
@@ -40,91 +43,101 @@
     margin: 24px 0 16px 0;      /* Khoảng trên–dưới gọn gàng */
 }
 
-    .about-scope .about-body h2,
-    .about-scope .about-body h3 {
-        scroll-margin-top: 120px;
-        text-align: left; /* giữ tiêu đề căn trái */
-    }
+  /* --- Tiêu đề phụ --- */
+.about-scope .about-body h2,
+.about-scope .about-body h3 {
+    scroll-margin-top: 120px;
+    text-align: left;
+    color: #124889;
+    font-weight: 600;
+    margin-top: 2rem;
+}
+
+.about-scope .about-body h2 {
+    font-size: 18px;
+}
+   .about-scope .about-body h3 {
+    font-size: 18px;
+}
 
     .about-scope a {
-        color: #124889;
-    }
+    color: #124889;
+}
 
-    .about-scope a:hover {
-        color: #124889;
-        text-decoration: underline;
-    }
+   .about-scope a:hover {
+    color: #124889;
+    text-decoration: underline;
+}
 
-    /* Layout 2 cột giống ảnh: aside trái + nội dung phải */
-    .about-scope .about-grid {
-        display: grid;
-        grid-template-columns: 320px 1fr;
-        gap: 24px;
-    }
+  /* --- Layout --- */
+.about-scope .about-grid {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 24px;
+}
+
 
     .about-scope .about-nav {
-        position: sticky;
-        top: 90px;
-        align-self: start;
-        border-right: 1px solid #e5e5e5;
-        padding-right: 16px;
-    }
+    position: sticky;
+    top: 90px;
+    align-self: start;
+    border-right: 1px solid #e5e5e5;
+    padding-right: 16px;
+}
 
     .about-scope .about-nav h3 {
-        font-size: 22px;
-        margin: 0 0 12px 0;
+    font-size: 16px;
+    margin: 0 0 12px 0;
+}
+
+.about-scope .about-nav ul {
+    list-style: none;
+    padding-left: 0;
+    margin: 0 0 20px 0;
+}
+
+/* --- Fix icon không che chữ (đã sửa) --- */
+.about-scope .about-nav ul li {
+  position: relative;
+  margin: 10px 0;
+  padding-left: 28px;           /* chừa đủ chỗ cho icon, không đè chữ */
+}
+.about-scope .about-nav ul li::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border: 2px solid #ff9900;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;                      /* bỏ -16px */
+  top: 50%;
+  transform: translateY(-50%);  /* canh giữa icon theo dòng */
+}
+
+/* Mobile: chừa rộng hơn chút cho chữ xuống dòng */
+@media (max-width: 992px) {
+  .about-scope .about-nav ul li { padding-left: 30px; }
+}
+
+/* Giữ nguyên phần content */
+.about-scope .about-content {
+  min-width: 0;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
+@media (max-width: 992px) {
+    .about-scope .about-grid {
+        grid-template-columns: 1fr;
     }
 
-    .about-scope .about-nav ul {
-        list-style: none;
-        padding-left: 16px;
-        margin: 0 0 20px 0;
+       .about-scope .about-nav {
+        position: static;
+        border-right: 0;
+        border-bottom: 1px solid #e5e5e5;
+        padding-bottom: 10px;
+        margin-bottom: 24px;
     }
-
-    .about-scope .about-nav ul li {
-        position: relative;
-        margin: 10px 0;
-    }
-
-    .about-scope .about-nav ul li::before {
-        content: "";
-        width: 8px;
-        height: 8px;
-        border: 2px solid #ff9900;
-        border-radius: 50%;
-        position: absolute;
-        left: -16px;
-        top: 8px;
-    }
-
-    .about-scope .about-content {
-        min-width: 0;
-        /* bỏ chiều cao cố định để văn bản co dãn tự nhiên */
-        overflow-y: auto;
-        scroll-behavior: smooth;
-    }
-
-    .about-scope .about-content h2 {
-        color: #124889;
-        font-size: 32px;
-    }
-
-    .about-scope .about-content h3 {
-        color: #124889;
-        font-size: 22px;
-    }
-
-    @media (max-width: 992px) {
-        .about-scope .about-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .about-scope .about-nav {
-            position: static;
-            border-right: 0;
-            border-bottom: 1px solid #e5e5e5;
-            padding-bottom: 10px;
-        }
         /* Mục tiêu cuộn: mỗi section có khoảng trống để không bị che bởi header/sticky */
 .about-scope .about-body section { 
   scroll-margin-top: 120px; 
@@ -147,6 +160,10 @@
         
     }
 </style>
+
+
+
+
 
 <style>
   /* CSS chỉ áp dụng trong phạm vi .about-scope để cách ly với public */
@@ -246,7 +263,7 @@
 
     <!-- Giới thiệu -->
     <section id="gioithieu">
-      <h2>VỀ CHÚNG TÔI</h2>
+      <h3>VỀ CHÚNG TÔI</h3>
       <p>Mạng xã hội Kinh tế - Tài chính TMI (TMI.VN) là mạng xã hội chính thống, hoạt động hợp pháp theo quy định pháp luật Việt Nam.</p>
       <p>Định vị là mạng xã hội kinh tế tài chính chuyên biệt cho nhà đầu tư, cộng đồng tài chính và các thành phần thị trường, TMI.VN phát triển đa kênh, đa nền tảng, là một tổ hợp truyền thông tương tác theo hướng chuyên sâu, chuyên biệt.</p>
       <p>TMI.VN đã và đang thu hút lượng lớn người dùng có kiến thức kinh tế, có năng lực tài chính, có nhu cầu đầu tư; cùng cộng đồng đông đảo người theo dõi có nhu cầu thông tin, có sức mua, có ảnh hưởng và khả năng lan tỏa.</p>
@@ -261,9 +278,9 @@
 
     <!-- Điều khoản định nghĩa -->
     <section id="dinhnghia">
-      <h2>THỎA THUẬN CUNG CẤP VÀ SỬ DỤNG DỊCH VỤ MẠNG XÃ HỘI</h2>
+      <h3>THỎA THUẬN CUNG CẤP VÀ SỬ DỤNG DỊCH VỤ MẠNG XÃ HỘI</h3>
       <h3>I. Điều khoản định nghĩa</h3>
-        <ol>
+      
         <li>Nhà cung cấp dịch vụ mạng xã hội (sau đây gọi là “Nhà cung cấp” hoặc “Chúng tôi”) là Công ty Cổ phần Tài chính số, được thành lập và hoạt động hợp pháp theo quy định của pháp luật Việt Nam.</li>
         <li>Người sử dụng dịch vụ mạng xã hội (sau đây gọi là “Người sử dụng” hoặc “Bạn”) là cá nhân sở hữu tài khoản mạng xã hội hợp pháp để sử dụng các dịch vụ mạng xã hội trên website của nhà cung cấp. Bài viết của người sử dụng được hoặc không được phép đăng tải dựa trên đánh giá của Bộ phận kiểm duyệt nội dung, phù hợp với phạm vi thông tin trao đổi và quy định pháp luật.</li>
         <li>Thông tin cá nhân là thông tin gắn với việc xác định danh tính của người sử dụng, do người sử dụng cung cấp để tạo tài khoản đăng nhập hệ thống mạng xã hội của nhà cung cấp.</li>
@@ -271,7 +288,7 @@
         <li>Thông tin công cộng là thông tin trên mạng xã hội do nhà cung cấp hoặc người sử dụng công khai cho tất cả những người sử dụng khác mà không cần xác định thông tin cá nhân cụ thể.</li>
         <li>Ban quản trị mạng xã hội là bộ phận trực thuộc nhà cung cấp, chịu trách nhiệm quản lý hoạt động của trang mạng xã hội; giải quyết các trường hợp vi phạm, khiếu nại của người sử dụng và các vấn đề liên quan trong quá trình quản lý hoạt động.</li>
         <li>Bộ phận kiểm duyệt nội dung là bộ phận trực thuộc nhà cung cấp, chịu trách nhiệm kiểm tra, phê duyệt nội dung bài viết, thông tin do người sử dụng cung cấp để đăng tải; đồng thời hỗ trợ Ban quản trị mạng xã hội phát hiện và xử lý vi phạm.</li>
-        </ol>
+      
 
         <p>Khi sử dụng bất cứ sản phẩm hay dịch vụ nào của nhà cung cấp, hoặc khi đăng ký thành viên, bạn xác nhận đã đọc, hiểu và đồng ý với tất cả các Điều khoản được đề cập ở đây.</p>
         <p>Nếu có bất kỳ điểm nào bạn không đồng ý, xin vui lòng dừng sử dụng các sản phẩm và dịch vụ của nhà cung cấp.</p>
@@ -283,7 +300,7 @@
     <section id="quydinh">
       <h3>II. Quy định phạm vi nội dung trao đổi, chia sẻ trên mạng xã hội TMI</h3>
       <p>Người sử dụng được tự do trao đổi, chia sẻ, cung cấp thông tin thuộc lĩnh vực kinh tế, tài chính trên cơ sở phù hợp với dịch vụ và ngành nghề của Công ty Cổ phần Tài chính số, trừ các nội dung cấm trao đổi, chia sẻ trên mạng xã hội như sau:</p>
-      <ol>
+      
         <li>- Nội dung chống lại Nhà nước Cộng hòa Xã hội Chủ nghĩa Việt Nam, gây phương hại đến an ninh quốc gia, trật tự an toàn xã hội; phá hoại khối đại đoàn kết dân tộc; tuyên truyền chiến tranh, khủng bố; gây hận thù, mâu thuẫn giữa các dân tộc, sắc tộc, tôn giáo.</li>
         <li>- Nội dung tuyên truyền, kích động bạo lực, dâm ô, đồi trụy, tội ác, tệ nạn xã hội, mê tín dị đoan, phá hoại thuần phong mỹ tục của dân tộc.</li>
         <li>- Nội dung liên quan đến bí mật nhà nước, bí mật quân sự, an ninh, kinh tế, đối ngoại và những bí mật khác do pháp luật quy định.</li>
@@ -295,7 +312,7 @@
         <li>- Nội dung tuyên truyền những thông điệp mang tính quảng cáo, mời gọi, quảng bá cơ hội đầu tư hay bất kỳ dạng liên lạc nào không thuộc phạm vi thông tin trao đổi, chia sẻ trên mạng xã hội để phục vụ cho lợi ích cá nhân hoặc tổ chức nào khác.</li>
         <li>- Thông tin có chứa các loại virus hay các thành phần gây nguy hại đến hệ thống mạng xã hội, máy tính, mạng internet và các thông tin bảo mật của nhà cung cấp và/hoặc của người sử dụng khác trên mạng xã hội.</li>
         <p>- Thông tin xâm phạm quyền tác giả theo quy định của Luật Sở hữu trí tuệ hiện hành.</p>
-      </ol>
+    
     </section>
 
     <!-- Xử lý vi phạm -->
@@ -312,11 +329,11 @@
     <!-- Cảnh báo -->
     <section id="canhbao">
       <h3>IV. Cảnh báo về các rủi ro khi lưu trữ, trao đổi và chia sẻ thông tin trên mạng xã hội</h3>
-      <ol>
+     
         <li>Nhà cung cấp cho phép người sử dụng đăng tải, lưu trữ, gửi hoặc nhận nội dung (từ bài viết hoặc bình luận), bao gồm các hình ảnh, clip trên mạng xã hội. Tuy nhiên, nhà cung cấp không đảm bảo những thông tin do người sử dụng tải lên, lưu trữ, chia sẻ trên mạng xã hội là chính xác, an toàn và không chứa đựng các rủi ro về an toàn thông tin.</li>
         <li>Trên website của mạng xã hội có thể xuất hiện link website, hoặc biểu tượng website khác, những website này có thể không thuộc kiểm soát hoặc sở hữu của nhà cung cấp. Việc truy cập tới các trang khác này hoàn toàn có thể gặp rủi ro, nguy hiểm. Người sử dụng hoàn toàn chịu trách nhiệm rủi ro khi sử dụng website liên kết này. Nhà cung cấp sẽ không chịu trách nhiệm về nội dung của bất kỳ website hoặc điểm đến nào mà người sử dụng đã truy cập, sử dụng đường link, liên kết hiện trên mạng xã hội.</li>
         <li>Người sử dụng phải đảm bảo các nội dung được đăng tải lên mạng xã hội đều không vi phạm luật sở hữu trí tuệ của Việt Nam và quốc tế. Sử dụng dịch vụ của mạng xã hội không có nghĩa là người sử dụng có bản quyền sử dụng những nội dung mà người sử dụng truy cập được. Người sử dụng không được sử dụng những nội dung không phải của mình trên mạng xã hội nếu không xin phép chủ sở hữu hợp pháp hoặc thực hiện các thủ tục khác theo luật định.</li>
-      </ol>
+    
     </section>
 
     <!-- Tài khoản -->
@@ -353,19 +370,19 @@
 
     <!-- Chính sách riêng tư -->
     <section id="thuthap">
-      <h2>Chính sách riêng tư</h2>
+      <h3>Chính sách riêng tư</h3>
       <h3>I. Chính sách thu thập, xử lý các thông tin cá nhân của người sử dụng dịch vụ mạng xã hội</h3>
-      <ol>
+   
         <li>Nhà cung cấp đảm bảo rằng mọi thông tin cá nhân thu thập được trên website mạng xã hội là dựa trên cơ sở đăng nhập và khai báo của người sử dụng.</li>
         <li>Thông tin được thu thập trên mạng xã hội sẽ được sử dụng rộng khắp trên toàn bộ dịch vụ mạng xã hội mà nhà cung cấp đang cung cấp cho người sử dụng, đồng thời sẽ được sử dụng cho tất cả các mục đích trên mạng xã hội, để đảm bảo tối ưu hoá tính năng và hiệu quả của thông tin được sử dụng.</li>
         <li>Nhà cung cấp sẽ lưu trữ các thông tin cá nhân do người sử dụng đăng tải trên các hệ thống nội bộ của nhà cung cấp trong quá trình cung cấp dịch vụ cho người sử dụng hoặc cho đến khi hoàn thành mục đích thu thập.</li>
         <li>Nhà cung cấp không tiết lộ, chia sẻ, cho thuê, hoặc bán những thông tin cá nhân, thông tin riêng của người sử dụng cho các tổ chức, cá nhân khác với bất kỳ mục đích nào trừ khi người sử dụng đồng ý hoặc nhà cung cấp nhận được yêu cầu cung cấp thông tin từ các cơ quan nhà nước có thẩm quyền.</li>
-      </ol>
+
     </section>
 
     <section id="baomat">
       <h3>II. Chính sách bảo mật thông tin của người sử dụng dịch vụ mạng xã hội</h3>
-      <ol>
+
         <li>Nhà cung cấp nỗ lực tối đa bảo mật các thông tin cá nhân, thông tin riêng của người sử dụng khỏi sự truy cập trái phép. Tuy nhiên, nhà cung cấp không đảm bảo, và không cam kết sẽ ngăn chặn được tất cả các truy cập, hoặc xâm nhập, sử dụng thông tin cá nhân trái phép nằm ngoài khả năng kiểm soát của nhà cung cấp. Do vậy, nhà cung cấp sẽ không chịu trách nhiệm dưới bất kỳ hình thức nào đối với bất kỳ khiếu nại, tranh chấp hoặc thiệt hại nào phát sinh từ hoặc liên quan đến việc truy cập, xâm nhập, sử dụng thông tin trái phép vượt khỏi mức kiểm soát như trên.</li>
         <li>Nhà cung cấp thực hiện biện pháp bảo mật thông tin cá nhân của người sử dụng bằng cách:
           <br>- Giới hạn thông tin truy cập cá nhân.
@@ -374,22 +391,30 @@
         </li>
         <li>Nếu người sử dụng cho rằng bảo mật của mình bị xâm phạm hay xâm nhập do tình trạng không được đảm bảo bảo mật an toàn trên hệ thống bảo mật của mạng xã hội, người sử dụng có thể liên hệ với ban quản trị mạng xã hội để phản ánh và được giải quyết vấn đề.</li>
         <li>Nhà cung cấp có toàn quyền chủ động chỉnh sửa chính sách bảo mật thông tin trên mạng xã hội vào bất kỳ thời điểm nào khi cần thiết, hoặc theo quy định của pháp luật, nhằm đảm bảo hoạt động tối ưu của mạng xã hội, và đảm bảo nghĩa vụ tôn trọng pháp luật luôn được thực thi tuyệt đối. Mọi nội dung của chính sách bảo mật thông tin, và các sửa đổi, bổ sung đối với chính sách này sẽ luôn được cập nhật và công bố trên mạng xã hội, và sẽ được ghi ngày sửa đổi, cập nhật để người sử dụng dịch vụ có thể nhận biết được nội dung mới nhất.</li>
-      </ol>
+      
     </section>
 
     <section id="quyenriengtu">
       <h3>III. Chính sách quyền riêng tư</h3>
-      <ol>
+    
         <li>Người sử dụng có quyền giữ bí mật và quyền quyết định tiết lộ thông tin của mình bao gồm thông tin cá nhân, thông tin riêng và các thông tin có liên quan khác được cung cấp, trao đổi trên mạng xã hội; đồng thời các thông tin trên của người sử dụng sẽ được nhà cung cấp bảo vệ khỏi sự truy cập, thu giữ, kiểm soát bất hợp pháp và chưa được phép của người sử dụng trừ trường hợp có yêu cầu của cơ quan nhà nước có thẩm quyền.</li>
         <li>Chỉ người sử dụng có quyền truy cập (bao gồm tạo, xem, chỉnh sửa, xóa) và kiểm soát thông tin cá nhân, thông tin riêng và các thông tin có liên quan khác mà người sử dụng cung cấp, chia sẻ, trao đổi trên mạng xã hội; đồng thời có quyền quyết định việc cho phép đối tượng nào được tìm kiếm, xem, chia sẻ, trao đổi về các thông tin trên của mình trên mạng xã hội.</li>
         <li>Trường hợp người sử dụng đăng ký sử dụng dịch vụ của bên thứ ba trên mạng xã hội, người sử dụng đồng ý cung cấp thông tin cá nhân, thông tin riêng và các thông tin có liên quan khác cho bên thứ ba thì phải tự chịu trách nhiệm về sự bảo mật cho các thông tin mà mình cung cấp. Nhà cung cấp không có nghĩa vụ đảm bảo tính an toàn, riêng tư cho thông tin cá nhân của người sử dụng trong trường hợp này.</li>
-      </ol>
+      
     </section>
 </article>
 
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
 
 
 <script>
