@@ -8090,13 +8090,47 @@ ul.timeline .left-arrow:after {
   #mobileModal .modal-dialog-centered { align-items: flex-end !important; }
   #mobileModal .modal-dialog-scrollable .modal-content { max-height: none !important; }
 
-  #mobileModal .modal-content {
-    border: 0; border-radius: 16px 16px 0 0;
-    height: auto !important; min-height: unset !important;
-    max-height: calc(100vh - env(safe-area-inset-top,0px));
-    overflow: hidden; box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+ @media (max-width: 576px) {
+  #mobileModal.modal { 
+    padding: 0 !important; 
+    z-index: 1060 !important; 
   }
-  #mobileModal .modal-header { position: sticky; top: 0; background: #fff; z-index: 1; }
+
+  #mobileModal .modal-dialog {
+    margin: 0 !important;
+    position: fixed;
+    left: 0;
+    right: 0;
+    /* 🚀 nâng modal cao: safe-area + 450px */
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 450px);
+    width: 100%;
+    transform: none !important;
+  }
+
+  #mobileModal .modal-content {
+    border: 0; 
+    border-radius: 20px; /* 👈 bo tròn đều 4 góc */
+    height: auto !important; 
+    min-height: unset !important;
+    max-height: calc(100vh - env(safe-area-inset-top,0px) - 400px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 -6px 24px rgba(0,0,0,.12);
+    padding-bottom: 20px;
+    background: #fff;/* 👈 chắc chắn nền trắng khi bo tròn */
+  top: 3rem !important; /* 👈 cách đỉnh 3rem */
+}
+
+
+  #mobileModal .modal-header { 
+    position: sticky; 
+    top: 0; 
+    background: #fff; 
+    z-index: 1; 
+    border-radius: 20px 20px 0 0; /* 👈 bo tròn góc trên header */
+  }
+}
+
 
   /* Body cuộn khi dài */
   #mobileModal .modal-body {
@@ -8123,7 +8157,7 @@ body.modal-open { overflow: hidden; }
     left: 0; right: 0; bottom: 0;
     margin: 0 !important;
     transform: none !important;
-    top: var(--under-stock-top, 56px); /* fallback 56px nếu chưa đo được */
+    top: var(--under-stock-top, 23rem); /* fallback 56px nếu chưa đo được */
     width: 100%;
   }
   #mobileModal.modal--under-stock .modal-content{
