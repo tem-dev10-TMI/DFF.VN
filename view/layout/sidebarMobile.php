@@ -45,6 +45,17 @@
 
     <?php render_sidebar_content('mobile', $topTopics, $moreTopics); ?>
 
+    <!-- Facebook Page Plugin -->
+    <div style="padding: 20px 10px;">
+        <div class="fb-page" data-href="https://www.facebook.com/profile.php?id=61581524937452" data-tabs="timeline" data-width=""
+            data-height="250" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false"
+            data-show-facepile="true">
+            <blockquote cite="https://www.facebook.com/profile.php?id=61581524937452" class="fb-xfbml-parse-ignore"><a
+                    href="https://www.facebook.com/profile.php?id=61581524937452">MXH</a>
+            </blockquote>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var nav = document.getElementById('navbarNav5');

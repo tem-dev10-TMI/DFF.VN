@@ -1330,82 +1330,140 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
         // $topArticles = ArticlesModel::getTopArticles(6);
         ?>
 
-        <?php if (!empty($rssArticles3)): ?>
-            <div class="block-k bg-box-a">
-                <div class="tieu-diem">
-                    <h2>
-                        <i class="fab fa-hotjar"></i> MXH <span>HOT</span>
-                    </h2>
-                    <ul>
-                        <?php foreach ($rssArticles3 as $article): ?>
-                            <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss'])
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
-                                    <?= htmlspecialchars($article['title']) ?>
-                                </a>
+        <!-- Reverted to Galaxy Style with Images -->
+        <style>
+            .topic-showcase-card {
+                --radius: 18px;
+                --shadow: 0 10px 30px rgba(0,0,0,.15);
+                position: relative;
+                display: block;
+                width: 100%;
+                max-width: 980px;
+                margin: 24px auto;
+                border-radius: var(--radius);
+                overflow: hidden;
+                box-shadow: var(--shadow);
+                color: #eef3ff;
+                padding: 24px;
+                min-height: 320px;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-end;
+                background-size: cover;
+                background-position: center;
+            }
 
-                                <?php if (!empty($article['main_image_url'])): ?>
-                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                        title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
-                                <?php endif; ?>
+            .topic-showcase-card.hot-card {
+                background-image: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+            }
+
+            .topic-showcase-card.analysis-card {
+                background-image: linear-gradient(to top, #00c6fb 0%, #005bea 100%);
+            }
+
+            .topic-showcase-card__overlay {
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(180deg, rgba(4,6,20,0) 0%, rgba(4,6,20,.65) 55%, rgba(4,6,20,.95) 100%);
+                pointer-events: none;
+            }
+
+            .topic-showcase-card__content {
+                position: relative;
+                z-index: 1;
+            }
+
+            .topic-showcase-card__title {
+                margin: 0 0 16px 0;
+                font-size: clamp(22px, 3.5vw, 30px);
+                font-weight: 700;
+                letter-spacing: .2px;
+                text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                color: #fff;
+            }
+            .topic-showcase-card__title span {
+                font-weight: 900;
+            }
+
+            .topic-showcase-card__list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: grid;
+                gap: 10px;
+            }
+
+            .topic-showcase-card__list li a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 8px;
+                border-radius: 8px;
+                text-decoration: none;
+                color: #eef3ff;
+                background: rgba(255,255,255,.08);
+                backdrop-filter: blur(2px);
+                border: 1px solid rgba(255,255,255,0.1);
+                transition: background .2s ease, transform .2s ease;
+            }
+
+            .topic-showcase-card__list li a:hover {
+                background: rgba(255,255,255,.18);
+                transform: translateX(5px);
+            }
+
+            .topic-showcase-card__list li img {
+                width: 48px;
+                height: 48px;
+                object-fit: cover;
+                border-radius: 6px;
+                flex-shrink: 0;
+            }
+
+            .topic-showcase-card__list li span {
+                font-weight: 500;
+                font-size: 15px;
+            }
+        </style>
+
+        <?php if (!empty($rssArticles3)): ?>
+            <div class="topic-showcase-card hot-card">
+                <div class="topic-showcase-card__overlay"></div>
+                <div class="topic-showcase-card__content">
+                    <h3 class="topic-showcase-card__title">
+                        <i class="fab fa-hotjar"></i> MXH <span>HOT</span>
+                    </h3>
+                    <ul class="topic-showcase-card__list">
+                        <?php foreach (array_slice($rssArticles3, 0, 5) as $article): ?>
+                            <li>
+                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= !empty($article['is_rss']) ? htmlspecialchars($article['link']) : 'details_blog/' . urlencode($article['slug']) ?>">
+                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : 'https://via.placeholder.com/48x48.png?text=DFF') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
+                                    <span><?= htmlspecialchars($article['title']) ?></span>
+                                </a>
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết nổi bật nào.</p>
-                    </div>
                 </div>
             </div>
         <?php endif; ?>
 
-
-
-
-
-
-
-
-
-
         <?php if (!empty($rssArticles4)): ?>
-            <div class="block-k bg-box-a">
-                <div class="tieu-diem t-analysis">
-                    <h2>
+            <div class="topic-showcase-card analysis-card">
+                <div class="topic-showcase-card__overlay"></div>
+                <div class="topic-showcase-card__content">
+                    <h3 class="topic-showcase-card__title">
                         <i class="fas fa-search-dollar"></i> MXH <span>ANALYSIS</span>
-                    </h2>
-                    <!-- Debug: <?= count($rssArticles4) ?> bài viết -->
-                    <ul>
-                        <?php foreach ($rssArticles4 as $article): ?>
-                            <li class="new-style">
-                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= (!empty($article['is_rss']) && !empty($article['link']))
-                                                                                                ? htmlspecialchars($article['link'])
-                                                                                                : 'details_blog/' . urlencode($article['slug']) ?>">
-                                    <?= htmlspecialchars($article['title']) ?>
+                    </h3>
+                    <ul class="topic-showcase-card__list">
+                        <?php foreach (array_slice($rssArticles4, 0, 5) as $article): ?>
+                            <li>
+                                <a title="<?= htmlspecialchars($article['title']) ?>" href="<?= (!empty($article['is_rss']) && !empty($article['link'])) ? htmlspecialchars($article['link']) : 'details_blog/' . urlencode($article['slug']) ?>">
+                                    <img src="<?= htmlspecialchars(!empty($article['main_image_url']) ? $article['main_image_url'] : 'https://via.placeholder.com/48x48.png?text=DFF') ?>" alt="<?= htmlspecialchars($article['title']) ?>" />
+                                    <span><?= htmlspecialchars($article['title']) ?></span>
                                 </a>
-
-                                <?php if (!empty($article['main_image_url'])): ?>
-                                    <img src="<?= htmlspecialchars($article['main_image_url']) ?>"
-                                        title="<?= htmlspecialchars($article['title']) ?>"
-                                        alt="<?= htmlspecialchars($article['title']) ?>" border="0" />
-                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>
-                </div>
-            </div>
-        <?php else: ?>
-            <div class="block-k">
-                <div class="view-carde f-frame">
-                    <div class="text-center p-4">
-                        <p>Chưa có bài viết phân tích nào.</p>
-                    </div>
                 </div>
             </div>
         <?php endif; ?>
