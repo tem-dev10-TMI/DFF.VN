@@ -22,51 +22,8 @@ class businessmenModel
     public static function registerBusiness($user_id, $birth_year, $nationality, $education, $position)
     {
         $db = new connect();
-
-        // 1. Kiểm tra user đã là doanh nhân chưa
-        $stmtCheck = $db->db->prepare("SELECT COUNT(*) FROM businessmen WHERE user_id = :user_id");
-        $stmtCheck->execute([':user_id' => $user_id]);
-        if ($stmtCheck->fetchColumn() > 0) {
-            return false; // User đã là doanh nhân
-        }
-
-        try {
-            // Bắt đầu transaction
-            $db->db->beginTransaction();
-
-            // 2. Insert vào bảng businessmen
-            $stmt = $db->db->prepare("
-            INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
-            VALUES (:user_id, :birth_year, :nationality, :education, :position)
-        ");
-            $stmt->execute([
-                ':user_id' => $user_id,
-                ':birth_year' => $birth_year,
-                ':nationality' => $nationality,
-                ':education' => $education,
-                ':position' => $position
-            ]);
-
-            // 3. Update role của user trong bảng users
-            $stmt2 = $db->db->prepare("UPDATE users SET role = 'businessmen' WHERE id = :user_id");
-            $stmt2->execute([':user_id' => $user_id]);
-
-            // Commit transaction
-            $db->db->commit();
-            return true;
-        } catch (Exception $e) {
-            $db->db->rollBack();
-            return false;
-        }
-    }
-
-    // =============== Cập nhật thông tin doanh nhân ===============
-    public static function updateBusiness($user_id, $birth_year, $nationality, $education, $position)
-    {
-        $db = new connect();
-        $sql = "UPDATE businessmen 
-                SET birth_year = :birth_year, nationality = :nationality, education = :education, position = :position 
-                WHERE user_id = :user_id";
+        $sql = "INSERT INTO businessmen (user_id, birth_year, nationality, education, position) 
+                VALUES (:user_id, :birth_year, :nationality, :education, :position)";
         $stmt = $db->db->prepare($sql);
         return $stmt->execute([
             ':user_id' => $user_id,
@@ -76,16 +33,22 @@ class businessmenModel
             ':position' => $position
         ]);
     }
-
-    public static function existsByUserId($user_id)
+    // =============== Cập nhật thông tin doanh nhân ===============
+    public static function updateBusiness($user_id, $birth_year, $nationality, $education, $position)
     {
         $db = new connect();
-        $sql = "SELECT COUNT(*) FROM businessmen WHERE user_id = :user_id";
+        $sql = "UPDATE businessmen 
+                SET birth_year = :birth, nationality = :nationality, education = :education, position = :position 
+                WHERE user_id = :user_id";
         $stmt = $db->db->prepare($sql);
-        $stmt->execute([':user_id' => $user_id]);
-        return $stmt->fetchColumn() > 0;
+        return $stmt->execute([
+            ':user_id' => $user_id,
+            ':birth' => $birth_year,
+            ':nationality' => $nationality,
+            ':education' => $education,
+            ':position' => $position
+        ]);
     }
-
 
     // =============== Xóa thông tin doanh nhân ===============
     public static function deleteBusiness($user_id)
@@ -155,13 +118,15 @@ class businessmenModel
     }
     // ========== Lấy số follower của user ==========
     public static function getFollowersCount($user_id)
-    {
-        $db = new connect();
-        $sql = "SELECT COUNT(*) FROM followers WHERE user_id = :user_id";
-        $stmt = $db->db->prepare($sql);
-        $stmt->execute([':user_id' => $user_id]);
-        return (int) $stmt->fetchColumn();
-    }
+{
+    $db = new connect();
+    // Đếm số người đang follow user này
+    $sql = "SELECT COUNT(*) FROM user_follows WHERE following_id = :user_id";
+    $stmt = $db->db->prepare($sql);
+    $stmt->execute([':user_id' => $user_id]);
+    return (int) $stmt->fetchColumn();
+}
+
 
     // ========== Lấy số like của user ==========
     public static function getLikesCount($user_id)
@@ -173,12 +138,12 @@ class businessmenModel
         return (int) $stmt->fetchColumn();
     }
 
-
-    public static function getAllBusinessmen($limit = 10, $currentUserId = null)
+    // Lấy danh sách tất cả businessmen với số followers
+    public static function getAllBusinessmen($limit = 6, $currentUserId = null)
     {
-        global $pdo;
+        $db = new connect();
+        $pdo = $db->db;
 
-        // 1. Xây dựng câu SQL cơ bản
         $sql = "
             SELECT 
                 b.id, 
@@ -190,32 +155,31 @@ class businessmenModel
                 (SELECT COUNT(*) FROM user_follows f WHERE f.following_id = u.id) AS followers
             FROM businessmen b
             JOIN users u ON b.user_id = u.id
+            WHERE b.status = 'approved'
         ";
 
-        // 2. Thêm điều kiện WHERE nếu có currentUserId được truyền vào
+        // Thêm điều kiện WHERE nếu có currentUserId được truyền vào
         if ($currentUserId !== null) {
-            $sql .= " WHERE u.id != :currentUserId ";
+            $sql .= " AND u.id != :currentUserId ";
         }
 
-        // 3. Thêm phần còn lại của câu lệnh
         $sql .= "
             ORDER BY followers DESC
             LIMIT :limit
         ";
 
-        // 4. Chuẩn bị và thực thi câu lệnh
         $stmt = $pdo->prepare($sql);
-
-        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-        // Chỉ bind giá trị :currentUserId nếu nó tồn tại
+        
         if ($currentUserId !== null) {
-            $stmt->bindValue(':currentUserId', (int)$currentUserId, PDO::PARAM_INT);
+            $stmt->bindValue(':currentUserId', $currentUserId, PDO::PARAM_INT);
         }
-
+        
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
     // Tạo dữ liệu mẫu cho businessmen
     public static function createSampleBusinessmen()
     {
@@ -323,35 +287,5 @@ class businessmenModel
             'following' => $followingCount,
             'likes' => $likesCount
         ];
-    }
-    public static function approveBusiness($user_id)
-    {
-        $db = new connect();
-
-        try {
-            $db->db->beginTransaction();
-
-            // 1. Update status doanh nhân sang 'approved'
-            $stmt = $db->db->prepare("
-            UPDATE businessmen 
-            SET status = 'approved' 
-            WHERE user_id = :user_id
-        ");
-            $stmt->execute([':user_id' => $user_id]);
-
-            // 2. Update role của user nếu chưa phải doanh nhân
-            $stmt2 = $db->db->prepare("
-            UPDATE users 
-            SET role = 'businessmen' 
-            WHERE id = :user_id AND role != 'businessmen'
-        ");
-            $stmt2->execute([':user_id' => $user_id]);
-
-            $db->db->commit();
-            return true;
-        } catch (Exception $e) {
-            $db->db->rollBack();
-            return false;
-        }
     }
 }

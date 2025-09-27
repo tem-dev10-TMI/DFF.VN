@@ -152,19 +152,16 @@ $comments = CommentGlobalModel::getRootCommentsPaged(20, 0);
                                                 </li>
                                                 <li class="f-folw">
                                                     <a class="btn-follow" href="javascript:void(0)"
-                                                        data-user="<?= $biz['user_id'] ?>">
-                                                        <span
-                                                            class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
-                                                        <span class="number"><?= intval($biz['followers'] ?? 0) ?></span>
+                                                        data-user="<?= $biz['user_id'] ?>"
+                                                        style="position: relative;">
+                                                        <span class="follow-text"><?= $isFollowing ? "Đang theo dõi" : "Theo dõi" ?></span>
+                                                        <span class="number" style="content: none !important;"><?= intval($biz['followers'] ?? 0) ?></span>
+                                                        <!-- Debug: followers = <?= $biz['followers'] ?? 'null' ?> -->
                                                     </a>
-
-
-                                                </li>
-
-
+                                                </li
                                             </ul>
                                         </div>
-                                    </div>
+                                    </div>  
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <p>Chưa có doanh nhân nào.</p>
