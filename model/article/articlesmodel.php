@@ -361,9 +361,16 @@ class ArticlesModel
     public static function getArticlesByAuthorId($author_id)
     {
         $db = new connect();
-        $sql = "SELECT a.*, u.name AS author_name, u.avatar_url
+        $sql = "SELECT 
+                    a.*, 
+                    u.name AS author_name, 
+                    u.avatar_url,
+                    COALESCE(lc.likes_count, 0) AS likes_count,
+                    COALESCE(cc.comment_count, 0) AS comment_count
                 FROM articles a
                 LEFT JOIN users u ON a.author_id = u.id
+                LEFT JOIN (SELECT article_id, COUNT(*) AS likes_count FROM article_likes GROUP BY article_id) AS lc ON a.id = lc.article_id
+                LEFT JOIN (SELECT article_id, COUNT(*) AS comment_count FROM comments GROUP BY article_id) AS cc ON a.id = cc.article_id
                 WHERE a.author_id = :author_id
                 ORDER BY a.created_at DESC, a.id DESC";
 
