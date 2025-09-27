@@ -1,16 +1,24 @@
 <style>
+    /* Global styles for this page */
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap');
     body {
         font-family: 'Quicksand', sans-serif;
         overflow: hidden;
     }
+
+    /* Tailwind CSS CDN - included here due to strict file modification constraints */
+    /* In a real project, this should be in the main layout file for better performance and maintainability. */
+    /* <script src="https://cdn.tailwindcss.com"></script> is usually placed in <head> or before </body> */
+    /* For CSS-only usage, we can rely on the classes being processed if Tailwind is set up to scan this file. */
+    /* If Tailwind is not processing this file, the classes will not apply. */
+    /* Assuming Tailwind is configured to scan all PHP files in view/page/ */
 
     .scene {
         position: relative;
         width: 100%;
         height: 100vh;
         overflow: hidden;
-        background: #000;
-        /* Fallback */
+        background: #000; /* Fallback */
     }
 
     .parallax-layer {
@@ -198,6 +206,10 @@
         }
     }
 </style>
+<!-- Tailwind CSS CDN - included here due to strict file modification constraints -->
+<!-- In a real project, this should be in the main layout file for better performance and maintainability. -->
+<script src="https://cdn.tailwindcss.com"></script>
+
 <div class="scene" id="scene">
     <!-- Background Động -->
     <div class="parallax-layer" id="sky-gradient" data-depth="0"></div>
@@ -234,10 +246,7 @@
         const layers = scene.querySelectorAll('.parallax-layer');
         if (!scene) return;
 
-        const {
-            clientWidth: width,
-            clientHeight: height
-        } = scene;
+        const { clientWidth: width, clientHeight: height } = scene;
         const x = e.clientX - width / 2;
         const y = e.clientY - height / 2;
 

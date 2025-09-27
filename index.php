@@ -273,7 +273,7 @@ switch ($url) {
 
     default:
 
-        require_once 'controller/error/404Controller.php';
+        require_once 'controller/NotFoundController.php';
         $controller = new NotFoundController();
         
         //$controller = new NotFoundController;
