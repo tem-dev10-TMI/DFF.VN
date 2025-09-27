@@ -392,33 +392,37 @@
             </div>
 
             <!-- Tab Người dùng -->
-            <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
-                <?php if (!empty($users)): ?>
-                    <?php foreach ($users as $user): ?>
-                        <div class="sea-user">
-                            <!-- Avatar -->
-                            <img src="<?= !empty($user['avatar_url'])
-                                            ? htmlspecialchars($user['avatar_url'])
-                                            : '/uploads/default.jpg' ?>" class="user-avatar"
-                                alt="<?= htmlspecialchars($user['name']) ?>">
+           <div class="tab-pane fade" id="pills-users" role="tabpanel" aria-labelledby="pills-users-tab">
+    <?php if (!empty($users)): ?>
+        <?php foreach ($users as $user): ?>
+            <div class="sea-user">
+                <!-- Avatar -->
+                <img src="<?= !empty($user['avatar_url'])
+                                ? htmlspecialchars($user['avatar_url'])
+                                : '/uploads/default.jpg' ?>" 
+                     class="user-avatar"
+                     alt="<?= htmlspecialchars($user['name']) ?>">
 
-                            <!-- Thông tin -->
-                            <div class="info">
-                                <h3 class="name">
-                                    <a title="<?= htmlspecialchars($user['name']) ?>"
-                                        href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
-                                        <?= htmlspecialchars($user['name']) ?>
-                                    </a>
-                                </h3>
-                                <p>@<?= htmlspecialchars($user['username']) ?></p>
-                                <small>Email: <?= htmlspecialchars($user['email']) ?></small>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>Không tìm thấy người dùng.</p>
-                <?php endif; ?>
+                <!-- Thông tin -->
+                <div class="info">
+                    <h3 class="name">
+                        <a title="<?= htmlspecialchars($user['name']) ?>"
+                           href="view_profile?id=<?= htmlspecialchars($user['id']) ?>">
+                            <?= htmlspecialchars($user['name']) ?>
+                        </a>
+                    </h3>
+                    <p>@<?= htmlspecialchars($user['username']) ?></p>
+
+                    <?php if (!empty($user['role']) && $user['role'] === 'businessman'): ?>
+                        <small>Email: <?= htmlspecialchars($user['email']) ?></small>
+                    <?php endif; ?>
+                </div>
             </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>Không tìm thấy người dùng.</p>
+    <?php endif; ?>
+</div>
 
 
         </div>

@@ -1177,7 +1177,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!articleId) return;
 
         if (confirm('Bạn có chắc chắn muốn bỏ lưu bài viết này?')) {
-            fetch('<?= BASE_URL ?>/controller/ArticleSaveController.php', {
+            fetch('ArticleSave', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
                 body: 'article_id=' + encodeURIComponent(articleId)
