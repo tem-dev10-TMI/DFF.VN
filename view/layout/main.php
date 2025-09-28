@@ -725,14 +725,13 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         document.querySelectorAll(".btn-follow").forEach(btn => {
             btn.addEventListener("click", function() {
                 const userId = this.getAttribute("data-user");
-                const token = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
 
                 fetch("api/follow", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
                         },
-                        body: `user_id=${encodeURIComponent(userId)}&session_token=${encodeURIComponent(token)}`,
+                        body: `user_id=${encodeURIComponent(userId)}`,
                         credentials: "include"
                     })
                     .then(res => res.json())
@@ -828,7 +827,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                     </div>
 
                                     <form id="postForm" class="needs-validation" novalidate>
-                                        <input type="hidden" name="session_token" value="<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>">
+
                                         <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success" placeholder="Nhập tiêu đề bài viết..." required>
 
                                         <div class="mb-3">
@@ -1166,10 +1165,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     </script>
     <script src="<?= BASE_URL ?>/public/js/main.js?v=1.2"></script>
     <script src="<?= BASE_URL ?>/public/js/dangbai.js"></script>
-    <script>
-        // Make session token available to JS
-        window.userSessionToken = "<?= htmlspecialchars($_SESSION['user']['session_token'] ?? '') ?>";
-    </script>
+
 
 
 

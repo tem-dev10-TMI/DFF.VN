@@ -133,12 +133,7 @@ class profileUserController
             return;
         }
 
-        $submittedToken = $_POST['session_token'] ?? '';
-        if (!UserModel::isTokenValid($_SESSION['user']['id'], $submittedToken)) {
-            http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.']);
-            return;
-        }
+
 
         $modelArticle = new ArticlesModel();
         $debug_info   = [];
@@ -1061,16 +1056,8 @@ class profileUserController
 
 
 
-        // 3. Lấy và xác thực dữ liệu đầu vào
         $postId = $_POST['post_id'] ?? null;
-        $token = $_POST['session_token'] ?? null;
         $currentUserId = $_SESSION['user']['id'];
-
-        // Bảo mật: Xác thực token
-        if (!UserModel::isTokenValid($currentUserId, $token)) {
-            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng đăng nhập lại.']);
-            exit;
-        }
 
         if (empty($postId) || !is_numeric($postId)) {
             echo json_encode(['success' => false, 'message' => 'ID bài viết không hợp lệ.']);

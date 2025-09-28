@@ -204,36 +204,7 @@ function deletePost(postId, buttonElement) {
   // Chọn phần tử sẽ xoá: ưu tiên #post-<id> nếu có
   const postElement = byIdEl || byClosestEl;
 
-  // ===== Lấy session token =====
-  let token = window.userSessionToken || '';
-  if (!token) {
-    const nearForm = $btn.closest('form');
-    const nearInput = nearForm && nearForm.querySelector('input[name="session_token"]');
-    if (nearInput && nearInput.value) token = nearInput.value;
-  }
-  if (!token) {
-    const anyInput = document.querySelector('input[name="session_token"]');
-    if (anyInput && anyInput.value) token = anyInput.value;
-  }
-  if (!token) {
-    const meta = document.querySelector('meta[name="session-token"]');
-    if (meta && meta.content) token = meta.content;
-  }
-  if (!token) {
-    alert('Phiên làm việc không hợp lệ. Vui lòng tải lại trang.');
-    return;
-  }
 
-  // ===== Khóa nút khi đang xoá =====
-  const oldHtml = $btn.innerHTML;
-  const hadDisabledProp = Object.prototype.hasOwnProperty.call($btn, 'disabled') || ('disabled' in $btn);
-  const oldDisabled = hadDisabledProp ? $btn.disabled : undefined;
-  if (hadDisabledProp) $btn.disabled = true;
-  $btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Đang xóa...';
-
-  const body = new URLSearchParams();
-  body.set('post_id', String(postId));
-  body.set('session_token', token);
 
   fetch('api/deletePost', {
     method: 'POST',
@@ -494,10 +465,7 @@ function addPost(e) {
 
   const fd = new FormData();
 
-  // session token (nếu có)
-  const tokenInput = formEl?.querySelector('input[name="session_token"]')
-    || document.querySelector('input[name="session_token"]');
-  if (tokenInput) fd.append('session_token', tokenInput.value);
+
 
   // Gửi fields bắt buộc
   fd.append('title', title);
@@ -1177,7 +1145,7 @@ function submitEditPost() {
   fd.append('summary', summary);
   fd.append('topic_id', topicId);
   fd.append('content', content);
-  fd.append('session_token', (formEl.querySelector('input[name="session_token"]')?.value || ''));
+
   if (coverEl?.files?.[0]) fd.append('main_image_url', coverEl.files[0]);
 
   // ==== Build sections_json + append file theo key section_media_{position}[] ====

@@ -1,14 +1,47 @@
 <?php
 date_default_timezone_set('Asia/Ho_Chi_Minh');
 require_once __DIR__ . '/helpers.php';
+// Cấu hình session an toàn
+ini_set('session.use_only_cookies', 1); // Chỉ sử dụng cookie để lưu session
+ini_set('session.cookie_httponly', 1); // Ngăn JavaScript truy cập cookie session (Chống XSS)
+ini_set('session.cookie_samesite', 'Lax'); // Chống tấn công CSRF
 ini_set('session.cookie_path', '/');
-ini_set('session.cookie_domain', 'localhost'); // nếu chạy ở localhost
+// ini_set('session.cookie_secure', 1); // Chỉ bật dòng này khi website chạy với HTTPS
+
+// Khởi động session nếu chưa có
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+// >>> KIỂM TRA PHIÊN DUY NHẤT (SINGLE SESSION) <<<
+if (isset($_SESSION['user']['id'])) {
+    require_once __DIR__ . '/model/user/userModel.php';
+    $active_token_from_db = UserModel::getActiveSessionToken($_SESSION['user']['id']);
+    $current_session_id = session_id();
+
+    if ($active_token_from_db !== null && $active_token_from_db !== $current_session_id) {
+        // Phiên này là phiên cũ, hủy nó
+        $_SESSION = [];
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', time() - 42000,
+                $params["path"], $params["domain"],
+                $params["secure"], $params["httponly"]
+            );
+        }
+        session_destroy();
+
+        // Đối với API request, trả về lỗi 401
+        if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+            http_response_code(401);
+            echo json_encode(['success' => false, 'message' => 'Phiên làm việc đã hết hạn do có đăng nhập ở nơi khác.']);
+            exit;
+        } else {
+            // Đối với trang bình thường, chuyển hướng về trang đăng nhập
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '/') . '/login?msg=session_expired');
+            exit;
+        }
+    }
 }
 
 

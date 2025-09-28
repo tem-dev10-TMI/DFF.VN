@@ -12,12 +12,7 @@ if (!isset($_SESSION['user']['id'])) {
     exit;
 }
 
-$submittedToken = $_POST['session_token'] ?? '';
-if (!isset($_SESSION['user']['session_token']) || $submittedToken !== $_SESSION['user']['session_token']) {
-    http_response_code(401);
-    echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ.']);
-    exit;
-}
+
 
 require_once __DIR__ . '/../../config/db.php';
 require_once __DIR__ . '/../../model/user/UserFollowModel.php';

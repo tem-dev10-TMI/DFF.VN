@@ -32,8 +32,11 @@ class loginController
                 $user = $loginModel->verifyUser($username, $password);
 
                 if ($user) {
-                    // Tạo và cập nhật session token
-                    $token = bin2hex(random_bytes(32));
+                    // Tái tạo session ID để chống tấn công session fixation
+                    session_regenerate_id(true);
+
+                    // Lấy session ID mới làm token duy nhất
+                    $token = session_id();
                     UserModel::updateSessionToken($user['id'], $token);
 
                     $_SESSION['user'] = [

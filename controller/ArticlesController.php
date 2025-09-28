@@ -103,13 +103,7 @@ class ArticlesController
         }
         $currentUserId = (int)$_SESSION['user']['id'];
 
-        // Check token
-        $submittedToken = $_POST['session_token'] ?? '';
-        if (!UserModel::isTokenValid($currentUserId, $submittedToken)) {
-            http_response_code(401);
-            echo json_encode(['success' => false, 'message' => 'Phiên làm việc không hợp lệ. Vui lòng tải lại trang.']);
-            return;
-        }
+
 
         // Định danh bài
         $slug   = trim($_POST['slug'] ?? $_POST['post_slug'] ?? '');

@@ -328,5 +328,16 @@ public static function updateUsername($userId, $username)
         $stmt->execute([':id' => $userId, ':token' => $token]);
         return $stmt->fetchColumn() > 0;
     }
+    public static function getActiveSessionToken($userId)
+    {
+        if (empty($userId)) {
+            return null;
+        }
+        $db = new connect();
+        $sql = "SELECT session_token FROM users WHERE id = :id";
+        $stmt = $db->db->prepare($sql);
+        $stmt->execute(['id' => $userId]);
+        return $stmt->fetchColumn();
+    }
     
 }
