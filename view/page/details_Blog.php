@@ -623,9 +623,16 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                 }
             }
 
-            // ===== Gửi comment: vừa lưu DB như cũ, vừa gọi AI async =====
+            // ===== Gửi comment: lưu DB trước để lấy ID thật, rồi mới AI check =====
             async function sendComment() {
                 const content = textarea.value.trim();
+
+                // 0) Chặn khi chưa đăng nhập (đặt trước mọi state flag để không “kẹt” nút)
+                if (!window.CURRENT_USER_ID || window.CURRENT_USER_ID === 0) {
+                    alert("Bạn cần đăng nhập để bình luận");
+                    return;
+                }
+
                 if (!content) {
                     alert("Vui lòng nhập nội dung bình luận!");
                     return;
@@ -634,23 +641,19 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                 isSubmitting = true;
                 btnSend.disabled = true;
 
-                // 1) Đẩy vào UI ngay (trạng thái đang kiểm tra)
                 const tempId = 'local-' + Date.now();
-                const currentUser = window.CURRENT_USER_NAME || 'Bạn cần đăng nhập để bình luận';
+                const currentUser = window.CURRENT_USER_NAME || 'Bạn đọc';
 
-                if (window.CURRENT_USER_ID === 0) {
-                    alert("Bạn cần đăng nhập để bình luận");
-                    return; // thoát, không cho tạo comment
-                }
+                // 1) Đẩy vào UI ngay (đang kiểm tra)
                 const temp = {
                     id: tempId,
                     name: currentUser,
                     avatar_url: '',
                     text: content,
                     time: nowIso(),
-                    user_id: <?= (int)($_SESSION['user']['id'] ?? 0) ?>, // Thêm user_id
-                    ai_checked: false, // Chưa được AI check
-                    commentId: null, // Sẽ được cập nhật sau khi lưu DB
+                    user_id: <?= (int)($_SESSION['user']['id'] ?? 0) ?>,
+                    ai_checked: false, // Chưa AI check
+                    commentId: null, // Sẽ cập nhật sau khi lưu DB
                     ai: {
                         isViolation: false,
                         isChecking: true,
@@ -660,14 +663,8 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                 comments.push(temp);
                 renderComments(comments);
 
-                // Xóa form
-                textarea.value = '';
-                autoGrow(textarea);
-
-                // 2) Gọi AI check (không chặn UI)
-                checkCommentAsync(tempId, content, content);
-
-                // 3) Lưu DB và lấy comment ID để cập nhật AI result
+                // 2) LƯU DB TRƯỚC để lấy comment_id thật
+                let savedCommentId = null;
                 try {
                     const res = await fetch("<?= BASE_URL ?>/?url=comment&action=addComment", {
                         method: "POST",
@@ -678,30 +675,41 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
                             "&content=" + encodeURIComponent(content) +
                             "&user_id=" + encodeURIComponent(<?= (int)($_SESSION['user']['id'] ?? 0) ?>)
                     });
-                    const data = await res.json();
-                    if (data.status === "success") {
-                        console.log('Comment saved to database successfully');
-                        // Lưu comment ID để cập nhật AI result sau này
-                        temp.commentId = data.comment_id || null;
-                        console.log('Comment ID saved:', temp.commentId);
-                        console.log('Updated temp object:', temp);
 
-                        // Cập nhật comment trong mảng comments
-                        const commentIndex = comments.findIndex(c => c.id === tempId);
-                        if (commentIndex !== -1) {
-                            comments[commentIndex].commentId = temp.commentId;
-                            console.log('Updated comment in array:', comments[commentIndex]);
-                            console.log('✅ Comment ID successfully stored in comments array');
-                        } else {
-                            console.error('❌ Could not find comment in array to update commentId');
+                    const data = await res.json();
+
+                    if (data.status === "success" && data.comment_id) {
+                        savedCommentId = data.comment_id;
+
+                        // Gán comment_id thật vào object tạm + mảng
+                        temp.commentId = savedCommentId;
+                        const idx = comments.findIndex(c => c.id === tempId);
+                        if (idx !== -1) {
+                            comments[idx].commentId = savedCommentId;
                         }
+
+                        // 3) CHỈ BÂY GIỜ MỚI GỌI AI CHECK (khi đã có ID thật)
+                        //    => loại bỏ race condition hoàn toàn
+                        checkCommentAsync(tempId, content, content);
                     } else {
-                        console.warn(data.message || "Lỗi khi gửi bình luận!");
-                        console.error('❌ Comment was NOT saved to database');
+                        // Lưu DB thất bại: rollback nhẹ UI (tuỳ chọn)
+                        alert(data.message || "Lỗi khi lưu bình luận. Vui lòng thử lại!");
+                        // Xoá comment tạm khỏi UI để tránh kẹt
+                        const i = comments.findIndex(c => c.id === tempId);
+                        if (i !== -1) comments.splice(i, 1);
+                        renderComments(comments);
                     }
                 } catch (err) {
                     console.error("Fetch lỗi:", err);
+                    alert("Không thể gửi bình luận. Kiểm tra kết nối mạng và thử lại!");
+                    // Xoá comment tạm khỏi UI để tránh kẹt
+                    const i = comments.findIndex(c => c.id === tempId);
+                    if (i !== -1) comments.splice(i, 1);
+                    renderComments(comments);
                 } finally {
+                    // Dọn form & unlock nút
+                    textarea.value = '';
+                    autoGrow(textarea);
                     isSubmitting = false;
                     btnSend.disabled = false;
                 }
@@ -1231,7 +1239,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
             background-color: #fff;
             border: 1px solid #ccc;
             border-radius: 4px;
-            box-shadow: 0 6px 12px rgba(0,0,0,.175);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, .175);
         }
 
         .home-item .dropdown-menu.show {
