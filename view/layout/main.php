@@ -1302,6 +1302,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
         };
         setTimeout(hideLoader, 5000);
     </script>
+    <?= $session_expired_message_script ?? '' ?>
 </body>
 
 

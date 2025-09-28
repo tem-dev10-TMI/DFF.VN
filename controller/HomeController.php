@@ -32,7 +32,7 @@ class Events
 
 class homeController
 {
-    public static function index()
+    public static function index($extra_script = '')
     {
         // --- START: Performance Measurement ---
         $log_file = __DIR__ . '/../debug_log.txt';
@@ -116,6 +116,7 @@ class homeController
 
         // 5. Load layout chính
         $profile = false;
+        $session_expired_message_script = $extra_script; // Truyền script vào view
         require_once __DIR__ . '/../view/layout/main.php';
     }
 

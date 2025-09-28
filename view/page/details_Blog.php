@@ -558,7 +558,7 @@ $totalFollowers = $authorId > 0 ? $followModel->countFollowers($authorId) : 0;
             // ===== Load comments từ DB như cũ rồi ghép vào state local =====
             async function loadCommentsFromDB() {
                 try {
-                    const res = await fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + encodeURIComponent(articleId));
+                    const res = await fetch("<?= BASE_URL ?>/?url=comment&action=getComments&article_id=" + encodeURIComponent(articleId) + "&_=" + new Date().getTime());
                     const data = await res.json();
                     if (data.status === "success") {
                         // map DB -> model hiển thị

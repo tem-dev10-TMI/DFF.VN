@@ -13,13 +13,16 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+require_once 'config/db.php';
+require_once 'config/config.php';
+
 // >>> KIỂM TRA PHIÊN DUY NHẤT (SINGLE SESSION) <<<
 if (isset($_SESSION['user']['id'])) {
     require_once __DIR__ . '/model/user/userModel.php';
     $active_token_from_db = UserModel::getActiveSessionToken($_SESSION['user']['id']);
-    $current_session_id = session_id();
+    $token_from_current_session = $_SESSION['user']['session_token'] ?? '';
 
-    if ($active_token_from_db !== null && $active_token_from_db !== $current_session_id) {
+    if ($active_token_from_db !== null && $active_token_from_db !== $token_from_current_session) {
         // Phiên này là phiên cũ, hủy nó
         $_SESSION = [];
         if (ini_get("session.use_cookies")) {
@@ -37,16 +40,36 @@ if (isset($_SESSION['user']['id'])) {
             echo json_encode(['success' => false, 'message' => 'Phiên làm việc đã hết hạn do có đăng nhập ở nơi khác.']);
             exit;
         } else {
-            // Đối với trang bình thường, chuyển hướng về trang đăng nhập
-            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '/') . '/login?msg=session_expired');
+            // Đối với trang bình thường, chuyển hướng về trang chủ với tham số
+            header('Location: ' . (defined('BASE_URL') ? BASE_URL : '/') . '?msg=session_expired_elsewhere');
             exit;
         }
     }
 }
 
-
-require_once 'config/db.php';
-require_once 'config/config.php';
+// >>> KIỂM TRA THÔNG BÁO TỪ URL <<<
+$session_expired_message_script = '';
+if (isset($_GET['msg']) && $_GET['msg'] === 'session_expired_elsewhere') {
+    $session_expired_message_script = "
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                if (typeof Swal !== 'undefined' && typeof window.showLoginModal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Phiên làm việc đã hết hạn!',
+                        text: 'Bạn đã đăng nhập ở một thiết bị khác. Vui lòng đăng nhập lại.',
+                        confirmButtonText: 'OK'
+                    }).then((result) => {
+                        window.showLoginModal();
+                    });
+                } else {
+                    // Fallback nếu SweetAlert hoặc hàm modal chưa sẵn sàng
+                    alert('Phiên làm việc đã hết hạn do có đăng nhập ở nơi khác. Vui lòng đăng nhập lại.');
+                }
+            });
+        </script>
+    ";
+}
 
 // autoload
 spl_autoload_register(function ($class) {
@@ -70,7 +93,7 @@ $url = isset($_GET['url']) ? $_GET['url'] : '';
 if (empty($url)) {
     require_once __DIR__ . '/controller/HomeController.php';
     $controller = new homeController();
-    $controller->index();
+    $controller->index($session_expired_message_script);
     exit;
 }
 //var_dump($_SESSION['user']);
