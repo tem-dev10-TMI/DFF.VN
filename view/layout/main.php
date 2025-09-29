@@ -124,11 +124,11 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous">
+    </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js"></script>
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.5/bootstrap-notify.min.js">
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -348,7 +348,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
     <script>
         (function() {
-            const onlineTargets = document.querySelectorAll('[data-role="online-count"], #onlineCount, #onlineCountHeader');
+            const onlineTargets = document.querySelectorAll(
+                '[data-role="online-count"], #onlineCount, #onlineCountHeader');
             const totalEl = document.getElementById('totalViews');
             const dotEl = document.getElementById('onlineDot'); // có thể không tồn tại
 
@@ -616,7 +617,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                         // NÂNG CẤP: Truyền vào lớp 'modal-account-style'
                         openMobileModal('Tài khoản', html, 'modal-account-style');
                     } else if (type === 'create') {
-                        var createHtml = '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>';
+                        var createHtml =
+                            '<div><a href="javascript:void(0)" module-load="loadwrite"><i class="fas fa-bolt"></i> Viết nhanh</a></div><div class="mt-2"><a href="javascript:void(0)" data-url="/write.html" module-load="redirect"><i class="fas fa-pen"></i> Viết bài thường</a></div>';
                         // Giữ nguyên, không cần style đặc biệt, nó sẽ tự động căn giữa
                         openMobileModal('Tạo mới', createHtml);
                     }
@@ -680,7 +682,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                 const bsModal = getModalInstance();
                 if (!bsModal) return;
 
-                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style', 'modal-fullscreen-mobile'); // THÊM LỚP MỚI VÀO ĐÂY ĐỂ XÓA TRƯỚC
+                modalEl.classList.remove('modal-mobile-custom', 'modal-account-style',
+                    'modal-fullscreen-mobile'); // THÊM LỚP MỚI VÀO ĐÂY ĐỂ XÓA TRƯỚC
                 if (modalClass) {
                     modalEl.classList.add(modalClass);
                 }
@@ -775,7 +778,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
             }
         </style>
         <!-- khúc này là hiện thị 4 cái cục bài viết nổi bật ở đầu á  -->
-        <?php if (!empty($profile)): ?> <!-- ✅ fix: thay if ($profile) -->
+        <?php if (!empty($profile)): ?>
+            <!-- ✅ fix: thay if ($profile) -->
             <?= $content ?>
 
         <?php else: ?>
@@ -798,8 +802,9 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                 <h5 class="modal-title fw-bold" id="createPostModalLabel">
                                     <i class="fas fa-pencil-alt me-2"></i> Tạo bài viết mới
                                 </h5>
-                                <button type="button" class="btn-close btn-close-white position-absolute top-50 end-0 translate-middle-y me-3" data-bs-dismiss="modal"
-                                    aria-label="Đóng"></button>
+                                <button type="button"
+                                    class="btn-close btn-close-white position-absolute top-50 end-0 translate-middle-y me-3"
+                                    data-bs-dismiss="modal" aria-label="Đóng"></button>
                             </div>
 
                             <!-- Body -->
@@ -819,7 +824,10 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                             $roleText = 'Quản trị viên';
                                         }
                                         ?>
-                                        <img src="<?= $userAvatar ?>" class="rounded-circle border border-2 border-success me-2" alt="avatar" style="width: 48px; height: 48px;" onerror="this.onerror=null;this.src='public/img/avatar/default.png';">
+                                        <img src="<?= $userAvatar ?>"
+                                            class="rounded-circle border border-2 border-success me-2" alt="avatar"
+                                            style="width: 48px; height: 48px;"
+                                            onerror="this.onerror=null;this.src='public/img/avatar/default.png';">
                                         <div>
                                             <h6 class="mb-0 fw-bold text-dark" id="modalPostUserName"><?= $userName ?></h6>
                                             <small class="text-muted" id="modalPostUserRole"><?= $roleText ?></small>
@@ -828,25 +836,34 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
 
                                     <form id="postForm" class="needs-validation" novalidate>
 
-                                        <input type="text" id="postTitle" class="form-control form-control-lg mb-3 border-success" placeholder="Nhập tiêu đề bài viết..." required>
+                                        <input type="text" id="postTitle"
+                                            class="form-control form-control-lg mb-3 border-success"
+                                            placeholder="Nhập tiêu đề bài viết..." required>
 
                                         <div class="mb-3">
-                                            <label for="postSummary" class="form-label fw-bold text-success">Tóm tắt bài viết:</label>
-                                            <textarea id="postSummary" class="form-control border-success" rows="3" placeholder="Nhập một đoạn tóm tắt ngắn gọn về nội dung bài viết..." required></textarea>
+                                            <label for="postSummary" class="form-label fw-bold text-success">Tóm tắt bài
+                                                viết:</label>
+                                            <textarea id="postSummary" class="form-control border-success" rows="3"
+                                                placeholder="Nhập một đoạn tóm tắt ngắn gọn về nội dung bài viết..."
+                                                required></textarea>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="postCoverImage" class="form-label fw-bold text-success">Ảnh bìa (cover):</label>
-                                            <input type="file" id="postCoverImage" class="form-control border-success" accept="image/*" required>
+                                            <label for="postCoverImage" class="form-label fw-bold text-success">Ảnh bìa
+                                                (cover):</label>
+                                            <input type="file" id="postCoverImage" class="form-control border-success"
+                                                accept="image/*" required>
                                         </div>
 
                                         <div class="mb-3">
-                                            <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ đề:</label>
+                                            <label for="topicSelect" class="form-label fw-bold text-success">Chọn chủ
+                                                đề:</label>
                                             <select class="form-select border-success" id="topicSelect" required>
                                                 <option value="">-- Chọn chủ đề --</option>
                                                 <?php if (!empty($allTopics)) : ?>
                                                     <?php foreach ($allTopics as $topic) : ?>
-                                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?></option>
+                                                        <option value="<?= $topic['id'] ?>"><?= htmlspecialchars($topic['name']) ?>
+                                                        </option>
                                                     <?php endforeach; ?>
                                                 <?php else : ?>
                                                     <option value="1" selected>Kinh doanh</option>
@@ -859,19 +876,26 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                         <div id="sectionsWrap" class="d-flex flex-column gap-3">
 
                                             <div class="card border-0 shadow-sm section-item" data-index="1">
-                                                <div class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
+                                                <div
+                                                    class="card-header bg-success-subtle d-flex align-items-center justify-content-between">
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <span class="badge bg-success text-white rounded-pill" style="min-width:2rem">1</span>
+                                                        <span class="badge bg-success text-white rounded-pill"
+                                                            style="min-width:2rem">1</span>
                                                         <strong>Phần 1</strong>
                                                     </div>
                                                     <div class="d-flex align-items-center gap-2">
-                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="image">
+                                                        <button type="button"
+                                                            class="btn btn-outline-success btn-sm section-add-media"
+                                                            data-type="image">
                                                             <i class="fas fa-image me-1"></i> Ảnh
                                                         </button>
-                                                        <button type="button" class="btn btn-outline-success btn-sm section-add-media" data-type="video">
+                                                        <button type="button"
+                                                            class="btn btn-outline-success btn-sm section-add-media"
+                                                            data-type="video">
                                                             <i class="fas fa-video me-1"></i> Video
                                                         </button>
-                                                        <button type="button" class="btn btn-outline-danger btn-sm d-none section-remove">
+                                                        <button type="button"
+                                                            class="btn btn-outline-danger btn-sm d-none section-remove">
                                                             <i class="fas fa-trash-alt"></i>
                                                         </button>
                                                     </div>
@@ -879,17 +903,21 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                                 <div class="card-body">
                                                     <div class="mb-3">
                                                         <label class="form-label fw-semibold">Tiêu đề phần 1</label>
-                                                        <input type="text" class="form-control" placeholder="Nhập tiêu đề phần 1..." value="" required>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="Nhập tiêu đề phần 1..." value="" required>
                                                     </div>
 
                                                     <div class="mb-3">
-                                                        <input type="file" class="d-none section-file" accept="image/*,video/*">
-                                                        <div class="media-preview border rounded p-3 text-center">Chưa chọn ảnh/video.</div>
+                                                        <input type="file" class="d-none section-file"
+                                                            accept="image/*,video/*">
+                                                        <div class="media-preview border rounded p-3 text-center">Chưa chọn
+                                                            ảnh/video.</div>
                                                     </div>
 
                                                     <div class="mb-2">
                                                         <label class="form-label fw-semibold">Nội dung phần 1</label>
-                                                        <textarea class="form-control" rows="4" placeholder="Nhập nội dung phần 1..." required></textarea>
+                                                        <textarea class="form-control" rows="4"
+                                                            placeholder="Nhập nội dung phần 1..." required></textarea>
                                                     </div>
                                                 </div>
                                             </div>
@@ -991,7 +1019,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                         if (addBtn) {
                                             const card = addBtn.closest('.section-item');
                                             const fileInput = card.querySelector('.section-file');
-                                            fileInput.setAttribute('accept', addBtn.dataset.type === 'image' ? 'image/*' : 'video/*');
+                                            fileInput.setAttribute('accept', addBtn.dataset.type === 'image' ?
+                                                'image/*' : 'video/*');
                                             fileInput.click();
                                         }
 
@@ -1007,7 +1036,8 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                                     sectionsWrap.addEventListener('change', (e) => {
                                         if (!e.target.classList.contains('section-file')) return;
                                         const file = e.target.files?.[0];
-                                        const preview = e.target.closest('.section-item').querySelector('.media-preview');
+                                        const preview = e.target.closest('.section-item').querySelector(
+                                            '.media-preview');
                                         preview.textContent = 'Chưa chọn ảnh/video.';
                                         if (!file) return;
                                         const url = URL.createObjectURL(file);
@@ -1047,9 +1077,9 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                     margin: 20,
                     dots: false,
                     /*
-                   animateOut: 'fadeOut',
-                   animateIn: 'fadeIn',
-                   */
+                       animateOut: 'fadeOut',
+                       animateIn: 'fadeIn',
+                       */
                     responsiveClass: true,
                     autoHeight: true,
                     autoplayTimeout: 7000,
@@ -1122,7 +1152,7 @@ require_once __DIR__ . '/_sidebar_content.php'; ?>
                     <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11m0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12" />
                 </svg>
             </a>
-            <a href="https://www.facebook.com/share/1CNJs6dRsc/?mibextid=wwXIfr" target="_blank" title="Facebook">
+            <a href="https://www.facebook.com/share/16yiP9PSNr/?mibextid=wwXIfr" target="_blank" title="Facebook">
                 <i class="fa-brands fa-facebook" style="color: #098aec;"></i>
             </a>
             <a href="https://www.tiktok.com/@mng.x.hi83?_t=ZS-902X8YxNlCv&_r=1" target="_blank" title="Tiktok">
