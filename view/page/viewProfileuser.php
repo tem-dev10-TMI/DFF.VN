@@ -3,7 +3,7 @@
     require_once __DIR__ . '/../../time.php';
     require_once __DIR__ . '/../../config/db.php';
     require_once __DIR__ . '/../../model/article/articlesmodel.php';
-    require_once __DIR__ . '/../../model/user/UserModel.php'; // cần model để lấy user
+    require_once __DIR__ . '/../../model/user/userModel.php'; // cần model để lấy user
 
     // Lấy id từ URL (dùng ?id=56)
     $profileId = intval($_GET['id'] ?? 0);
