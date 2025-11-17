@@ -206,13 +206,13 @@ function deletePost(postId, buttonElement) {
 
 
 
+  const formData = new FormData();
+  formData.append('post_id', postId);
+  formData.append('session_token', window.userSessionToken || '');
+
   fetch('api/deletePost', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'X-Requested-With': 'XMLHttpRequest'
-    },
-    body: body.toString()
+    body: formData
   })
     .then(async (res) => {
       if (res.status === 204) return { success: true };
