@@ -92,7 +92,7 @@ class homeController
         // Ở đây, chúng ta sẽ dùng tạm bài viết từ DB
         $rssArticlesForBox1 = array_slice($dbArticlesForSlider, 0, 6);
         $rssArticlesForBox2 = array_slice($dbArticlesForSlider, 6, 6);
-        
+
         // Nếu không đủ dữ liệu cho box 2, lấy lại từ đầu với offset khác
         if (empty($rssArticlesForBox2) && count($dbArticlesForSlider) > 0) {
             $rssArticlesForBox2 = array_slice($dbArticlesForSlider, 0, 6);
@@ -121,34 +121,33 @@ class homeController
     }
 
 
-        // API: Load thêm bài viết (lazy load)
-        public function loadMoreArticles()
-        {
-            header('Content-Type: application/json');
-            try {
-                require_once __DIR__ . '/../model/article/articlesmodel.php';
-    
-                $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
-                $limit = isset($_GET['limit']) ? min(20, max(1, intval($_GET['limit']))) : 5;
-    
-                // Chỉ lấy thêm bài viết từ database
-                $articles = ArticlesModel::getArticlesPaged($offset, $limit);
-    
-                echo json_encode([
-                    'success' => true,
-                    'items' => $articles,
-                    'count' => count($articles),
-                    'nextOffset' => $offset + count($articles)
-                ]);
-    
-            } catch (Throwable $e) {
-                echo json_encode([
-                    'success' => false,
-                    'message' => $e->getMessage()
-                ]);
-            }
-            exit;
+    // API: Load thêm bài viết (lazy load)
+    public function loadMoreArticles()
+    {
+        header('Content-Type: application/json');
+        try {
+            require_once __DIR__ . '/../model/article/articlesmodel.php';
+
+            $offset = isset($_GET['offset']) ? max(0, intval($_GET['offset'])) : 0;
+            $limit = isset($_GET['limit']) ? min(20, max(1, intval($_GET['limit']))) : 5;
+
+            // Chỉ lấy thêm bài viết từ database
+            $articles = ArticlesModel::getArticlesPaged($offset, $limit);
+
+            echo json_encode([
+                'success' => true,
+                'items' => $articles,
+                'count' => count($articles),
+                'nextOffset' => $offset + count($articles)
+            ]);
+        } catch (Throwable $e) {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
         }
+        exit;
+    }
 
     public static function profile_business()
     {
